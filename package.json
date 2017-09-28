@@ -1,0 +1,34 @@
+{
+  "name": "datapower",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "nodemon src",
+    "test": "nyc istanbul cover tape tests/tests.js | tap-spec",
+    "coverage": "istanbul cover tests/*.tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FAC-11/DataPower.git"
+  },
+  "author": "Rachael, James, Alina",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FAC-11/DataPower/issues"
+  },
+  "homepage": "https://github.com/FAC-11/DataPower#readme",
+  "devDependencies": {
+    "eslint": "^4.7.2",
+    "istanbul": "^0.4.5",
+    "nodemon": "^1.12.1",
+    "nyc": "^11.2.1",
+    "supertest": "^3.0.0",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.8.0",
+    "travis": "^0.1.1"
+  }
+}
