@@ -11,13 +11,13 @@
   margin: auto;
 }
 
-.Main{
+.Main {
   display: inline-block;
   height: 100%;
   width: 70%;
 }
 
-.Privacy{
+.Privacy {
   background-color: purple;
   color: white;
   display: inline-block;
@@ -27,30 +27,29 @@
   overflow: scroll;
 }
 
-.Privacy__image{
+.Privacy__image {
   width: 50%;
   margin: auto;
   display: block;
 }
 
-.Privacy__title{
+.Privacy__title {
   display: inline-block;
   padding: 3%;
   text-align: center;
 }
 
-.Privacy__text{
+.Privacy__text {
   display: inline-block;
   padding: 3%;
-
 }
 
-.Button{
+.Button {
   background-color: orange;
   color: white;
 }
 
-.Video{
+.Video {
   display: inline-block;
   width: 80%;
   object-fit: contain;
