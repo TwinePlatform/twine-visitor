@@ -1,4 +1,4 @@
-
+function(){
       let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
       scanner.addListener('scan', function (content) {
         console.log(content);
@@ -12,3 +12,4 @@
       }).catch(function (e) {
         console.error(e);
       });
+}()

@@ -37,17 +37,18 @@ export class QRCode extends Component {
   //
   //   console.log(formData);
   // }
+  componentDidMount(){
+    window.instascan();
+  }
 
   render() {
 
     if (this.state.login === 1) {
       return (
         <section className="Main">
-          <script type="text/javascript" src="./javascripts/instascan.min.js"></script>
           <h1>WELCOME BACK!</h1>
           <div id="instascan">
-            <video id="preview"></video>
-            <script src="./javascripts/instascan"></script>
+            <video id="preview" className="Video active"></video>
           </div>
         </section>
       )
