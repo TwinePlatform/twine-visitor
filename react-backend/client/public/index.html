@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,6 +22,7 @@
     -->
     <title>Data Power</title>
   </head>
+
   <body>
     <noscript>
       You need to enable JavaScript to run this app.
@@ -28,25 +30,31 @@
     <div id="root"></div>
     <script type="text/javascript" src="./javascripts/instascan.min.js"></script>
     <script type="text/javascript">
-    function instascan(){
-      let scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5 });
-      scanner.addListener('scan', function (content) {
-        console.log(content);
-        // document.getElementById('preview').dispatchEvent('ended');
-        if (document.getElementById('preview')){document.getElementById('preview').pause();}  
-      });
-      Instascan.Camera.getCameras().then(function (cameras) {
-        if (cameras.length > 0) {
-          console.log(cameras);
-          scanner.start(cameras[0]);
-        } else {
-          console.error('No cameras found.');
-        }
-      }).catch(function (e) {
-        console.error(e);
-      });
-    }
-</script>
+      function instascan() {
+        let scanner = new Instascan.Scanner({
+          video: document.getElementById('preview'),
+          scanPeriod: 5
+        });
+        scanner.addListener('scan', function(content) {
+          console.log(content);
+          // document.getElementById('preview').dispatchEvent('ended');
+          if (document.getElementById('preview')) {
+            document.getElementById('preview').pause();
+          }
+        });
+        Instascan.Camera.getCameras().then(function(cameras) {
+          if (cameras.length > 0) {
+            console.log(cameras);
+            scanner.start(cameras[0]);
+          } else {
+            console.error('No cameras found.');
+          }
+        }).catch(function(e) {
+          console.error(e);
+        });
+      }
+
+    </script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -58,4 +66,5 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+
 </html>

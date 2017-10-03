@@ -1,11 +1,10 @@
-import React, {Component} from 'react';
-import {Input} from './input';
-import {Select} from './select';
-import {Button} from './button';
-import {PurposeButton} from './purposeButton';
+import React, { Component } from 'react';
+import { Input } from './input';
+import { Select } from './select';
+import { Button } from './button';
+import { PurposeButton } from './purposeButton';
 
 export class QRCode extends Component {
-
   constructor() {
     super();
 
@@ -63,7 +62,6 @@ export class QRCode extends Component {
   }
 
   render() {
-
     if (this.state.login === 1) {
       return (
         <section className="Main">
@@ -87,5 +85,4 @@ export class QRCode extends Component {
       )
     }
   }
-
 }
