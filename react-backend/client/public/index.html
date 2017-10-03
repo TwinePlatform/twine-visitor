@@ -37,6 +37,10 @@
         });
         scanner.addListener('scan', function(content) {
           console.log(content);
+          // document.getElementById('preview').dispatchEvent('ended');
+          if (document.getElementById('preview')) {
+            document.getElementById('preview').pause();
+          }
         });
         Instascan.Camera.getCameras().then(function(cameras) {
           if (cameras.length > 0) {

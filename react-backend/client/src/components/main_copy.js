@@ -10,10 +10,18 @@ export class QRCode extends Component {
     this.state = {
       login: 1,
       username: '',
-      qrcode: '',
-    };
+      qrcode: ''
+    }
+
+    this.handleVideo = this.handleVideo.bind(this);
   }
 
+  handleVideo = (e) => {
+    console.log('video has ended');
+    let newState = {};
+    newState['login'] = this.state.login+1;
+    this.setState(newState);
+  };
   // handleChange = (e) => {
   //   let newState = {};
   //   newState[e.target.name] = e.target.value;
@@ -36,7 +44,8 @@ export class QRCode extends Component {
   //
   //   console.log(formData);
   // }
-  componentDidMount() {
+  componentDidMount(){
+
     window.instascan();
   }
 
@@ -46,7 +55,7 @@ export class QRCode extends Component {
         <section className="Main">
           <h1>WELCOME BACK!</h1>
           <div id="instascan">
-            <video id="preview" className="Video active" />
+            <video id="preview" className="Video active" onPause={this.handleVideo}></video>
           </div>
         </section>
       );
