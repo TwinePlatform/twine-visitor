@@ -1,28 +1,51 @@
-.App {
+.Container {
+  background-color: indigo;
+  height: 100vh;
+  padding-top: 10%;
+}
+
+.Foreground {
+  background-color: white;
+  height: 80%;
+  width: 80%;
+  margin: auto;
+}
+
+.Main{
+  display: inline-block;
+  height: 100%;
+  width: 70%;
+}
+
+.Privacy{
+  background-color: purple;
+  color: white;
+  display: inline-block;
+  height: 100%;
+  width: 30%;
+  float: right;
+  overflow: scroll;
+}
+
+.Privacy__image{
+  width: 50%;
+  margin: auto;
+  display: block;
+}
+
+.Privacy__title{
+  display: inline-block;
+  padding: 3%;
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.Privacy__text{
+  display: inline-block;
+  padding: 3%;
+
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
+.Button{
+  background-color: orange;
   color: white;
-}
-
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }
