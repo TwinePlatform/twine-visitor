@@ -49,3 +49,10 @@
   background-color: orange;
   color: white;
 }
+
+.Video{
+  display: inline-block;
+  width: 80%;
+  object-fit: contain;
+  margin: auto;
+}
