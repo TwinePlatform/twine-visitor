@@ -18,7 +18,7 @@ export class Select extends Component {
       <br />
       <select name = {this.props.option} onChange={this.handleUserInput} value={this.state.userInput}>
       {this.props.choices.map(function(choice){
-          return <option value={choice}>{choice}</option>;
+          return <option key = {choice} value={choice}>{choice}</option>;
         })}
 
       </select>
