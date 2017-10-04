@@ -56,7 +56,7 @@ export class Main extends Component {
       let data = JSON.stringify(payload);
       resolve(data);
     })
-
+    let that = this;
     dataCollection.then((data)=> {
       fetch('/qrgen',
       {
@@ -64,17 +64,8 @@ export class Main extends Component {
         body: data
       })
       .then(function(res){ return res.text() })
-      .then(function(data){ console.log("hello i am here", data) })
+      .then(function(data){ that.setState({url: data}) })
     })
-
-
-
-    // fetch('/qrgen')
-    //   .then(res => res.json())
-    //   .then(outcome => this.setState({users: outcome}))
-      // .then(this.setState({formpage: 3}));
-      // .then(users => this.setState({ users }))
-      // .then(console.log(this.state.users));
   }
 
   render() {
