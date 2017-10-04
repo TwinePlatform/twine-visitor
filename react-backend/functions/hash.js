@@ -14,7 +14,7 @@ module.exports = (userObject) => {
     .update(userString)
     .digest('hex');
 
-  return hash;
+  return Promise.resolve(hash);
 }
 
 

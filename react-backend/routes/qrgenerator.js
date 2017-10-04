@@ -8,19 +8,18 @@ const qrmake = require('../functions/qrcodemaker');
 
 router.post('/', (req, res, next) => {
   let body = '';
-    req.on('data', (chunk) => {
-      body += chunk;
-    });
-    req.on('end', () => {
-      let code =  hash(JSON.parse(body));
-      let qrUrl = qrmake(code);
-      console.log(qrUrl);
-      res.send(qrUrl);
-    });
-  //console.log(req.body);
-  // res.json([{
-  //   qr: 'QRRR Martin'
-  // }]);
+  req.on('data', (chunk) => {
+    body += chunk;
+  });
+  req.on('end', () => new Promise(function(resolve, reject) {
+      resolve(hash(JSON.parse(body)))
+    })
+    .then(qrmake)
+    .then((result)=> res.send(result))
+    .catch((err)=>{
+      console.log(err);
+    })
+  );
 });
 
 module.exports = router;

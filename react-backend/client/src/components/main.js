@@ -16,7 +16,8 @@ export class Main extends Component {
    sex: 'male',
    year: 1980,
    hash: '',
-   users: []
+   users: [],
+   url: ''
     }
   }
 
@@ -62,8 +63,8 @@ export class Main extends Component {
         method: "POST",
         body: data
       })
-      .then(function(res){ return res.blob(); })
-      .then(function(data){ console.log(data) })
+      .then(function(res){ return res.text() })
+      .then(function(data){ console.log("hello i am here", data) })
     })
 
 
@@ -105,6 +106,7 @@ export class Main extends Component {
         <section className = "Main" >
           <h1>Here is your QR code. Please print this page and use the code to sign in when you visit us.</h1>
           <h2>We have also emailed you a copy.</h2>
+          <img src={this.state.url}></img>
 
         </section>
       )
