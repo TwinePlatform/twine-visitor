@@ -64,7 +64,7 @@ export class Main extends Component {
         body: data
       })
       .then(function(res){ return res.text() })
-      .then(function(data){ that.setState({url: data}) })
+      .then(function(data){ that.setState({url: data}) }) //When in doubt of ~.this~ try ~.that~
     })
   }
 
