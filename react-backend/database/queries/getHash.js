@@ -1,6 +1,6 @@
 const dbConnection = require('../dbConnection');
 
-const checkName = 'SELECT fullname from users WHERE hash (VALUES ($1))';
+const checkName = 'SELECT fullname FROM users WHERE hash (VALUES ($1))';
 
 
 const getHash = (hashString, cb) => {

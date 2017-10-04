@@ -2,18 +2,22 @@ import React, { Component } from 'react';
 import { Input } from './input';
 import { Select } from './select';
 import { Button } from './button';
+import { PurposeButton } from './purposeButton';
 
 export class QRCode extends Component {
   constructor() {
     super();
 
     this.state = {
-      login: 1,
+      login: 2,
       username: '',
-      qrcode: ''
+      qrcode: '',
+      activity: 'not selected'
     }
 
     this.handleVideo = this.handleVideo.bind(this);
+
+    this.changeActivity = this.changeActivity.bind(this);
   }
 
   handleVideo = (e) => {
@@ -22,6 +26,14 @@ export class QRCode extends Component {
     newState['login'] = this.state.login+1;
     this.setState(newState);
   };
+
+  changeActivity = (newActivity) => {
+    this.setState({
+      activity: newActivity
+    });
+      console.log("activity: ", this.state.activity);
+  };
+
   // handleChange = (e) => {
   //   let newState = {};
   //   newState[e.target.name] = e.target.value;
@@ -45,8 +57,8 @@ export class QRCode extends Component {
   //   console.log(formData);
   // }
   componentDidMount(){
-
-    window.instascan();
+    if(this.state.login===1){
+    window.instascan();}
   }
 
   render() {
@@ -58,28 +70,19 @@ export class QRCode extends Component {
             <video id="preview" className="Video active" onPause={this.handleVideo}></video>
           </div>
         </section>
-      );
+      )
+    } else {
+      return (
+        <section className="Main">
+          <h1>Welcome Back, {this.state.username}</h1>
+
+            <PurposeButton session="Yoga" activity={this.state.activity} onClick={this.changeActivity}/> <br/>
+            <PurposeButton session="Dancing" activity={this.state.activity} onClick={this.changeActivity}/><br/>
+            <PurposeButton session="Baking" activity={this.state.activity} onClick={this.changeActivity}/>
+
+
+        </section>
+      )
     }
-    return (
-      <section className="Main">
-        <h1>Please tell us about yourself</h1>
-        <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
-          <Select question="Select Your Sex" option="sex" choices={['male', 'female', 'prefer not to say']} />
-          <Select
-            question="Year of Birth"
-            option="year"
-            choices={[
-              1980,
-              1981,
-              1982,
-              1983,
-              1984,
-              1985,
-            ]}
-          />
-          <Button />
-        </form>
-      </section>
-    );
   }
 }
