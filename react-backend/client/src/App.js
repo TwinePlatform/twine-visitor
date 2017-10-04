@@ -10,8 +10,8 @@ class App extends Component {
     return (
       <div className="Container">
         <div className="Foreground">
-          <QRCode />
-          <QRPrivacy />
+          <Main />
+          <Privacy />
         </div>
       </div>
     );
