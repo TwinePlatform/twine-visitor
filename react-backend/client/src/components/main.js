@@ -10,7 +10,7 @@ export class Main extends Component {
   super();
 
   this.state = {
-   formpage: 3,
+   formpage: 1,
    fullname: 'no name entered',
    email: 'no@email.com',
    sex: 'male',
@@ -75,8 +75,8 @@ export class Main extends Component {
         <section className = "Main" >
           <h1>Please tell us about yourself</h1>
           <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
-          <Input question="Choose your Full Name" option="fullname"/>
-          <Input question="Email (optional)" option="email"/>
+          <Input question="Your Full Name" option="fullname"/>
+          <Input question="Your Email" option="email"/>
           <Button />
           </form>
         </section>

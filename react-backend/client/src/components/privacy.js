@@ -2,19 +2,20 @@ import React, {
   Component,
 } from 'react';
 
-export class Privacy extends Component {
+export class FormPrivacy extends Component {
   render() {
     return (
       <aside className="Privacy">
         <img className="Privacy__image" src="/images/question.png" alt="question" />
-        <h3 className="Privacy__title">Why are we asking for this data?</h3>
-        <p className="Privacy__text">Username: This tells us what you’d like to be called.
+        <h3 className="Privacy__title">Why are we collecting this information?</h3>
+        <p className="Privacy__text">We are always working to improve what we offer to you.
           <br />
           <br />
-        Email: This allows us to send you your sign-up details and information about our events.
+         That is why we are gathering information on visitors when they arrive, so we have a better picture of our customers.
           <br />
           <br />
-        Year of birth and Sex (next page): This helps us understand more about who uses our services so we can host events that will be popular with you.</p>
+The data you disclose is safe with us, and we will only use it to improve our services.
+We will never sell your data to third parties.</p>
       </aside>
     );
   }
