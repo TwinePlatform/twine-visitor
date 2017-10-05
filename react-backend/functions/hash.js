@@ -2,7 +2,7 @@ const crypto = require('crypto');
 require('env2')('./config.env');
 
 if (!process.env.SECRET) throw new Error('Environment variable SECRET must be set');
-const secret = process.env.SECRET
+const secret = process.env.SECRET;
 
 
 module.exports = (userObject) => {
@@ -14,8 +14,8 @@ module.exports = (userObject) => {
     .update(userString)
     .digest('hex');
 
-  return Promise.resolve(hash);
-}
+  return hash;
+};
 
 
-//{"formSender":"no name entered","formEmail":"no@email.com","formSex":"male","formYear":1980}
+// {"formSender":"no name entered","formEmail":"no@email.com","formSex":"male","formYear":1980}

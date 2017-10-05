@@ -38,7 +38,8 @@ export class Main extends Component {
      formSender: this.state.fullname,
      formEmail: this.state.email,
      formSex: this.state.sex,
-     formYear: this.state.year
+     formYear: this.state.year,
+     formHash: this.state.hash
       }
 
     console.log(formData);
@@ -50,7 +51,8 @@ export class Main extends Component {
        formSender: this.state.fullname,
        formEmail: this.state.email,
        formSex: this.state.sex,
-       formYear: this.state.year
+       formYear: this.state.year,
+       formHash: this.state.hash
       };
 
       let data = JSON.stringify(payload);
