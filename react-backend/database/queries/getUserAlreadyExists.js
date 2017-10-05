@@ -11,7 +11,7 @@ const getUserAlreadyExists = (fullname, email, cb) => {
     dbConnection.query(checkEmail, email, (err2, res2) => {
       if (err2) { return cb(err2); }
 
-      if (res1 && res2 === 'TRUE') {
+      if (res1 && res2 === true) {
         res = true;
       } else {
         res = false;
