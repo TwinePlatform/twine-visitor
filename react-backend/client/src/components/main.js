@@ -11,10 +11,13 @@ export class Main extends Component {
 
   this.state = {
    formpage: 1,
-   username: '',
-   email: '',
-   sex: '',
-   year: 0
+   fullname: 'no name entered',
+   email: 'no@email.com',
+   sex: 'male',
+   year: 1980,
+   hash: '',
+   users: [],
+   url: ''
     }
   }
 
@@ -32,15 +35,38 @@ export class Main extends Component {
     this.setState(newState);
 
     let formData = {
-     formSender: this.state.username,
+     formSender: this.state.fullname,
      formEmail: this.state.email,
      formSex: this.state.sex,
-     formyear: this.state.year
+     formYear: this.state.year
       }
 
     console.log(formData);
   }
 
+  componentDidMount() {
+    let dataCollection = new Promise((resolve, reject)=> {
+      let payload = {
+       formSender: this.state.fullname,
+       formEmail: this.state.email,
+       formSex: this.state.sex,
+       formYear: this.state.year
+      };
+
+      let data = JSON.stringify(payload);
+      resolve(data);
+    })
+    let that = this;
+    dataCollection.then((data)=> {
+      fetch('/qrgen',
+      {
+        method: "POST",
+        body: data
+      })
+      .then(function(res){ return res.text() })
+      .then(function(data){ that.setState({url: data}) }) //When in doubt of ~.this~ try ~.that~
+    })
+  }
 
   render() {
 
@@ -49,13 +75,13 @@ export class Main extends Component {
         <section className = "Main" >
           <h1>Please tell us about yourself</h1>
           <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
-          <Input question="Choose your username" option="username"/>
-          <Input question="Email (optional)" option="email"/>
+          <Input question="Your Full Name" option="fullname"/>
+          <Input question="Your Email" option="email"/>
           <Button />
           </form>
         </section>
       )
-    } else {
+    } else if (this.state.formpage===2){
       return (
         <section className = "Main" >
           <h1>Please tell us about yourself</h1>
@@ -64,6 +90,15 @@ export class Main extends Component {
           <Select question="Year of Birth" option="year" choices={[1980,1981,1982,1983,1984,1985]}/>
           <Button />
           </form>
+        </section>
+      )
+    } else {
+      return (
+        <section className = "Main" >
+          <h1>Here is your QR code. Please print this page and use the code to sign in when you visit us.</h1>
+          <h2>We have also emailed you a copy.</h2>
+          <img src={this.state.url}></img>
+
         </section>
       )
     }
