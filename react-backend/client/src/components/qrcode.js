@@ -58,7 +58,7 @@ export class QRCode extends Component {
   // }
   componentDidMount(){
     if(this.state.login===1){
-    window.instascan();}
+    window.instascan()}
   }
 
   render() {
