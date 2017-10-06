@@ -9,7 +9,7 @@ export class QRCode extends Component {
     super();
 
     this.state = {
-      login: 2,
+      login: 1,
       username: '',
       qrcode: '',
       activity: 'not selected'
@@ -58,7 +58,7 @@ export class QRCode extends Component {
   // }
   componentDidMount(){
     if(this.state.login===1){
-    window.instascan();}
+    window.instascan()}
   }
 
   render() {
