@@ -4,13 +4,14 @@ import { Select } from './select';
 import { Button } from './button';
 import { PurposeButton } from './purposeButton';
 
+
 export class QRCode extends Component {
   constructor() {
     super();
 
     this.state = {
       login: 1,
-      username: '',
+      fullName: '',
       qrcode: '',
       activity: 'not selected'
     }
@@ -74,7 +75,7 @@ export class QRCode extends Component {
     } else {
       return (
         <section className="Main">
-          <h1>Welcome Back, {this.state.username}</h1>
+          <h1>Welcome Back, {this.state.fullName}</h1>
 
             <PurposeButton session="Yoga" activity={this.state.activity} onClick={this.changeActivity}/> <br/>
             <PurposeButton session="Dancing" activity={this.state.activity} onClick={this.changeActivity}/><br/>

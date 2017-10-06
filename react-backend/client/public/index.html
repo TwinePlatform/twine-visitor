@@ -36,11 +36,22 @@
           scanPeriod: 5
         });
         scanner.addListener('scan', function(content) {
-          console.log(content);
+          console.log("I am instascan reader:  ", content);
           // document.getElementById('preview').dispatchEvent('ended');
           if (document.getElementById('preview')) {
             document.getElementById('preview').pause();
           }
+          fetch('/checkHash', {
+            method: "POST",
+            body: content
+          })
+          //   .then((res) => res.text())
+          //   //  .then((data) => console.log(data);)
+          // .then((data) => {
+          //   console.log(data);
+          //   })
+          // //console.log(QRCode.state.fullName);
+          // // console.log('Sent data:', body);
         });
         Instascan.Camera.getCameras().then(function(cameras) {
           if (cameras.length > 0) {
