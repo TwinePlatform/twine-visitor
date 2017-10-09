@@ -39,31 +39,6 @@ router.post('/', (req, res, next) => {
         console.log(err);
       });
   });
-
-
-  // getUserAlreadyExists('Barry Inglis', (err, res) => {
-  //   if (err) {
-  //     console.log('I am error1', err);
-  //   } else {
-  //     console.log('I am res1', res.rows[0].exists);
-  //     result1 = res.rows[0].exists;
-  //   }
-  // });
-  //
-  // getEmailAlreadyExists('jinglis12@gmail.com', (err, res) => {
-  //   if (err) {
-  //     console.log('I am error2', err);
-  //   } else {
-  //     console.log('I am res2', res.rows[0].exists);
-  //     result2 = res.rows[0].exists;
-  //   }
-  // });
-  //
-  // if (result1 && result2) {
-  //   console.log(true);
-  // } else {
-  //   console.log(false);
-  // }
 });
 
 

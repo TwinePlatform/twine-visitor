@@ -28,7 +28,7 @@ class App extends Component {
             <Route exact path="/" component={FormPrivacy}/>
             <Route exact path="/signup" component={FormPrivacy}/>
             <Route exact path="/signup/step2" component={FormPrivacy2}/>
-            <Route exact path="/flow2" component={QRPrivacy}/>
+            <Route path="/flow2" component={QRPrivacy}/>
           </Switch>
         </div>
       </div>

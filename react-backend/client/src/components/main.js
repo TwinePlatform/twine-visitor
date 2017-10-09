@@ -11,7 +11,7 @@ class Main extends Component {
     super(props)
 
     this.state = {
-     formpage: 1,
+    //  formpage: 1,
      fullname: 'no name entered',
      email: 'no@email.com',
      sex: 'male',
@@ -31,12 +31,12 @@ class Main extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const newState = {
-      formpage: this.state.formpage+1
-    };
-    this.setState(newState);
+    // const newState = {
+    //   formpage: this.state.formpage+1
+    // };
+    // this.setState(newState);
 
-    const payload = {
+    const formData = {
      formSender: this.state.fullname,
      formEmail: this.state.email,
      formSex: this.state.sex,
@@ -47,38 +47,13 @@ class Main extends Component {
     fetch('/qrgen',
       {
         method: "POST",
-        body: JSON.stringify(payload)
+        body: JSON.stringify(formData)
       })
-      // .then((res) => console.log("body  ", res))
       .then((res) => res.text() )
       .then((data) => { this.setState({url: data}) })
       .then(()=>this.props.history.push('/signup/thankyou'))
+      //history.push - forces to change page
   }
-
-  // componentDidMount() {
-  //   let dataCollection = new Promise((resolve, reject)=> {
-  //     let payload = {
-  //      formSender: this.state.fullname,
-  //      formEmail: this.state.email,
-  //      formSex: this.state.sex,
-  //      formYear: this.state.year,
-  //      formHash: this.state.hash
-  //     };
-  //
-  //     let data = JSON.stringify(payload);
-  //     resolve(data);
-  //   })
-  //
-  //   dataCollection.then((data)=> {
-  //     fetch('/qrgen',
-  //     {
-  //       method: "POST",
-  //       body: data
-  //     })
-  //     .then((res) => { return res.text() })
-  //     .then((data) => { this.setState({url: data}) }) //When in doubt of ~.this~ try ~.that~
-  //   })
-  // }
 
   render() {
     return (
@@ -93,7 +68,7 @@ class Main extends Component {
             </form>
           </section>
         </Route>
-        <Route path="/signup/step2">
+        <Route exact path="/signup/step2">
           <section className="Main" >
             <h1>Please tell us about yourself</h1>
             <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
@@ -116,5 +91,5 @@ class Main extends Component {
   }
 }
 
-const MainWithRouter = withRouter(Main);
+const MainWithRouter = withRouter(Main); //to get history and use history.push
 export {Main}
