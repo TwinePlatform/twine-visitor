@@ -34,28 +34,6 @@ export class QRCode extends Component {
       console.log("activity: ", this.state.activity);
   };
 
-  // handleChange = (e) => {
-  //   let newState = {};
-  //   newState[e.target.name] = e.target.value;
-  //   this.setState(newState);
-  // };
-  //
-  // handleSubmit = (e) => {
-  //   e.preventDefault();
-  //
-  //   let newState = {};
-  //   newState['formpage'] = this.state.formpage+1;
-  //   this.setState(newState);
-  //
-  //   let formData = {
-  //    formSender: this.state.username,
-  //    formEmail: this.state.email,
-  //    formSex: this.state.sex,
-  //    formyear: this.state.year
-  //     }
-  //
-  //   console.log(formData);
-  // }
   componentDidMount(){
     if(this.state.login===1){
     window.instascan()}

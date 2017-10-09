@@ -17,14 +17,19 @@ class App extends Component {
             <Route exact path="/">
               <div>
                 Where do you want to go?<br/>
-              <Link to="/signup">Go to Flow 1</Link><br/>
-                <Link to="/flow2">Go to Flow 2</Link><br/>
+              <Link to="/signup">Sign up</Link><br/>
+                <Link to="/flow2">Login</Link><br/>
               </div>
             </Route>
             <Route path="/signup" component={Main}/>
             <Route path="/flow2" component={QRCode}/>
           </Switch>
-          <FormPrivacy/>
+          <Switch>
+            <Route exact path="/" component={FormPrivacy}/>
+            <Route exact path="/signup" component={FormPrivacy}/>
+            <Route exact path="/signup/step2" component={FormPrivacy2}/>
+            <Route exact path="/flow2" component={QRPrivacy}/>
+          </Switch>
         </div>
       </div>
     );
