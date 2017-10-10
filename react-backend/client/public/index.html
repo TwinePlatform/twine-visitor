@@ -27,34 +27,9 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <div id="root"></div>
     <script type="text/javascript" src="./javascripts/instascan.min.js"></script>
-    <script type="text/javascript">
-      function instascan() {
-        let scanner = new Instascan.Scanner({
-          video: document.getElementById('preview'),
-          scanPeriod: 5
-        });
-        scanner.addListener('scan', function(content) {
-          console.log(content);
-          // document.getElementById('preview').dispatchEvent('ended');
-          if (document.getElementById('preview')) {
-            document.getElementById('preview').pause();
-          }
-        });
-        Instascan.Camera.getCameras().then(function(cameras) {
-          if (cameras.length > 0) {
-            console.log(cameras);
-            scanner.start(cameras[0]);
-          } else {
-            console.error('No cameras found.');
-          }
-        }).catch(function(e) {
-          console.error(e);
-        });
-      }
+    <div id="root"></div>
 
-    </script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

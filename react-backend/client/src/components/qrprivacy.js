@@ -11,8 +11,9 @@ export class QRPrivacy extends Component {
         <p className="Privacy__text">Your name, sex, age, and reason for visiting today, as well as the time and date of your visit.
           <br />
           <br />
-          <h4>Why are we collecting this information?</h4>
-          We are always trying to improve what we offer you. By signing in, you are helping us make our
+        </p>
+        <h4>Why are we collecting this information?</h4>
+        <p>We are always trying to improve what we offer you. By signing in, you are helping us make our
 services better.</p>
       </aside>
     );

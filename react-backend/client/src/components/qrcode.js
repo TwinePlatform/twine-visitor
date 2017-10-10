@@ -1,8 +1,45 @@
+/*global Instascan*/
 import React, { Component } from 'react';
 import { Input } from './input';
 import { Select } from './select';
 import { Button } from './button';
 import { PurposeButton } from './purposeButton';
+
+
+function getUserFromQRScan(content) {
+  return fetch('/getUsername', {
+    method: "POST",
+    body: JSON.stringify(content)
+  })
+  .then(res=>res.text())
+}
+
+function instascan() {
+  return new Promise((resolve, reject)=>{
+    let scanner = new Instascan.Scanner({
+      video: document.getElementById('preview'),
+      scanPeriod: 5
+    });
+    scanner.addListener('scan', function(content) {
+      console.log("I am instascan reader: ", content);
+      if (document.getElementById('preview')) {
+        document.getElementById('preview').pause();
+      }
+      resolve(content)
+    });
+    Instascan.Camera.getCameras().then(function(cameras) {
+      if (cameras.length > 0) {
+        console.log(cameras);
+        scanner.start(cameras[0]);
+      } else {
+        console.error('No cameras found.');
+      }
+    }).catch(function(e) {
+      console.error(e);
+    });
+  })
+}
+
 
 export class QRCode extends Component {
   constructor() {
@@ -34,31 +71,14 @@ export class QRCode extends Component {
       console.log("activity: ", this.state.activity);
   };
 
-  // handleChange = (e) => {
-  //   let newState = {};
-  //   newState[e.target.name] = e.target.value;
-  //   this.setState(newState);
-  // };
-  //
-  // handleSubmit = (e) => {
-  //   e.preventDefault();
-  //
-  //   let newState = {};
-  //   newState['formpage'] = this.state.formpage+1;
-  //   this.setState(newState);
-  //
-  //   let formData = {
-  //    formSender: this.state.username,
-  //    formEmail: this.state.email,
-  //    formSex: this.state.sex,
-  //    formyear: this.state.year
-  //     }
-  //
-  //   console.log(formData);
-  // }
   componentDidMount(){
     if(this.state.login===1){
-    window.instascan()}
+      instascan()
+      .then(getUserFromQRScan)
+      .then((user)=>{
+        this.setState({username:user})
+      })
+    }
   }
 
   render() {

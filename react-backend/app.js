@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const index = require('./routes/index');
 const users = require('./routes/users');
 const qrgen = require('./routes/qrgenerator');
+const getUsername = require('./routes/getUsername');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/qrgen', qrgen);
+app.use('/getUsername', getUsername);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
