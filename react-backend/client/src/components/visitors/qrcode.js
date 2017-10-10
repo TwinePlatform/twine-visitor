@@ -1,20 +1,22 @@
-/*global Instascan*/
 import React, { Component } from 'react';
-import { Input } from './input';
-import { Select } from './select';
-import { Button } from './button';
 import { PurposeButton } from './purposeButton';
-import {Route, Switch, Link} from 'react-router-dom';
-import { withRouter } from 'react-router-dom'
+import { withRouter} from 'react-router-dom';
 
 
 function getUserFromQRScan(content) {
   return fetch('/getUsername', {
     method: "POST",
-    body: JSON.stringify(content)
+    headers: {
+      'Accept': 'application/json, text/plain, */*',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({token:content})
   })
-  .then(res=>res.text())
-  .then(result => JSON.parse(result))
+  .then(res=>res.json())
+  .catch((err) => {
+    console.log("error from getUserFromQRScan:  ", err);
+    throw err
+  })
 }
 
 function instascan() {
@@ -29,15 +31,14 @@ function instascan() {
       }
       resolve(content)
     });
-    Instascan.Camera.getCameras().then(function(cameras) {
+    Instascan.Camera.getCameras().then((cameras) => {
       if (cameras.length > 0) {
-        console.log(cameras);
         scanner.start(cameras[0]);
       } else {
         console.error('No cameras found.');
       }
-    }).catch(function(e) {
-      console.error(e);
+    }).catch((err) => {
+      console.error(err);
     });
   })
 }
@@ -57,11 +58,9 @@ export class QRCode extends Component {
     this.handleVideo = this.handleVideo.bind(this);
 
     this.changeActivity = this.changeActivity.bind(this);
-
   }
 
   handleVideo = (e) => {
-    console.log('video has ended');
     let newState = {};
     newState['login'] = this.state.login+1;
     this.setState(newState);
@@ -81,7 +80,7 @@ export class QRCode extends Component {
       method: "POST",
       body: JSON.stringify(visitInfo)
     }).then(
-      this.props.history.push('/end')
+      this.props.history.push('/visitor/end')
     );
   };
 
@@ -97,7 +96,7 @@ export class QRCode extends Component {
 
     componentWillUpdate(nextProps, nextState) {
     if (nextState.username ==='there is no registered user') {
-      this.props.history.push('/qrerror')
+      this.props.history.push('/visitor/qrerror')
     }
   }
 
@@ -129,4 +128,4 @@ export class QRCode extends Component {
   }
 }
 
-const MainWithRouter = withRouter(QRCode); //to get history and use history.push
+withRouter(QRCode); //to get history and use history.push

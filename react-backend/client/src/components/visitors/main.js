@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import {Input} from './input';
 import {Select} from './select';
 import {Button} from './button';
-import {Route, Switch, Link} from 'react-router-dom';
-import { withRouter } from 'react-router-dom'
+import {Route, Switch} from 'react-router-dom';
 
 class Main extends Component {
 
@@ -42,7 +41,7 @@ class Main extends Component {
     .then((res)=>res.text())
     .then((data)=> {
       if (data==='false') {
-        this.props.history.push('/signup/step2');
+        this.props.history.push('/visitor/signup/step2');
       } else if(data === 'email') {
         document.getElementById('userexistserror').classList.add('hidden');
         document.getElementById('nameerror').classList.add('hidden');
@@ -81,7 +80,7 @@ class Main extends Component {
       })
       .then((res) => res.text() )
       .then((data) => { this.setState({url: data}) })
-      .then(()=>this.props.history.push('/signup/thankyou'))
+      .then(()=>this.props.history.push('/visitor/signup/thankyou'))
       //history.push - forces to change page
   }
 
@@ -89,7 +88,7 @@ class Main extends Component {
   render() {
     return (
       <Switch>
-        <Route exact path="/signup">
+        <Route exact path="/visitor/signup">
           <section className="Main" >
             <h1>Please tell us about yourself</h1>
             <div className="ErrorText hidden" id="userexistserror">This user already exists - please check your details. <br/>
@@ -101,13 +100,13 @@ class Main extends Component {
               <Input question="Your Full Name" option="fullname"/>
               <Input question="Your Email" option="email"/>
               {
-                //<Link to="/signup/step2">Next</Link>
+                //<Link to="/visitor/signup/step2">Next</Link>
               }
             </form>
             <button onClick={this.handleSwitch} className="Button"> Next </button>
           </section>
         </Route>
-        <Route exact path="/signup/step2">
+        <Route exact path="/visitor/signup/step2">
           <section className="Main" >
             <h1>Please tell us about yourself</h1>
             <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
@@ -117,12 +116,11 @@ class Main extends Component {
             </form>
           </section>
         </Route>
-        <Route path="/signup/thankyou">
+        <Route path="/visitor/signup/thankyou">
           <section className="Main" >
             <h1>Here is your QR code. Please print this page and use the code to sign in when you visit us.</h1>
             <h2>We have also emailed you a copy.</h2>
-            <img src={this.state.url}></img>
-
+            <img src={this.state.url} alt=""></img>
           </section>
         </Route>
       </Switch>
@@ -130,5 +128,4 @@ class Main extends Component {
   }
 }
 
-const MainWithRouter = withRouter(Main); //to get history and use history.push
 export {Main}
