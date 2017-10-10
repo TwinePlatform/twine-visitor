@@ -11,7 +11,6 @@ class Main extends Component {
     super(props)
 
     this.state = {
-    //  formpage: 1,
      fullname: 'no name entered',
      email: 'no@email.com',
      sex: 'male',
@@ -30,11 +29,6 @@ class Main extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-
-    // const newState = {
-    //   formpage: this.state.formpage+1
-    // };
-    // this.setState(newState);
 
     const formData = {
      formSender: this.state.fullname,
