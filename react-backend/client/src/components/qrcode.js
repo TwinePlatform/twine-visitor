@@ -14,6 +14,7 @@ function getUserFromQRScan(content) {
     body: JSON.stringify(content)
   })
   .then(res=>res.text())
+  .then(result => JSON.parse(result))
 }
 
 function instascan() {
@@ -23,7 +24,6 @@ function instascan() {
       scanPeriod: 5
     });
     scanner.addListener('scan', function(content) {
-      console.log("I am instascan reader: ", content);
       if (document.getElementById('preview')) {
         document.getElementById('preview').pause();
       }
@@ -57,6 +57,7 @@ export class QRCode extends Component {
     this.handleVideo = this.handleVideo.bind(this);
 
     this.changeActivity = this.changeActivity.bind(this);
+
   }
 
   handleVideo = (e) => {
@@ -70,7 +71,18 @@ export class QRCode extends Component {
     this.setState({
       activity: newActivity
     });
-      console.log("activity: ", this.state.activity);
+
+    const visitInfo = {
+      hash: this.state.hash,
+      activity: newActivity
+    }
+
+    return fetch('/postActivity', {
+      method: "POST",
+      body: JSON.stringify(visitInfo)
+    }).then(
+      this.props.history.push('/end')
+    );
   };
 
   componentDidMount(){
@@ -78,7 +90,7 @@ export class QRCode extends Component {
       instascan()
       .then(getUserFromQRScan)
       .then((user)=>{
-        this.setState({username:user});
+        this.setState({username:user.fullname, hash:user.hash});
       })
     }
   }
@@ -105,8 +117,10 @@ export class QRCode extends Component {
           <h1>Welcome Back, {this.state.username}</h1>
 
             <PurposeButton session="Yoga" activity={this.state.activity} onClick={this.changeActivity}/> <br/>
-            <PurposeButton session="Dancing" activity={this.state.activity} onClick={this.changeActivity}/><br/>
-            <PurposeButton session="Baking" activity={this.state.activity} onClick={this.changeActivity}/>
+            <PurposeButton session="French Lessons" activity={this.state.activity} onClick={this.changeActivity}/><br/>
+            <PurposeButton session="Baking Lessons" activity={this.state.activity} onClick={this.changeActivity}/><br/>
+            <PurposeButton session="Self-Defence Class" activity={this.state.activity} onClick={this.changeActivity}/><br/>
+            <PurposeButton session="Flamenco Dancing" activity={this.state.activity} onClick={this.changeActivity}/>
 
 
         </section>

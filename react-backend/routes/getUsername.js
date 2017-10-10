@@ -28,15 +28,20 @@ router.post('/', (req, res, next) => {
           // console.log("getHash called", result)
           resolve(result);
         } else {
-          reject(err);
+          if(result.rowCount > 0) {
+            resolve(result)
+          } else {
+            reject(err)
+          }
         }
-      });
+      })
     })
-      .then(result => result.rows[0].fullname)
-      .then(fullname => res.send(fullname))
-      .catch((err) => {
-        res.send('there is no registered user');
-      });
+    .then(result => result.rows[0])
+    .then(fullname => res.send(JSON.stringify(fullname)))
+    .catch((err) => {
+      res.send(JSON.stringify({fullname: 'there is no registered user', hash: '0'})
+      )
+    })
   });
 });
 
