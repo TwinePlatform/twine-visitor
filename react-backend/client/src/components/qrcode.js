@@ -80,7 +80,9 @@ export class QRCode extends Component {
     return fetch('/postActivity', {
       method: "POST",
       body: JSON.stringify(visitInfo)
-    })
+    }).then(
+      this.props.history.push('/end')
+    );
   };
 
   componentDidMount(){
