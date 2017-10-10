@@ -80,6 +80,7 @@ class Main extends Component {
       //history.push - forces to change page
   }
 
+
   render() {
     return (
       <Switch>
