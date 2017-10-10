@@ -9,6 +9,7 @@ const index = require('./routes/index');
 const users = require('./routes/users');
 const qrgen = require('./routes/qrgenerator');
 const getUsername = require('./routes/getUsername');
+const checkUser = require('./routes/userchecker');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/qrgen', qrgen);
 app.use('/getUsername', getUsername);
+app.use('/checkUser', checkUser);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

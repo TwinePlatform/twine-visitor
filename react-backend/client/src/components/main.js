@@ -27,6 +27,28 @@ class Main extends Component {
     this.setState(newState);
   };
 
+  handleSwitch = (e) => {
+    e.preventDefault();
+
+    const checkData = {
+      formSender: this.state.fullname,
+      formEmail: this.state.email
+    }
+
+    fetch('/checkUser', {
+      method: "POST",
+      body: JSON.stringify(checkData)
+    })
+    .then((res)=>res.text())
+    .then((data)=> {
+      if (data==='false') {
+        this.props.history.push('/signup/step2');
+      } else {
+        document.getElementById('userexistserror').classList.remove('hidden');
+      }
+    });
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
 
@@ -55,11 +77,16 @@ class Main extends Component {
         <Route exact path="/signup">
           <section className="Main" >
             <h1>Please tell us about yourself</h1>
+            <div className="ErrorText hidden" id="userexistserror">This user already exists - please check your details. <br/>
+            If you have already signed up and have lost your login information, please speak to Reception. </div>
             <form className="Signup" onChange={this.handleChange}>
               <Input question="Your Full Name" option="fullname"/>
               <Input question="Your Email" option="email"/>
-              <Link to="/signup/step2">Next</Link>
+              {
+                //<Link to="/signup/step2">Next</Link>
+              }
             </form>
+            <button onClick={this.handleSwitch} className="Button"> Next </button>
           </section>
         </Route>
         <Route exact path="/signup/step2">
