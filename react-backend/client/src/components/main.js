@@ -44,15 +44,20 @@ class Main extends Component {
       if (data==='false') {
         this.props.history.push('/signup/step2');
       } else if(data === 'email') {
+        document.getElementById('userexistserror').classList.add('hidden');
         document.getElementById('nameerror').classList.add('hidden');
         document.getElementById('emailerror').classList.remove('hidden');
       } else if(data === 'name') {
+        document.getElementById('userexistserror').classList.add('hidden');
         document.getElementById('emailerror').classList.add('hidden');
         document.getElementById('nameerror').classList.remove('hidden');
       } else if(data === 'emailname') {
+        document.getElementById('userexistserror').classList.add('hidden');
         document.getElementById('emailerror').classList.remove('hidden');
         document.getElementById('nameerror').classList.remove('hidden');
-      } else {
+      } else if(data === 'true'){
+        document.getElementById('emailerror').classList.add('hidden');
+        document.getElementById('nameerror').classList.add('hidden');
         document.getElementById('userexistserror').classList.remove('hidden');
       }
     });
