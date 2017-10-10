@@ -1,3 +1,4 @@
+/*global Instascan*/
 import React, { Component } from 'react';
 import { PurposeButton } from './purposeButton';
 import { withRouter} from 'react-router-dom';
@@ -7,10 +8,9 @@ function getUserFromQRScan(content) {
   return fetch('/getUsername', {
     method: "POST",
     headers: {
-      'Accept': 'application/json, text/plain, */*',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({token:content})
+    body: JSON.stringify({user:content})
   })
   .then(res=>res.json())
   .catch((err) => {
