@@ -10,6 +10,7 @@ const users = require('./routes/users');
 const qrgen = require('./routes/qrgenerator');
 const getUsername = require('./routes/getUsername');
 const checkUser = require('./routes/userchecker');
+const postActivity = require('./routes/postActivity')
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use('/users', users);
 app.use('/qrgen', qrgen);
 app.use('/getUsername', getUsername);
 app.use('/checkUser', checkUser);
+app.use('/postActivity', postActivity)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

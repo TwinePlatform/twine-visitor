@@ -22,7 +22,6 @@ router.post('/', (req, res, next) => {
           console.log("I am an error from getHash ", err)
         } else {
           if(result.rowCount > 0) {
-            // console.log("getHash called", result)
             resolve(result)
           } else {
             reject(err)
@@ -30,10 +29,11 @@ router.post('/', (req, res, next) => {
         }
       })
     })
-    .then(result => result.rows[0].fullname)
-    .then(fullname => res.send(fullname))
+    .then(result => result.rows[0])
+    .then(fullname => res.send(JSON.stringify(fullname)))
     .catch((err) => {
-      res.send('there is no registered user');
+      res.send(JSON.stringify({fullname: 'there is no registered user', hash: '0'})
+      )
     })
   });
 });
