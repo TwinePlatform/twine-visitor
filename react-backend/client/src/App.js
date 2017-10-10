@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
-import {Route, Switch, Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Route, Switch, Link } from 'react-router-dom';
 
 import './App.css';
-import {Main} from './components/main';
-import {QRCode} from './components/qrcode';
-import {FormPrivacy} from './components/form_privacy';
-import {FormPrivacy2} from './components/form_privacy2';
-import {QRPrivacy} from './components/qrprivacy';
-import {QrError} from './components/qrerror';
-import {Thanks} from './components/thanks';
+import { Main } from './components/main';
+import { QRCode } from './components/qrcode';
+import { FormPrivacy } from './components/form_privacy';
+import { FormPrivacy2 } from './components/form_privacy2';
+import { QRPrivacy } from './components/qrprivacy';
+import { QrError } from './components/qrerror';
+import { Thanks } from './components/thanks';
 
 class App extends Component {
   render() {
@@ -18,9 +18,9 @@ class App extends Component {
           <Switch>
             <Route exact path="/">
               <div>
-                Where do you want to go?<br/>
-              <Link to="/signup">Sign up</Link><br/>
-                <Link to="/flow2">Login</Link><br/>
+                Where do you want to go?<br />
+                <Link to="/signup">Sign up</Link><br />
+                <Link to="/flow2">Login</Link><br />
               </div>
             </Route>
             <Route path="/signup" component={Main}/>
