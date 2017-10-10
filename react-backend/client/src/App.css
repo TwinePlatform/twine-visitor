@@ -1,11 +1,13 @@
 .Container {
-  background-color: indigo;
+  background-color: #6F38F2;
   height: 100vh;
   padding-top: 10%;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .Foreground {
   background-color: white;
+  color: #2A1756;
   height: 80%;
   width: 80%;
   margin: auto;
@@ -14,21 +16,23 @@
 .Main {
   display: inline-block;
   height: 100%;
-  width: 70%;
+  width: 65%;
 }
 
 .Privacy {
-  background-color: purple;
+  background-color: black;
+  background-image: url('/images/stonehenge.jpg');
+  background-size: cover;
   color: white;
   display: inline-block;
   height: 100%;
-  width: 30%;
+  width: 35%;
   float: right;
   overflow: scroll;
 }
 
 .Privacy__image {
-  width: 50%;
+  width: 40%;
   margin: auto;
   display: block;
 }
@@ -42,13 +46,31 @@
 .Privacy__text {
   display: inline-block;
   padding: 3%;
+  font-size: .8rem;
 }
 
 .Button {
   background-color: orange;
   color: white;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 1px 1px 0px rgba(51,51,51,0.5);
+  width: 60%;
+  margin-left: 20%;
+  padding: 1%;
 }
-
+.Form__Label {
+  width: 70%;
+  margin-left: 15%;
+}
+.Form__Input {
+  width: 70%;
+  margin-left: 15%;
+  background-color: rgba(87, 49, 179, 0.15);
+  border: none;
+  padding: 2%;
+}
 .Video {
   display: inline-block;
   width: 80%;
@@ -63,4 +85,8 @@
 
 .hidden {
   display: none;
+}
+
+h1 {
+  text-align: center;
 }
