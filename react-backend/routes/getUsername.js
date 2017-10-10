@@ -25,7 +25,7 @@ router.post('/', (req, res, next) => {
             // console.log("getHash called", result)
             resolve(result)
           } else {
-            // console.log("no result")
+            reject(err)
           }
         }
       })
@@ -33,7 +33,7 @@ router.post('/', (req, res, next) => {
     .then(result => result.rows[0].fullname)
     .then(fullname => res.send(fullname))
     .catch((err) => {
-      console.log("Look, I am a caught error ", err);
+      res.send('there is no registered user');
     })
   });
 });

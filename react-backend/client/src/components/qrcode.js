@@ -4,6 +4,8 @@ import { Input } from './input';
 import { Select } from './select';
 import { Button } from './button';
 import { PurposeButton } from './purposeButton';
+import {Route, Switch, Link} from 'react-router-dom';
+import { withRouter } from 'react-router-dom'
 
 
 function getUserFromQRScan(content) {
@@ -76,8 +78,14 @@ export class QRCode extends Component {
       instascan()
       .then(getUserFromQRScan)
       .then((user)=>{
-        this.setState({username:user})
+        this.setState({username:user});
       })
+    }
+  }
+
+    componentWillUpdate(nextProps, nextState) {
+    if (nextState.username ==='there is no registered user') {
+      this.props.history.push('/qrerror')
     }
   }
 
@@ -106,3 +114,5 @@ export class QRCode extends Component {
     }
   }
 }
+
+const MainWithRouter = withRouter(QRCode); //to get history and use history.push
