@@ -7,6 +7,7 @@ import {QRCode} from './components/qrcode';
 import {FormPrivacy} from './components/form_privacy';
 import {FormPrivacy2} from './components/form_privacy2';
 import {QRPrivacy} from './components/qrprivacy';
+import {QrError} from './components/qrerror';
 
 class App extends Component {
   render() {
@@ -23,12 +24,14 @@ class App extends Component {
             </Route>
             <Route path="/signup" component={Main}/>
             <Route path="/flow2" component={QRCode}/>
+            <Route path="/qrerror" component={QrError}/>
           </Switch>
           <Switch>
             <Route exact path="/" component={FormPrivacy}/>
             <Route exact path="/signup" component={FormPrivacy}/>
             <Route exact path="/signup/step2" component={FormPrivacy2}/>
             <Route path="/flow2" component={QRPrivacy}/>
+            <Route exact path="/qrerror" component={QRPrivacy}/>
           </Switch>
         </div>
       </div>
