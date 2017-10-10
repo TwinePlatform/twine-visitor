@@ -12,7 +12,8 @@
     "express": "~4.15.2",
     "jade": "~1.11.0",
     "morgan": "~1.8.1",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "~2.4.2",
+    "validator": "^9.0.0"
   },
   "devDependencies": {
     "env2": "^2.2.0",

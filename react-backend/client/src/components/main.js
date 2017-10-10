@@ -43,6 +43,15 @@ class Main extends Component {
     .then((data)=> {
       if (data==='false') {
         this.props.history.push('/signup/step2');
+      } else if(data === 'email') {
+        document.getElementById('nameerror').classList.add('hidden');
+        document.getElementById('emailerror').classList.remove('hidden');
+      } else if(data === 'name') {
+        document.getElementById('emailerror').classList.add('hidden');
+        document.getElementById('nameerror').classList.remove('hidden');
+      } else if(data === 'emailname') {
+        document.getElementById('emailerror').classList.remove('hidden');
+        document.getElementById('nameerror').classList.remove('hidden');
       } else {
         document.getElementById('userexistserror').classList.remove('hidden');
       }
@@ -80,6 +89,9 @@ class Main extends Component {
             <h1>Please tell us about yourself</h1>
             <div className="ErrorText hidden" id="userexistserror">This user already exists - please check your details. <br/>
             If you have already signed up and have lost your login information, please speak to Reception. </div>
+            <div className="ErrorText hidden" id="emailerror">This email is invalid - please make sure you have entered a valid email address.</div>
+            <div className="ErrorText hidden" id="nameerror">This name is invalid - please remove all special characters. <br/>
+            Your entered name must only contain alphebetical characters and spaces. </div>
             <form className="Signup" onChange={this.handleChange}>
               <Input question="Your Full Name" option="fullname"/>
               <Input question="Your Email" option="email"/>
