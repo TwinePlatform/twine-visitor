@@ -55,3 +55,12 @@
   object-fit: contain;
   margin: auto;
 }
+
+.ErrorText {
+  color: red;
+  padding: 2%;
+}
+
+.hidden {
+  display: none;
+}
