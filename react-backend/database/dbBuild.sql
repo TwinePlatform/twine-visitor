@@ -28,9 +28,9 @@ CREATE TABLE visits (
 
 
 INSERT INTO users (fullName, sex, yearOfBirth, email, hash) VALUES
-('James Inglis', 'Male', 1992, 'jinglis12@googlemail.com', '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955'),
-('Alina Solinas', 'Female', 1988, 'azayneeva@gmail.com', '9b57815dcc7568e942baed14c61f636034f138e5f43d72f26ec32a9069f9d7df'),
-('Rachael ORourke', 'Female', 1987, 'rorourke.rsp@gmail.com', 'bcec143de6d9e45c28a9a376f1728f8227e36586ad0a770cf1417b282f1d1afa');
+('jamesinglis', 'male', 1992, 'jinglis12@googlemail.com', '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955'),
+('alinasolinas', 'female', 1988, 'azayneeva@gmail.com', '9b57815dcc7568e942baed14c61f636034f138e5f43d72f26ec32a9069f9d7df'),
+('rachaelorourke', 'female', 1987, 'rorourke.rsp@gmail.com', 'bcec143de6d9e45c28a9a376f1728f8227e36586ad0a770cf1417b282f1d1afa');
 
 INSERT INTO activities (name, description) VALUES
 ('Yoga', 'Become Super flexible and dangerously supple, with Mina the Magical!'),
