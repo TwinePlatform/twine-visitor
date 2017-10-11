@@ -5,9 +5,9 @@ export class HomeVisitor extends Component {
   render() {
     return (
       <div>
-        Where do you want to go?<br />
-        <Link to="/visitor/signup">Sign up</Link><br />
-        <Link to="/visitor/login">Login</Link><br />
+        <h1>Where do you want to go?<br /></h1>
+        <Link to="/visitor/signup"><button className="Button">Sign up</button></Link><br />
+        <Link to="/visitor/login"><button className="Button">Login</button></Link><br />
       </div>
     );
   }

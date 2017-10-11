@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Input} from './input';
 import {Select} from './select';
 import {Button} from './button';
-import {Route, Switch} from 'react-router-dom';
+import {Route, Link, Switch} from 'react-router-dom';
 
 class Main extends Component {
 
@@ -99,9 +99,11 @@ class Main extends Component {
             <form className="Signup" onChange={this.handleChange}>
               <Input question="Your Full Name" option="fullname"/>
               <Input question="Your Email" option="email"/>
+
               {
                 //<Link to="/visitor/signup/step2">Next</Link>
               }
+
             </form>
             <button onClick={this.handleSwitch} className="Button"> Next </button>
           </section>
@@ -116,11 +118,16 @@ class Main extends Component {
             </form>
           </section>
         </Route>
+
         <Route path="/visitor/signup/thankyou">
-          <section className="Main" >
+          <section>
             <h1>Here is your QR code. Please print this page and use the code to sign in when you visit us.</h1>
             <h2>We have also emailed you a copy.</h2>
-            <img src={this.state.url} alt=""></img>
+            <img className= "QR__image" src={this.state.url} alt=""></img>
+              <Link to="/visitor/login">
+                <button className="Button">Next</button>
+              </Link>
+
           </section>
         </Route>
       </Switch>

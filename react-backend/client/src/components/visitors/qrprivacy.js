@@ -12,8 +12,8 @@ export class QRPrivacy extends Component {
           <br />
           <br />
         </p>
-        <h4>Why are we collecting this information?</h4>
-        <p>We are always trying to improve what we offer you. By signing in, you are helping us make our
+        <h3 className="Privacy__title">Why are we collecting this information?</h3>
+        <p className="Privacy__text">We are always trying to improve what we offer you. By signing in, you are helping us make our
 services better.</p>
       </aside>
     );

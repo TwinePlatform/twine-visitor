@@ -21,6 +21,7 @@ class App extends Component {
     return (
       <div className="Container">
         <div className="Foreground">
+
             <Route exact path="/" component={Home} />
 
             <Route exact path="/visitor" component={HomeVisitor} />
@@ -39,6 +40,7 @@ class App extends Component {
 
 
             <Route exact path="/admin" component={HomeAdmin} />
+
         </div>
       </div>
     );
