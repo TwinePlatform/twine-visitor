@@ -16,12 +16,14 @@ import { HomeVisitor } from './components/visitors/homeVisitor';
 
 import { HomeAdmin } from './components/admin/homeAdmin';
 
+import { NotFound } from './components/NotFound';
+
 class App extends Component {
   render() {
     return (
       <div className="Container">
         <div className="Foreground">
-
+            <Switch>
             <Route exact path="/" component={Home} />
 
             <Route exact path="/visitor" component={HomeVisitor} />
@@ -41,6 +43,8 @@ class App extends Component {
 
             <Route exact path="/admin" component={HomeAdmin} />
 
+            <Route component={NotFound} />
+            </Switch>
         </div>
       </div>
     );
