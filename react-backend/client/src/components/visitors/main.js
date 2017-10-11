@@ -100,10 +100,6 @@ class Main extends Component {
               <Input question="Your Full Name" option="fullname"/>
               <Input question="Your Email" option="email"/>
 
-              {
-                //<Link to="/visitor/signup/step2">Next</Link>
-              }
-
             </form>
             <button onClick={this.handleSwitch} className="Button"> Next </button>
           </section>
