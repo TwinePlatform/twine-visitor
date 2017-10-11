@@ -18,9 +18,9 @@ class App extends Component {
           <Switch>
             <Route exact path="/">
               <div>
-                Where do you want to go?<br />
-                <Link to="/signup">Sign up</Link><br />
-                <Link to="/flow2">Login</Link><br />
+                <h1>Where do you want to go?<br /></h1>
+                <Link to="/signup"><button className='Button'>Sign up</button></Link><br />
+                <Link to="/flow2"><button className='Button'>Login</button></Link><br />
               </div>
             </Route>
             <Route path="/signup" component={Main}/>
