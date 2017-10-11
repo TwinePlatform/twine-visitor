@@ -10,8 +10,8 @@ class Main extends Component {
     super(props)
 
     this.state = {
-     fullname: 'no name entered',
-     email: 'no@email.com',
+     fullname: '',
+     email: '',
      sex: 'male',
      year: 1980,
      hash: '',
@@ -43,21 +43,30 @@ class Main extends Component {
       if (data==='false') {
         this.props.history.push('/visitor/signup/step2');
       } else if(data === 'email') {
+        document.getElementById('noinputerror').classList.add('hidden');
         document.getElementById('userexistserror').classList.add('hidden');
         document.getElementById('nameerror').classList.add('hidden');
         document.getElementById('emailerror').classList.remove('hidden');
       } else if(data === 'name') {
+        document.getElementById('noinputerror').classList.add('hidden');
         document.getElementById('userexistserror').classList.add('hidden');
         document.getElementById('emailerror').classList.add('hidden');
         document.getElementById('nameerror').classList.remove('hidden');
       } else if(data === 'emailname') {
+        document.getElementById('noinputerror').classList.add('hidden');
         document.getElementById('userexistserror').classList.add('hidden');
         document.getElementById('emailerror').classList.remove('hidden');
         document.getElementById('nameerror').classList.remove('hidden');
       } else if(data === 'true'){
+        document.getElementById('noinputerror').classList.add('hidden');
         document.getElementById('emailerror').classList.add('hidden');
         document.getElementById('nameerror').classList.add('hidden');
         document.getElementById('userexistserror').classList.remove('hidden');
+      } else if(data === 'noinput'){
+        document.getElementById('emailerror').classList.add('hidden');
+        document.getElementById('nameerror').classList.add('hidden');
+        document.getElementById('userexistserror').classList.add('hidden');
+        document.getElementById('noinputerror').classList.remove('hidden');
       }
     });
   }
@@ -96,6 +105,8 @@ class Main extends Component {
             <div className="ErrorText hidden" id="emailerror">This email is invalid - please make sure you have entered a valid email address.</div>
             <div className="ErrorText hidden" id="nameerror">This name is invalid - please remove all special characters. <br/>
             Your entered name must only contain alphebetical characters and spaces. </div>
+            <div className="ErrorText hidden" id="noinputerror">Oops, you need to enter your information. <br/>
+            Please make sure you leave no input field blank before continuing. </div>
             <form className="Signup" onChange={this.handleChange}>
               <Input question="Your Full Name" option="fullname"/>
               <Input question="Your Email" option="email"/>

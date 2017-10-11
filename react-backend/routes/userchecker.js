@@ -15,8 +15,11 @@ router.post('/', (req, res, next) => {
   req.on('end', () => {
     const data = JSON.parse(body);
     const name = data.formSender.split(' ').join('');
-    if (validator.isEmail(data.formEmail) && validator.isAlpha(name, ['en-GB'])) {
-      getUserAlreadyExists(data.formSender, data.formEmail, (error, result) => {
+    console.log(data.formSender);
+    if (data.formSender.length === 0 || data.formEmail.length === 0) {
+      res.send('noinput');
+    } else if (validator.isEmail(data.formEmail) && validator.isAlpha(name, ['en-GB'])) {
+      getUserAlreadyExists(data.formSender.toLowerCase(), data.formEmail, (error, result) => {
         if (error) {
           console.log('error from getUserAlreadyExists ', error);
         } else {
