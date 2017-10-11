@@ -113,7 +113,7 @@ export class QRCode extends Component {
     } else {
       return (
         <section className="Main">
-          <h1>Welcome Back, {this.state.username}</h1>
+          <h1 className="capitalise" id="username">Welcome Back, {this.state.username}</h1>
 
             <PurposeButton session="Yoga" activity={this.state.activity} onClick={this.changeActivity}/> <br/>
             <PurposeButton session="French Lessons" activity={this.state.activity} onClick={this.changeActivity}/><br/>

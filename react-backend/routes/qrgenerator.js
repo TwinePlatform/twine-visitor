@@ -22,7 +22,8 @@ router.post('/', (req, res, next) => {
       details.formHash = hashString;
       console.log(details);
 
-      putUserData(details.formSender, details.formSex, details.formYear, details.formEmail, details.formHash, (err, res) => {
+      const name = details.formSender.toLowerCase();
+      putUserData(name, details.formSex, details.formYear, details.formEmail, details.formHash, (err, res) => {
         if (err) {
           console.log('I am postformdata error', err);
         } else {
