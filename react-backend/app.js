@@ -9,6 +9,7 @@ const index = require('./routes/index');
 const users = require('./routes/users');
 const qrgen = require('./routes/qrgenerator');
 const getUsername = require('./routes/getUsername');
+const getAllUsers = require('./routes/getAllUsers');
 const checkUser = require('./routes/userchecker');
 const postActivity = require('./routes/postActivity')
 
@@ -18,11 +19,12 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -30,6 +32,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/qrgen', qrgen);
 app.use('/getUsername', getUsername);
+app.use('/all-users', getAllUsers);
 app.use('/checkUser', checkUser);
 app.use('/postActivity', postActivity)
 
