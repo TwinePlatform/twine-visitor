@@ -89,7 +89,7 @@ export class QRCode extends Component {
       instascan()
       .then(getUserFromQRScan)
       .then((user)=>{
-        this.setState({username:user.fullname, hash:user.hash});
+        this.setState({username:user.fullname.fullname, hash:user.fullname.hash});
       })
     }
   }
