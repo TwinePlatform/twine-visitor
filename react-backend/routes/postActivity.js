@@ -12,18 +12,16 @@ router.post('/', (req, res, next) => {
   });
 
   req.on('end', () => {
-      let visitToAdd = JSON.parse(body);
-      console.log(visitToAdd);
-      putVisitsData(visitToAdd.hash, visitToAdd.activity, (error, result)=> {
-        if (error) {
-          console.log('I am an error from putVisitsData ', error)
-        } else {
-          res.send()
-        }
-      })
-
-  })
-
-})
+    const visitToAdd = JSON.parse(body);
+    console.log(visitToAdd);
+    putVisitsData(visitToAdd.hash, visitToAdd.activity, (error, result) => {
+      if (error) {
+        console.log('I am an error from putVisitsData ', error);
+      } else {
+        res.send();
+      }
+    });
+  });
+});
 
 module.exports = router;
