@@ -52,7 +52,8 @@ export class QRCode extends Component {
       login: 1,
       username: '',
       qrcode: '',
-      activity: 'not selected'
+      activity: 'not selected',
+      activities: []
     }
 
     this.handleVideo = this.handleVideo.bind(this);
@@ -92,6 +93,13 @@ export class QRCode extends Component {
         this.setState({username:user.fullname.fullname, hash:user.fullname.hash});
       })
     }
+
+    fetch('/activities')
+    .then((res)=>res.json())
+    .then((res)=>res.activities)
+    .then((activities)=> {
+      this.setState({activities})
+    })
   }
 
     componentWillUpdate(nextProps, nextState) {
@@ -115,11 +123,9 @@ export class QRCode extends Component {
         <section className="Main">
           <h1 className="capitalise" id="username">Welcome Back, {this.state.username}</h1>
 
-            <PurposeButton session="Yoga" activity={this.state.activity} onClick={this.changeActivity}/> <br/>
-            <PurposeButton session="French Lessons" activity={this.state.activity} onClick={this.changeActivity}/><br/>
-            <PurposeButton session="Baking Lessons" activity={this.state.activity} onClick={this.changeActivity}/><br/>
-            <PurposeButton session="Self-Defence Class" activity={this.state.activity} onClick={this.changeActivity}/><br/>
-            <PurposeButton session="Flamenco Dancing" activity={this.state.activity} onClick={this.changeActivity}/>
+            {this.state.activities.map(activity => (
+              <PurposeButton key={activity} session={activity.name} activity={this.state.activity} onClick={this.changeActivity} />
+            ))}
 
 
         </section>
