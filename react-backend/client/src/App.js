@@ -27,16 +27,16 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route exact path="/visitor" component={HomeVisitor} />
             <Route path="/visitor/signup" component={Main} />
-            <Route exact path="/visitor/login" component={QRCode}/>
-            <Route exact path="/visitor/qrerror" component={QrError}/>
-            <Route exact path="/visitor/end" component={Thanks}/>
+            <Route exact path="/visitor/login" component={QRCode} />
+            <Route exact path="/visitor/qrerror" component={QrError} />
+            <Route exact path="/visitor/end" component={Thanks} />
             <Route exact path="/admin" component={HomeAdmin} />
             <Route component={NotFound} />
           </Switch>
           <Route exact path="/visitor/signup" component={FormPrivacy} />
-          <Route exact path="/visitor/signup/step2" component={FormPrivacy2}/>
-          <Route exact path="/visitor/login" component={QRPrivacy}/>
-          <Route exact path="/visitor/qrerror" component={QRPrivacy}/>
+          <Route exact path="/visitor/signup/step2" component={FormPrivacy2} />
+          <Route exact path="/visitor/login" component={QRPrivacy} />
+          <Route exact path="/visitor/qrerror" component={QRPrivacy} />
         </div>
       </div>
     );
