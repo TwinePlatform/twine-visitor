@@ -1,0 +1,16 @@
+const dbConnection = require('../dbConnection');
+
+const getActivitiesQuery = 'SELECT name FROM activities';
+
+
+const activities = () => {
+  return new Promise((resolve, reject)=>{
+    dbConnection.query(getActivitiesQuery, (err, res) => {
+      if (err) { return reject(err); }
+      if (res.rowCount === 0) {return reject("No activities found")}
+      resolve(res.rows)
+    });
+  })
+};
+
+module.exports = activities;
