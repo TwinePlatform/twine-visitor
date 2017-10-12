@@ -1,5 +1,5 @@
 .Container {
-  background-color: #6F38F2;
+
   height: 100vh;
   padding-top: 10%;
   font-family: 'Quicksand', sans-serif;
@@ -8,7 +8,8 @@
 .Foreground {
   background-color: white;
   color: #2A1756;
-  height: 80%;
+  height:80%;
+  overflow: scroll;
   width: 80%;
   margin: auto;
   border-radius: 30px;
@@ -110,6 +111,7 @@
 .ErrorText {
   color: red;
   padding: 2%;
+  text-align: center;
 }
 
 .hidden {
