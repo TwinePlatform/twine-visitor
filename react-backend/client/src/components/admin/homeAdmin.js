@@ -24,19 +24,21 @@ export class HomeAdmin extends Component {
         <table>
           <thead>
             <tr>
-              <th>Full Name</th>
-              <th>Sex</th>
-              <th>Dob</th>
-              <th>Email</th>
+              <th>Visitor ID</th>
+              <th>Visitor Gender</th>
+              <th>Visitor Year of Birth</th>
+              <th>Activity</th>
+              <th>Date of Visit</th>
             </tr>
           </thead>
           <tbody>
             {this.state.users.map(user=>(
-              <tr key={user.email}>
-                <td>{user.fullname}</td>
+              <tr key={user.sex}>
+                <td>{user.id}</td>
                 <td>{user.sex}</td>
                 <td>{user.yearofbirth}</td>
-                <td>{user.email}</td>
+                <td>{user.name}</td>
+                <td>{user.date.slice(0, 10)} {user.date.slice(11, 16)}</td>
               </tr>
             ))}
           </tbody>

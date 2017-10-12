@@ -1,6 +1,6 @@
 const dbConnection = require('../dbConnection');
 
-const getAllUsersQuery = 'SELECT fullname, sex, yearofbirth, email FROM users';
+const getAllUsersQuery = 'Select users.id, users.sex, users.yearofbirth, activities.name, visits.date from users inner join visits on users.id=visits.usersid inner join activities on visits.activitiesid = activities.id';
 
 
 const getAllUsers = () => {

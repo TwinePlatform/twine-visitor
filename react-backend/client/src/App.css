@@ -114,6 +114,16 @@ h2 {
   text-align: center;
 }
 
+table {
+  text-align: center;
+  margin:auto;
+  padding-top: 5%;
+}
+
+th {
+  padding-bottom: 5%;
+}
+
 .QR__image {
   margin: auto;
   display: block;
