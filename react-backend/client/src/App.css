@@ -111,6 +111,7 @@
 .ErrorText {
   color: red;
   padding: 2%;
+  text-align: center;
 }
 
 .hidden {
