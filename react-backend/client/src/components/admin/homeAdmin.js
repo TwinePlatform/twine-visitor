@@ -21,6 +21,7 @@ export class HomeAdmin extends Component {
   render() {
     return (
       <div>
+        <h2>Visitor Data</h2>
         <table>
           <thead>
             <tr>
