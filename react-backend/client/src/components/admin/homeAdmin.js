@@ -43,6 +43,7 @@ export class HomeAdmin extends Component {
             ))}
           </tbody>
         </table>
+        <Link to="/"><button className="ButtonBack">Back to the main page</button></Link><br />
       </div>
     );
   }
