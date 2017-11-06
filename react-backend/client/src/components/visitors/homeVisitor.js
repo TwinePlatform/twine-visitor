@@ -9,6 +9,7 @@ export class HomeVisitor extends Component {
         <Link to="/visitor/signup"><button className="Button">Sign up</button></Link><br />
         <Link to="/visitor/login"><button className="Button">Login</button></Link><br />
         <Link to="/"><button className="ButtonBack">Back to the main page</button></Link><br />
+        <a href="http://www.powertochange.org.uk/data-protection-funding-applications/" className="Policy">Data Protection Policy</a>
       </div>
     );
   }
