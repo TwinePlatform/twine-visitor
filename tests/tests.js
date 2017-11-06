@@ -1,4 +1,4 @@
-const supertest = require('supertest');
+// const supertest = require('supertest');
 const test = require('tape');
 
 test('tape is working', (t) => {
