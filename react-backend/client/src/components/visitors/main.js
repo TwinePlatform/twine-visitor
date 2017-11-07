@@ -131,7 +131,7 @@ class Main extends Component {
             <h1>Here is your QR code. Please print this page and use the code to sign in when you visit us.</h1>
             <h2>We have also emailed you a copy.</h2>
             <img className= "QR__image" src={this.state.url} alt=""></img>
-              <Link to="/visitor/login">
+              <Link to="/visitor">
                 <button className="Button">Next</button>
               </Link>
 
