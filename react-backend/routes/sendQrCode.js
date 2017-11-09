@@ -5,7 +5,6 @@ const client = new postmark.Client("89eaa2ad-8f62-474d-9a13-7782eecdd603");
 
 const sendQrCode = function(email, name, hash) {
   if (!email) return console.log("Missing the person to deliver this email to");
-  console.log("typeof hash: ", typeof hash);
   const newhash = QrCodeMaker(hash)
     .then((url) => {
       const qrcontent = url.slice(22);
@@ -27,17 +26,11 @@ const sendQrCode = function(email, name, hash) {
           console.error("Unable to send via postmark: " + error.message);
           return;
         }
-        console.log(url.slice(22));
         console.info("Sent to postmark for delivery");
       })
     })
 
 }
-
-// sendEmail ('azayneeva@gmail.com', {
-//   name:'Alina',
-//   qr_code: 123456
-// })
 
 module.exports = {
   sendQrCode
