@@ -54,20 +54,19 @@ function instascan() {
         reject('ADD LISTENER FAILED');
       }
     });
-    Instascan.Camera
-      .getCameras()
+    Instascan.Camera.getCameras()
       .then(cameras => {
         if (cameras.length > 0) {
           scanner.start(cameras[0]);
         } else {
           console.error('No cameras found.');
-          console.log('ERROR HAPPEINGN AT getCameras');
+          console.log('ERROR HAPPENING AT getCameras');
 
-          throw new Error('ERROR HAPPEINGN AT getCameras');
+          throw new Error('ERROR HAPPENING AT getCameras');
         }
       })
       .catch(err => {
-        console.log('ERROR HAPPEINGN AT getCameras');
+        console.log('ERROR HAPPENING AT getCameras');
         console.log(err);
         throw err;
       });
