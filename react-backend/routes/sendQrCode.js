@@ -1,53 +1,56 @@
-const postmark = require("postmark");
+const postmark = require('postmark');
+require('env2')('./config.env');
+const QrCodeMaker = require('../functions/qrcodemaker');
 
-const QrCodeMaker = require("../functions/qrcodemaker");
-const client = new postmark.Client("89eaa2ad-8f62-474d-9a13-7782eecdd603");
+const client = new postmark.Client(process.env.POSTMARK_SERVER);
 
-const sendQrCode = function(email, name, hash) {
-  if (!email) return console.log("Missing the person to deliver this email to");
+if (!process.env.POSTMARK_SERVER) throw new Error('Environment variable POSTMARK_SERVER must be set');
+
+const sendQrCode = function (email, name, hash) {
+  if (!email) return console.log('Missing the person to deliver this email to');
   const newhash = QrCodeMaker(hash)
     .then((url) => {
       const qrcontent = url.slice(22);
       const messages = [
         {
-          "From": "dev@milfordcapitalpartners.com",
-          "TemplateId": 3843402,
-          "To": email,
-          "TemplateModel": {
-            "name": name
+          From: 'dev@milfordcapitalpartners.com',
+          TemplateId: 3843402,
+          To: email,
+          TemplateModel: {
+            name,
           },
-          "Attachments": [{
-            "Name": "qrcode.png",
-            "Content": qrcontent,
-            "ContentType": "image/png"
-          }]
+          Attachments: [{
+            Name: 'qrcode.png',
+            Content: qrcontent,
+            ContentType: 'image/png',
+          }],
         },
         {
-          "From": "dev@milfordcapitalpartners.com",
-          "TemplateId": 3853062,
-          "To": "dev@milfordcapitalpartners.com",
-          "TemplateModel": {
-            "email": email,
-            "name": name
+          From: 'dev@milfordcapitalpartners.com',
+          TemplateId: 3853062,
+          To: 'dev@milfordcapitalpartners.com',
+          TemplateModel: {
+            email,
+            name,
           },
-          "Attachments": [{
-            "Name": "qrcode.png",
-            "Content": qrcontent,
-            "ContentType": "image/png"
-          }]
-        }
+          Attachments: [{
+            Name: 'qrcode.png',
+            Content: qrcontent,
+            ContentType: 'image/png',
+          }],
+        },
       ];
-      client.sendEmailBatch(messages, function(error, result) {
+      client.sendEmailBatch(messages, (error, result) => {
         if (error) {
-          console.error("Unable to send via postmark: " + error.message);
+          console.error(`Unable to send via postmark: ${error.message}`);
           return;
         }
-        console.info("Sent to postmark for delivery");
-      })
-    })
-
-}
+        console.info('Sent to postmark for delivery');
+      },
+      );
+    });
+};
 
 module.exports = {
-  sendQrCode
-}
+  sendQrCode,
+};
