@@ -12,7 +12,7 @@ const getUsername = require('./routes/getUsername');
 const getAllUsers = require('./routes/getAllUsers');
 const checkUser = require('./routes/userchecker');
 const postActivity = require('./routes/postActivity');
-const activities = require('./routes/activities')
+const activities = require('./routes/activities');
 
 const app = express();
 
@@ -36,7 +36,7 @@ app.use('/getUsername', getUsername);
 app.use('/all-users', getAllUsers);
 app.use('/checkUser', checkUser);
 app.use('/postActivity', postActivity);
-app.use('/activities', activities)
+app.use('/activities', activities);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

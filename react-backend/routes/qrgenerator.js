@@ -5,6 +5,7 @@ const router = express.Router();
 const hash = require('../functions/hash');
 const qrmake = require('../functions/qrcodemaker');
 const putUserData = require('../database/queries/putFormData');
+const {sendQrCode} = require('./sendQrCode');
 
 let details = {};
 let hashString = '';
@@ -23,10 +24,12 @@ router.post('/', (req, res, next) => {
       console.log(details);
 
       const name = details.formSender.toLowerCase();
+
       putUserData(name, details.formSex, details.formYear, details.formEmail, details.formHash, (err, res) => {
         if (err) {
           console.log('I am postformdata error', err);
         } else {
+          sendQrCode(details.formEmail, details.formSender, details.formHash)
           console.log('GREAT SUCCESS');
         }
       });
