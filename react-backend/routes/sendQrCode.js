@@ -13,7 +13,7 @@ const sendQrCode = function (email, name, hash) {
       const qrcontent = url.slice(22);
       const messages = [
         {
-          From: 'dev@milfordcapitalpartners.com',
+          From: 'sonjaw@powertochange.org.uk',
           TemplateId: 3843402,
           To: email,
           TemplateModel: {
@@ -26,7 +26,7 @@ const sendQrCode = function (email, name, hash) {
           }],
         },
         {
-          From: 'dev@milfordcapitalpartners.com',
+          From: 'sonjaw@powertochange.org.uk',
           TemplateId: 3853062,
           To: 'dev@milfordcapitalpartners.com',
           TemplateModel: {

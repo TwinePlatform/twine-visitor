@@ -44,13 +44,9 @@ function instascan() {
         if (cameras.length > 0) {
           scanner.start(cameras[0]);
         } else {
-          throw new Error('ERROR HAPPENING AT getCameras');
+          reject('ERROR HAPPENING AT getCameras');
         }
       })
-      .catch(err => {
-        console.log('ERROR HAPPENING AT getCameras: ', err);
-        throw err;
-      });
   });
 }
 
@@ -94,6 +90,8 @@ export class QRCode extends Component {
       .then(this.props.history.push('/visitor/end'))
       .catch(error => {
         console.log('ERROR HAPPENING AT FETCH /postActivity', error);
+        this.props.history.push('/visitor/login');
+        throw error;
       });
   };
 
@@ -106,12 +104,13 @@ export class QRCode extends Component {
         })
         .then(user => {
           this.setState({
-            username: user.fullname.fullname,
-            hash: user.fullname.hash,
+            username: user.fullname,
+            hash: user.hash,
           });
         })
         .catch(error => {
           console.log('ERROR HAPPENING AT INSTASCAN', error);
+          this.props.history.push('/visitor/qrerror');
         });
     }
 
@@ -123,6 +122,7 @@ export class QRCode extends Component {
       })
       .catch(error => {
         console.log('ERROR HAPPENING AT FETCH', error);
+        this.props.history.push('/visitor/qrerror')
       });
   }
 
