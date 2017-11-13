@@ -90,7 +90,10 @@ class Main extends Component {
       .then((res) => res.text() )
       .then((data) => { this.setState({url: data}) })
       .then(()=>this.props.history.push('/visitor/signup/thankyou'))
-      //history.push - forces to change page
+      .catch(error => {
+        console.log('ERROR HAPPENING AT FETCH /qrgen', error);
+        this.props.history.push('/visitor/login')
+      })
   }
 
 
