@@ -90,7 +90,10 @@ class Main extends Component {
       .then((res) => res.text() )
       .then((data) => { this.setState({url: data}) })
       .then(()=>this.props.history.push('/visitor/signup/thankyou'))
-      //history.push - forces to change page
+      .catch(error => {
+        console.log('ERROR HAPPENING AT FETCH /qrgen', error);
+        this.props.history.push('/visitor/login')
+      })
   }
 
 
@@ -132,8 +135,9 @@ class Main extends Component {
             <h2>We have also emailed you a copy.</h2>
             <img className= "QR__image" src={this.state.url} alt=""></img>
               <Link to="/visitor">
-                <button className="Button">Next</button>
+                <button className="Button hidden-printer">Next</button>
               </Link>
+              <button className="Button hidden-printer" onClick = {window.print}>Print</button>
 
           </section>
         </Route>

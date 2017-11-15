@@ -1,48 +1,57 @@
 /*global Instascan*/
 import React, { Component } from 'react';
 import { PurposeButton } from './purposeButton';
-import { withRouter} from 'react-router-dom';
-
+import { withRouter } from 'react-router-dom';
 
 function getUserFromQRScan(content) {
   return fetch('/getUsername', {
-    method: "POST",
+    method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify({user:content})
+    body: JSON.stringify({ user: content }),
   })
-  .then(res=>res.json())
-  .catch((err) => {
-    console.log("error from getUserFromQRScan:  ", err);
-    throw err
-  })
+    .then(res => res.json())
+    .catch(err => {
+      console.log('error from getUserFromQRScan:  ', err);
+      throw err;
+    });
 }
 
 function instascan() {
-  return new Promise((resolve, reject)=>{
+  return new Promise((resolve, reject) => {
     let scanner = new Instascan.Scanner({
       video: document.getElementById('preview'),
-      scanPeriod: 5
+      scanPeriod: 5,
     });
     scanner.addListener('scan', function(content) {
       if (document.getElementById('preview')) {
-        document.getElementById('preview').pause();
-      }
-      resolve(content)
-    });
-    Instascan.Camera.getCameras().then((cameras) => {
-      if (cameras.length > 0) {
-        scanner.start(cameras[0]);
+        scanner
+          .stop()
+          .then(res => {
+            resolve(content);
+          })
+          .catch(error => {
+            reject('failure stopping scanner');
+          });
       } else {
-        console.error('No cameras found.');
+        document.getElementById('preview').play();
+        reject('ADD LISTENER FAILED');
       }
-    }).catch((err) => {
-      console.error(err);
     });
-  })
+    Instascan.Camera.getCameras()
+      .then(cameras => {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          reject('ERROR HAPPENING AT getCameras');
+        }
+      })
+      .catch(err => {
+        reject(err)
+      })
+  });
 }
-
 
 export class QRCode extends Component {
   constructor() {
@@ -53,58 +62,76 @@ export class QRCode extends Component {
       username: '',
       qrcode: '',
       activity: 'not selected',
-      activities: []
-    }
+      activities: [],
+    };
 
     this.handleVideo = this.handleVideo.bind(this);
 
     this.changeActivity = this.changeActivity.bind(this);
   }
 
-  handleVideo = (e) => {
+  handleVideo = e => {
     let newState = {};
-    newState['login'] = this.state.login+1;
+    newState['login'] = this.state.login + 1;
     this.setState(newState);
   };
 
-  changeActivity = (newActivity) => {
+  changeActivity = newActivity => {
     this.setState({
-      activity: newActivity
+      activity: newActivity,
     });
 
     const visitInfo = {
       hash: this.state.hash,
-      activity: newActivity
-    }
+      activity: newActivity,
+    };
 
     return fetch('/postActivity', {
-      method: "POST",
-      body: JSON.stringify(visitInfo)
-    }).then(
-      this.props.history.push('/visitor/end')
-    );
+      method: 'POST',
+      body: JSON.stringify(visitInfo),
+    })
+      .then(this.props.history.push('/visitor/end'))
+      .catch(error => {
+        console.log('ERROR HAPPENING AT FETCH /postActivity', error);
+        this.props.history.push('/visitor/login');
+        throw error;
+      });
   };
 
-  componentDidMount(){
-    if(this.state.login===1){
+  componentDidMount() {
+    if (this.state.login === 1) {
       instascan()
-      .then(getUserFromQRScan)
-      .then((user)=>{
-        this.setState({username:user.fullname.fullname, hash:user.fullname.hash});
-      })
+        .then(content => {
+          this.handleVideo();
+          return getUserFromQRScan(content);
+        })
+        .then(user => {
+          this.setState({
+            username: user.fullname,
+            hash: user.hash,
+          });
+        })
+        .catch(error => {
+          console.log('ERROR HAPPENING AT INSTASCAN', error);
+          this.props.history.push('/visitor/qrerror');
+        });
     }
 
     fetch('/activities')
-    .then((res)=>res.json())
-    .then((res)=>res.activities)
-    .then((activities)=> {
-      this.setState({activities})
-    })
+      .then(res => res.json())
+      .then(res => res.activities)
+      .then(activities => {
+        this.setState({ activities });
+      })
+      .catch(error => {
+        console.log('ERROR HAPPENING AT FETCH', error);
+        this.props.history.push('/visitor/qrerror')
+      });
   }
 
-    componentWillUpdate(nextProps, nextState) {
-    if (nextState.username ==='there is no registered user') {
-      this.props.history.push('/visitor/qrerror')
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.username === 'there is no registered user') {
+      this.props.history.push('/visitor/qrerror');
     }
   }
 
@@ -114,22 +141,27 @@ export class QRCode extends Component {
         <section className="Main">
           <h1>WELCOME BACK!</h1>
           <div id="instascan">
-            <video id="preview" className="Video active" onPause={this.handleVideo}></video>
+            <video id="preview" className="Video active" />
           </div>
         </section>
-      )
+      );
     } else {
       return (
         <section className="Main">
-          <h1 className="capitalise" id="username">Welcome Back, {this.state.username}</h1>
+          <h1 className="capitalise" id="username">
+            Welcome Back, {this.state.username}
+          </h1>
 
-            {this.state.activities.map(activity => (
-              <PurposeButton key={activity} session={activity.name} activity={this.state.activity} onClick={this.changeActivity} />
-            ))}
-
-
+          {this.state.activities.map(activity => (
+            <PurposeButton
+              key={activity.name}
+              session={activity.name}
+              activity={this.state.activity}
+              onClick={this.changeActivity}
+            />
+          ))}
         </section>
-      )
+      );
     }
   }
 }
