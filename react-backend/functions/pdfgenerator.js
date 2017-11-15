@@ -13,7 +13,7 @@ module.exports = (QRcodeBase64Url)=>{
   const docDefinition = {
     content: [
       {
-        image: __dirname + '/../public/qrcodelogo.png'
+        image: __dirname + '/../src/qrcodelogo.png'
       },
       {
         text: 'Please use the QR code below to visit us',

@@ -155,9 +155,51 @@ th {
   text-transform: capitalize;
 }
 
+.dashed {
+  border: 1px dashed #ccc;
+}
+
+.visible-printer {
+  display: none;
+}
 
 @media print {
   .hidden-printer {
     display: none;
+  }
+
+  .visible-printer {
+    display:block;
+  }
+
+  body {
+    background: white;
+  }
+
+  .Foreground {
+    box-shadow:none;
+    height: auto;
+    width: auto;
+    overflow: visible;
+  }
+
+  .qr-code-to-print {
+    text-align: center;
+    color: #333;
+  }
+
+  .qr-code-to-print img {
+    display: inline-block;
+    margin: 0 20px;
+    vertical-align: middle;
+  }
+
+  .qr-code-to-print .dashed {
+    display: inline-block;
+    padding:10px 20px;
+  }
+
+  .qr-code-to-print h5{
+    margin:8px 0 12px 0;
   }
 }
