@@ -47,6 +47,9 @@ function instascan() {
           reject('ERROR HAPPENING AT getCameras');
         }
       })
+      .catch(err => {
+        reject(err)
+      })
   });
 }
 

@@ -154,3 +154,10 @@ th {
 .capitalise {
   text-transform: capitalize;
 }
+
+
+@media print {
+  .hidden-printer {
+    display: none;
+  }
+}

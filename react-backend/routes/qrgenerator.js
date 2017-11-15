@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const hash = require('../functions/hash');
-const qrmake = require('../functions/qrcodemaker');
+const qrcodemaker = require('../functions/qrcodemaker');
 const putUserData = require('../database/queries/putFormData');
 const {sendQrCode} = require('./sendQrCode');
 
@@ -11,7 +11,7 @@ let details = {};
 let hashString = '';
 
 router.post('/', (req, res, next) => {
-
+  //TODO: use res.body!
   let body = '';
   req.on('data', (chunk) => {
     body += chunk;
@@ -33,7 +33,7 @@ router.post('/', (req, res, next) => {
       });
       resolve(hashString);
     }))
-      .then(qrmake)
+      .then(qrcodemaker)
       .then(result => res.send(result))
       .catch((err) => {
         console.log(err);

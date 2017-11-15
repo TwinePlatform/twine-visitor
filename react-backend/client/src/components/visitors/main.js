@@ -135,8 +135,9 @@ class Main extends Component {
             <h2>We have also emailed you a copy.</h2>
             <img className= "QR__image" src={this.state.url} alt=""></img>
               <Link to="/visitor">
-                <button className="Button">Next</button>
+                <button className="Button hidden-printer">Next</button>
               </Link>
+              <button className="Button hidden-printer" onClick = {window.print}>Print</button>
 
           </section>
         </Route>
