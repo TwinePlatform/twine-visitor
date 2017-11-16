@@ -14,7 +14,7 @@ module.exports = (email, name, pdf) => {
       name,
     },
     Attachments: [{
-      Name: 'qrcode.pdf',
+      Name: `${name}-QrCode.pdf`,
       Content: pdf,
       ContentType: 'application/octet-stream',
     }],
