@@ -4,10 +4,9 @@ const router = express.Router();
 
 const putVisitsData = require('../database/queries/putVisitsData');
 
-
 router.post('/', (req, res, next) => {
   let body = '';
-  req.on('data', (chunk) => {
+  req.on('data', chunk => {
     body += chunk;
   });
 

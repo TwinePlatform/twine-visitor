@@ -2,13 +2,12 @@ const validator = require('validator');
 
 const express = require('express');
 
-
 const router = express.Router();
 const getUserAlreadyExists = require('../database/queries/getUserAlreadyExists');
 
 router.post('/', (req, res, next) => {
   let body = '';
-  req.on('data', (chunk) => {
+  req.on('data', chunk => {
     body += chunk;
   });
 
@@ -26,10 +25,10 @@ router.post('/', (req, res, next) => {
           res.send(result.rows[0].exists);
         }
       });
-    } else if (!(validator.isEmail(data.formEmail)) && validator.isAlpha(name, ['en-GB'])) {
+    } else if (!validator.isEmail(data.formEmail) && validator.isAlpha(name, ['en-GB'])) {
       console.log('This isnt a correct email!?');
       res.send('email');
-    } else if (validator.isEmail(data.formEmail) && !(validator.isAlpha(name, ['en-GB']))) {
+    } else if (validator.isEmail(data.formEmail) && !validator.isAlpha(name, ['en-GB'])) {
       console.log('This isnt a correct name!?');
       res.send('name');
     } else {

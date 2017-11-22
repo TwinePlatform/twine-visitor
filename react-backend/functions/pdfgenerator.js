@@ -1,6 +1,6 @@
 const PdfPrinter = require('pdfmake');
 
-module.exports = (QRcodeBase64Url) => {
+module.exports = QRcodeBase64Url => {
   const fontDescriptors = {
     Roboto: {
       normal: `${__dirname}/../public/Roboto/Roboto-Regular.ttf`,
@@ -14,7 +14,6 @@ module.exports = (QRcodeBase64Url) => {
     info: {
       title: 'Visitor QRCode',
       author: 'Power To Change',
-
     },
 
     pageSize: 'C8',
@@ -55,7 +54,7 @@ module.exports = (QRcodeBase64Url) => {
     const chunks = [];
     let result;
 
-    doc.on('data', (chunk) => {
+    doc.on('data', chunk => {
       chunks.push(chunk);
     });
     doc.on('end', () => {
