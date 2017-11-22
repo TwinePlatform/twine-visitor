@@ -13,10 +13,20 @@ export class Select extends Component {
 
   render() {
     return (
-      <label className="Form__Label">{this.props.question}
+      <label className="Form__Label">
+        {this.props.question}
         <br />
-        <select name={this.props.option} onChange={this.handleUserInput} value={this.state.userInput} className="Select">
-          {this.props.choices.map(choice => <option key={choice} value={choice}>{choice}</option>)}
+        <select
+          name={this.props.option}
+          onChange={this.handleUserInput}
+          value={this.state.userInput}
+          className="Select"
+        >
+          {this.props.choices.map(choice => (
+            <option key={choice} value={choice}>
+              {choice}
+            </option>
+          ))}
         </select>
         <br />
         <br />

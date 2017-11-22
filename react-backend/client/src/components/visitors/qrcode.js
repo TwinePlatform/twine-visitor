@@ -48,8 +48,8 @@ function instascan() {
         }
       })
       .catch(err => {
-        reject(err)
-      })
+        reject(err);
+      });
   });
 }
 
@@ -125,7 +125,7 @@ export class QRCode extends Component {
       })
       .catch(error => {
         console.log('ERROR HAPPENING AT FETCH', error);
-        this.props.history.push('/visitor/qrerror')
+        this.props.history.push('/visitor/qrerror');
       });
   }
 

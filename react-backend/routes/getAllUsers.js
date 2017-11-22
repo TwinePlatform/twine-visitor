@@ -6,11 +6,10 @@ const getAllUsers = require('../database/queries/getAllUsers');
 
 router.get('/', (req, res) => {
   getAllUsers()
-    .then(users => res.send({users}))
-    .catch((err) => {
+    .then(users => res.send({ users }))
+    .catch(err => {
       console.log(err);
-    })
+    });
 });
-
 
 module.exports = router;
