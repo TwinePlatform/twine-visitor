@@ -15,7 +15,7 @@ router.post('/', (req, res, next) => {
     const data = JSON.parse(body);
     const org_name = data.formName.split(' ').join('');
     console.log(data.formName);
-    if (data.formName.length === 0 || data.formEmail.length === 0) {
+    if (data.formName.length === 0 || data.formEmail.length === 0 || data.formGenre.length === 0) {
       res.send('noinput');
     } else if (validator.isEmail(data.formEmail) && validator.isAlpha(org_name, ['en-GB'])) {
       getCBAlreadyExists(data.formName.toLowerCase(), data.formEmail, (error, result) => {
