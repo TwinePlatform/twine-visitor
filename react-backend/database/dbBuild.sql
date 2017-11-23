@@ -3,6 +3,7 @@ BEGIN;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS visits CASCADE;
 DROP TABLE IF EXISTS activities CASCADE;
+DROP TABLE IF EXISTS cbusiness CASCADE;
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -13,18 +14,30 @@ CREATE TABLE users (
   hash VARCHAR(64) NOT NULL
 );
 
+CREATE TABLE cbusiness (
+  id SERIAL PRIMARY KEY,
+  org_name VARCHAR(100) NOT NULL,
+  genre VARCHAR(50) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  hash_pwd VARCHAR(64) NOT NULL
+);
+
 CREATE TABLE activities (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
-  description TEXT NOT NULL
+  description TEXT NOT NULL,
+  cb_id INTEGER REFERENCES cbusiness
 );
 
 CREATE TABLE visits (
   id SERIAL PRIMARY KEY,
   usersId INTEGER REFERENCES users,
   activitiesId INTEGER REFERENCES activities,
+  cb_id INTEGER REFERENCES cbusiness,
   date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+
 
 
 INSERT INTO users (fullName, sex, yearOfBirth, email, hash) VALUES
@@ -46,6 +59,9 @@ INSERT INTO visits (usersId, activitiesId, date) VALUES
 (1, 3, '2017-07-02 09:57:01'),
 (2, 4, '2017-04-29 20:03:17'),
 (3, 5, '2017-06-22 17:45:00');
+
+INSERT INTO cbusiness (org_name, genre, email, hash_pwd) VALUES
+('Dog & Fish', 'pub', 'dev@milfordcapitalpartners.com', '9345a35a6fdf174dff7219282a3ae4879790dbb785c70f6fff91e32fafd66eab');
 
 
 COMMIT;
