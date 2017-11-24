@@ -6,6 +6,7 @@ import './App.css';
 import { Home } from './components/home';
 
 import { CBsignup } from './components/authentication/signupcb';
+import { CBlogin } from './components/authentication/logincb';
 
 import { Main } from './components/visitors/main';
 import { QRCode } from './components/visitors/qrcode';
@@ -28,6 +29,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/signupcb" component={CBsignup} />
+            <Route exact path="/logincb" component={CBlogin} />
             <Route exact path="/visitor" component={HomeVisitor} />
             <Route path="/visitor/signup" component={Main} />
             <Route exact path="/visitor/login" component={QRCode} />
