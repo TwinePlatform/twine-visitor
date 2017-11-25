@@ -33,6 +33,8 @@ class CBsignup extends Component {
       formName: this.state.org_name,
       formEmail: this.state.email,
       formGenre: this.state.genre,
+      formPswd: this.state.password,
+      formPswdConfirm: this.state.confirm_password,
     };
 
     fetch('/checkCB', {
@@ -64,7 +66,19 @@ class CBsignup extends Component {
             field blank before continuing.
           </span>
         );
-
+        const NO_PASSWORD_MATCH = (
+          <span>
+            Oops, your passwords do not match. <br />Please make sure you have typed the same
+            password in both fields.
+          </span>
+        );
+        const PASSWORD_WEAK = (
+          <span>
+            Your password is insecure, make sure it fulfills all of the requirements. <br />It must
+            contain at least one lowercase, one uppercase letter, one number and one special
+            character and must be at least 8 characters long.
+          </span>
+        );
         if (data === 'false') {
           const CBData = {
             formName: this.state.org_name,
@@ -80,6 +94,7 @@ class CBsignup extends Component {
           });
           this.props.history.push('/logincb');
         } else if (data === 'email') {
+          console.log(data);
           this.setError([EMAIL_ERROR]);
         } else if (data === 'name') {
           this.setError([NAME_ERROR]);
@@ -89,6 +104,10 @@ class CBsignup extends Component {
           this.setError([USER_EXISTS_ERROR]);
         } else if (data === 'noinput') {
           this.setError([NO_INPUT_ERROR]);
+        } else if (data === 'pswdmatch') {
+          this.setError([NO_PASSWORD_MATCH]);
+        } else if (data === 'pswdweak') {
+          this.setError([PASSWORD_WEAK]);
         }
       });
   };
@@ -126,8 +145,8 @@ class CBsignup extends Component {
               'Waste reduction, reuse or recycling',
             ]}
           />
-          <Input question="Enter Password" option="password" />
-          <Input question="Confirm Password" option="confirm_password" />
+          <Input type="password" question="Enter Password" option="password" />
+          <Input type="password" question="Confirm Password" option="confirm_password" />
           <Button />
         </form>
       </section>
