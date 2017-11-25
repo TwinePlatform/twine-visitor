@@ -15,7 +15,7 @@ router.post('/', (req, res, next) => {
 
   req.on('end', () => {
     const data = JSON.parse(body);
-    if (data.formEmail.length === 0 || data.formPswd === undefined) {
+    if (data.formEmail.length === 0 || data.formPswd.length === 0) {
       res.send('noinput');
     } else if (validator.isEmail(data.formEmail)) {
       data.formPswd = hashCB(data.formPswd);
@@ -29,9 +29,6 @@ router.post('/', (req, res, next) => {
     } else if (!validator.isEmail(data.formEmail)) {
       console.log('This isnt a correct email!?');
       res.send('email');
-    } else if (validator.isEmail(data.formEmail) && !validator.isAlpha(org_name, ['en-GB'])) {
-      console.log('This isnt a correct name!?');
-      res.send('name');
     }
   });
 });
