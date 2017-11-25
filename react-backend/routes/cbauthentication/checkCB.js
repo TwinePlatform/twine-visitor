@@ -29,20 +29,21 @@ router.post('/', (req, res, next) => {
       getCBAlreadyExists(data.formName.toLowerCase(), data.formEmail, (error, result) => {
         if (error) {
           console.log('error from getCBAlreadyExists ', error);
-        } else if (result.rows[0].exists === 'true') {
+        } else if (result.rows[0].exists === true) {
           res.send(result.rows[0].exists);
         } else if (
-          result.rows[0].exists === 'false' &&
+          result.rows[0].exists === false &&
           strongPassword.test(data.formPswd) === false
         ) {
           console.log('Password is weak');
           res.send('pswdweak');
-        } else if (result.rows[0].exists === 'false' && data.formPswd !== data.formPswdConfirm) {
+        } else if (result.rows[0].exists === false && data.formPswd !== data.formPswdConfirm) {
           console.log("Passwords don't match");
           res.send('pswdmatch');
         } else {
           res.send(result.rows[0].exists);
         }
+        console.log(typeof result.rows[0].exists, result.rows[0].exists);
       });
     } else if (!validator.isEmail(data.formEmail) && validator.isAlpha(org_name, ['en-GB'])) {
       console.log('This isnt a correct email!?');
