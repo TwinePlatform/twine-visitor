@@ -55,10 +55,7 @@ class CBsignup extends Component {
           </span>
         );
         const USER_EXISTS_ERROR = (
-          <span>
-            This user already exists - please check your details. <br />If you have already signed
-            up and have lost your login information, please speak to Reception.{' '}
-          </span>
+          <span>This user already exists - please check your details.</span>
         );
         const NO_INPUT_ERROR = (
           <span>
