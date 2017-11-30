@@ -6,8 +6,6 @@ const hashCB = require('../../functions/cbhash');
 const putCBData = require('../../database/queries/CBqueries/putCBData');
 const sendCBemail = require('../../functions/sendCBemail');
 
-let details = {};
-
 router.post('/', (req, res, next) => {
   // TODO: use res.body!
   console.log('i am here in registerCB');
@@ -18,7 +16,7 @@ router.post('/', (req, res, next) => {
 
   req.on('end', () => {
     new Promise((resolve, reject) => {
-      details = JSON.parse(body);
+      const details = JSON.parse(body);
       console.log(details);
       details.formPswd = hashCB(details.formPswd);
       const name = details.formName.toLowerCase();

@@ -29,6 +29,7 @@ router.post('/', (req, res, next) => {
       getCBAlreadyExists(data.formName.toLowerCase(), data.formEmail, (error, result) => {
         if (error) {
           console.log('error from getCBAlreadyExists ', error);
+          res.status(500).send({ error: 'Cannot access database to check if CB exists' });
         } else if (result.rows[0].exists === true) {
           res.send(result.rows[0].exists);
         } else if (
