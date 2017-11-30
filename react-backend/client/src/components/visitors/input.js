@@ -16,7 +16,13 @@ export class Input extends Component {
       <label className="Form__Label">
         {this.props.question}
         <br />
-        <input type="text" name={this.props.option} onChange={this.handleUserInput} value={this.state.userInput} className="Form__Input"/>
+        <input
+          type="text"
+          name={this.props.option}
+          onChange={this.handleUserInput}
+          value={this.state.userInput}
+          className="Form__Input"
+        />
         <br />
         <br />
       </label>

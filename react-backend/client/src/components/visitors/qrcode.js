@@ -4,7 +4,6 @@ import { PurposeButton } from './purposeButton';
 import { withRouter } from 'react-router-dom';
 
 function getUserFromQRScan(content) {
-  console.log('getUserFromQRScan: ', content);
   return fetch('/getUsername', {
     method: 'POST',
     headers: {
@@ -26,27 +25,13 @@ function instascan() {
       scanPeriod: 5,
     });
     scanner.addListener('scan', function(content) {
-      console.log(document.getElementById('preview'));
       if (document.getElementById('preview')) {
-        console.log('scanner listener: ', content);
-        //previously you were calling .pause on the video element here, this
-        //paused the video element but didn't do anything with the scanner that
-        //you created above
-        //So (i think) whenever you ran this it created a new scanner somehow
-        //it just messed with the old one
-        //so now when the scanner scans
-        //we stop the scanner using scanner.stop() which returns a Promise
-        //and on success we resolve the overall promise with the Content
-        //and reject the promise if there's a problem scanning.
-
         scanner
           .stop()
           .then(res => {
             resolve(content);
-            console.log(('stopped': res));
           })
           .catch(error => {
-            console.log('error at stop scanner');
             reject('failure stopping scanner');
           });
       } else {
@@ -54,22 +39,16 @@ function instascan() {
         reject('ADD LISTENER FAILED');
       }
     });
-    Instascan.Camera
-      .getCameras()
+    Instascan.Camera.getCameras()
       .then(cameras => {
         if (cameras.length > 0) {
           scanner.start(cameras[0]);
         } else {
-          console.error('No cameras found.');
-          console.log('ERROR HAPPEINGN AT getCameras');
-
-          throw new Error('ERROR HAPPEINGN AT getCameras');
+          reject('ERROR HAPPENING AT getCameras');
         }
       })
       .catch(err => {
-        console.log('ERROR HAPPEINGN AT getCameras');
-        console.log(err);
-        throw err;
+        reject(err);
       });
   });
 }
@@ -113,8 +92,9 @@ export class QRCode extends Component {
     })
       .then(this.props.history.push('/visitor/end'))
       .catch(error => {
-        console.log('ERROR HAPPENING AT FETCH /postActivity');
-        console.log(error);
+        console.log('ERROR HAPPENING AT FETCH /postActivity', error);
+        this.props.history.push('/visitor/login');
+        throw error;
       });
   };
 
@@ -122,24 +102,18 @@ export class QRCode extends Component {
     if (this.state.login === 1) {
       instascan()
         .then(content => {
-          //here, when the instascan promise resolves (when the scan event
-          //triggers) we call the handleVideo method on this class, to change
-          //the state to trigger the change in view, then call get
-          //getUserFromQRScan with the Content
-          //and everything (seems) to work okay
-          console.log('instascan() has resolved: ', content);
           this.handleVideo();
           return getUserFromQRScan(content);
         })
         .then(user => {
           this.setState({
-            username: user.fullname.fullname,
-            hash: user.fullname.hash,
+            username: user.fullname,
+            hash: user.hash,
           });
         })
         .catch(error => {
-          console.log('ERROR HAPPENING AT INSTASCANE');
-          console.log(error);
+          console.log('ERROR HAPPENING AT INSTASCAN', error);
+          this.props.history.push('/visitor/qrerror');
         });
     }
 
@@ -150,8 +124,8 @@ export class QRCode extends Component {
         this.setState({ activities });
       })
       .catch(error => {
-        console.log('ERROR HAPPENING AT FETCH');
-        console.log(error);
+        console.log('ERROR HAPPENING AT FETCH', error);
+        this.props.history.push('/visitor/qrerror');
       });
   }
 
