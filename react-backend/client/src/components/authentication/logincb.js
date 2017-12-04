@@ -35,7 +35,7 @@ class CBlogin extends Component {
       method: 'POST',
       body: JSON.stringify(checkData),
     })
-      .then(res => res.text())
+      .then(res => res.json())
       .then(data => {
         const EMAIL_ERROR = (
           <span>
@@ -51,14 +51,17 @@ class CBlogin extends Component {
             field blank before continuing.
           </span>
         );
-        if (data === 'true') {
+        if (data.success === true) {
           console.log("Success, now it's time to use cookies");
+          console.log(data.token);
+          localStorage.setItem('token', data.token);
           this.props.history.push('/visitor');
+          //change failure messages to JSON in checkCBlogin!!! data.reason
         } else if (data === 'email') {
           this.setError([EMAIL_ERROR]);
         } else if (data === 'noinput') {
           this.setError([NO_INPUT_ERROR]);
-        } else if (data === 'false') {
+        } else if (data.success === false) {
           this.setError([DETAILS_ERROR]);
         }
       });
