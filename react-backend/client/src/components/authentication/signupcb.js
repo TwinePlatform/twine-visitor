@@ -57,7 +57,10 @@ class CBsignup extends Component {
           </span>
         );
         const USER_EXISTS_ERROR = (
-          <span>This user already exists - please check your details.</span>
+          <span>
+            This email is already registered. Are you sure you don't have an
+            account?
+          </span>
         );
         const NO_INPUT_ERROR = (
           <span>
