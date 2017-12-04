@@ -116,8 +116,13 @@ export class QRCode extends Component {
           this.props.history.push('/visitor/qrerror');
         });
     }
-
-    fetch('/activities')
+    const headers = new Headers({
+      Authorization: localStorage.getItem('token'),
+    });
+    fetch('/activities', {
+      method: 'GET',
+      headers,
+    })
       .then(res => res.json())
       .then(res => res.activities)
       .then(activities => {

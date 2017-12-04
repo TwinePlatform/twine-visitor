@@ -7,8 +7,6 @@ const router = express.Router();
 const getAllUsers = require('../database/queries/getAllUsers');
 
 router.get('/', (req, res) => {
-  console.log('I am req: ', req);
-  console.log('I am headers.Authorization: ', req.headers.authorization);
   jwt.verify(req.headers.authorization, process.env.SECRET, (err, payload) => {
     if (err) {
       console.log(err);

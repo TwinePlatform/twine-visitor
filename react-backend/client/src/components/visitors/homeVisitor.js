@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Logoutbutton } from '../visitors/logoutbutton';
 
 export class HomeVisitor extends Component {
   render() {
@@ -26,6 +27,9 @@ export class HomeVisitor extends Component {
         >
           Data Protection Policy
         </a>
+        <Link to="/logincb">
+          <Logoutbutton />
+        </Link>
       </div>
     );
   }

@@ -56,10 +56,9 @@ class CBlogin extends Component {
           console.log(data.token);
           localStorage.setItem('token', data.token);
           this.props.history.push('/visitor');
-          //change failure messages to JSON in checkCBlogin!!! data.reason
-        } else if (data === 'email') {
+        } else if (data.reason === 'email') {
           this.setError([EMAIL_ERROR]);
-        } else if (data === 'noinput') {
+        } else if (data.reason === 'noinput') {
           this.setError([NO_INPUT_ERROR]);
         } else if (data.success === false) {
           this.setError([DETAILS_ERROR]);
