@@ -1,6 +1,7 @@
 const validator = require('validator');
 const getCBAlreadyExists = require('../../database/queries/getCBAlreadyExists');
 const express = require('express');
+const sendresetemail = require('../../functions/sendresetemail');
 
 const router = express.Router();
 
@@ -18,8 +19,14 @@ router.post('/', (req, res, next) => {
       getCBAlreadyExists(data.formEmail, (error, result) => {
         if (error) {
           console.log('error from getCBAlreadyExists ', error);
+          res.status(500).send({
+            error: 'Cannot access database to check if cbemail exists'
+          });
         } else {
-          res.send(result.exists);
+          res.send(result.rows[0].exists);
+          if (result.rows[0].exists === true) {
+            sendresetemail(data.formEmail);
+          }
         }
       });
     } else if (!validator.isEmail(data.formEmail)) {
