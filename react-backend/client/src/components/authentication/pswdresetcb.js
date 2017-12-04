@@ -3,13 +3,12 @@ import { Input } from '../visitors/input';
 import { Button } from '../visitors/button';
 import { Link } from 'react-router-dom';
 
-class CBlogin extends Component {
+class CBPswdReset extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       email: '',
-      password: '',
       error: []
     };
   }
@@ -28,11 +27,10 @@ class CBlogin extends Component {
     e.preventDefault();
 
     const checkData = {
-      formEmail: this.state.email,
-      formPswd: this.state.password
+      formEmail: this.state.email
     };
 
-    fetch('/checkCBlogin', {
+    fetch('/checkCBemail', {
       method: 'POST',
       body: JSON.stringify(checkData)
     })
@@ -46,18 +44,17 @@ class CBlogin extends Component {
         );
         const DETAILS_ERROR = (
           <span>
-            The email address or password is incorrect. Please try again.
+            We don't have a record of this email. Have you entered it correctly?
           </span>
         );
         const NO_INPUT_ERROR = (
           <span>
             Oops, you need to enter your information. <br />Please make sure you
-            leave no input field blank before continuing.
+            enter an email before continuing.
           </span>
         );
         if (data === 'true') {
-          console.log("Success, now it's time to use cookies");
-          this.props.history.push('/visitor');
+          console.log('Success, now lets send a password reset email');
         } else if (data === 'email') {
           this.setError([EMAIL_ERROR]);
         } else if (data === 'noinput') {
@@ -73,10 +70,9 @@ class CBlogin extends Component {
 
     return (
       <section>
-        <Link to="/signupcb">
-          <button className="ButtonBack">Sign Up</button>
-        </Link>
-        <h1>Please login or signup</h1>
+        <h1>
+          Please enter your registered email to receive reset instructions
+        </h1>
         {error && (
           <div className="ErrorText">
             {error.map((el, i) => <span key={i}>{el}</span>)}
@@ -88,16 +84,14 @@ class CBlogin extends Component {
           onSubmit={this.handleSubmit}
         >
           <Input question="Business Email" option="email" />
-          <Input question="Enter Password" option="password" />
           <Button />
         </form>
-        <br />
-        <Link to="/pswdresetcb">
-          <button className="ButtonBack">Reset Password</button>
+        <Link to="/logincb">
+          <button className="ButtonBack">Back to login</button>
         </Link>
       </section>
     );
   }
 }
 
-export { CBlogin };
+export { CBPswdReset };

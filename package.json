@@ -9,8 +9,7 @@
   "scripts": {
     "start": "node ./react-backend/app.js",
     "devstart": "nodemon ./react-backend/bin/www",
-    "heroku-postbuild":
-      "cd react-backend/client && npm install --only=dev && npm install && npm run build",
+    "heroku-postbuild": "cd react-backend/client && npm install --only=dev && npm install && npm run build",
     "test": "nyc istanbul cover tape tests/tests.js | tap-spec",
     "coverage": "istanbul cover tests/*.tests.js"
   },
@@ -25,14 +24,14 @@
   },
   "homepage": "https://github.com/FAC-11/DataPower#readme",
   "devDependencies": {
-    "eslint": "^4.8.0",
+    "eslint": "^4.12.1",
     "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.4.0",
+    "eslint-plugin-react": "^7.5.1",
     "istanbul": "^0.4.5",
     "nodemon": "^1.12.1",
-    "nyc": "^11.2.1",
+    "nyc": "^11.4.0",
     "supertest": "^3.0.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.8.0",
@@ -47,13 +46,13 @@
     "express": "~4.15.2",
     "jade": "~1.11.0",
     "morgan": "~1.8.1",
-    "pdfmake": "^0.1.33",
-    "pg": "^7.3.0",
-    "postmark": "^1.4.1",
+    "pdfmake": "^0.1.34",
+    "pg": "^7.4.0",
+    "postmark": "^1.5.0",
     "qrcode": "^0.9.0",
     "querystring": "^0.2.0",
     "serve-favicon": "~2.4.2",
     "url": "^0.11.0",
-    "validator": "^9.0.0"
+    "validator": "^9.1.2"
   }
 }
