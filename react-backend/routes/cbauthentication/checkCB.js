@@ -5,11 +5,13 @@ const express = require('express');
 const router = express.Router();
 const getCBAlreadyExists = require('../../database/queries/getCBAlreadyExists');
 
-const strongPassword = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})');
+const strongPassword = new RegExp(
+  '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
+);
 
 router.post('/', (req, res, next) => {
   let body = '';
-  req.on('data', (chunk) => {
+  req.on('data', chunk => {
     body += chunk;
   });
 
@@ -25,11 +27,16 @@ router.post('/', (req, res, next) => {
       data.formPswdConfirm.length === 0
     ) {
       res.send('noinput');
-    } else if (validator.isEmail(data.formEmail) && validator.isAlpha(org_name, ['en-GB'])) {
-      getCBAlreadyExists(data.formName.toLowerCase(), data.formEmail, (error, result) => {
+    } else if (
+      validator.isEmail(data.formEmail) &&
+      validator.isAlpha(org_name, ['en-GB'])
+    ) {
+      getCBAlreadyExists(data.formEmail, (error, result) => {
         if (error) {
           console.log('error from getCBAlreadyExists ', error);
-          res.status(500).send({ error: 'Cannot access database to check if CB exists' });
+          res
+            .status(500)
+            .send({ error: 'Cannot access database to check if CB exists' });
         } else if (result.rows[0].exists === true) {
           res.send(result.rows[0].exists);
         } else if (
@@ -38,7 +45,10 @@ router.post('/', (req, res, next) => {
         ) {
           console.log('Password is weak');
           res.send('pswdweak');
-        } else if (result.rows[0].exists === false && data.formPswd !== data.formPswdConfirm) {
+        } else if (
+          result.rows[0].exists === false &&
+          data.formPswd !== data.formPswdConfirm
+        ) {
           console.log("Passwords don't match");
           res.send('pswdmatch');
         } else {
@@ -46,13 +56,22 @@ router.post('/', (req, res, next) => {
         }
         console.log(typeof result.rows[0].exists, result.rows[0].exists);
       });
-    } else if (!validator.isEmail(data.formEmail) && validator.isAlpha(org_name, ['en-GB'])) {
+    } else if (
+      !validator.isEmail(data.formEmail) &&
+      validator.isAlpha(org_name, ['en-GB'])
+    ) {
       console.log('This isnt a correct email!?');
       res.send('email');
-    } else if (validator.isEmail(data.formEmail) && !validator.isAlpha(org_name, ['en-GB'])) {
+    } else if (
+      validator.isEmail(data.formEmail) &&
+      !validator.isAlpha(org_name, ['en-GB'])
+    ) {
       console.log('This isnt a correct name!?');
       res.send('name');
-    } else if (!validator.isEmail(data.formEmail) && !validator.isAlpha(org_name, ['en-GB'])) {
+    } else if (
+      !validator.isEmail(data.formEmail) &&
+      !validator.isAlpha(org_name, ['en-GB'])
+    ) {
       console.log('Both name and email are wrong!!!');
       res.send('emailname');
     }
