@@ -21,15 +21,16 @@ export class HomeVisitor extends Component {
           <button className="ButtonBack">Back to the main page</button>
         </Link>
         <br />
+        <Link to="/logincb">
+          <Logoutbutton />
+        </Link>
+        <br />
         <a
           href="http://www.powertochange.org.uk/data-protection-funding-applications/"
           className="Policy"
         >
           Data Protection Policy
         </a>
-        <Link to="/logincb">
-          <Logoutbutton />
-        </Link>
       </div>
     );
   }

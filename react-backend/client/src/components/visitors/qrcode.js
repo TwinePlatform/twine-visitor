@@ -4,10 +4,14 @@ import { PurposeButton } from './purposeButton';
 import { withRouter } from 'react-router-dom';
 
 function getUserFromQRScan(content) {
+  const headers = new Headers({
+    Authorization: localStorage.getItem('token'),
+  });
   return fetch('/getUsername', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      headers,
     },
     body: JSON.stringify({ user: content }),
   })
@@ -86,8 +90,13 @@ export class QRCode extends Component {
       activity: newActivity,
     };
 
+    const headers = new Headers({
+      Authorization: localStorage.getItem('token'),
+    });
+
     return fetch('/postActivity', {
       method: 'POST',
+      headers,
       body: JSON.stringify(visitInfo),
     })
       .then(this.props.history.push('/visitor/end'))

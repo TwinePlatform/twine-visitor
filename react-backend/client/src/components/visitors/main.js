@@ -36,6 +36,10 @@ class Main extends Component {
     this.setState({ error: messagesArray });
   }
 
+  headers = new Headers({
+    Authorization: localStorage.getItem('token'),
+  });
+
   handleSwitch = e => {
     e.preventDefault();
 
@@ -46,6 +50,7 @@ class Main extends Component {
 
     fetch('/checkUser', {
       method: 'POST',
+      headers: this.headers,
       body: JSON.stringify(checkData),
     })
       .then(res => res.text())
@@ -100,9 +105,9 @@ class Main extends Component {
       formYear: this.state.year,
       formHash: this.state.hash,
     };
-
     fetch('/qrgen', {
       method: 'POST',
+      headers: this.headers,
       body: JSON.stringify(formData),
     })
       .then(res => res.text())
@@ -171,7 +176,7 @@ class Main extends Component {
 
             {/*This is the print layout of the QRcode*/}
             <div className="visible-printer qr-code-to-print">
-              <div class="dashed">
+              <div className="dashed">
                 <img height="182" src={qrcodelogo} alt="Power to change Logo" />
                 <img className="QR__image" src={url} alt="This is your QRcode" />
                 <h5>
