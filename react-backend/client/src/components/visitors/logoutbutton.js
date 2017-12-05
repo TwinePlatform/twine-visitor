@@ -8,7 +8,6 @@ export class Logoutbutton extends Component {
   };
 
   render() {
-    console.log(this.props.updateLoggedIn);
     return (
       <button className="Logoutbutton" type="submit" onClick={this.logout}>
         Log out

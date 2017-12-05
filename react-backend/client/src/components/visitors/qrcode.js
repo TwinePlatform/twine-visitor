@@ -6,13 +6,11 @@ import { withRouter } from 'react-router-dom';
 function getUserFromQRScan(content) {
   const headers = new Headers({
     Authorization: localStorage.getItem('token'),
+    'Content-Type': 'application/json',
   });
   return fetch('/getUsername', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      headers,
-    },
+    headers,
     body: JSON.stringify({ user: content }),
   })
     .then(res => res.json())
