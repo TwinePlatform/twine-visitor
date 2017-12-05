@@ -7,7 +7,7 @@ if (!process.env.POSTMARK_SERVER) {
 
 const client = new postmark.Client(process.env.POSTMARK_SERVER);
 
-module.exports = email => {
+module.exports = (email, token) => {
   console.log('Hello, I am in sendresetemail');
   const messages = [
     {
@@ -15,7 +15,8 @@ module.exports = email => {
       TemplateId: 4148361,
       To: email,
       TemplateModel: {
-        email
+        email,
+        token
       }
     }
   ];
