@@ -21,9 +21,12 @@ export class HomeVisitor extends Component {
           <button className="ButtonBack">Back to the main page</button>
         </Link>
         <br />
-        <Link to="/logincb">
-          <Logoutbutton />
-        </Link>
+
+        <Logoutbutton
+          updateLoggedIn={this.props.updateLoggedIn}
+          redirectUser={this.props.history.push}
+        />
+
         <br />
         <a
           href="http://www.powertochange.org.uk/data-protection-funding-applications/"

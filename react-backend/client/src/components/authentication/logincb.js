@@ -52,9 +52,8 @@ class CBlogin extends Component {
           </span>
         );
         if (data.success === true) {
-          console.log("Success, now it's time to use cookies");
-          console.log(data.token);
           localStorage.setItem('token', data.token);
+          this.props.setLoggedIn();
           this.props.history.push('/visitor');
         } else if (data.reason === 'email') {
           this.setError([EMAIL_ERROR]);
