@@ -1,7 +1,7 @@
 const validator = require('validator');
 const getCBAlreadyExists = require('../../database/queries/getCBAlreadyExists');
 const express = require('express');
-const sendresetemail = require('../../functions/sendresetemail');
+const sendResetEmail = require('../../functions/sendResetEmail');
 
 const router = express.Router();
 
@@ -25,7 +25,7 @@ router.post('/', (req, res, next) => {
         } else {
           res.send(result.rows[0].exists);
           if (result.rows[0].exists === true) {
-            sendresetemail(data.formEmail);
+            sendResetEmail(data.formEmail);
           }
         }
       });
