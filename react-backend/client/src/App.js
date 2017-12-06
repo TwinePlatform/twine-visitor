@@ -1,26 +1,26 @@
-import React, { Component } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
 
-import './App.css';
+import "./App.css";
 
-import { Home } from './components/home';
+import { Home } from "./components/home";
 
-import { CBsignup } from './components/authentication/signupcb';
-import { CBlogin } from './components/authentication/logincb';
-import { CBPswdReset } from './components/authentication/pswdresetcb';
+import { CBsignup } from "./components/authentication/signupcb";
+import { CBlogin } from "./components/authentication/logincb";
+import { CBPswdReset } from "./components/authentication/pswdresetcb";
 
-import { Main } from './components/visitors/main';
-import { QRCode } from './components/visitors/qrcode';
-import { FormPrivacy } from './components/visitors/form_privacy';
-import { FormPrivacy2 } from './components/visitors/form_privacy2';
-import { QRPrivacy } from './components/visitors/qrprivacy';
-import { QrError } from './components/visitors/qrerror';
-import { Thanks } from './components/visitors/thanks';
-import { HomeVisitor } from './components/visitors/homeVisitor';
+import { Main } from "./components/visitors/main";
+import { QRCode } from "./components/visitors/qrcode";
+import { FormPrivacy } from "./components/visitors/form_privacy";
+import { FormPrivacy2 } from "./components/visitors/form_privacy2";
+import { QRPrivacy } from "./components/visitors/qrprivacy";
+import { QrError } from "./components/visitors/qrerror";
+import { Thanks } from "./components/visitors/thanks";
+import { HomeVisitor } from "./components/visitors/homeVisitor";
 
-import { HomeAdmin } from './components/admin/homeAdmin';
+import { HomeAdmin } from "./components/admin/homeAdmin";
 
-import { NotFound } from './components/NotFound';
+import { NotFound } from "./components/NotFound";
 
 class App extends Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class App extends Component {
   }
 
   updateLoggedIn = () => {
-    const loggedIn = Boolean(localStorage.getItem('token'));
+    const loggedIn = Boolean(localStorage.getItem("token"));
     this.setState({ loggedIn });
   };
 
@@ -129,7 +129,18 @@ class App extends Component {
               }
             />
 
-            <Route exact path="/admin" component={HomeAdmin} />
+            <Route
+              exact
+              path="/admin"
+              render={props =>
+                this.state.loggedIn ? (
+                  <HomeAdmin {...props} updateLoggedIn={this.updateLoggedIn} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
+              }
+            />
+
             <Route component={NotFound} />
           </Switch>
 
