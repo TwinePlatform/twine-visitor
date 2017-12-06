@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Input } from '../visitors/input';
 import { Button } from '../visitors/button';
 
@@ -79,6 +80,10 @@ class CBlogin extends Component {
           <Input question="Enter Password" option="password" />
           <Button />
         </form>
+        <Link to="/signupcb">
+          <button className="ButtonBack">Sign up your community business</button>
+        </Link>
+        <br />
       </section>
     );
   }
