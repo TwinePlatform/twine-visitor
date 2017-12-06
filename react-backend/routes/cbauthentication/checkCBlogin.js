@@ -1,6 +1,7 @@
 const validator = require('validator');
 
 const express = require('express');
+const jwt = require('jsonwebtoken');
 
 const hashCB = require('../../functions/cbhash');
 
@@ -16,19 +17,41 @@ router.post('/', (req, res, next) => {
   req.on('end', () => {
     const data = JSON.parse(body);
     if (data.formEmail.length === 0 || data.formPswd.length === 0) {
-      res.send('noinput');
+      res.send(
+        JSON.stringify({
+          reason: 'noinput',
+        }),
+      );
     } else if (validator.isEmail(data.formEmail)) {
       data.formPswd = hashCB(data.formPswd);
       getCBlogindetailsvalid(data.formEmail, data.formPswd, (error, result) => {
         if (error) {
           console.log('error from getCBlogindetailsvalid ', error);
+        } else if (result.rows[0].exists) {
+          // if CB exists we want to create jwt and send it to the frontend
+          const token = jwt.sign({ email: data.formEmail }, process.env.SECRET);
+          res.send(
+            JSON.stringify({
+              success: true,
+              token,
+            }),
+          );
         } else {
-          res.send(result.rows[0].exists);
+          // we want to send false
+          res.send(
+            JSON.stringify({
+              success: false,
+            }),
+          );
         }
       });
     } else if (!validator.isEmail(data.formEmail)) {
       console.log('This isnt a correct email!?');
-      res.send('email');
+      res.send(
+        JSON.stringify({
+          reason: 'email',
+        }),
+      );
     }
   });
 });

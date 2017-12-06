@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import './App.css';
 
@@ -23,27 +23,163 @@ import { HomeAdmin } from './components/admin/homeAdmin';
 import { NotFound } from './components/NotFound';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { loggedIn: false };
+  }
+
+  componentWillMount() {
+    this.updateLoggedIn();
+  }
+
+  updateLoggedIn = () => {
+    const loggedIn = Boolean(localStorage.getItem('token'));
+    this.setState({ loggedIn });
+  };
+
   render() {
     return (
       <div className="Container">
         <div className="Foreground">
           <Switch>
-            <Route exact path="/" component={Home} />
+            <Route
+              exact
+              path="/"
+              render={props =>
+                this.state.loggedIn ? (
+                  <Home {...props} updateLoggedIn={this.updateLoggedIn} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
+              }
+            />
             <Route exact path="/signupcb" component={CBsignup} />
-            <Route exact path="/logincb" component={CBlogin} />
+
             <Route exact path="/pswdresetcb" component={CBPswdReset} />
-            <Route exact path="/visitor" component={HomeVisitor} />
-            <Route path="/visitor/signup" component={Main} />
-            <Route exact path="/visitor/login" component={QRCode} />
-            <Route exact path="/visitor/qrerror" component={QrError} />
-            <Route exact path="/visitor/end" component={Thanks} />
+
+            <Route
+              exact
+              path="/logincb"
+              render={props =>
+                this.state.loggedIn ? (
+                  <Redirect to="/" />
+                ) : (
+                  <CBlogin setLoggedIn={this.updateLoggedIn} {...props} />
+                )
+              }
+            />
+
+            <Route
+              exact
+              path="/visitor"
+              render={props =>
+                this.state.loggedIn ? (
+                  <HomeVisitor
+                    {...props}
+                    updateLoggedIn={this.updateLoggedIn}
+                  />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
+              }
+            />
+            <Route
+              path="/visitor/signup"
+              render={props =>
+                this.state.loggedIn ? (
+                  <Main {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
+              }
+            />
+            <Route
+              exact
+              path="/visitor/login"
+              render={props =>
+                this.state.loggedIn ? (
+                  <QRCode {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
+              }
+            />
+
+            <Route
+              exact
+              path="/visitor/qrerror"
+              render={props =>
+                this.state.loggedIn ? (
+                  <QrError {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
+              }
+            />
+
+            <Route
+              exact
+              path="/visitor/end"
+              render={props =>
+                this.state.loggedIn ? (
+                  <Thanks {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
+              }
+            />
+
             <Route exact path="/admin" component={HomeAdmin} />
             <Route component={NotFound} />
           </Switch>
-          <Route exact path="/visitor/signup" component={FormPrivacy} />
-          <Route exact path="/visitor/signup/step2" component={FormPrivacy2} />
-          <Route exact path="/visitor/login" component={QRPrivacy} />
-          <Route exact path="/visitor/qrerror" component={QRPrivacy} />
+
+          <Route
+            exact
+            path="/visitor/signup"
+            render={props =>
+              this.state.loggedIn ? (
+                <FormPrivacy {...props} />
+              ) : (
+                <Redirect to="/logincb" />
+              )
+            }
+          />
+
+          <Route
+            exact
+            path="/visitor/signup/step2"
+            render={props =>
+              this.state.loggedIn ? (
+                <FormPrivacy2 {...props} />
+              ) : (
+                <Redirect to="/logincb" />
+              )
+            }
+          />
+
+          <Route
+            exact
+            path="/visitor/login"
+            render={props =>
+              this.state.loggedIn ? (
+                <QRPrivacy {...props} />
+              ) : (
+                <Redirect to="/logincb" />
+              )
+            }
+          />
+
+          <Route
+            exact
+            path="/visitor/qrerror"
+            render={props =>
+              this.state.loggedIn ? (
+                <QRPrivacy {...props} />
+              ) : (
+                <Redirect to="/logincb" />
+              )
+            }
+          />
         </div>
       </div>
     );

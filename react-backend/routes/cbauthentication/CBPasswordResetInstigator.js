@@ -1,9 +1,9 @@
 const validator = require('validator');
 const getCBAlreadyExists = require('../../database/queries/getCBAlreadyExists');
 const express = require('express');
-const sendresetemail = require('../../functions/sendresetemail');
 const resetTokenGen = require('../../functions/tokengen');
 const putToken = require('../../database/queries/CBqueries/putTokenData');
+const sendResetEmail = require('../../functions/sendResetEmail');
 
 const router = express.Router();
 
@@ -27,6 +27,7 @@ router.post('/', (req, res, next) => {
         } else {
           res.send(result.rows[0].exists);
           if (result.rows[0].exists === true) {
+<<<<<<< HEAD:react-backend/routes/cbauthentication/checkCBemail.js
             resetTokenGen(data.formEmail, token => {
               const tokenExpire = Date.now() + 3600000;
               putToken(token, tokenExpire, data.formEmail, err => {
@@ -34,6 +35,9 @@ router.post('/', (req, res, next) => {
                 sendresetemail(data.formEmail, token);
               });
             });
+=======
+            sendResetEmail(data.formEmail);
+>>>>>>> publicarea:react-backend/routes/cbauthentication/CBPasswordResetInstigator.js
           }
         }
       });

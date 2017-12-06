@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Input } from '../visitors/input';
 import { Button } from '../visitors/button';
-import { Link } from 'react-router-dom';
 
 class CBlogin extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class CBlogin extends Component {
       method: 'POST',
       body: JSON.stringify(checkData)
     })
-      .then(res => res.text())
+      .then(res => res.json())
       .then(data => {
         const EMAIL_ERROR = (
           <span>
@@ -55,14 +55,15 @@ class CBlogin extends Component {
             leave no input field blank before continuing.
           </span>
         );
-        if (data === 'true') {
-          console.log("Success, now it's time to use cookies");
+        if (data.success === true) {
+          localStorage.setItem('token', data.token);
+          this.props.setLoggedIn();
           this.props.history.push('/visitor');
-        } else if (data === 'email') {
+        } else if (data.reason === 'email') {
           this.setError([EMAIL_ERROR]);
-        } else if (data === 'noinput') {
+        } else if (data.reason === 'noinput') {
           this.setError([NO_INPUT_ERROR]);
-        } else if (data === 'false') {
+        } else {
           this.setError([DETAILS_ERROR]);
         }
       });
@@ -73,9 +74,6 @@ class CBlogin extends Component {
 
     return (
       <section>
-        <Link to="/signupcb">
-          <button className="ButtonBack">Sign Up</button>
-        </Link>
         <h1>Please login or signup</h1>
         {error && (
           <div className="ErrorText">
@@ -95,6 +93,12 @@ class CBlogin extends Component {
         <Link to="/pswdresetcb">
           <button className="ButtonBack">Reset Password</button>
         </Link>
+        <Link to="/signupcb">
+          <button className="ButtonBack">
+            Sign up your community business
+          </button>
+        </Link>
+        <br />
       </section>
     );
   }
