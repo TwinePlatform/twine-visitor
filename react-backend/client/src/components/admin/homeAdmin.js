@@ -10,11 +10,26 @@ export class HomeAdmin extends Component {
   }
 
   componentDidMount() {
-    fetch('/all-users')
+    const headers = new Headers({
+      Authorization: localStorage.getItem('token'),
+    });
+    fetch('/all-users', {
+      method: 'GET',
+      headers,
+    })
       .then(res => res.json())
-      .then(res => res.users)
-      .then(users => {
+      .then((res) => {
+        if (res.error) {
+          throw res.error;
+        } else {
+          return res.users;
+        }
+      })
+      .then((users) => {
         this.setState({ users });
+      })
+      .catch((err) => {
+        this.props.history.push('/logincb');
       });
   }
 
