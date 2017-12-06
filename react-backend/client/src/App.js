@@ -7,6 +7,7 @@ import { Home } from './components/home';
 
 import { CBsignup } from './components/authentication/signupcb';
 import { CBlogin } from './components/authentication/logincb';
+import { CBPswdReset } from './components/authentication/pswdresetcb';
 
 import { Main } from './components/visitors/main';
 import { QRCode } from './components/visitors/qrcode';
@@ -54,6 +55,8 @@ class App extends Component {
             />
             <Route exact path="/signupcb" component={CBsignup} />
 
+            <Route exact path="/pswdresetcb" component={CBPswdReset} />
+
             <Route
               exact
               path="/logincb"
@@ -71,7 +74,10 @@ class App extends Component {
               path="/visitor"
               render={props =>
                 this.state.loggedIn ? (
-                  <HomeVisitor {...props} updateLoggedIn={this.updateLoggedIn} />
+                  <HomeVisitor
+                    {...props}
+                    updateLoggedIn={this.updateLoggedIn}
+                  />
                 ) : (
                   <Redirect to="/logincb" />
                 )
@@ -80,14 +86,22 @@ class App extends Component {
             <Route
               path="/visitor/signup"
               render={props =>
-                this.state.loggedIn ? <Main {...props} /> : <Redirect to="/logincb" />
+                this.state.loggedIn ? (
+                  <Main {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
               }
             />
             <Route
               exact
               path="/visitor/login"
               render={props =>
-                this.state.loggedIn ? <QRCode {...props} /> : <Redirect to="/logincb" />
+                this.state.loggedIn ? (
+                  <QRCode {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
               }
             />
 
@@ -95,7 +109,11 @@ class App extends Component {
               exact
               path="/visitor/qrerror"
               render={props =>
-                this.state.loggedIn ? <QrError {...props} /> : <Redirect to="/logincb" />
+                this.state.loggedIn ? (
+                  <QrError {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
               }
             />
 
@@ -103,7 +121,11 @@ class App extends Component {
               exact
               path="/visitor/end"
               render={props =>
-                this.state.loggedIn ? <Thanks {...props} /> : <Redirect to="/logincb" />
+                this.state.loggedIn ? (
+                  <Thanks {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
               }
             />
 
@@ -115,7 +137,11 @@ class App extends Component {
             exact
             path="/visitor/signup"
             render={props =>
-              this.state.loggedIn ? <FormPrivacy {...props} /> : <Redirect to="/logincb" />
+              this.state.loggedIn ? (
+                <FormPrivacy {...props} />
+              ) : (
+                <Redirect to="/logincb" />
+              )
             }
           />
 
@@ -123,7 +149,11 @@ class App extends Component {
             exact
             path="/visitor/signup/step2"
             render={props =>
-              this.state.loggedIn ? <FormPrivacy2 {...props} /> : <Redirect to="/logincb" />
+              this.state.loggedIn ? (
+                <FormPrivacy2 {...props} />
+              ) : (
+                <Redirect to="/logincb" />
+              )
             }
           />
 
@@ -131,7 +161,11 @@ class App extends Component {
             exact
             path="/visitor/login"
             render={props =>
-              this.state.loggedIn ? <QRPrivacy {...props} /> : <Redirect to="/logincb" />
+              this.state.loggedIn ? (
+                <QRPrivacy {...props} />
+              ) : (
+                <Redirect to="/logincb" />
+              )
             }
           />
 
@@ -139,7 +173,11 @@ class App extends Component {
             exact
             path="/visitor/qrerror"
             render={props =>
-              this.state.loggedIn ? <QRPrivacy {...props} /> : <Redirect to="/logincb" />
+              this.state.loggedIn ? (
+                <QRPrivacy {...props} />
+              ) : (
+                <Redirect to="/logincb" />
+              )
             }
           />
         </div>
