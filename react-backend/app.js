@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const index = require('./routes/index');
-const users = require('./routes/users');
 const qrgen = require('./routes/qrgenerator');
 const getUsername = require('./routes/getUsername');
 const getAllUsers = require('./routes/getAllUsers');
@@ -32,7 +31,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use('/', index);
-app.use('/users', users);
 app.use('/qrgen', qrgen);
 app.use('/getUsername', getUsername);
 app.use('/all-users', getAllUsers);

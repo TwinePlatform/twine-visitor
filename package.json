@@ -9,8 +9,7 @@
   "scripts": {
     "start": "node ./react-backend/app.js",
     "devstart": "nodemon ./react-backend/bin/www",
-    "heroku-postbuild":
-      "cd react-backend/client && npm install --only=dev && npm install && npm run build",
+    "heroku-postbuild": "cd react-backend/client && npm install --only=dev && npm install && npm run build",
     "test": "nyc istanbul cover tape tests/tests.js | tap-spec",
     "coverage": "istanbul cover tests/*.tests.js"
   },
@@ -46,6 +45,7 @@
     "env2": "^2.2.0",
     "express": "~4.15.2",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^8.1.0",
     "morgan": "~1.8.1",
     "pdfmake": "^0.1.33",
     "pg": "^7.3.0",
