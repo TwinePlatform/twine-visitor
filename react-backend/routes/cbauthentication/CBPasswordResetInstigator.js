@@ -7,6 +7,8 @@ const sendResetEmail = require('../../functions/sendResetEmail');
 
 const router = express.Router();
 
+const tokenExpire = Date.now() + 3600000;
+
 router.post('/', (req, res, next) => {
   let body = '';
   req.on('data', chunk => {
@@ -26,11 +28,11 @@ router.post('/', (req, res, next) => {
           });
         } else {
           res.send(result.rows[0].exists);
-          if (result.rows[0].exists === true) {
-            resetTokenGen(data.formEmail, token => {
-              const tokenExpire = Date.now() + 3600000;
+          if (result.rows[0].exists) {
+            resetTokenGen().then(token => {
               putToken(token, tokenExpire, data.formEmail, err => {
                 if (err) throw err;
+                console.log(token);
                 sendResetEmail(data.formEmail, token);
               });
             });

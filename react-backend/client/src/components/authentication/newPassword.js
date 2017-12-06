@@ -7,19 +7,19 @@ class NewPassword extends Component {
   constructor(props) {
     super(props);
 
-    urlToken = '';
-    if (
-      checkToken(urlToken, (error, result) => {
-        if (error) {
-          console.log('error from checkToken ', error);
-          this.props.history.push('/logincb');
-        } else if (result === true) {
-          this.setState({ token: urlToken });
-        } else {
-          this.props.history.push('/logincb');
-        }
-      })
-    );
+    // urlToken = '';
+    // if (
+    //   checkToken(urlToken, (error, result) => {
+    //     if (error) {
+    //       console.log('error from checkToken ', error);
+    //       this.props.history.push('/logincb');
+    //     } else if (result === true) {
+    //       this.setState({ token: urlToken });
+    //     } else {
+    //       this.props.history.push('/logincb');
+    //     }
+    //   })
+    // );
 
     this.state = {
       password: '',
@@ -74,6 +74,19 @@ class NewPassword extends Component {
             character and must be at least 8 characters long.
           </span>
         );
+        const NO_TOKEN_MATCH = (
+          <span>
+            The security token you have entered does not match the one we have. 
+            <br /> Please double check that you have entered it correctly.
+          </span>
+        );
+        const TOKEN_EXPIRED = (
+          <span>
+            The security token you have entered has expired. 
+            <br /> If you still need to change your password please contact us 
+            through the reset password page again.
+          </span>
+        );
         if (data === true) {
           console.log('Sucessfully changed the password');
           this.props.history.push('/logincb');
@@ -83,6 +96,10 @@ class NewPassword extends Component {
           this.setError([NO_PASSWORD_MATCH]);
         } else if (data === 'pswdweak') {
           this.setError([PASSWORD_WEAK]);
+        } else if (data === 'tokenmatch') {
+          this.setError([NO_TOKEN_MATCH]);
+        } else if (data === 'tokenexpired') {
+          this.setError([TOKEN_EXPIRED]);
         }
       });
   };
@@ -103,6 +120,7 @@ class NewPassword extends Component {
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
         >
+        <Input type="password" question="Enter Security Token" option="token" />
           <Input type="password" question="Enter Password" option="password" />
           <Input
             type="password"

@@ -9,23 +9,14 @@ const client = new postmark.Client(process.env.POSTMARK_SERVER);
 
 module.exports = (email, token) => {
   console.log('Hello, I am in sendresetemail');
-  const messages = [
-    {
-      From: 'visitorapp@powertochange.org.uk',
-      TemplateId: 4148361,
-      To: email,
-      TemplateModel: {
-        email,
-        token
-      }
-    }
-  ];
 
-  client.sendEmailBatch(messages, (error, result) => {
-    if (error) {
-      console.error('Unable to send via postmark: ', error);
-      return;
+  client.sendEmailWithTemplate({
+    From: 'visitorapp@powertochange.org.uk',
+    TemplateId: 4148361,
+    To: email,
+    TemplateModel: {
+      email,
+      token
     }
-    console.info('Sent to postmark for delivery', result);
   });
 };
