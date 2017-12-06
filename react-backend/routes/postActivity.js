@@ -24,6 +24,8 @@ router.post('/', (req, res, next) => {
           if (error) {
             console.log('I am an error from putVisitsData ', error);
             res.status(500).send(err);
+          } else {
+            res.send('success');
           }
         });
       });
