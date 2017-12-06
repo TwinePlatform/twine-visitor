@@ -41,7 +41,17 @@ class App extends Component {
       <div className="Container">
         <div className="Foreground">
           <Switch>
-            <Route exact path="/" component={Home} />
+            <Route
+              exact
+              path="/"
+              render={props =>
+                this.state.loggedIn ? (
+                  <Home {...props} updateLoggedIn={this.updateLoggedIn} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
+              }
+            />
             <Route exact path="/signupcb" component={CBsignup} />
 
             <Route
