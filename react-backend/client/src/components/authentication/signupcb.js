@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Input } from '../visitors/input';
 import { Select } from '../visitors/select';
 import { Button } from '../visitors/button';
@@ -161,6 +162,9 @@ class CBsignup extends Component {
           />
           <Button />
         </form>
+        <Link to="/logincb">
+          <button className="ButtonBack">Login</button>
+        </Link>
       </section>
     );
   }
