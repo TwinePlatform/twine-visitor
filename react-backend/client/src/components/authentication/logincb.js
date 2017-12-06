@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Input } from '../visitors/input';
 import { Button } from '../visitors/button';
-import { Link } from 'react-router-dom';
 
 class CBlogin extends Component {
   constructor(props) {
@@ -74,9 +74,6 @@ class CBlogin extends Component {
 
     return (
       <section>
-        <Link to="/signupcb">
-          <button className="ButtonBack">Sign Up</button>
-        </Link>
         <h1>Please login or signup</h1>
         {error && (
           <div className="ErrorText">
@@ -96,6 +93,12 @@ class CBlogin extends Component {
         <Link to="/pswdresetcb">
           <button className="ButtonBack">Reset Password</button>
         </Link>
+        <Link to="/signupcb">
+          <button className="ButtonBack">
+            Sign up your community business
+          </button>
+        </Link>
+        <br />
       </section>
     );
   }

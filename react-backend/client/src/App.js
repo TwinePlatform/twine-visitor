@@ -55,6 +55,8 @@ class App extends Component {
             />
             <Route exact path="/signupcb" component={CBsignup} />
 
+            <Route exact path="/pswdresetcb" component={CBPswdReset} />
+
             <Route
               exact
               path="/logincb"
