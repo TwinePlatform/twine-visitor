@@ -1,5 +1,7 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '../visitors/button';
+import { Logoutbutton } from '../visitors/logoutbutton';
 
 export class HomeAdmin extends Component {
   constructor(props) {
@@ -8,7 +10,7 @@ export class HomeAdmin extends Component {
       users: [],
       reauthenticated: false,
       failure: false,
-      password: ""
+      password: '',
     };
   }
 
@@ -21,12 +23,12 @@ export class HomeAdmin extends Component {
   authenticate = event => {
     event.preventDefault();
     const headers = new Headers({
-      Authorization: localStorage.getItem("token")
+      Authorization: localStorage.getItem('token'),
     });
-    fetch("/all-users", {
-      method: "POST",
+    fetch('/all-users', {
+      method: 'POST',
       headers,
-      body: JSON.stringify({ password: this.state.password })
+      body: JSON.stringify({ password: this.state.password }),
     })
       .then(res => res.json())
       .then(res => {
@@ -34,11 +36,11 @@ export class HomeAdmin extends Component {
         if (res.success) {
           return res.users;
         } else {
-          if (res.reason === "not logged in") {
-            throw new Error("not logged in");
+          if (res.reason === 'not logged in') {
+            throw new Error('not logged in');
           } else {
             this.setState({ failure: true });
-            throw new Error("password");
+            throw new Error('password');
           }
         }
       })
@@ -48,14 +50,12 @@ export class HomeAdmin extends Component {
       })
       .catch(err => {
         if (!this.state.failure) {
-          this.props.history.push("/logincb");
+          this.props.history.push('/logincb');
         }
       });
   };
 
-  passwordError = (
-    <span>The email address or password is incorrect. Please try again.</span>
-  );
+  passwordError = <span>The password is incorrect. Please try again.</span>;
 
   render() {
     return this.state.reauthenticated ? (
@@ -89,22 +89,28 @@ export class HomeAdmin extends Component {
           <button className="ButtonBack">Back to the main page</button>
         </Link>
         <br />
+        <Logoutbutton
+          updateLoggedIn={this.props.updateLoggedIn}
+          redirectUser={this.props.history.push}
+        />
+        <br />
       </div>
     ) : (
       <div>
-        <form onSubmit={this.authenticate}>
-          <label>
-            password
+        <div className="ErrorText">{this.state.failure ? this.passwordError : ''}</div>
+        <form className="Signup" onSubmit={this.authenticate}>
+          <label className="Form__Label">
+            Please, type your password
             <input
+              className="Form__Input"
               type="text"
               name="password"
               onChange={this.handleChange}
               value={this.state.password}
             />
           </label>
-          <button>login</button>
+          <Button />
         </form>
-        {this.state.failure ? this.passwordError : ""}
       </div>
     );
   }
