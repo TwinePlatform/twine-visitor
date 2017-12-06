@@ -59,7 +59,7 @@ class CBlogin extends Component {
           this.setError([EMAIL_ERROR]);
         } else if (data.reason === 'noinput') {
           this.setError([NO_INPUT_ERROR]);
-        } else if (data.success === false) {
+        } else {
           this.setError([DETAILS_ERROR]);
         }
       });

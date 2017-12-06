@@ -23,8 +23,7 @@ router.post('/', (req, res, next) => {
         putVisitsData(visitToAdd.hash, visitToAdd.activity, (error, result) => {
           if (error) {
             console.log('I am an error from putVisitsData ', error);
-          } else {
-            res.send();
+            res.status(500).send(err);
           }
         });
       });

@@ -16,6 +16,7 @@ router.get('/', (req, res) => {
         .then(activities => res.send({ activities }))
         .catch((err) => {
           console.log(err);
+          res.status(500).send(err);
         });
     }
   });

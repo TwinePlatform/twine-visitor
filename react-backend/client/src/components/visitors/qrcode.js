@@ -78,6 +78,10 @@ export class QRCode extends Component {
     this.setState(newState);
   };
 
+  headers = new Headers({
+    Authorization: localStorage.getItem('token'),
+  });
+
   changeActivity = newActivity => {
     this.setState({
       activity: newActivity,
@@ -88,13 +92,9 @@ export class QRCode extends Component {
       activity: newActivity,
     };
 
-    const headers = new Headers({
-      Authorization: localStorage.getItem('token'),
-    });
-
     return fetch('/postActivity', {
       method: 'POST',
-      headers,
+      headers: this.headers,
       body: JSON.stringify(visitInfo),
     })
       .then(this.props.history.push('/visitor/end'))
@@ -123,12 +123,10 @@ export class QRCode extends Component {
           this.props.history.push('/visitor/qrerror');
         });
     }
-    const headers = new Headers({
-      Authorization: localStorage.getItem('token'),
-    });
+
     fetch('/activities', {
       method: 'GET',
-      headers,
+      headers: this.headers,
     })
       .then(res => res.json())
       .then(res => res.activities)

@@ -16,6 +16,7 @@ router.get('/', (req, res) => {
         .then(users => res.send({ users }))
         .catch((err) => {
           console.log(err);
+          res.status(500).send(err);
         });
     }
   });
