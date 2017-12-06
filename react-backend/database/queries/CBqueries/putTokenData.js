@@ -1,9 +1,9 @@
 const dbConnection = require('../../dbConnection');
 
 const insertToken =
-  'UPDATE cbusiness SET token = (token), tokenExpire = (tokenExpire) WHERE email = (formEmail) VALUES ($2, $3, $1)';
+  'UPDATE cbusiness SET token = $1, tokenExpire = $2 WHERE email = $3';
 
-const putCBData = (token, tokenExpire, formEmail, cb) => {
+const putTokenData = (token, tokenExpire, formEmail, cb) => {
   dbConnection.query(
     insertToken,
     [token, tokenExpire, formEmail],
@@ -17,4 +17,4 @@ const putCBData = (token, tokenExpire, formEmail, cb) => {
   );
 };
 
-module.exports = putCBData;
+module.exports = putTokenData;

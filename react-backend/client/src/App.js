@@ -7,6 +7,7 @@ import { Home } from './components/home';
 
 import { CBsignup } from './components/authentication/signupcb';
 import { CBlogin } from './components/authentication/logincb';
+import { NewPassword } from './components/authentication/newPassword';
 import { CBPswdReset } from './components/authentication/pswdresetcb';
 
 import { Main } from './components/visitors/main';
@@ -54,7 +55,7 @@ class App extends Component {
               }
             />
             <Route exact path="/signupcb" component={CBsignup} />
-
+            <Route exact path="/newPassword" component={NewPassword} />
             <Route exact path="/pswdresetcb" component={CBPswdReset} />
 
             <Route
