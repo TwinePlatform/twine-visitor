@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Logoutbutton } from '../visitors/logoutbutton';
 
 export class HomeVisitor extends Component {
   render() {
@@ -19,6 +20,13 @@ export class HomeVisitor extends Component {
         <Link to="/">
           <button className="ButtonBack">Back to the main page</button>
         </Link>
+        <br />
+
+        <Logoutbutton
+          updateLoggedIn={this.props.updateLoggedIn}
+          redirectUser={this.props.history.push}
+        />
+
         <br />
         <a
           href="http://www.powertochange.org.uk/data-protection-funding-applications/"
