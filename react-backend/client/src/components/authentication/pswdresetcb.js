@@ -30,7 +30,7 @@ class CBPswdReset extends Component {
       formEmail: this.state.email
     };
 
-    fetch('/checkCBemail', {
+    fetch('/CBPasswordResetInstigator', {
       method: 'POST',
       body: JSON.stringify(checkData)
     })

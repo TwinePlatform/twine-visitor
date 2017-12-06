@@ -16,7 +16,7 @@ const activities = require('./routes/activities');
 const checkCB = require('./routes/cbauthentication/checkCB');
 const registerCB = require('./routes/cbauthentication/registerCB');
 const checkCBlogin = require('./routes/cbauthentication/checkCBlogin');
-const checkCBemail = require('./routes/cbauthentication/checkCBemail');
+const checkCBemail = require('./routes/cbauthentication/CBPasswordResetInstigator');
 
 const app = express();
 
@@ -43,7 +43,7 @@ app.use('/activities', activities);
 app.use('/checkCB', checkCB);
 app.use('/registerCB', registerCB);
 app.use('/checkCBlogin', checkCBlogin);
-app.use('/checkCBemail', checkCBemail);
+app.use('/CBPasswordResetInstigator', checkCBemail);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
