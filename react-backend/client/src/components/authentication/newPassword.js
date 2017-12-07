@@ -73,7 +73,7 @@ class NewPassword extends Component {
             through the reset password page again.
           </span>
         );
-        if (data === true) {
+        if (data === 'true') {
           console.log('Sucessfully changed the password');
           this.props.history.push('/logincb');
         } else if (data === 'noinput') {

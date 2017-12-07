@@ -20,62 +20,45 @@ router.post('/', (req, res, next) => {
     const data = JSON.parse(body);
     console.log(data);
 
-    // let tokenExists = false;
-    // checkToken(data.token, (error, result) => {
-    //   if (error) {
-    //     console.log('error from checkToken ', error);
-    //     throw error;
-    //   } else {
-    //     tokenExists = result.rows[0].exists;
-    //     console.log(typeof tokenExists, tokenExists);
-    //   }
-    // });
-
-    // let tokenExpire = false;
-    // checkExpire(data.token, (error, result) => {
-    //   if (error) {
-    //     console.log('error from checkExpire ', error);
-    //     throw error;
-    //   } else {
-    //     tokenExpire = result.rows[0].exists;
-    //     console.log(typeof tokenExpire, tokenExpire);
-    //   }
-    // });
-
     if (
       data.formPswd.length === 0 ||
       data.formPswdConfirm.length === 0 ||
       data.token.length === 0
     ) {
       res.send('noinput');
-    } else if (data.formPswd !== data.formPswdConfirm) {
-      console.log("Passwords don't match");
-      res.send('pswdmatch');
-    } else if (strongPassword.test(data.formPswd) === false) {
-      console.log('Password is weak');
-      res.send('pswdweak');
-    } else if (!checkExists(data.token)) {
-      console.log('Token does not match');
-      // console.log(typeof tokenExists, tokenExists);
-      res.send('tokenmatch');
-    } else if (!checkExpire(data.token)) {
-      console.log('Token has expired');
-      // console.log(typeof tokenExpire, tokenExpire);
-      res.send('tokenexpired');
     } else {
-      console.log('password put incoming');
-      const password = hash(data.formPswd);
-      console.log(password);
-      putNewPassword(password, data.token, (error, result) => {
-        if (error) {
-          console.log('error from putNewPassword ', error);
-          res.status(500).send({
-            error: 'Cannot access database to change password'
-          });
-        } else {
-          res.send(true);
+      Promise.all([checkExists(data.token), checkExpire(data.token)]).then(
+        result => {
+          if (!result[0]) {
+            console.log('Token does not match');
+            res.send('tokenmatch');
+          } else if (!result[1]) {
+            console.log('Token has expired');
+            res.send('tokenexpired');
+          } else if (data.formPswd !== data.formPswdConfirm) {
+            console.log("Passwords don't match");
+            res.send('pswdmatch');
+          } else if (strongPassword.test(data.formPswd) === false) {
+            console.log('Password is weak');
+            res.send('pswdweak');
+          } else {
+            console.log('password put incoming');
+            const password = hash(data.formPswd);
+            console.log(password);
+            putNewPassword(password, data.token, (error, result) => {
+              if (error) {
+                console.log('error from putNewPassword ', error);
+                res.status(500).send({
+                  error: 'Cannot access database to change password'
+                });
+              } else {
+                console.log('This should redirect');
+                res.send(true);
+              }
+            });
+          }
         }
-      });
+      );
     }
   });
 });
