@@ -130,7 +130,18 @@ class App extends Component {
               }
             />
 
-            <Route exact path="/admin" component={HomeAdmin} />
+            <Route
+              exact
+              path="/admin"
+              render={props =>
+                this.state.loggedIn ? (
+                  <HomeAdmin {...props} updateLoggedIn={this.updateLoggedIn} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
+              }
+            />
+
             <Route component={NotFound} />
           </Switch>
 
