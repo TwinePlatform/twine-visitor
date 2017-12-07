@@ -3,8 +3,8 @@ const express = require('express');
 const router = express.Router();
 const putNewPassword = require('../../database/queries/CBqueries/putNewPassword');
 const hash = require('../../functions/cbhash');
-const checkExpire = require('../../database/queries/CBqueries/checkExpire');
-const checkToken = require('../../database/queries/CBqueries/checkToken');
+const checkExpire = require('../../functions/checkExpire');
+const checkExists = require('../../functions/checkExists');
 
 const strongPassword = new RegExp(
   '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
@@ -20,27 +20,27 @@ router.post('/', (req, res, next) => {
     const data = JSON.parse(body);
     console.log(data);
 
-    let tokenExists = false;
-    checkToken(data.token, (error, result) => {
-      if (error) {
-        console.log('error from checkToken ', error);
-        throw error;
-      } else {
-        tokenExists = result.rows[0].exists;
-        console.log(typeof tokenExists, tokenExists);
-      }
-    });
+    // let tokenExists = false;
+    // checkToken(data.token, (error, result) => {
+    //   if (error) {
+    //     console.log('error from checkToken ', error);
+    //     throw error;
+    //   } else {
+    //     tokenExists = result.rows[0].exists;
+    //     console.log(typeof tokenExists, tokenExists);
+    //   }
+    // });
 
-    let tokenExpire = false;
-    checkExpire(data.token, (error, result) => {
-      if (error) {
-        console.log('error from checkExpire ', error);
-        throw error;
-      } else {
-        tokenExpire = result.rows[0].exists;
-        console.log(typeof tokenExpire, tokenExpire);
-      }
-    });
+    // let tokenExpire = false;
+    // checkExpire(data.token, (error, result) => {
+    //   if (error) {
+    //     console.log('error from checkExpire ', error);
+    //     throw error;
+    //   } else {
+    //     tokenExpire = result.rows[0].exists;
+    //     console.log(typeof tokenExpire, tokenExpire);
+    //   }
+    // });
 
     if (
       data.formPswd.length === 0 ||
@@ -54,13 +54,13 @@ router.post('/', (req, res, next) => {
     } else if (strongPassword.test(data.formPswd) === false) {
       console.log('Password is weak');
       res.send('pswdweak');
-    } else if (!tokenExists) {
+    } else if (!checkExists(data.token)) {
       console.log('Token does not match');
-      console.log(typeof tokenExists, tokenExists);
+      // console.log(typeof tokenExists, tokenExists);
       res.send('tokenmatch');
-    } else if (!tokenExpire) {
+    } else if (!checkExpire(data.token)) {
       console.log('Token has expired');
-      console.log(typeof tokenExpire, tokenExpire);
+      // console.log(typeof tokenExpire, tokenExpire);
       res.send('tokenexpired');
     } else {
       console.log('password put incoming');
