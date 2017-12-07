@@ -19,6 +19,29 @@ router.post('/', (req, res, next) => {
   req.on('end', () => {
     const data = JSON.parse(body);
     console.log(data);
+
+    let tokenExists = false;
+    checkToken(data.token, (error, result) => {
+      if (error) {
+        console.log('error from checkToken ', error);
+        throw error;
+      } else {
+        tokenExists = result.rows[0].exists;
+        console.log(typeof tokenExists, tokenExists);
+      }
+    });
+
+    let tokenExpire = false;
+    checkExpire(data.token, (error, result) => {
+      if (error) {
+        console.log('error from checkExpire ', error);
+        throw error;
+      } else {
+        tokenExpire = result.rows[0].exists;
+        console.log(typeof tokenExpire, tokenExpire);
+      }
+    });
+
     if (
       data.formPswd.length === 0 ||
       data.formPswdConfirm.length === 0 ||
@@ -31,32 +54,18 @@ router.post('/', (req, res, next) => {
     } else if (strongPassword.test(data.formPswd) === false) {
       console.log('Password is weak');
       res.send('pswdweak');
-    } else if (
-      !checkToken(data.token, (error, result) => {
-        if (error) {
-          console.log('error from checkToken ', error);
-          throw error;
-        } else {
-          return result;
-        }
-      })
-    ) {
+    } else if (!tokenExists) {
       console.log('Token does not match');
+      console.log(typeof tokenExists, tokenExists);
       res.send('tokenmatch');
-    } else if (
-      !checkExpire(data.token, (error, result) => {
-        if (error) {
-          console.log('error from checkExpire ', error);
-          throw error;
-        } else {
-          return result;
-        }
-      })
-    ) {
+    } else if (!tokenExpire) {
       console.log('Token has expired');
+      console.log(typeof tokenExpire, tokenExpire);
       res.send('tokenexpired');
     } else {
+      console.log('password put incoming');
       const password = hash(data.formPswd);
+      console.log(password);
       putNewPassword(password, data.token, (error, result) => {
         if (error) {
           console.log('error from putNewPassword ', error);

@@ -7,20 +7,6 @@ class NewPassword extends Component {
   constructor(props) {
     super(props);
 
-    // urlToken = '';
-    // if (
-    //   checkToken(urlToken, (error, result) => {
-    //     if (error) {
-    //       console.log('error from checkToken ', error);
-    //       this.props.history.push('/logincb');
-    //     } else if (result === true) {
-    //       this.setState({ token: urlToken });
-    //     } else {
-    //       this.props.history.push('/logincb');
-    //     }
-    //   })
-    // );
-
     this.state = {
       password: '',
       confirm_password: '',
@@ -76,14 +62,14 @@ class NewPassword extends Component {
         );
         const NO_TOKEN_MATCH = (
           <span>
-            The security token you have entered does not match the one we have. 
+            The security token you have entered does not match the one we have.
             <br /> Please double check that you have entered it correctly.
           </span>
         );
         const TOKEN_EXPIRED = (
           <span>
-            The security token you have entered has expired. 
-            <br /> If you still need to change your password please contact us 
+            The security token you have entered has expired.
+            <br /> If you still need to change your password please contact us
             through the reset password page again.
           </span>
         );
@@ -120,7 +106,11 @@ class NewPassword extends Component {
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
         >
-        <Input type="password" question="Enter Security Token" option="token" />
+          <Input
+            type="password"
+            question="Enter Security Token"
+            option="token"
+          />
           <Input type="password" question="Enter Password" option="password" />
           <Input
             type="password"
