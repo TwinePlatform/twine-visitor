@@ -10,7 +10,7 @@ class CBlogin extends Component {
     this.state = {
       email: '',
       password: '',
-      error: []
+      error: [],
     };
   }
 
@@ -29,30 +29,27 @@ class CBlogin extends Component {
 
     const checkData = {
       formEmail: this.state.email,
-      formPswd: this.state.password
+      formPswd: this.state.password,
     };
 
     fetch('/checkCBlogin', {
       method: 'POST',
-      body: JSON.stringify(checkData)
+      body: JSON.stringify(checkData),
     })
       .then(res => res.json())
       .then(data => {
         const EMAIL_ERROR = (
           <span>
-            This email is invalid - please make sure you have entered a valid
-            email address.
+            This email is invalid - please make sure you have entered a valid email address.
           </span>
         );
         const DETAILS_ERROR = (
-          <span>
-            The email address or password is incorrect. Please try again.
-          </span>
+          <span>The email address or password is incorrect. Please try again.</span>
         );
         const NO_INPUT_ERROR = (
           <span>
-            Oops, you need to enter your information. <br />Please make sure you
-            leave no input field blank before continuing.
+            Oops, you need to enter your information. <br />Please make sure you leave no input
+            field blank before continuing.
           </span>
         );
         if (data.success === true) {
@@ -74,29 +71,21 @@ class CBlogin extends Component {
 
     return (
       <section>
-        <h1>Please login or signup</h1>
+        <h1>Please login</h1>
         {error && (
-          <div className="ErrorText">
-            {error.map((el, i) => <span key={i}>{el}</span>)}
-          </div>
+          <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
         )}
-        <form
-          className="Signup"
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-        >
-          <Input question="Business Email" option="email" />
-          <Input question="Enter Password" option="password" />
-          <Button />
+        <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
+          <Input label="Business Email" name="email" />
+          <Input label="Password" name="password" type="password" />
+          <Button label="Login" />
         </form>
         <br />
         <Link to="/pswdresetcb">
-          <button className="ButtonBack">Reset Password</button>
+          <button className="Button ButtonBack">Reset Password</button>
         </Link>
         <Link to="/signupcb">
-          <button className="ButtonBack">
-            Sign up your community business
-          </button>
+          <button className="Button ButtonBack">Sign up your community business</button>
         </Link>
         <br />
       </section>

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 export class QRPrivacy extends Component {
   render() {
     return (
-      <aside className="Privacy">
+      <aside className={`Privacy ${this.props.className}`}>
         <img className="Privacy__image" src="/images/question.png" alt="question" />
         <h3 className="Privacy__title">What information are we storing?</h3>
         <p className="Privacy__text">

@@ -144,54 +144,6 @@ class App extends Component {
 
             <Route component={NotFound} />
           </Switch>
-
-          <Route
-            exact
-            path="/visitor/signup"
-            render={props =>
-              this.state.loggedIn ? (
-                <FormPrivacy {...props} />
-              ) : (
-                <Redirect to="/logincb" />
-              )
-            }
-          />
-
-          <Route
-            exact
-            path="/visitor/signup/step2"
-            render={props =>
-              this.state.loggedIn ? (
-                <FormPrivacy2 {...props} />
-              ) : (
-                <Redirect to="/logincb" />
-              )
-            }
-          />
-
-          <Route
-            exact
-            path="/visitor/login"
-            render={props =>
-              this.state.loggedIn ? (
-                <QRPrivacy {...props} />
-              ) : (
-                <Redirect to="/logincb" />
-              )
-            }
-          />
-
-          <Route
-            exact
-            path="/visitor/qrerror"
-            render={props =>
-              this.state.loggedIn ? (
-                <QRPrivacy {...props} />
-              ) : (
-                <Redirect to="/logincb" />
-              )
-            }
-          />
         </div>
       </div>
     );
