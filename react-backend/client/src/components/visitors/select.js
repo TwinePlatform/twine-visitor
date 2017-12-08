@@ -20,7 +20,7 @@ export class Select extends Component {
           name={this.props.option}
           onChange={this.handleUserInput}
           value={this.state.userInput}
-          className="Select"
+          className="Form__Select"
         >
           {this.props.choices.map(choice => (
             <option key={choice} value={choice}>
@@ -28,8 +28,6 @@ export class Select extends Component {
             </option>
           ))}
         </select>
-        <br />
-        <br />
       </label>
     );
   }

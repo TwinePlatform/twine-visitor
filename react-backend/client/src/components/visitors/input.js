@@ -14,17 +14,15 @@ export class Input extends Component {
   render() {
     return (
       <label className="Form__Label">
-        {this.props.question}
+        {this.props.label || this.props.question}
         <br />
         <input
-          type="text"
-          name={this.props.option}
+          type={this.props.type || 'text'}
+          name={this.props.name || this.props.option}
           onChange={this.handleUserInput}
           value={this.state.userInput}
           className="Form__Input"
         />
-        <br />
-        <br />
       </label>
     );
   }

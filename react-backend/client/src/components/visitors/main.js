@@ -4,6 +4,8 @@ import { Select } from './select';
 import { Button } from './button';
 import { Route, Link, Switch } from 'react-router-dom';
 import qrcodelogo from '../../qrcodelogo.png';
+import { FormPrivacy } from '../visitors/form_privacy';
+import { FormPrivacy2 } from '../visitors/form_privacy2';
 
 const generateYearsArray = (startYear, currentYear) =>
   Array.from({ length: currentYear + 1 - startYear }, (v, i) => startYear + i);
@@ -105,7 +107,7 @@ class Main extends Component {
       formYear: this.state.year,
       formHash: this.state.hash,
     };
-    fetch('/qrgen', {
+    fetch('/qrgenerator', {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify(formData),
@@ -116,7 +118,7 @@ class Main extends Component {
       })
       .then(() => this.props.history.push('/visitor/signup/thankyou'))
       .catch(error => {
-        console.log('ERROR HAPPENING AT FETCH /qrgen', error);
+        console.log('ERROR HAPPENING AT FETCH /qrgenerator', error);
         this.props.history.push('/visitor/login');
       });
   };
@@ -125,68 +127,74 @@ class Main extends Component {
     const { error, url } = this.state; //const error = this.state.error
 
     return (
-      <Switch>
-        <Route exact path="/visitor/signup">
-          <section className="Main">
-            <h1>Please tell us about yourself</h1>
-            {error && (
-              <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
-            )}
-            <form className="Signup" onChange={this.handleChange}>
-              <Input question="Your Full Name" option="fullname" />
-              <Input question="Your Email" option="email" />
-            </form>
-            <button onClick={this.handleSwitch} className="Button">
-              {' '}
-              Next{' '}
-            </button>
-          </section>
-        </Route>
-        <Route exact path="/visitor/signup/step2">
-          <section className="Main">
-            <h1>Please tell us about yourself</h1>
-            <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
-              <Select
-                question="Select Your Sex"
-                option="sex"
-                choices={['male', 'female', 'prefer not to say']}
-              />
-              <Select question="Year of Birth" option="year" choices={years} />
-              <Button />
-            </form>
-          </section>
-        </Route>
-
-        <Route path="/visitor/signup/thankyou">
-          <section>
-            <div className="hidden-printer">
-              <h1>
-                Here is your QR code. Please print this page and use the code to sign in when you
-                visit us.
-              </h1>
-              <h2>We have also emailed you a copy.</h2>
-              <img className="QR__image" src={url} alt="This is your QRcode" />
-              <Link to="/visitor">
-                <button className="Button">Next</button>
-              </Link>
-              <button className="Button" onClick={window.print}>
-                Print
+      <div className="row">
+        <Switch>
+          <Route exact path="/visitor/signup">
+            <section className="Main col-9">
+              <h1>Please tell us about yourself</h1>
+              {error && (
+                <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
+              )}
+              <form className="Signup" onChange={this.handleChange}>
+                <Input question="Your Full Name" option="fullname" />
+                <Input question="Your Email" option="email" />
+              </form>
+              <button onClick={this.handleSwitch} className="Button">
+                {' '}
+                Next{' '}
               </button>
-            </div>
+            </section>
+          </Route>
+          <Route exact path="/visitor/signup/step2">
+            <section className="Main col-9">
+              <h1>Please tell us about yourself</h1>
+              <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
+                <Select
+                  question="Select Your Sex"
+                  option="sex"
+                  choices={['male', 'female', 'prefer not to say']}
+                />
+                <Select question="Year of Birth" option="year" choices={years} />
+                <Button />
+              </form>
+            </section>
+          </Route>
 
-            {/*This is the print layout of the QRcode*/}
-            <div className="visible-printer qr-code-to-print">
-              <div className="dashed">
-                <img height="182" src={qrcodelogo} alt="Power to change Logo" />
+          <Route path="/visitor/signup/thankyou">
+            <section className="col-12">
+              <div className="hidden-printer col-12">
+                <h1>
+                  Here is your QR code. Please print this page and use the code to sign in when you
+                  visit us.
+                </h1>
+                <h2>We have also emailed you a copy.</h2>
                 <img className="QR__image" src={url} alt="This is your QRcode" />
-                <h5>
-                  Please print this QR code and <br /> bring it with you to access next time
-                </h5>
+                <Link to="/visitor">
+                  <button className="Button">Next</button>
+                </Link>
+                <button className="Button" onClick={window.print}>
+                  Print
+                </button>
               </div>
-            </div>
-          </section>
-        </Route>
-      </Switch>
+
+              {/*This is the print layout of the QRcode*/}
+              <div className="visible-printer qr-code-to-print">
+                <div className="dashed">
+                  <img height="182" src={qrcodelogo} alt="Power to change Logo" />
+                  <img className="QR__image" src={url} alt="This is your QRcode" />
+                  <h5>
+                    Please print this QR code and <br /> bring it with you to access next time
+                  </h5>
+                </div>
+              </div>
+            </section>
+          </Route>
+        </Switch>
+
+        <Route exact path="/visitor/signup" component={FormPrivacy} />
+
+        <Route exact path="/visitor/signup/step2" component={FormPrivacy2} />
+      </div>
     );
   }
 }
