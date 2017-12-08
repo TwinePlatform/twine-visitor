@@ -1,26 +1,23 @@
-import React, { Component } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import React, { Component } from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
-import "./App.css";
+import './App.css';
 
-import { Home } from "./components/home";
+import { Home } from './components/home';
 
-import { CBsignup } from "./components/authentication/signupcb";
-import { CBlogin } from "./components/authentication/logincb";
-import { CBPswdReset } from "./components/authentication/pswdresetcb";
+import { CBsignup } from './components/authentication/signupcb';
+import { CBlogin } from './components/authentication/logincb';
+import { CBPswdReset } from './components/authentication/pswdresetcb';
 
-import { Main } from "./components/visitors/main";
-import { QRCode } from "./components/visitors/qrcode";
-import { FormPrivacy } from "./components/visitors/form_privacy";
-import { FormPrivacy2 } from "./components/visitors/form_privacy2";
-import { QRPrivacy } from "./components/visitors/qrprivacy";
-import { QrError } from "./components/visitors/qrerror";
-import { Thanks } from "./components/visitors/thanks";
-import { HomeVisitor } from "./components/visitors/homeVisitor";
+import { Main } from './components/visitors/main';
+import { QRCode } from './components/visitors/qrcode';
+import { QrError } from './components/visitors/qrerror';
+import { Thanks } from './components/visitors/thanks';
+import { HomeVisitor } from './components/visitors/homeVisitor';
 
-import { HomeAdmin } from "./components/admin/homeAdmin";
+import { HomeAdmin } from './components/admin/homeAdmin';
 
-import { NotFound } from "./components/NotFound";
+import { NotFound } from './components/NotFound';
 
 class App extends Component {
   constructor(props) {
@@ -33,7 +30,7 @@ class App extends Component {
   }
 
   updateLoggedIn = () => {
-    const loggedIn = Boolean(localStorage.getItem("token"));
+    const loggedIn = Boolean(localStorage.getItem('token'));
     this.setState({ loggedIn });
   };
 
@@ -74,10 +71,7 @@ class App extends Component {
               path="/visitor"
               render={props =>
                 this.state.loggedIn ? (
-                  <HomeVisitor
-                    {...props}
-                    updateLoggedIn={this.updateLoggedIn}
-                  />
+                  <HomeVisitor {...props} updateLoggedIn={this.updateLoggedIn} />
                 ) : (
                   <Redirect to="/logincb" />
                 )
@@ -86,22 +80,14 @@ class App extends Component {
             <Route
               path="/visitor/signup"
               render={props =>
-                this.state.loggedIn ? (
-                  <Main {...props} />
-                ) : (
-                  <Redirect to="/logincb" />
-                )
+                this.state.loggedIn ? <Main {...props} /> : <Redirect to="/logincb" />
               }
             />
             <Route
               exact
               path="/visitor/login"
               render={props =>
-                this.state.loggedIn ? (
-                  <QRCode {...props} />
-                ) : (
-                  <Redirect to="/logincb" />
-                )
+                this.state.loggedIn ? <QRCode {...props} /> : <Redirect to="/logincb" />
               }
             />
 
@@ -109,11 +95,7 @@ class App extends Component {
               exact
               path="/visitor/qrerror"
               render={props =>
-                this.state.loggedIn ? (
-                  <QrError {...props} />
-                ) : (
-                  <Redirect to="/logincb" />
-                )
+                this.state.loggedIn ? <QrError {...props} /> : <Redirect to="/logincb" />
               }
             />
 
@@ -121,11 +103,7 @@ class App extends Component {
               exact
               path="/visitor/end"
               render={props =>
-                this.state.loggedIn ? (
-                  <Thanks {...props} />
-                ) : (
-                  <Redirect to="/logincb" />
-                )
+                this.state.loggedIn ? <Thanks {...props} /> : <Redirect to="/logincb" />
               }
             />
 
@@ -143,54 +121,6 @@ class App extends Component {
 
             <Route component={NotFound} />
           </Switch>
-
-          <Route
-            exact
-            path="/visitor/signup"
-            render={props =>
-              this.state.loggedIn ? (
-                <FormPrivacy {...props} />
-              ) : (
-                <Redirect to="/logincb" />
-              )
-            }
-          />
-
-          <Route
-            exact
-            path="/visitor/signup/step2"
-            render={props =>
-              this.state.loggedIn ? (
-                <FormPrivacy2 {...props} />
-              ) : (
-                <Redirect to="/logincb" />
-              )
-            }
-          />
-
-          <Route
-            exact
-            path="/visitor/login"
-            render={props =>
-              this.state.loggedIn ? (
-                <QRPrivacy {...props} />
-              ) : (
-                <Redirect to="/logincb" />
-              )
-            }
-          />
-
-          <Route
-            exact
-            path="/visitor/qrerror"
-            render={props =>
-              this.state.loggedIn ? (
-                <QRPrivacy {...props} />
-              ) : (
-                <Redirect to="/logincb" />
-              )
-            }
-          />
         </div>
       </div>
     );

@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "../visitors/button";
-import { Logoutbutton } from "../visitors/logoutbutton";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '../visitors/button';
+import { Logoutbutton } from '../visitors/logoutbutton';
 
 export class HomeAdmin extends Component {
   constructor(props) {
@@ -10,7 +10,7 @@ export class HomeAdmin extends Component {
       users: [],
       reauthenticated: false,
       failure: false,
-      password: ""
+      password: '',
     };
   }
 
@@ -23,12 +23,12 @@ export class HomeAdmin extends Component {
   authenticate = event => {
     event.preventDefault();
     const headers = new Headers({
-      Authorization: localStorage.getItem("token")
+      Authorization: localStorage.getItem('token'),
     });
-    fetch("/all-users", {
-      method: "POST",
+    fetch('/all-users', {
+      method: 'POST',
       headers,
-      body: JSON.stringify({ password: this.state.password })
+      body: JSON.stringify({ password: this.state.password }),
     })
       .then(res => res.json())
       .then(res => {
@@ -36,11 +36,11 @@ export class HomeAdmin extends Component {
         if (res.success) {
           return res.users;
         } else {
-          if (res.reason === "not logged in") {
-            throw new Error("not logged in");
+          if (res.reason === 'not logged in') {
+            throw new Error('not logged in');
           } else {
             this.setState({ failure: true });
-            throw new Error("password");
+            throw new Error('password');
           }
         }
       })
@@ -50,7 +50,7 @@ export class HomeAdmin extends Component {
       })
       .catch(err => {
         if (!this.state.failure) {
-          this.props.history.push("/logincb");
+          this.props.history.push('/logincb');
         }
       });
   };
@@ -60,7 +60,7 @@ export class HomeAdmin extends Component {
   render() {
     return this.state.reauthenticated ? (
       <div>
-        <h2>Visitor Data</h2>
+        <h1>Visitor Data</h1>
         <table>
           <thead>
             <tr>
@@ -86,7 +86,7 @@ export class HomeAdmin extends Component {
           </tbody>
         </table>
         <Link to="/">
-          <button className="ButtonBack">Back to the main page</button>
+          <button className="Button ButtonBack">Back to the main page</button>
         </Link>
         <br />
         <Logoutbutton
@@ -97,15 +97,13 @@ export class HomeAdmin extends Component {
       </div>
     ) : (
       <div>
-        <div className="ErrorText">
-          {this.state.failure ? this.passwordError : ""}
-        </div>
+        <div className="ErrorText">{this.state.failure ? this.passwordError : ''}</div>
         <form className="Signup" onSubmit={this.authenticate}>
           <label className="Form__Label">
             Please, type your password
             <input
               className="Form__Input"
-              type="text"
+              type="password"
               name="password"
               onChange={this.handleChange}
               value={this.state.password}

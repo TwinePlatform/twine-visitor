@@ -13,7 +13,7 @@ class CBsignup extends Component {
       email: '',
       genre: '',
       password: '',
-      error: []
+      error: [],
     };
   }
 
@@ -35,51 +35,46 @@ class CBsignup extends Component {
       formEmail: this.state.email,
       formGenre: this.state.genre,
       formPswd: this.state.password,
-      formPswdConfirm: this.state.confirm_password
+      formPswdConfirm: this.state.confirm_password,
     };
 
     fetch('/checkCB', {
       method: 'POST',
-      body: JSON.stringify(checkData)
+      body: JSON.stringify(checkData),
     })
       .then(res => res.text())
       .then(data => {
         const EMAIL_ERROR = (
           <span>
-            This email is invalid - please make sure you have entered a valid
-            email address.
+            This email is invalid - please make sure you have entered a valid email address.
           </span>
         );
         const NAME_ERROR = (
           <span>
-            This name is invalid - please remove all special characters. <br />Your
-            entered name must only contain alphebetical characters and spaces.
+            This name is invalid - please remove all special characters. <br />Your entered name
+            must only contain alphebetical characters and spaces.
           </span>
         );
         const USER_EXISTS_ERROR = (
-          <span>
-            This email is already registered. Are you sure you don't have an
-            account?
-          </span>
+          <span>This email is already registered. Are you sure you don't have an account?</span>
         );
         const NO_INPUT_ERROR = (
           <span>
-            Oops, you need to enter your information. <br />Please make sure you
-            leave no input field blank before continuing.
+            Oops, you need to enter your information. <br />Please make sure you leave no input
+            field blank before continuing.
           </span>
         );
         const NO_PASSWORD_MATCH = (
           <span>
-            Oops, your passwords do not match. <br />Please make sure you have
-            typed the same password in both fields.
+            Oops, your passwords do not match. <br />Please make sure you have typed the same
+            password in both fields.
           </span>
         );
         const PASSWORD_WEAK = (
           <span>
-            Your password is insecure, make sure it fulfills all of the
-            requirements. <br />It must contain at least one lowercase, one
-            uppercase letter, one number and one special character and must be
-            at least 8 characters long.
+            Your password is insecure, make sure it fulfills all of the requirements. <br />It must
+            contain at least one lowercase, one uppercase letter, one number and one special
+            character and must be at least 8 characters long.
           </span>
         );
         if (data === 'false') {
@@ -87,11 +82,11 @@ class CBsignup extends Component {
             formName: this.state.org_name,
             formEmail: this.state.email,
             formGenre: this.state.genre,
-            formPswd: this.state.password
+            formPswd: this.state.password,
           };
           fetch('/registerCB', {
             method: 'POST',
-            body: JSON.stringify(CBData)
+            body: JSON.stringify(CBData),
           }).catch(error => {
             console.log('ERROR HAPPENING AT FETCH /registercb', error);
           });
@@ -122,15 +117,9 @@ class CBsignup extends Component {
       <section>
         <h1>Please provide us with required information on your business</h1>
         {error && (
-          <div className="ErrorText">
-            {error.map((el, i) => <span key={i}>{el}</span>)}
-          </div>
+          <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
         )}
-        <form
-          className="Signup"
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-        >
+        <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
           <Input question="Business Name" option="org_name" />
           <Input question="Business Email" option="email" />
           <Select
@@ -151,19 +140,15 @@ class CBsignup extends Component {
               'Sport & leisure',
               'Transport',
               'Visitor facilities or tourism',
-              'Waste reduction, reuse or recycling'
+              'Waste reduction, reuse or recycling',
             ]}
           />
           <Input type="password" question="Enter Password" option="password" />
-          <Input
-            type="password"
-            question="Confirm Password"
-            option="confirm_password"
-          />
+          <Input type="password" question="Confirm Password" option="confirm_password" />
           <Button />
         </form>
         <Link to="/logincb">
-          <button className="ButtonBack">Login</button>
+          <button className="Button ButtonBack">Login</button>
         </Link>
       </section>
     );

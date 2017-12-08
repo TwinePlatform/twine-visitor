@@ -4,7 +4,7 @@ export class Button extends Component {
   render() {
     return (
       <button className="Button" type="submit">
-        Continue
+        {this.props.label || 'Continue'}
       </button>
     );
   }

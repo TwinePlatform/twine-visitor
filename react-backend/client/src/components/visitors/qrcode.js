@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { PurposeButton } from './purposeButton';
 import { withRouter } from 'react-router-dom';
+import { QRPrivacy } from '../visitors/qrprivacy';
 
 function getUserFromQRScan(content) {
   const headers = new Headers({
@@ -148,29 +149,35 @@ export class QRCode extends Component {
   render() {
     if (this.state.login === 1) {
       return (
-        <section className="Main">
-          <h1>WELCOME BACK!</h1>
-          <div id="instascan">
-            <video id="preview" className="Video active" />
-          </div>
-        </section>
+        <div className="row">
+          <section className="Main col-9">
+            <h1>WELCOME BACK!</h1>
+            <div id="instascan">
+              <video id="preview" className="Video active" />
+            </div>
+          </section>
+          <QRPrivacy className="col-3" />
+        </div>
       );
     } else {
       return (
-        <section className="Main">
-          <h1 className="capitalise" id="username">
-            Welcome Back, {this.state.username}
-          </h1>
+        <div className="row">
+          <section className="Main col-9">
+            <h1 className="capitalise" id="username">
+              Welcome Back, {this.state.username}
+            </h1>
 
-          {this.state.activities.map(activity => (
-            <PurposeButton
-              key={activity.name}
-              session={activity.name}
-              activity={this.state.activity}
-              onClick={this.changeActivity}
-            />
-          ))}
-        </section>
+            {this.state.activities.map(activity => (
+              <PurposeButton
+                key={activity.name}
+                session={activity.name}
+                activity={this.state.activity}
+                onClick={this.changeActivity}
+              />
+            ))}
+          </section>
+          <QRPrivacy className="col-3" />
+        </div>
       );
     }
   }

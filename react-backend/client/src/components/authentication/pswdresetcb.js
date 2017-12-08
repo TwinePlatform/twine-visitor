@@ -9,7 +9,7 @@ class CBPswdReset extends Component {
 
     this.state = {
       email: '',
-      error: []
+      error: [],
     };
   }
 
@@ -27,30 +27,27 @@ class CBPswdReset extends Component {
     e.preventDefault();
 
     const checkData = {
-      formEmail: this.state.email
+      formEmail: this.state.email,
     };
 
     fetch('/CBPasswordResetInstigator', {
       method: 'POST',
-      body: JSON.stringify(checkData)
+      body: JSON.stringify(checkData),
     })
       .then(res => res.text())
       .then(data => {
         const EMAIL_ERROR = (
           <span>
-            This email is invalid - please make sure you have entered a valid
-            email address.
+            This email is invalid - please make sure you have entered a valid email address.
           </span>
         );
         const DETAILS_ERROR = (
-          <span>
-            We don't have a record of this email. Have you entered it correctly?
-          </span>
+          <span>We don't have a record of this email. Have you entered it correctly?</span>
         );
         const NO_INPUT_ERROR = (
           <span>
-            Oops, you need to enter your information. <br />Please make sure you
-            enter an email before continuing.
+            Oops, you need to enter your information. <br />Please make sure you enter an email
+            before continuing.
           </span>
         );
         if (data === 'true') {
@@ -71,24 +68,16 @@ class CBPswdReset extends Component {
 
     return (
       <section>
-        <h1>
-          Please enter your registered email to receive reset instructions
-        </h1>
+        <h1>Please enter your registered email to receive reset instructions</h1>
         {error && (
-          <div className="ErrorText">
-            {error.map((el, i) => <span key={i}>{el}</span>)}
-          </div>
+          <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
         )}
-        <form
-          className="Signup"
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-        >
+        <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
           <Input question="Business Email" option="email" />
           <Button />
         </form>
         <Link to="/logincb">
-          <button className="ButtonBack">Back to login</button>
+          <button className="Button ButtonBack">Back to login</button>
         </Link>
       </section>
     );

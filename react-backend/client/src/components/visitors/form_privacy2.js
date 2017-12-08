@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 export class FormPrivacy2 extends Component {
   render() {
     return (
-      <aside className="Privacy">
+      <aside className="Privacy col-3">
         <img className="Privacy__image" src="/images/question.png" alt="question" />
         <h3 className="Privacy__title">What happens to the data I disclose here?</h3>
         <p className="Privacy__text">
