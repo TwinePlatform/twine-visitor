@@ -1,9 +1,13 @@
 const validator = require('validator');
 const getCBAlreadyExists = require('../../database/queries/getCBAlreadyExists');
 const express = require('express');
+const resetTokenGen = require('../../functions/tokengen');
+const putToken = require('../../database/queries/CBqueries/putTokenData');
 const sendResetEmail = require('../../functions/sendResetEmail');
 
 const router = express.Router();
+
+const tokenExpire = Date.now() + 3600000;
 
 router.post('/', (req, res, next) => {
   let body = '';
@@ -24,8 +28,14 @@ router.post('/', (req, res, next) => {
           });
         } else {
           res.send(result.rows[0].exists);
-          if (result.rows[0].exists === true) {
-            sendResetEmail(data.formEmail);
+          if (result.rows[0].exists) {
+            resetTokenGen().then(token => {
+              putToken(token, tokenExpire, data.formEmail, err => {
+                if (err) throw err;
+                console.log(token);
+                sendResetEmail(data.formEmail, token);
+              });
+            });
           }
         }
       });
