@@ -106,11 +106,7 @@ class NewPassword extends Component {
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
         >
-          <Input
-            type="password"
-            question="Enter Security Token"
-            option="token"
-          />
+          <Input type="text" question="Enter Security Token" option="token" />
           <Input type="password" question="Enter Password" option="password" />
           <Input
             type="password"
@@ -120,7 +116,7 @@ class NewPassword extends Component {
           <Button />
         </form>
         <Link to="/logincb">
-          <button className="ButtonBack">Back to login</button>
+          <button className="Button ButtonBack">Back to login</button>
         </Link>
       </section>
     );
