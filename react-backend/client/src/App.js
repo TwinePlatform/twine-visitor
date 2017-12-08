@@ -12,9 +12,6 @@ import { CBPswdReset } from './components/authentication/pswdresetcb';
 
 import { Main } from './components/visitors/main';
 import { QRCode } from './components/visitors/qrcode';
-import { FormPrivacy } from './components/visitors/form_privacy';
-import { FormPrivacy2 } from './components/visitors/form_privacy2';
-import { QRPrivacy } from './components/visitors/qrprivacy';
 import { QrError } from './components/visitors/qrerror';
 import { Thanks } from './components/visitors/thanks';
 import { HomeVisitor } from './components/visitors/homeVisitor';
