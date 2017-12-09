@@ -7,13 +7,13 @@ const sendResetEmail = require('../../functions/sendResetEmail');
 
 const router = express.Router();
 
-const tokenExpire = Date.now() + 3600000;
-
 router.post('/', (req, res, next) => {
   let body = '';
   req.on('data', chunk => {
     body += chunk;
   });
+
+  const tokenExpire = Date.now() + 3600000;
 
   req.on('end', () => {
     const data = JSON.parse(body);

@@ -6,7 +6,7 @@ export class HomeVisitor extends Component {
     return (
       <div>
         <h1>
-          Where do you want to go?<br />
+          Welcome visitor! <br /> What do you want to do?<br />
         </h1>
         <Link to="/visitor/signup">
           <button className="Button">Sign up</button>
