@@ -37,15 +37,20 @@ class CBPswdReset extends Component {
     })
       .then(res => res.text())
       .then(data => {
-        if (data === 'true') {
-          console.log('Success, now lets send a password reset email');
-          this.props.history.push('/logincb');
-        } else if (data === 'email') {
-          this.setError([errorMessages.EMAIL_ERROR]);
-        } else if (data === 'noinput') {
-          this.setError([errorMessages.NO_INPUT_ERROR]);
-        } else if (data === 'false') {
-          this.setError([errorMessages.RESET_DETAILS_ERROR]);
+        switch (data) {
+          case 'email':
+            this.setError([errorMessages.EMAIL_ERROR]);
+            break;
+          case 'noinput':
+            this.setError([errorMessages.NO_INPUT_ERROR]);
+            break;
+          case 'false':
+            this.setError([errorMessages.RESET_DETAILS_ERROR]);
+            break;
+          default:
+            console.log('Success, now lets send a password reset email');
+            this.props.history.push('/logincb');
+            break;
         }
       });
   };

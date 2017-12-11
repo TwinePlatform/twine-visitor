@@ -41,19 +41,26 @@ class NewPassword extends Component {
     })
       .then(res => res.text())
       .then(data => {
-        if (data === 'true') {
-          console.log('Sucessfully changed the password');
-          this.props.history.push('/logincb');
-        } else if (data === 'noinput') {
-          this.setError([errorMessages.NO_INPUT_ERROR]);
-        } else if (data === 'pswdmatch') {
-          this.setError([errorMessages.NO_PASSWORD_MATCH]);
-        } else if (data === 'pswdweak') {
-          this.setError([errorMessages.PASSWORD_WEAK]);
-        } else if (data === 'tokenmatch') {
-          this.setError([errorMessages.NO_TOKEN_MATCH]);
-        } else if (data === 'tokenexpired') {
-          this.setError([errorMessages.TOKEN_EXPIRED]);
+        switch (data) {
+          case 'noinput':
+            this.setError([errorMessages.NO_INPUT_ERROR]);
+            break;
+          case 'pswdmatch':
+            this.setError([errorMessages.NO_PASSWORD_MATCH]);
+            break;
+          case 'pswdweak':
+            this.setError([errorMessages.PASSWORD_WEAK]);
+            break;
+          case 'tokenmatch':
+            this.setError([errorMessages.NO_TOKEN_MATCH]);
+            break;
+          case 'tokenexpired':
+            this.setError([errorMessages.TOKEN_EXPIRED]);
+            break;
+          default:
+            console.log('Sucessfully changed the password');
+            this.props.history.push('/logincb');
+            break;
         }
       });
   };

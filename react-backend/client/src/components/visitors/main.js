@@ -58,18 +58,25 @@ class Main extends Component {
     })
       .then(res => res.text())
       .then(data => {
-        if (data === 'false') {
-          this.props.history.push('/visitor/signup/step2');
-        } else if (data === 'email') {
-          this.setError([errorMessages.EMAIL_ERROR]);
-        } else if (data === 'name') {
-          this.setError([errorMessages.NAME_ERROR]);
-        } else if (data === 'emailname') {
-          this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
-        } else if (data === 'true') {
-          this.setError([errorMessages.USER_EXISTS_ERROR]);
-        } else if (data === 'noinput') {
-          this.setError([errorMessages.NO_INPUT_ERROR]);
+        switch (data) {
+          case 'email':
+            this.setError([errorMessages.EMAIL_ERROR]);
+            break;
+          case 'name':
+            this.setError([errorMessages.NAME_ERROR]);
+            break;
+          case 'emailname':
+            this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
+            break;
+          case 'true':
+            this.setError([errorMessages.USER_EXISTS_ERROR]);
+            break;
+          case 'noinput':
+            this.setError([errorMessages.NO_INPUT_ERROR]);
+            break;
+          default:
+            this.props.history.push('/visitor/signup/step2');
+            break;
         }
       });
   };

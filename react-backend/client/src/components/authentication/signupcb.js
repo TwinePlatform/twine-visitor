@@ -45,35 +45,44 @@ class CBsignup extends Component {
     })
       .then(res => res.text())
       .then(data => {
-        if (data === 'false') {
-          const CBData = {
-            formName: this.state.org_name,
-            formEmail: this.state.email,
-            formGenre: this.state.genre,
-            formPswd: this.state.password,
-          };
-          fetch('/registerCB', {
-            method: 'POST',
-            body: JSON.stringify(CBData),
-          }).catch(error => {
-            console.log('ERROR HAPPENING AT FETCH /registercb', error);
-          });
-          this.props.history.push('/logincb');
-        } else if (data === 'email') {
-          console.log(data);
-          this.setError([errorMessages.EMAIL_ERROR]);
-        } else if (data === 'name') {
-          this.setError([errorMessages.NAME_ERROR]);
-        } else if (data === 'emailname') {
-          this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
-        } else if (data === 'true') {
-          this.setError([errorMessages.CB_EXISTS_ERROR]);
-        } else if (data === 'noinput') {
-          this.setError([errorMessages.NO_INPUT_ERROR]);
-        } else if (data === 'pswdmatch') {
-          this.setError([errorMessages.NO_PASSWORD_MATCH]);
-        } else if (data === 'pswdweak') {
-          this.setError([errorMessages.PASSWORD_WEAK]);
+        switch (data) {
+          case 'email':
+            console.log(data);
+            this.setError([errorMessages.EMAIL_ERROR]);
+            break;
+          case 'name':
+            this.setError([errorMessages.NAME_ERROR]);
+            break;
+          case 'emailname':
+            this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
+            break;
+          case 'true':
+            this.setError([errorMessages.CB_EXISTS_ERROR]);
+            break;
+          case 'noinput':
+            this.setError([errorMessages.NO_INPUT_ERROR]);
+            break;
+          case 'pswdmatch':
+            this.setError([errorMessages.NO_PASSWORD_MATCH]);
+            break;
+          case 'pswdweak':
+            this.setError([errorMessages.PASSWORD_WEAK]);
+            break;
+          default:
+            const CBData = {
+              formName: this.state.org_name,
+              formEmail: this.state.email,
+              formGenre: this.state.genre,
+              formPswd: this.state.password,
+            };
+            fetch('/registerCB', {
+              method: 'POST',
+              body: JSON.stringify(CBData),
+            }).catch(error => {
+              console.log('ERROR HAPPENING AT FETCH /registercb', error);
+            });
+            this.props.history.push('/logincb');
+            break;
         }
       });
   };
