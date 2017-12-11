@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Input } from '../visitors/input';
 import { Button } from '../visitors/button';
 import { Link } from 'react-router-dom';
+import errorMessages from '../errors';
 
 class CBPswdReset extends Component {
   constructor(props) {
@@ -36,29 +37,15 @@ class CBPswdReset extends Component {
     })
       .then(res => res.text())
       .then(data => {
-        const EMAIL_ERROR = (
-          <span>
-            This email is invalid - please make sure you have entered a valid email address.
-          </span>
-        );
-        const DETAILS_ERROR = (
-          <span>We don't have a record of this email. Have you entered it correctly?</span>
-        );
-        const NO_INPUT_ERROR = (
-          <span>
-            Oops, you need to enter your information. <br />Please make sure you enter an email
-            before continuing.
-          </span>
-        );
         if (data === 'true') {
           console.log('Success, now lets send a password reset email');
           this.props.history.push('/logincb');
         } else if (data === 'email') {
-          this.setError([EMAIL_ERROR]);
+          this.setError([errorMessages.EMAIL_ERROR]);
         } else if (data === 'noinput') {
-          this.setError([NO_INPUT_ERROR]);
+          this.setError([errorMessages.NO_INPUT_ERROR]);
         } else if (data === 'false') {
-          this.setError([DETAILS_ERROR]);
+          this.setError([errorMessages.RESET_DETAILS_ERROR]);
         }
       });
   };

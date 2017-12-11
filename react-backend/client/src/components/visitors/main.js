@@ -6,6 +6,7 @@ import { Route, Link, Switch } from 'react-router-dom';
 import qrcodelogo from '../../qrcodelogo.png';
 import { FormPrivacy } from '../visitors/form_privacy';
 import { FormPrivacy2 } from '../visitors/form_privacy2';
+import errorMessages from '../errors';
 
 const generateYearsArray = (startYear, currentYear) =>
   Array.from({ length: currentYear + 1 - startYear }, (v, i) => startYear + i);
@@ -57,42 +58,18 @@ class Main extends Component {
     })
       .then(res => res.text())
       .then(data => {
-        const EMAIL_ERROR = (
-          <span>
-            This email is invalid - please make sure you have entered a valid email address.
-          </span>
-        );
-        const NAME_ERROR = (
-          <span>
-            This name is invalid - please remove all special characters. <br />Your entered name
-            must only contain alphebetical characters and spaces.
-          </span>
-        );
-        const USER_EXISTS_ERROR = (
-          <span>
-            This user already exists - please check your details. <br />If you have already signed
-            up and have lost your login information, please speak to Reception.{' '}
-          </span>
-        );
-        const NO_INPUT_ERROR = (
-          <span>
-            Oops, you need to enter your information. <br />Please make sure you leave no input
-            field blank before continuing.
-          </span>
-        );
-
         if (data === 'false') {
           this.props.history.push('/visitor/signup/step2');
         } else if (data === 'email') {
-          this.setError([EMAIL_ERROR]);
+          this.setError([errorMessages.EMAIL_ERROR]);
         } else if (data === 'name') {
-          this.setError([NAME_ERROR]);
+          this.setError([errorMessages.NAME_ERROR]);
         } else if (data === 'emailname') {
-          this.setError([NAME_ERROR, EMAIL_ERROR]);
+          this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
         } else if (data === 'true') {
-          this.setError([USER_EXISTS_ERROR]);
+          this.setError([errorMessages.USER_EXISTS_ERROR]);
         } else if (data === 'noinput') {
-          this.setError([NO_INPUT_ERROR]);
+          this.setError([errorMessages.NO_INPUT_ERROR]);
         }
       });
   };

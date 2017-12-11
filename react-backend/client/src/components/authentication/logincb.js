@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '../visitors/input';
 import { Button } from '../visitors/button';
+import errorMessages from '../errors';
 
 class CBlogin extends Component {
   constructor(props) {
@@ -38,30 +39,16 @@ class CBlogin extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        const EMAIL_ERROR = (
-          <span>
-            This email is invalid - please make sure you have entered a valid email address.
-          </span>
-        );
-        const DETAILS_ERROR = (
-          <span>The email address or password is incorrect. Please try again.</span>
-        );
-        const NO_INPUT_ERROR = (
-          <span>
-            Oops, you need to enter your information. <br />Please make sure you leave no input
-            field blank before continuing.
-          </span>
-        );
         if (data.success === true) {
           localStorage.setItem('token', data.token);
           this.props.setLoggedIn();
           this.props.history.push('/visitor');
         } else if (data.reason === 'email') {
-          this.setError([EMAIL_ERROR]);
+          this.setError([errorMessages.EMAIL_ERROR]);
         } else if (data.reason === 'noinput') {
-          this.setError([NO_INPUT_ERROR]);
+          this.setError([errorMessages.NO_INPUT_ERROR]);
         } else {
-          this.setError([DETAILS_ERROR]);
+          this.setError([errorMessages.DETAILS_ERROR]);
         }
       });
   };

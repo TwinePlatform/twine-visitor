@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Input } from '../visitors/input';
 import { Select } from '../visitors/select';
 import { Button } from '../visitors/button';
+import errorMessages from '../errors';
 
 class CBsignup extends Component {
   constructor(props) {
@@ -44,39 +45,6 @@ class CBsignup extends Component {
     })
       .then(res => res.text())
       .then(data => {
-        const EMAIL_ERROR = (
-          <span>
-            This email is invalid - please make sure you have entered a valid email address.
-          </span>
-        );
-        const NAME_ERROR = (
-          <span>
-            This name is invalid - please remove all special characters. <br />Your entered name
-            must only contain alphebetical characters and spaces.
-          </span>
-        );
-        const USER_EXISTS_ERROR = (
-          <span>This email is already registered. Are you sure you don't have an account?</span>
-        );
-        const NO_INPUT_ERROR = (
-          <span>
-            Oops, you need to enter your information. <br />Please make sure you leave no input
-            field blank before continuing.
-          </span>
-        );
-        const NO_PASSWORD_MATCH = (
-          <span>
-            Oops, your passwords do not match. <br />Please make sure you have typed the same
-            password in both fields.
-          </span>
-        );
-        const PASSWORD_WEAK = (
-          <span>
-            Your password is insecure, make sure it fulfills all of the requirements. <br />It must
-            contain at least one lowercase, one uppercase letter, one number and one special
-            character and must be at least 8 characters long.
-          </span>
-        );
         if (data === 'false') {
           const CBData = {
             formName: this.state.org_name,
@@ -93,19 +61,19 @@ class CBsignup extends Component {
           this.props.history.push('/logincb');
         } else if (data === 'email') {
           console.log(data);
-          this.setError([EMAIL_ERROR]);
+          this.setError([errorMessages.EMAIL_ERROR]);
         } else if (data === 'name') {
-          this.setError([NAME_ERROR]);
+          this.setError([errorMessages.NAME_ERROR]);
         } else if (data === 'emailname') {
-          this.setError([NAME_ERROR, EMAIL_ERROR]);
+          this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
         } else if (data === 'true') {
-          this.setError([USER_EXISTS_ERROR]);
+          this.setError([errorMessages.CB_EXISTS_ERROR]);
         } else if (data === 'noinput') {
-          this.setError([NO_INPUT_ERROR]);
+          this.setError([errorMessages.NO_INPUT_ERROR]);
         } else if (data === 'pswdmatch') {
-          this.setError([NO_PASSWORD_MATCH]);
+          this.setError([errorMessages.NO_PASSWORD_MATCH]);
         } else if (data === 'pswdweak') {
-          this.setError([PASSWORD_WEAK]);
+          this.setError([errorMessages.PASSWORD_WEAK]);
         }
       });
   };
