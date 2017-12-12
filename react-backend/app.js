@@ -17,6 +17,7 @@ const registerCB = require('./routes/cbauthentication/registerCB');
 const checkCBlogin = require('./routes/cbauthentication/checkCBlogin');
 const checkPassword = require('./routes/cbauthentication/checkPassword');
 const CBPasswordResetInstigator = require('./routes/cbauthentication/CBPasswordResetInstigator');
+const frontEndRoutes = require('./frontEndRoutes');
 
 const app = express();
 
@@ -25,10 +26,14 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.use('/', index);
+frontEndRoutes.forEach(route =>
+  app.use(
+    route,
+    express.static(path.join(__dirname, 'client/build/index.html'))
+  )
+);
 app.use('/qrgenerator', qrgenerator);
 app.use('/getUsername', getUsername);
 app.use('/all-users', getAllUsers);
