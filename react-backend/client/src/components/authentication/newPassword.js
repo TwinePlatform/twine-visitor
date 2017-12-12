@@ -39,7 +39,13 @@ class NewPassword extends Component {
       method: 'POST',
       body: JSON.stringify(checkData),
     })
-      .then(res => res.text())
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error();
+        } else {
+          return res.text();
+        }
+      })
       .then(data => {
         switch (data) {
           case 'noinput':
@@ -62,6 +68,9 @@ class NewPassword extends Component {
             this.props.history.push('/logincb');
             break;
         }
+      })
+      .catch(error => {
+        this.props.history.push('/internalServerError');
       });
   };
 

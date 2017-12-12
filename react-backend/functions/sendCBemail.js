@@ -8,7 +8,6 @@ if (!process.env.POSTMARK_SERVER) {
 const client = new postmark.Client(process.env.POSTMARK_SERVER);
 
 module.exports = (email, name) => {
-  console.log('hello, i am in sendCBemail');
   const messages = [
     {
       From: 'visitorapp@powertochange.org.uk',

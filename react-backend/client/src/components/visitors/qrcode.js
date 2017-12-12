@@ -15,9 +15,9 @@ function getUserFromQRScan(content) {
     body: JSON.stringify({ user: content }),
   })
     .then(res => res.json())
-    .catch(err => {
-      console.log('error from getUserFromQRScan:  ', err);
-      throw err;
+    .catch(error => {
+      console.log('error from getUserFromQRScan:  ', error);
+      throw error;
     });
 }
 
@@ -98,7 +98,12 @@ export class QRCode extends Component {
       headers: this.headers,
       body: JSON.stringify(visitInfo),
     })
-      .then(this.props.history.push('/visitor/end'))
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error();
+        }
+      })
+      .then(() => this.props.history.push('/visitor/end'))
       .catch(error => {
         console.log('ERROR HAPPENING AT FETCH /postActivity', error);
         this.props.history.push('/visitor/login');
@@ -129,7 +134,13 @@ export class QRCode extends Component {
       method: 'GET',
       headers: this.headers,
     })
-      .then(res => res.json())
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error();
+        } else {
+          return res.json();
+        }
+      })
       .then(res => res.activities)
       .then(activities => {
         this.setState({ activities });

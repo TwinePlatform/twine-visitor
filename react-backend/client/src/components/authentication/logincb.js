@@ -37,7 +37,13 @@ class CBlogin extends Component {
       method: 'POST',
       body: JSON.stringify(checkData),
     })
-      .then(res => res.json())
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error();
+        } else {
+          return res.json();
+        }
+      })
       .then(data => {
         if (data.success === true) {
           localStorage.setItem('token', data.token);
@@ -50,6 +56,9 @@ class CBlogin extends Component {
         } else {
           this.setError([errorMessages.DETAILS_ERROR]);
         }
+      })
+      .catch(error => {
+        this.props.history.push('/internalServerError');
       });
   };
 

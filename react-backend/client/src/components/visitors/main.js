@@ -56,7 +56,13 @@ class Main extends Component {
       headers: this.headers,
       body: JSON.stringify(checkData),
     })
-      .then(res => res.text())
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error();
+        } else {
+          return res.text();
+        }
+      })
       .then(data => {
         switch (data) {
           case 'email':
@@ -78,6 +84,9 @@ class Main extends Component {
             this.props.history.push('/visitor/signup/step2');
             break;
         }
+      })
+      .catch(error => {
+        this.props.history.push('/internalServerError');
       });
   };
 
@@ -96,7 +105,13 @@ class Main extends Component {
       headers: this.headers,
       body: JSON.stringify(formData),
     })
-      .then(res => res.text())
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error();
+        } else {
+          return res.text();
+        }
+      })
       .then(data => {
         this.setState({ url: data });
       })
