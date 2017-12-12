@@ -17,7 +17,7 @@ export class HomeVisitor extends Component {
         </Link>
         <br />
         <Link to="/">
-          <button className="Button ButtonBack">Back to the main page</button>
+          <button className="Button ButtonBack">Back</button>
         </Link>
         <br />
 
