@@ -6,13 +6,11 @@ const hash = require('../../functions/cbhash');
 const checkExpire = require('../../functions/checkExpire');
 const checkExists = require('../../functions/checkExists');
 
-const strongPassword = new RegExp(
-  '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
-);
+const strongPassword = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})');
 
 router.post('/', (req, res, next) => {
   let body = '';
-  req.on('data', chunk => {
+  req.on('data', (chunk) => {
     body += chunk;
   });
 
@@ -27,8 +25,8 @@ router.post('/', (req, res, next) => {
     ) {
       res.send('noinput');
     } else {
-      Promise.all([checkExists(data.token), checkExpire(data.token)]).then(
-        result => {
+      Promise.all([checkExists(data.token), checkExpire(data.token)])
+        .then((result) => {
           if (!result[0]) {
             console.log('Token does not match');
             res.send('tokenmatch');
@@ -49,7 +47,7 @@ router.post('/', (req, res, next) => {
               if (error) {
                 console.log('error from putNewPassword ', error);
                 res.status(500).send({
-                  error: 'Cannot access database to change password'
+                  error: 'Cannot access database to change password',
                 });
               } else {
                 console.log('This should redirect');
@@ -57,8 +55,10 @@ router.post('/', (req, res, next) => {
               }
             });
           }
-        }
-      );
+        })
+        .catch((error) => {
+          res.status(500).send(error);
+        });
     }
   });
 });

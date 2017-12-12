@@ -27,6 +27,7 @@ router.post('/', (req, res, next) => {
       getCBlogindetailsvalid(data.formEmail, data.formPswd, (error, result) => {
         if (error) {
           console.log('error from getCBlogindetailsvalid ', error);
+          res.status(500).send(error);
         } else if (result.rows[0].exists) {
           // if CB exists we want to create jwt and send it to the frontend
           const token = jwt.sign({ email: data.formEmail }, process.env.SECRET);

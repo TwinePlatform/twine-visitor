@@ -43,7 +43,13 @@ class CBsignup extends Component {
       method: 'POST',
       body: JSON.stringify(checkData),
     })
-      .then(res => res.text())
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error();
+        } else {
+          return res.text();
+        }
+      })
       .then(data => {
         switch (data) {
           case 'email':
@@ -78,12 +84,22 @@ class CBsignup extends Component {
             fetch('/registerCB', {
               method: 'POST',
               body: JSON.stringify(CBData),
-            }).catch(error => {
-              console.log('ERROR HAPPENING AT FETCH /registercb', error);
-            });
+            })
+              .then(res => {
+                if (res.status === 500) {
+                  throw new Error();
+                }
+              })
+              .catch(error => {
+                console.log('ERROR HAPPENING AT FETCH /registercb', error);
+                this.props.history.push('/internalServerError');
+              });
             this.props.history.push('/logincb');
             break;
         }
+      })
+      .catch(error => {
+        this.props.history.push('/internalServerError');
       });
   };
 

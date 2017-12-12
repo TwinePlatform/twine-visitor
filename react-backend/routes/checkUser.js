@@ -28,6 +28,7 @@ router.post('/', (req, res, next) => {
           getUserAlreadyExists(data.formSender.toLowerCase(), data.formEmail, (error, result) => {
             if (error) {
               console.log('error from getUserAlreadyExists ', error);
+              res.status(500).send(error);
             } else {
               res.send(result.rows[0].exists);
             }

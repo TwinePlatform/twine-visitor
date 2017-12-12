@@ -30,9 +30,14 @@ export class HomeAdmin extends Component {
       headers,
       body: JSON.stringify({ password: this.state.password }),
     })
-      .then(res => res.json())
       .then(res => {
-        console.log(res);
+        if (res.status === 500) {
+          throw new Error('500');
+        } else {
+          return res.json();
+        }
+      })
+      .then(res => {
         if (res.success) {
           return res.users;
         } else {
@@ -45,12 +50,13 @@ export class HomeAdmin extends Component {
         }
       })
       .then(users => {
-        console.log(users);
         this.setState({ users, reauthenticated: true });
       })
-      .catch(err => {
+      .catch(error => {
         if (!this.state.failure) {
           this.props.history.push('/logincb');
+        } else if (error === '500') {
+          this.props.history.push('/internalServerError');
         }
       });
   };
@@ -73,7 +79,7 @@ export class HomeAdmin extends Component {
           </thead>
           <tbody>
             {this.state.users.map(user => (
-              <tr key={user.sex}>
+              <tr key={user.date}>
                 <td>{user.id}</td>
                 <td>{user.sex}</td>
                 <td>{user.yearofbirth}</td>

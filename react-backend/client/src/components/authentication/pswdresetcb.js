@@ -35,7 +35,13 @@ class CBPswdReset extends Component {
       method: 'POST',
       body: JSON.stringify(checkData),
     })
-      .then(res => res.text())
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error();
+        } else {
+          return res.text();
+        }
+      })
       .then(data => {
         switch (data) {
           case 'email':
@@ -52,6 +58,9 @@ class CBPswdReset extends Component {
             this.props.history.push('/logincb');
             break;
         }
+      })
+      .catch(error => {
+        this.props.history.push('/internalServerError');
       });
   };
 
