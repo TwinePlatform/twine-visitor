@@ -117,6 +117,9 @@ export class HomeAdmin extends Component {
           </label>
           <Button />
         </form>
+        <Link to="/pswdresetcb">
+          <button className="Button ButtonBack">Reset Password</button>
+        </Link>
       </div>
     );
   }
