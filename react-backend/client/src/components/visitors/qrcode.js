@@ -103,7 +103,7 @@ export class QRCode extends Component {
           throw new Error();
         }
       })
-      .then(this.props.history.push('/visitor/end'))
+      .then(() => this.props.history.push('/visitor/end'))
       .catch(error => {
         console.log('ERROR HAPPENING AT FETCH /postActivity', error);
         this.props.history.push('/visitor/login');

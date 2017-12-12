@@ -8,5 +8,6 @@ module.exports = [
   '/visitor/login',
   '/visitor/qrerror',
   '/visitor/end',
-  '/admin'
+  '/admin',
+  '/internalServerError',
 ];
