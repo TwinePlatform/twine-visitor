@@ -60,7 +60,7 @@ const isAuthenticated = (req, res, next) => {
 
 app.use('/qrgenerator', qrgenerator);
 app.use('/getUsername', getUsername);
-app.use('/all-users', getAllUsers);
+app.use('/all-users', isAuthenticated, getAllUsers);
 app.use('/checkUser', checkUser);
 app.use('/postActivity', postActivity);
 app.use('/activities', isAuthenticated, activities);

@@ -41,7 +41,7 @@ export class AdminVisitsPage extends Component {
         if (res.success) {
           return res.users;
         } else {
-          if (res.reason === 'not logged in') {
+          if (res.error === 'not logged in') {
             throw new Error('not logged in');
           } else {
             this.setState({ failure: true });
