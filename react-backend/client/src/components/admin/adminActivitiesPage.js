@@ -45,6 +45,11 @@ export class AdminActivitiesPage extends Component {
     event.preventDefault();
     const updatedActivities = removeActivity(this.state.activities, id);
     this.setState({ activities: updatedActivities });
+    fetch('/removeActivity', {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify(id),
+    });
   };
 
   handleSubmit(event) {

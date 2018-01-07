@@ -4,6 +4,7 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 
 const index = require('./routes/index');
 const qrgenerator = require('./routes/qrgenerator');
@@ -13,11 +14,13 @@ const checkUser = require('./routes/checkUser');
 const postActivity = require('./routes/postActivity');
 const activities = require('./routes/activities');
 const addActivity = require('./routes/addActivity');
+const removeActivity = require('./routes/removeActivity');
 const checkCB = require('./routes/cbauthentication/checkCB');
 const registerCB = require('./routes/cbauthentication/registerCB');
 const checkCBlogin = require('./routes/cbauthentication/checkCBlogin');
 const checkPassword = require('./routes/cbauthentication/checkPassword');
 const CBPasswordResetInstigator = require('./routes/cbauthentication/CBPasswordResetInstigator');
+const getCBFromEmail = require('./database/queries/CBqueries/getCBFromEmail');
 const frontEndRoutes = require('./frontEndRoutes');
 
 const app = express();
@@ -32,13 +35,37 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 frontEndRoutes.forEach(route =>
   app.use(route, express.static(path.join(__dirname, 'client/build/index.html'))),
 );
+
+const isAuthenticated = (req, res, next) => {
+  jwt.verify(req.headers.authorization, process.env.SECRET, (err, payload) => {
+    if (err) {
+      console.log(err);
+      return next('notauthorized');
+    }
+
+    req.auth = req.auth || {};
+    req.auth.cb_email = payload.email;
+    // Get the community business from the database
+    getCBFromEmail(payload.email, (err, res) => {
+      if (err) {
+        console.log(err);
+        return next('notauthorized');
+      }
+      req.auth.cb_id = res[0].id;
+      req.auth.cb_name = res[0].org_name;
+      next();
+    });
+  });
+};
+
 app.use('/qrgenerator', qrgenerator);
 app.use('/getUsername', getUsername);
 app.use('/all-users', getAllUsers);
 app.use('/checkUser', checkUser);
 app.use('/postActivity', postActivity);
 app.use('/activities', activities);
-app.use('/addActivity', addActivity);
+app.use('/addActivity', isAuthenticated, addActivity);
+app.use('/removeActivity', isAuthenticated, removeActivity);
 app.use('/checkCB', checkCB);
 app.use('/registerCB', registerCB);
 app.use('/checkCBlogin', checkCBlogin);
@@ -54,6 +81,9 @@ app.use((req, res, next) => {
 
 // error handler
 app.use((err, req, res, next) => {
+  if (err === 'notauthorized') {
+    return res.send(JSON.stringify({ error: 'Not logged in' }));
+  }
   // set locals, only providing error in development
   const message = err.message;
   const error = req.app.get('env') === 'development' ? err : {};

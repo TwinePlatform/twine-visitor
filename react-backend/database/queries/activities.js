@@ -1,6 +1,6 @@
 const dbConnection = require('../dbConnection');
 
-const getActivitiesQuery = 'SELECT id, name FROM activities';
+const getActivitiesQuery = 'SELECT id, name FROM activities WHERE deleted=false';
 
 const activities = () =>
   new Promise((resolve, reject) => {
