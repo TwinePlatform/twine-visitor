@@ -10,6 +10,7 @@ const index = require('./routes/index');
 const qrgenerator = require('./routes/qrgenerator');
 const getUsername = require('./routes/getUsername');
 const getAllUsers = require('./routes/getAllUsers');
+const isAdminAuthenticated = require('./routes/isAdminAuthenticated');
 const checkUser = require('./routes/checkUser');
 const postActivity = require('./routes/postActivity');
 const activities = require('./routes/activities');
@@ -61,6 +62,7 @@ const isAuthenticated = (req, res, next) => {
 app.use('/qrgenerator', isAuthenticated, qrgenerator);
 app.use('/getUsername', isAuthenticated, getUsername);
 app.use('/all-users', isAuthenticated, getAllUsers);
+app.use('/isAdminAuthenticated', isAuthenticated, isAdminAuthenticated);
 app.use('/checkUser', isAuthenticated, checkUser);
 app.use('/postActivity', isAuthenticated, postActivity);
 app.use('/activities', isAuthenticated, activities);

@@ -41,8 +41,8 @@ export class AdminVisitsPage extends Component {
         if (res.success) {
           return res.users;
         } else {
-          if (res.error === 'not logged in') {
-            throw new Error('not logged in');
+          if (res.error === 'Not logged in') {
+            throw new Error('Not logged in');
           } else {
             this.setState({ failure: true });
             throw new Error('password');
@@ -91,8 +91,8 @@ export class AdminVisitsPage extends Component {
             ))}
           </tbody>
         </table>
-        <Link to="/">
-          <button className="Button ButtonBack">Back to the main page</button>
+        <Link to="/admin">
+          <button className="Button ButtonBack">Back to the admin menu page</button>
         </Link>
         <br />
         <Logoutbutton

@@ -25,7 +25,7 @@ export class AdminMenuPage extends Component {
     const headers = new Headers({
       Authorization: localStorage.getItem('token'),
     });
-    fetch('/all-users', {
+    fetch('/isAdminAuthenticated', {
       method: 'POST',
       headers,
       body: JSON.stringify({ password: this.state.password }),
@@ -39,18 +39,15 @@ export class AdminMenuPage extends Component {
       })
       .then(res => {
         if (res.success) {
-          return res.users;
+          this.setState({ reauthenticated: true });
         } else {
-          if (res.reason === 'not logged in') {
-            throw new Error('not logged in');
+          if (res.error === 'Not logged in') {
+            throw new Error('Not logged in');
           } else {
             this.setState({ failure: true });
             throw new Error('password');
           }
         }
-      })
-      .then(users => {
-        this.setState({ users, reauthenticated: true });
       })
       .catch(error => {
         if (!this.state.failure) {
@@ -118,35 +115,3 @@ export class AdminMenuPage extends Component {
     );
   }
 }
-
-// export class AdminMenuPage extends Component {
-//   render() {
-//     return (
-//       <div>
-//         <h1>
-//           Welcome admin! <br /> Where do you want to go?<br />
-//         </h1>
-//         <Link to="/admin/activities">
-//           <button className="Button">Activities</button>
-//         </Link>
-//         <br />
-//         <Link to="/admin/visits">
-//           <button className="Button">Visits</button>
-//         </Link>
-//         <br />
-//         <Link to="/admin/visitorsinfo">
-//           <button className="Button">Visitors Info</button>
-//         </Link>
-//         <br />
-//         <Link to="/admin/accountsettings">
-//           <button className="Button">Account Settings</button>
-//         </Link>
-//         <br />
-//         <Link to="/">
-//           <button className="Button ButtonBack">Back to the visitor page</button>
-//         </Link>
-//         <br />
-//       </div>
-//     );
-//   }
-// }
