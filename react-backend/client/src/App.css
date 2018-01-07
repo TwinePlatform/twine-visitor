@@ -282,3 +282,24 @@ th {
   flex: 0 0 100%;
   max-width: 100%;
 }
+
+/*Styling for Activities Admin Page*/
+
+.Activities {
+  padding-top: 20px;
+  display: inline-block;
+  text-align: left;
+}
+
+ul {
+  padding: 0px;
+}
+
+li {
+  list-style-type: none;
+}
+
+li span.delete-item a {
+  text-decoration: none;
+  color: red;
+}
