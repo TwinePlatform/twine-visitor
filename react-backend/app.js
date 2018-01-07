@@ -12,6 +12,7 @@ const getAllUsers = require('./routes/getAllUsers');
 const checkUser = require('./routes/checkUser');
 const postActivity = require('./routes/postActivity');
 const activities = require('./routes/activities');
+const addActivity = require('./routes/addActivity');
 const checkCB = require('./routes/cbauthentication/checkCB');
 const registerCB = require('./routes/cbauthentication/registerCB');
 const checkCBlogin = require('./routes/cbauthentication/checkCBlogin');
@@ -29,10 +30,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 frontEndRoutes.forEach(route =>
-  app.use(
-    route,
-    express.static(path.join(__dirname, 'client/build/index.html'))
-  )
+  app.use(route, express.static(path.join(__dirname, 'client/build/index.html'))),
 );
 app.use('/qrgenerator', qrgenerator);
 app.use('/getUsername', getUsername);
@@ -40,6 +38,7 @@ app.use('/all-users', getAllUsers);
 app.use('/checkUser', checkUser);
 app.use('/postActivity', postActivity);
 app.use('/activities', activities);
+app.use('/addActivity', addActivity);
 app.use('/checkCB', checkCB);
 app.use('/registerCB', registerCB);
 app.use('/checkCBlogin', checkCBlogin);

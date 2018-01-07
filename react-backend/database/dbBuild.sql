@@ -31,17 +31,16 @@ CREATE TABLE cbusiness
 CREATE TABLE activities
 (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  description TEXT NOT NULL,
-  date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  cb_id INTEGER REFERENCES cbusiness
+  name VARCHAR(100) NOT NULL
+  -- date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  -- cb_id INTEGER REFERENCES cbusiness
 );
 CREATE TABLE visits
 (
   id SERIAL PRIMARY KEY,
   usersId INTEGER REFERENCES users,
   activitiesId INTEGER REFERENCES activities,
-  cb_id INTEGER REFERENCES cbusiness,
+  -- cb_id INTEGER REFERENCES cbusiness,
   date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 INSERT INTO users
@@ -51,13 +50,13 @@ VALUES
   ('britney spears', 'female', 1982, 'goodbye@gmail.com', '2017-05-15 12:24:56', '9b57815dcc7568e942baed14c61f636034f138e5f43d72f26ec32a9069f9d7df'),
   ('aldous huxley', 'female', 1993, 'sometimes@gmail.com', '2017-05-15 12:24:56', 'bcec143de6d9e45c28a9a376f1728f8227e36586ad0a770cf1417b282f1d1afa');
 INSERT INTO activities
-  (name, description, date)
+  (name)
 VALUES
-  ('Yoga', 'Become Super flexible and dangerously supple, with Mina the Magical!', '2017-05-15 12:24:56'),
-  ('French Lessons', 'Bring out your inner parisian with these easy to follow and in-depth lessons by Madame Amelie!', '2017-05-15 12:24:56'),
-  ('Baking Lessons', 'Wow your friends and family with these deliciously simple lessons from our own Masterchef Jamie Olivers!', '2017-05-15 12:24:56'),
-  ('Self-Defence Class', 'Civilise the mind but make savage the body! Sensai Bruce Wayne will empower you with raw martial energy!', '2017-05-15 12:24:56'),
-  ('Flamenco Dancing', 'Free yourself from all of that stress and dance all night like a Spanish heartbreaker with Rebecca Gonzalez!', '2017-05-15 12:24:56');
+  ('Yoga'),
+  ('French Lessons'),
+  ('Baking Lessons'),
+  ('Self-Defence Class'),
+  ('Flamenco Dancing');
 INSERT INTO visits
   (usersId, activitiesId, date)
 VALUES

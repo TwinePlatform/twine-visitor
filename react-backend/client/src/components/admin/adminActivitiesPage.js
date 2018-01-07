@@ -57,6 +57,11 @@ export class AdminActivitiesPage extends Component {
       currentActivity: '',
       errorMessage: '',
     });
+    fetch('/addActivity', {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify(newActivity),
+    });
   }
 
   handleEmptySubmit(event) {
