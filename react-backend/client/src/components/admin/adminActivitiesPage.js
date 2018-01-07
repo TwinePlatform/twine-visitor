@@ -6,17 +6,39 @@ export class AdminActivitiesPage extends Component {
   constructor() {
     super();
     this.state = {
-      activities: [
-        { id: 1, name: 'Learn JSX' },
-        { id: 2, name: 'Build an Awesome App' },
-        { id: 3, name: 'Ship It' },
-      ],
+      activities: [],
       currentActivity: '',
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleEmptySubmit = this.handleEmptySubmit.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
+  }
+
+  headers = new Headers({
+    Authorization: localStorage.getItem('token'),
+  });
+
+  componentDidMount() {
+    fetch('/activities', {
+      method: 'GET',
+      headers: this.headers,
+    })
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error();
+        } else {
+          return res.json();
+        }
+      })
+      .then(res => res.activities)
+      .then(activities => {
+        this.setState({ activities });
+      })
+      .catch(error => {
+        console.log('error with fetching activities');
+        this.props.history.push('/admin');
+      });
   }
 
   handleRemove = (id, event) => {
