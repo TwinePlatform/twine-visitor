@@ -19,8 +19,10 @@ router.post('/', (req, res, next) => {
       activityToAdd.id,
       'name: ',
       activityToAdd.name,
+      'cb id: ',
+      req.auth.cb_id,
     );
-    insertActivity(activityToAdd.id, activityToAdd.name, (error, result) => {
+    insertActivity(activityToAdd.id, activityToAdd.name, req.auth.cb_id, (error, result) => {
       if (error) {
         console.log('I am an error from insertActivity ', error);
         res.status(500).send(error);

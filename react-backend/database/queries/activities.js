@@ -1,10 +1,10 @@
 const dbConnection = require('../dbConnection');
 
-const getActivitiesQuery = 'SELECT id, name FROM activities WHERE deleted=false';
+const getActivitiesQuery = 'SELECT id, name FROM activities WHERE cb_id=$1 AND deleted=false';
 
-const activities = () =>
+const activities = cb_id =>
   new Promise((resolve, reject) => {
-    dbConnection.query(getActivitiesQuery, (err, res) => {
+    dbConnection.query(getActivitiesQuery, [cb_id], (err, res) => {
       if (err) {
         return reject(err);
       }

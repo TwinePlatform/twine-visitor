@@ -61,7 +61,7 @@ INSERT INTO cbusiness
   (org_name, genre, email, hash_pwd, date)
 VALUES
   ('Dog & Fish', 'pub', 'dev@milfordcapitalpartners.com', '9345a35a6fdf174dff7219282a3ae4879790dbb785c70f6fff91e32fafd66eab', '2017-05-15 12:24:56'),
-  ('alina industries', 'pub', 'azayneeva@gmail.com', '9B8813FE04843F4B42735C199192CA745C3639581F72AF340F833556B965012F', '2017-05-15 12:24:56');
+  ('alina industries', 'pub', 'a@gmail.com', '9B8813FE04843F4B42735C199192CA745C3639581F72AF340F833556B965012F', '2017-05-15 12:24:56');
 
 INSERT INTO activities
   (name, cb_id)

@@ -63,7 +63,7 @@ app.use('/getUsername', getUsername);
 app.use('/all-users', getAllUsers);
 app.use('/checkUser', checkUser);
 app.use('/postActivity', postActivity);
-app.use('/activities', activities);
+app.use('/activities', isAuthenticated, activities);
 app.use('/addActivity', isAuthenticated, addActivity);
 app.use('/removeActivity', isAuthenticated, removeActivity);
 app.use('/checkCB', checkCB);

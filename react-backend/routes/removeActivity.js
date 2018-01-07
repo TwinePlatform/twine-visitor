@@ -14,7 +14,7 @@ router.post('/', (req, res, next) => {
   req.on('end', () => {
     const activityToRemove = JSON.parse(body);
     console.log('im about to be deleted: ', 'id: ', activityToRemove);
-    deleteActivity(activityToRemove, (error, result) => {
+    deleteActivity(activityToRemove, req.auth.cb_id, (error, result) => {
       if (error) {
         console.log('I am an error from deleteActivity ', error);
         res.status(500).send(error);

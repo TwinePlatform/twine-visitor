@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { ActivityForm, ActivityList } from './activitiesComponents/activity';
 import { addActivity, generateId, removeActivity } from './activitiesLib/activityHelpers';
 
@@ -96,6 +97,9 @@ export class AdminActivitiesPage extends Component {
           />
           <ActivityList activities={this.state.activities} handleRemove={this.handleRemove} />
         </div>
+        <Link to="/admin">
+          <button className="Button ButtonBack">Back to the Menu Page</button>
+        </Link>
       </div>
     );
   }
