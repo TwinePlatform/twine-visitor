@@ -289,6 +289,8 @@ th {
   padding-top: 20px;
   display: inline-block;
   text-align: left;
+  width: 70%;
+  margin: 0 15%;
 }
 
 ul {
@@ -302,4 +304,8 @@ li {
 li span.delete-item a {
   text-decoration: none;
   color: red;
+}
+
+button {
+  border-style: none;
 }
