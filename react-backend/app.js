@@ -42,7 +42,7 @@ const isAuthenticated = (req, res, next) => {
       console.log(err);
       return next('notauthorized');
     }
-
+    // below we create a req.auth object: if it existed before we leave it as it is, if it didn't exist we assign empty object to req.auth. req.auth will help us to access info related to a cb
     req.auth = req.auth || {};
     req.auth.cb_email = payload.email;
     // Get the community business from the database
@@ -58,11 +58,11 @@ const isAuthenticated = (req, res, next) => {
   });
 };
 
-app.use('/qrgenerator', qrgenerator);
-app.use('/getUsername', getUsername);
+app.use('/qrgenerator', isAuthenticated, qrgenerator);
+app.use('/getUsername', isAuthenticated, getUsername);
 app.use('/all-users', isAuthenticated, getAllUsers);
-app.use('/checkUser', checkUser);
-app.use('/postActivity', postActivity);
+app.use('/checkUser', isAuthenticated, checkUser);
+app.use('/postActivity', isAuthenticated, postActivity);
 app.use('/activities', isAuthenticated, activities);
 app.use('/addActivity', isAuthenticated, addActivity);
 app.use('/removeActivity', isAuthenticated, removeActivity);
