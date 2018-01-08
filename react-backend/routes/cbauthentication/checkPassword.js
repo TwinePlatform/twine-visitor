@@ -3,8 +3,8 @@ const express = require('express');
 const router = express.Router();
 const putNewPassword = require('../../database/queries/CBqueries/putNewPassword');
 const hash = require('../../functions/cbhash');
-const checkExpire = require('../../functions/checkExpire');
-const checkExists = require('../../functions/checkExists');
+const checkExpire = require('../../database/queries/CBqueries/checkExpire');
+const checkExists = require('../../database/queries/CBqueries/checkToken');
 
 const strongPassword = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})');
 
@@ -43,21 +43,20 @@ router.post('/', (req, res, next) => {
             console.log('password put incoming');
             const password = hash(data.formPswd);
             console.log(password);
-            putNewPassword(password, data.token, (error, result) => {
-              if (error) {
+            putNewPassword(password, data.token)
+              .then((result) => {
+                res.send(true);
+              })
+              .catch((error) => {
                 console.log('error from putNewPassword ', error);
                 res.status(500).send({
                   error: 'Cannot access database to change password',
-                });
-              } else {
-                console.log('This should redirect');
-                res.send(true);
-              }
-            });
+                })
+              })
           }
         })
-        .catch((error) => {
-          res.status(500).send(error);
+        .catch((err) => {
+          res.status(500).send(err);
         });
     }
   });

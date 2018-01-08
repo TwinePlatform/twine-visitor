@@ -30,15 +30,20 @@ router.post('/', (req, res, next) => {
           res.send(result.rows[0].exists);
           if (result.rows[0].exists) {
             resetTokenGen().then(token => {
-              putToken(token, tokenExpire, data.formEmail, err => {
-                if (err) throw err;
-                console.log(token);
-                sendResetEmail(data.formEmail, token);
-              });
+              putToken(token, tokenExpire, data.formEmail)
+                .then((result) => {
+                  console.log(token);
+                  sendResetEmail(data.formEmail, token);
+                })
+                .catch((error) => {
+                  res.status(500).send(err);
+                })
             });
           }
-        }
-      });
+        };
+      }
+
+      );
     } else if (!validator.isEmail(data.formEmail)) {
       console.log('This isnt a correct email!?');
       res.send('email');

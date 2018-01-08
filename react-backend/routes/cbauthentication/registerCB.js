@@ -21,20 +21,18 @@ router.post('/', (req, res, next) => {
       details.formPswd = hashCB(details.formPswd);
       const name = details.formName.toLowerCase();
 
-      putCBData(name, details.formEmail, details.formGenre, details.formPswd, (err, res) => {
-        if (err) {
-          reject(err);
-        } else {
+      putCBData(name, details.formEmail, details.formGenre, details.formPswd)
+        .then((result) => {
           sendCBemail(details.formEmail, details.formName);
-        }
-        resolve(details);
-        console.log(" I've finished with registerCB");
+        })
+      resolve(details);
+      console.log(" I've finished with registerCB");
+    })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send(err);
       });
-    }).catch((err) => {
-      console.log(err);
-      res.status(500).send(err);
-    });
-  });
+  })
 });
 
 module.exports = router;

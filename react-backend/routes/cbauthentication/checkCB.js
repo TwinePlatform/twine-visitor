@@ -31,31 +31,34 @@ router.post('/', (req, res, next) => {
       validator.isEmail(data.formEmail) &&
       validator.isAlpha(org_name, ['en-GB'])
     ) {
-      getCBAlreadyExists(data.formEmail, (error, result) => {
-        if (error) {
+      getCBAlreadyExists(data.formEmail)
+        .then((result) => {
+          if (result.rows[0].exists === true) {
+            res.send(result.rows[0].exists);
+          } else if (
+            result.rows[0].exists === false &&
+            strongPassword.test(data.formPswd) === false
+          ) {
+            console.log('Password is weak');
+            res.send('pswdweak');
+          } else if (
+            result.rows[0].exists === false &&
+            data.formPswd !== data.formPswdConfirm
+          ) {
+            console.log("Passwords don't match");
+            res.send('pswdmatch');
+          } else {
+            res.send(result.rows[0].exists);
+          }
+          console.log(typeof result.rows[0].exists, result.rows[0].exists);
+        })
+        .catch((error) => {
           console.log('error from getCBAlreadyExists ', error);
           res
             .status(500)
             .send({ error: 'Cannot access database to check if CB exists' });
-        } else if (result.rows[0].exists === true) {
-          res.send(result.rows[0].exists);
-        } else if (
-          result.rows[0].exists === false &&
-          strongPassword.test(data.formPswd) === false
-        ) {
-          console.log('Password is weak');
-          res.send('pswdweak');
-        } else if (
-          result.rows[0].exists === false &&
-          data.formPswd !== data.formPswdConfirm
-        ) {
-          console.log("Passwords don't match");
-          res.send('pswdmatch');
-        } else {
-          res.send(result.rows[0].exists);
-        }
-        console.log(typeof result.rows[0].exists, result.rows[0].exists);
-      });
+        });
+
     } else if (
       !validator.isEmail(data.formEmail) &&
       validator.isAlpha(org_name, ['en-GB'])
