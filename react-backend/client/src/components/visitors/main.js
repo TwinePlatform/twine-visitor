@@ -181,8 +181,7 @@ class Main extends Component {
 
               {/*This is the print layout of the QRcode*/}
               <div className="visible-printer qr-code-to-print">
-                <div className="dashed">this.setError([errorMessages.NO_INPUT_ERROR]);
-            break;
+                <div className="dashed">
                   <img height="182" src={qrcodelogo} alt="Power to change Logo" />
                   <img className="QR__image" src={url} alt="This is your QRcode" />
                   <h5>

@@ -65,11 +65,11 @@ export default {
   ),
 
   DETAILS_ERROR: (
-  <span>The email address or password is incorrect. Please try again.</span>
+    <span>The email address or password is incorrect. Please try again.</span>
   ),
 
   UNKOWN_ERROR: (
-    <span>Something weird has happened :S. <br />
-    Please try again or contact an system administrator if the problem persists.</span>
+    <span>Something weird has happened! <br />
+      Please try again or contact a system administrator if the problem persists.</span>
   ),
 };
