@@ -15,6 +15,7 @@ const checkUser = require('./routes/checkUser');
 const postActivity = require('./routes/postActivity');
 const activities = require('./routes/activities');
 const addActivity = require('./routes/addActivity');
+const updateActivityDay = require('./routes/updateActivityDay');
 const removeActivity = require('./routes/removeActivity');
 const checkCB = require('./routes/cbauthentication/checkCB');
 const registerCB = require('./routes/cbauthentication/registerCB');
@@ -47,13 +48,16 @@ const isAuthenticated = (req, res, next) => {
     req.auth = req.auth || {};
     req.auth.cb_email = payload.email;
     // Get the community business from the database
-    getCBFromEmail(payload.email, (err, res) => {
+    getCBFromEmail(payload.email, (err, data) => {
       if (err) {
         console.log(err);
         return next('notauthorized');
       }
-      req.auth.cb_id = res[0].id;
-      req.auth.cb_name = res[0].org_name;
+      if (data[0] === undefined) {
+        return next('notauthorized');
+      }
+      req.auth.cb_id = data[0].id;
+      req.auth.cb_name = data[0].org_name;
       next();
     });
   });
@@ -67,6 +71,7 @@ app.use('/checkUser', isAuthenticated, checkUser);
 app.use('/postActivity', isAuthenticated, postActivity);
 app.use('/activities', isAuthenticated, activities);
 app.use('/addActivity', isAuthenticated, addActivity);
+app.use('/updateActivityDay', isAuthenticated, updateActivityDay);
 app.use('/removeActivity', isAuthenticated, removeActivity);
 app.use('/checkCB', checkCB);
 app.use('/registerCB', registerCB);

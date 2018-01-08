@@ -36,7 +36,14 @@ CREATE TABLE activities
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   cb_id INTEGER REFERENCES cbusiness(id),
-  deleted BOOLEAN DEFAULT false
+  deleted BOOLEAN DEFAULT false,
+  monday BOOLEAN DEFAULT false,
+  tuesday BOOLEAN DEFAULT false,
+  wednesday BOOLEAN DEFAULT false,
+  thursday BOOLEAN DEFAULT false,
+  friday BOOLEAN DEFAULT false,
+  saturday BOOLEAN DEFAULT false,
+  sunday BOOLEAN DEFAULT false
 );
 
 CREATE TABLE visits

@@ -3,7 +3,7 @@ import { partial } from '../../activitiesLib/utils';
 
 export const ActivityItem = (props) => {
   const handleRemove = partial(props.handleRemove, props.id);
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
   return (
     <li>
       <span className="delete-item">

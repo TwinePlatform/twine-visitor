@@ -54,6 +54,20 @@ export class AdminActivitiesPage extends Component {
     const updatedActivities = updateActivity(this.state.activities, updatedActivity);
     console.log(updatedActivities);
     this.setState({ activities: updatedActivities });
+    fetch('/updateActivityDay', {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify(updatedActivity),
+    })
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error();
+        }
+      })
+      .catch(error => {
+        console.log('error with toggleDay');
+        this.props.history.push('/admin');
+      });
   };
 
   handleRemove = (id, event) => {
@@ -64,7 +78,16 @@ export class AdminActivitiesPage extends Component {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify(id),
-    });
+    })
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error();
+        }
+      })
+      .catch(error => {
+        console.log('error with removing activities');
+        this.props.history.push('/admin');
+      });
   };
 
   handleSubmit(event) {
@@ -73,13 +96,13 @@ export class AdminActivitiesPage extends Component {
     const newActivity = {
       id: newId,
       name: this.state.currentActivity,
-      Monday: false,
-      Tuesday: false,
-      Wednesday: false,
-      Thursday: false,
-      Friday: false,
-      Saturday: false,
-      Sunday: false,
+      monday: false,
+      tuesday: false,
+      wednesday: false,
+      thursday: false,
+      friday: false,
+      saturday: false,
+      sunday: false,
     };
     const updatedActivities = addActivity(this.state.activities, newActivity);
     this.setState({

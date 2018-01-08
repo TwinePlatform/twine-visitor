@@ -54,6 +54,8 @@ export class AdminMenuPage extends Component {
           this.props.history.push('/logincb');
         } else if (error === '500') {
           this.props.history.push('/internalServerError');
+        } else if (error.message === 'Not logged in') {
+          this.props.history.push('/logincb');
         }
       });
   };
