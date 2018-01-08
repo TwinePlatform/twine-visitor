@@ -24,28 +24,31 @@ router.post('/', (req, res, next) => {
       );
     } else if (validator.isEmail(data.formEmail)) {
       data.formPswd = hashCB(data.formPswd);
-      getCBlogindetailsvalid(data.formEmail, data.formPswd, (error, result) => {
-        if (error) {
+      getCBlogindetailsvalid(data.formEmail, data.formPswd)
+        .then((result) => {
+          if (result.rows[0].exists) {
+            // if CB exists we want to create jwt and send it to the frontend
+            const token = jwt.sign({ email: data.formEmail }, process.env.SECRET);
+            res.send(
+              JSON.stringify({
+                success: true,
+                token,
+              }),
+            );
+          } else {
+            // we want to send false
+            res.send(
+              JSON.stringify({
+                success: false,
+              }),
+            );
+          }
+        })
+        .catch((error) => {
           console.log('error from getCBlogindetailsvalid ', error);
           res.status(500).send(error);
-        } else if (result.rows[0].exists) {
-          // if CB exists we want to create jwt and send it to the frontend
-          const token = jwt.sign({ email: data.formEmail }, process.env.SECRET);
-          res.send(
-            JSON.stringify({
-              success: true,
-              token,
-            }),
-          );
-        } else {
-          // we want to send false
-          res.send(
-            JSON.stringify({
-              success: false,
-            }),
-          );
-        }
-      });
+        });
+
     } else if (!validator.isEmail(data.formEmail)) {
       console.log('This isnt a correct email!?');
       res.send(

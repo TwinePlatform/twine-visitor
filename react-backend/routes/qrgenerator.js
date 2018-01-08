@@ -33,15 +33,15 @@ router.post('/', (req, res, next) => {
             details.formSex,
             details.formYear,
             details.formEmail,
-            details.formHash,
-            (err, res) => {
-              if (err) {
-                reject(err);
-              } else {
-                sendQrCode(details.formEmail, details.formSender, details.formHash);
-              }
-            },
-          );
+            details.formHash)
+            .then((result) => {
+              sendQrCode(details.formEmail, details.formSender, details.formHash);
+            })
+            .catch((error) => {
+              res.status(500).send(error);
+            });
+
+
           resolve(hashString);
         })
           .then(qrcodemaker)

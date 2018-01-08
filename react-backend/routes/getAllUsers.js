@@ -26,34 +26,30 @@ router.post("/", (req, res, next) => {
           res.send(JSON.stringify({ success: false, reason: "not logged in" }));
         } else {
           const hashedPassword = hashCB(bodyObject.password);
-          getCBLoginDetailsValid(
-            payload.email,
-            hashedPassword,
-            (error, result) => {
-              if (error) {
-                res.status(500).send(error);
+          getCBLoginDetailsValid(payload.email, hashedPassword)
+            .then((result) => {
+              if (result.rows[0].exists) {
+                getAllUsers()
+                  .then(users => res.send({ success: true, users }))
+                  .catch(err => {
+                    console.log(err);
+                    res.status(500).send(err);
+                  });
               } else {
-                if (result.rows[0].exists) {
-                  getAllUsers()
-                    .then(users => res.send({ success: true, users }))
-                    .catch(err => {
-                      console.log(err);
-                      res.status(500).send(err);
-                    });
-                } else {
-                  res.send(
-                    JSON.stringify({
-                      success: false,
-                      reason: "incorrect password"
-                    })
-                  );
-                }
+                res.send(
+                  JSON.stringify({
+                    success: false,
+                    reason: "incorrect password"
+                  })
+                );
               }
-            }
-          );
+            })
+            .catch((error) => {
+              res.status(500).send(error);
+            });
+
         }
-      }
-    );
+      });
   });
 });
 

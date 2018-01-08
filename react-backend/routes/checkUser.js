@@ -25,14 +25,14 @@ router.post('/', (req, res, next) => {
         if (data.formSender.length === 0 || data.formEmail.length === 0) {
           res.send('noinput');
         } else if (validator.isEmail(data.formEmail) && validator.isAlpha(name, ['en-GB'])) {
-          getUserAlreadyExists(data.formSender.toLowerCase(), data.formEmail, (error, result) => {
-            if (error) {
+          getUserAlreadyExists(data.formSender.toLowerCase(), data.formEmail)
+            .then((result) => {
+              res.send(result.rows[0].exists);
+            })
+            .catch((error) => {
               console.log('error from getUserAlreadyExists ', error);
               res.status(500).send(error);
-            } else {
-              res.send(result.rows[0].exists);
-            }
-          });
+            });
         } else if (!validator.isEmail(data.formEmail) && validator.isAlpha(name, ['en-GB'])) {
           console.log('This isnt a correct email!?');
           res.send('email');
