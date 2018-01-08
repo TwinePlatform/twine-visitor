@@ -129,7 +129,7 @@ export class QRCode extends Component {
         });
     }
 
-    fetch('/activities', {
+    fetch('/activitiesForToday', {
       method: 'GET',
       headers: this.headers,
     })
