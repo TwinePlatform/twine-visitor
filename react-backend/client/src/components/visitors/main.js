@@ -65,6 +65,9 @@ class Main extends Component {
       })
       .then(data => {
         switch (data) {
+          case false:
+            this.props.history.push('/visitor/signup/step2');
+            break;
           case 'email':
             this.setError([errorMessages.EMAIL_ERROR]);
             break;
@@ -81,7 +84,7 @@ class Main extends Component {
             this.setError([errorMessages.NO_INPUT_ERROR]);
             break;
           default:
-            this.props.history.push('/visitor/signup/step2');
+            this.setError([errorMessages.UNKNOWN_ERROR]);
             break;
         }
       })
@@ -178,7 +181,8 @@ class Main extends Component {
 
               {/*This is the print layout of the QRcode*/}
               <div className="visible-printer qr-code-to-print">
-                <div className="dashed">
+                <div className="dashed">this.setError([errorMessages.NO_INPUT_ERROR]);
+            break;
                   <img height="182" src={qrcodelogo} alt="Power to change Logo" />
                   <img className="QR__image" src={url} alt="This is your QRcode" />
                   <h5>
