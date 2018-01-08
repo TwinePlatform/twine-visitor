@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { ActivityForm, ActivityList } from './activitiesComponents/activity';
-import { addActivity, generateId, removeActivity } from './activitiesLib/activityHelpers';
+import {
+  addActivity,
+  generateId,
+  removeActivity,
+  findById,
+  updateActivity,
+} from './activitiesLib/activityHelpers';
 
 export class AdminActivitiesPage extends Component {
   constructor() {
@@ -42,6 +48,14 @@ export class AdminActivitiesPage extends Component {
       });
   }
 
+  toggleDay = (day, id) => {
+    const activity = findById(id, this.state.activities);
+    const updatedActivity = { ...activity, [day]: !activity[day] };
+    const updatedActivities = updateActivity(this.state.activities, updatedActivity);
+    console.log(updatedActivities);
+    this.setState({ activities: updatedActivities });
+  };
+
   handleRemove = (id, event) => {
     event.preventDefault();
     const updatedActivities = removeActivity(this.state.activities, id);
@@ -56,7 +70,17 @@ export class AdminActivitiesPage extends Component {
   handleSubmit(event) {
     event.preventDefault();
     const newId = generateId();
-    const newActivity = { id: newId, name: this.state.currentActivity };
+    const newActivity = {
+      id: newId,
+      name: this.state.currentActivity,
+      Monday: false,
+      Tuesday: false,
+      Wednesday: false,
+      Thursday: false,
+      Friday: false,
+      Saturday: false,
+      Sunday: false,
+    };
     const updatedActivities = addActivity(this.state.activities, newActivity);
     this.setState({
       activities: updatedActivities,
@@ -95,7 +119,11 @@ export class AdminActivitiesPage extends Component {
             currentActivity={this.state.currentActivity}
             handleSubmit={submitHandler}
           />
-          <ActivityList activities={this.state.activities} handleRemove={this.handleRemove} />
+          <ActivityList
+            toggleDay={this.toggleDay}
+            activities={this.state.activities}
+            handleRemove={this.handleRemove}
+          />
         </div>
         <Link to="/admin">
           <button className="Button ButtonBack">Back to the Menu Page</button>
