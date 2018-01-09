@@ -24,7 +24,9 @@ export class HomeAdmin extends Component {
     event.preventDefault();
     const headers = new Headers({
       Authorization: localStorage.getItem('token'),
+      'Content-Type': 'application/json',
     });
+
     fetch('/all-users', {
       method: 'POST',
       headers,
@@ -103,7 +105,9 @@ export class HomeAdmin extends Component {
       </div>
     ) : (
       <div>
-        <div className="ErrorText">{this.state.failure ? this.passwordError : ''}</div>
+        <div className="ErrorText">
+          {this.state.failure ? this.passwordError : ''}
+        </div>
         <form className="Signup" onSubmit={this.authenticate}>
           <label className="Form__Label">
             Please, type your password
