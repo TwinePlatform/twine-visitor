@@ -81,6 +81,7 @@ export class QRCode extends Component {
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
+    'Content-Type': 'application/json',
   });
 
   changeActivity = newActivity => {

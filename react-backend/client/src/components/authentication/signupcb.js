@@ -41,6 +41,7 @@ class CBsignup extends Component {
 
     fetch('/checkCB', {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(checkData),
     })
       .then(res => {
@@ -60,7 +61,10 @@ class CBsignup extends Component {
             this.setError([errorMessages.NAME_ERROR]);
             break;
           case 'emailname':
-            this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
+            this.setError([
+              errorMessages.NAME_ERROR,
+              errorMessages.EMAIL_ERROR,
+            ]);
             break;
           case 'true':
             this.setError([errorMessages.CB_EXISTS_ERROR]);
@@ -83,6 +87,7 @@ class CBsignup extends Component {
             };
             fetch('/registerCB', {
               method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(CBData),
             })
               .then(res => {
@@ -110,9 +115,15 @@ class CBsignup extends Component {
       <section>
         <h1>Please provide us with required information on your business</h1>
         {error && (
-          <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
+          <div className="ErrorText">
+            {error.map((el, i) => <span key={i}>{el}</span>)}
+          </div>
         )}
-        <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
+        <form
+          className="Signup"
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+        >
           <Input question="Business Name" option="org_name" />
           <Input question="Business Email" option="email" />
           <Select
@@ -137,7 +148,11 @@ class CBsignup extends Component {
             ]}
           />
           <Input type="password" question="Enter Password" option="password" />
-          <Input type="password" question="Confirm Password" option="confirm_password" />
+          <Input
+            type="password"
+            question="Confirm Password"
+            option="confirm_password"
+          />
           <Button />
         </form>
         <Link to="/logincb">

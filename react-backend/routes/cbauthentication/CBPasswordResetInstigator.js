@@ -8,42 +8,35 @@ const sendResetEmail = require('../../functions/sendResetEmail');
 const router = express.Router();
 
 router.post('/', (req, res, next) => {
-  let body = '';
-  req.on('data', chunk => {
-    body += chunk;
-  });
-
   const tokenExpire = Date.now() + 3600000;
+  const data = req.body;
 
-  req.on('end', () => {
-    const data = JSON.parse(body);
-    if (data.formEmail.length === 0) {
-      res.send('noinput');
-    } else if (validator.isEmail(data.formEmail)) {
-      getCBAlreadyExists(data.formEmail, (error, result) => {
-        if (error) {
-          console.log('error from getCBAlreadyExists ', error);
-          res.status(500).send({
-            error: 'Cannot access database to check if cbemail exists'
-          });
-        } else {
-          res.send(result.rows[0].exists);
-          if (result.rows[0].exists) {
-            resetTokenGen().then(token => {
-              putToken(token, tokenExpire, data.formEmail, err => {
-                if (err) throw err;
-                console.log(token);
-                sendResetEmail(data.formEmail, token);
-              });
+  if (data.formEmail.length === 0) {
+    res.send('noinput');
+  } else if (validator.isEmail(data.formEmail)) {
+    getCBAlreadyExists(data.formEmail, (error, result) => {
+      if (error) {
+        console.log('error from getCBAlreadyExists ', error);
+        res.status(500).send({
+          error: 'Cannot access database to check if cbemail exists',
+        });
+      } else {
+        res.send(result.rows[0].exists);
+        if (result.rows[0].exists) {
+          resetTokenGen().then((token) => {
+            putToken(token, tokenExpire, data.formEmail, (err) => {
+              if (err) throw err;
+              console.log(token);
+              sendResetEmail(data.formEmail, token);
             });
-          }
+          });
         }
-      });
-    } else if (!validator.isEmail(data.formEmail)) {
-      console.log('This isnt a correct email!?');
-      res.send('email');
-    }
-  });
+      }
+    });
+  } else if (!validator.isEmail(data.formEmail)) {
+    console.log('This isnt a correct email!?');
+    res.send('email');
+  }
 });
 
 module.exports = router;
