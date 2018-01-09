@@ -1,7 +1,5 @@
 const express = require('express');
 
-const jwt = require('jsonwebtoken');
-
 const router = express.Router();
 
 const hashCB = require('../functions/cbhash');
@@ -20,14 +18,12 @@ router.post('/', (req, res, next) => {
       if (error) {
         res.status(500).send(error);
       } else if (result.rows[0].exists) {
-        res.send(JSON.stringify({ success: true }));
+        res.send({ success: true });
       } else {
-        res.send(
-          JSON.stringify({
-            success: false,
-            reason: 'incorrect password',
-          }),
-        );
+        res.send({
+          success: false,
+          reason: 'incorrect password',
+        });
       }
     });
   });

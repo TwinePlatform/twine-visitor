@@ -23,15 +23,14 @@ router.post('/', (req, res, next) => {
       activityToUpdate.saturday,
       activityToUpdate.sunday,
       req.auth.cb_id,
-      (error, result) => {
-        if (error) {
-          console.log('I am an error from updateActivity ', error);
-          res.status(500).send(error);
-        } else {
-          res.send('success');
-        }
-      },
-    );
+    )
+      .then((result) => {
+        res.send('success');
+      })
+      .catch((error) => {
+        console.log('I am an error from updateActivity ', error);
+        res.status(500).send(error);
+      });
   });
 });
 

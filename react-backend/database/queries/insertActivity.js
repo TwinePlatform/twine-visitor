@@ -1,15 +1,15 @@
 const dbConnection = require('../dbConnection');
 
-const insertInfo = 'INSERT INTO activities (id, name, cb_id) VALUES ($1, $2, $3)';
+const insertInfo = 'INSERT INTO activities (name, cb_id) VALUES ($1, $2)';
 
-const insertActivity = (id, name, cb_id, cb) => {
-  dbConnection.query(insertInfo, [id, name, cb_id], (err, res) => {
-    if (err) {
-      return cb(err);
-    }
-
-    cb(null, res);
+const insertActivity = (name, cb_id) =>
+  new Promise((resolve, reject) => {
+    dbConnection
+      .query(insertInfo, [name, cb_id])
+      .then(res => resolve(res))
+      .catch((err) => {
+        reject(err);
+      });
   });
-};
 
 module.exports = insertActivity;

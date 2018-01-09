@@ -23,7 +23,7 @@ const registerCB = require('./routes/cbauthentication/registerCB');
 const checkCBlogin = require('./routes/cbauthentication/checkCBlogin');
 const checkPassword = require('./routes/cbauthentication/checkPassword');
 const CBPasswordResetInstigator = require('./routes/cbauthentication/CBPasswordResetInstigator');
-const getCBFromEmail = require('./database/queries/CBqueries/getCBFromEmail');
+const isAuthenticated = require('./routes/cbauthentication/isAuthenticated');
 const frontEndRoutes = require('./frontEndRoutes');
 
 const app = express();
@@ -38,31 +38,6 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 frontEndRoutes.forEach(route =>
   app.use(route, express.static(path.join(__dirname, 'client/build/index.html'))),
 );
-
-const isAuthenticated = (req, res, next) => {
-  jwt.verify(req.headers.authorization, process.env.SECRET, (err, payload) => {
-    if (err) {
-      console.log(err);
-      return next('notauthorized');
-    }
-    // below we create a req.auth object: if it existed before we leave it as it is, if it didn't exist we assign empty object to req.auth. req.auth will help us to access info related to a cb
-    req.auth = req.auth || {};
-    req.auth.cb_email = payload.email;
-    // Get the community business from the database
-    getCBFromEmail(payload.email, (err, data) => {
-      if (err) {
-        console.log(err);
-        return next('notauthorized');
-      }
-      if (data[0] === undefined) {
-        return next('notauthorized');
-      }
-      req.auth.cb_id = data[0].id;
-      req.auth.cb_name = data[0].org_name;
-      next();
-    });
-  });
-};
 
 app.use('/qrgenerator', isAuthenticated, qrgenerator);
 app.use('/getUsername', isAuthenticated, getUsername);
@@ -91,7 +66,7 @@ app.use((req, res, next) => {
 // error handler
 app.use((err, req, res, next) => {
   if (err === 'notauthorized') {
-    return res.send(JSON.stringify({ error: 'Not logged in' }));
+    return res.status(401).send(JSON.stringify({ error: 'Not logged in' }));
   }
   // set locals, only providing error in development
   const message = err.message;

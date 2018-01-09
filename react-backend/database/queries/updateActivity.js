@@ -14,18 +14,26 @@ const updateActivity = (
   sunday,
   cb_id,
   cb,
-) => {
-  dbConnection.query(
-    updateActivityQuery,
-    [id, monday, tuesday, wednesday, thursday, friday, saturday, sunday, cb_id],
-    (err, res) => {
-      if (err) {
-        return cb(err);
-      }
-
-      cb(null, res);
-    },
-  );
-};
+) =>
+  new Promise((resolve, reject) => {
+    dbConnection
+      .query(updateActivityQuery, [
+        id,
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        saturday,
+        sunday,
+        cb_id,
+      ])
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 
 module.exports = updateActivity;

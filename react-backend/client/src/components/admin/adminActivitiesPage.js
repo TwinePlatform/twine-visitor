@@ -16,10 +16,6 @@ export class AdminActivitiesPage extends Component {
       activities: [],
       currentActivity: '',
     };
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleEmptySubmit = this.handleEmptySubmit.bind(this);
-    this.handleRemove = this.handleRemove.bind(this);
   }
 
   headers = new Headers({
@@ -90,7 +86,7 @@ export class AdminActivitiesPage extends Component {
       });
   };
 
-  handleSubmit(event) {
+  handleSubmit = event => {
     event.preventDefault();
     const newId = generateId();
     const newActivity = {
@@ -114,21 +110,30 @@ export class AdminActivitiesPage extends Component {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify(newActivity),
-    });
-  }
+    })
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error();
+        }
+      })
+      .catch(error => {
+        console.log('error with adding activities');
+        this.props.history.push('/admin');
+      });
+  };
 
-  handleEmptySubmit(event) {
+  handleEmptySubmit = event => {
     event.preventDefault();
     this.setState({
       errorMessage: 'Please supply an activity name',
     });
-  }
+  };
 
-  handleInputChange(event) {
+  handleInputChange = event => {
     this.setState({
       currentActivity: event.target.value,
     });
-  }
+  };
 
   render() {
     const submitHandler = this.state.currentActivity ? this.handleSubmit : this.handleEmptySubmit;
