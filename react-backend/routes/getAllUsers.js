@@ -1,7 +1,5 @@
 const express = require('express');
 
-const jwt = require('jsonwebtoken');
-
 const router = express.Router();
 
 const getAllUsers = require('../database/queries/getAllUsers');
@@ -29,12 +27,10 @@ router.post('/', (req, res, next) => {
             res.status(500).send(err);
           });
       } else {
-        res.send(
-          JSON.stringify({
-            success: false,
-            reason: 'incorrect password',
-          }),
-        );
+        res.send({
+          success: false,
+          reason: 'incorrect password',
+        });
       }
     });
   });

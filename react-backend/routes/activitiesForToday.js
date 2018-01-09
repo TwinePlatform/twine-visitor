@@ -1,7 +1,5 @@
 const express = require('express');
 
-const jwt = require('jsonwebtoken');
-
 const router = express.Router();
 
 const activitiesForToday = require('../database/queries/activitiesForToday');

@@ -1,7 +1,6 @@
 const express = require('express');
 
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const hash = require('../functions/hash');
 const qrcodemaker = require('../functions/qrcodemaker');
 const putUserData = require('../database/queries/putFormData');
@@ -34,10 +33,10 @@ router.post('/', (req, res, next) => {
             reject(err);
           } else {
             sendQrCode(details.formEmail, details.formSender, details.formHash);
+            resolve(hashString);
           }
         },
       );
-      resolve(hashString);
     })
       .then(qrcodemaker)
       .then(result => res.send(result))

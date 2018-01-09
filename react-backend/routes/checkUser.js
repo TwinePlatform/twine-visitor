@@ -2,8 +2,6 @@ const validator = require('validator');
 
 const express = require('express');
 
-const jwt = require('jsonwebtoken');
-
 const router = express.Router();
 const getUserAlreadyExists = require('../database/queries/getUserAlreadyExists');
 

@@ -4,7 +4,6 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
 
 const index = require('./routes/index');
 const qrgenerator = require('./routes/qrgenerator');
@@ -66,7 +65,7 @@ app.use((req, res, next) => {
 // error handler
 app.use((err, req, res, next) => {
   if (err === 'notauthorized') {
-    return res.status(401).send(JSON.stringify({ error: 'Not logged in' }));
+    return res.status(401).send({ error: 'Not logged in' });
   }
   // set locals, only providing error in development
   const message = err.message;
