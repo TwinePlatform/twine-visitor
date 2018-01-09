@@ -16,7 +16,9 @@ import { QrError } from './components/visitors/qrerror';
 import { Thanks } from './components/visitors/thanks';
 import { HomeVisitor } from './components/visitors/homeVisitor';
 
-import { HomeAdmin } from './components/admin/homeAdmin';
+import { AdminMenuPage } from './components/admin/adminMenuPage';
+import { AdminActivitiesPage } from './components/admin/adminActivitiesPage';
+import { AdminVisitsPage } from './components/admin/adminVisitsPage';
 
 import { NotFound } from './components/NotFound';
 import { InternalServerError } from './components/InternalServerError';
@@ -114,12 +116,33 @@ class App extends Component {
               path="/admin"
               render={props =>
                 this.state.loggedIn ? (
-                  <HomeAdmin {...props} updateLoggedIn={this.updateLoggedIn} />
+                  <AdminMenuPage {...props} updateLoggedIn={this.updateLoggedIn} />
                 ) : (
                   <Redirect to="/logincb" />
                 )
               }
             />
+
+            <Route
+              exact
+              path="/admin/activities"
+              render={props =>
+                this.state.loggedIn ? (
+                  <AdminActivitiesPage {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
+              }
+            />
+
+            <Route
+              exact
+              path="/admin/visits"
+              render={props =>
+                this.state.loggedIn ? <AdminVisitsPage {...props} /> : <Redirect to="/logincb" />
+              }
+            />
+
             <Route exact path="/internalServerError" component={InternalServerError} />
             <Route component={NotFound} />
           </Switch>

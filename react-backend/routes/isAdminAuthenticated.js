@@ -2,8 +2,6 @@ const express = require('express');
 
 const router = express.Router();
 
-const getAllUsers = require('../database/queries/getAllUsers');
-
 const hashCB = require('../functions/cbhash');
 const getCBLoginDetailsValid = require('../database/queries/getCBlogindetailsvalid');
 
@@ -20,12 +18,7 @@ router.post('/', (req, res, next) => {
       if (error) {
         res.status(500).send(error);
       } else if (result.rows[0].exists) {
-        getAllUsers(req.auth.cb_id)
-          .then(users => res.send({ success: true, users }))
-          .catch((err) => {
-            console.log(err);
-            res.status(500).send(err);
-          });
+        res.send({ success: true });
       } else {
         res.send({
           success: false,

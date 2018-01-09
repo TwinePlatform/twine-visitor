@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
 
-export class HomeAdmin extends Component {
+export class AdminMenuPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +25,7 @@ export class HomeAdmin extends Component {
     const headers = new Headers({
       Authorization: localStorage.getItem('token'),
     });
-    fetch('/all-users', {
+    fetch('/isAdminAuthenticated', {
       method: 'POST',
       headers,
       body: JSON.stringify({ password: this.state.password }),
@@ -39,24 +39,23 @@ export class HomeAdmin extends Component {
       })
       .then(res => {
         if (res.success) {
-          return res.users;
+          this.setState({ reauthenticated: true });
         } else {
-          if (res.reason === 'not logged in') {
-            throw new Error('not logged in');
+          if (res.error === 'Not logged in') {
+            throw new Error('Not logged in');
           } else {
             this.setState({ failure: true });
             throw new Error('password');
           }
         }
       })
-      .then(users => {
-        this.setState({ users, reauthenticated: true });
-      })
       .catch(error => {
         if (!this.state.failure) {
           this.props.history.push('/logincb');
         } else if (error === '500') {
           this.props.history.push('/internalServerError');
+        } else if (error.message === 'Not logged in') {
+          this.props.history.push('/logincb');
         }
       });
   };
@@ -66,31 +65,25 @@ export class HomeAdmin extends Component {
   render() {
     return this.state.reauthenticated ? (
       <div>
-        <h1>Visitor Data</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>Visitor ID</th>
-              <th>Visitor Gender</th>
-              <th>Visitor Year of Birth</th>
-              <th>Activity</th>
-              <th>Date of Visit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.users.map(user => (
-              <tr key={user.date}>
-                <td>{user.id}</td>
-                <td>{user.sex}</td>
-                <td>{user.yearofbirth}</td>
-                <td>{user.name}</td>
-                <td>
-                  {user.date.slice(0, 10)} {user.date.slice(11, 16)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <h1>
+          Welcome admin! <br /> Where do you want to go?<br />
+        </h1>
+        <Link to="/admin/activities">
+          <button className="Button">Activities</button>
+        </Link>
+        <br />
+        <Link to="/admin/visits">
+          <button className="Button">Visits</button>
+        </Link>
+        <br />
+        <Link to="/admin/visitorsinfo">
+          <button className="Button">Visitors Info</button>
+        </Link>
+        <br />
+        <Link to="/admin/accountsettings">
+          <button className="Button">Account Settings</button>
+        </Link>
+        <br />
         <Link to="/">
           <button className="Button ButtonBack">Back to the main page</button>
         </Link>
