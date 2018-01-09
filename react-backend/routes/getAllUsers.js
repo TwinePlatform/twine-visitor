@@ -27,7 +27,7 @@ router.post("/", (req, res, next) => {
         } else {
           const hashedPassword = hashCB(bodyObject.password);
           getCBLoginDetailsValid(payload.email, hashedPassword)
-            .then((result) => {
+            .then(result => {
               if (result) {
                 getAllUsers()
                   .then(users => res.send({ success: true, users }))
@@ -36,20 +36,18 @@ router.post("/", (req, res, next) => {
                     res.status(500).send(err);
                   });
               } else {
-                res.send(
-                  JSON.stringify({
-                    success: false,
-                    reason: "incorrect password"
-                  })
-                );
+                res.send({
+                  success: false,
+                  reason: "incorrect password"
+                });
               }
             })
-            .catch((error) => {
+            .catch(error => {
               res.status(500).send(error);
             });
-
         }
-      });
+      }
+    );
   });
 });
 

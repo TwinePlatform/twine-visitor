@@ -1,53 +1,52 @@
-const validator = require('validator');
-const getCBAlreadyExists = require('../../database/queries/getCBAlreadyExists');
-const express = require('express');
-const resetTokenGen = require('../../functions/tokengen');
-const putToken = require('../../database/queries/CBqueries/putTokenData');
-const sendResetEmail = require('../../functions/sendResetEmail');
+const validator = require("validator");
+const getCBAlreadyExists = require("../../database/queries/getCBAlreadyExists");
+const express = require("express");
+const resetTokenGen = require("../../functions/tokengen");
+const putToken = require("../../database/queries/CBqueries/putTokenData");
+const sendResetEmail = require("../../functions/sendResetEmail");
 
 const router = express.Router();
 
-router.post('/', (req, res, next) => {
-  let body = '';
-  req.on('data', chunk => {
+router.post("/", (req, res, next) => {
+  let body = "";
+  req.on("data", chunk => {
     body += chunk;
   });
 
   const tokenExpire = Date.now() + 3600000;
 
-  req.on('end', () => {
+  req.on("end", () => {
     const data = JSON.parse(body);
     if (data.formEmail.length === 0) {
-      res.send('noinput');
+      res.send("noinput");
     } else if (validator.isEmail(data.formEmail)) {
       getCBAlreadyExists(data.formEmail)
-        .then((result) => {
-          res.send(result.rows[0].exists);
-          if (result.rows[0].exists) {
+        .then(cbExists => {
+          res.send(cbExists);
+          if (cbExists) {
             resetTokenGen().then(token => {
               putToken(token, tokenExpire, data.formEmail)
-                .then((result) => {
+                .then(result => {
                   console.log(token);
                   sendResetEmail(data.formEmail, token);
                 })
-                .catch((error) => {
+                .catch(error => {
                   res.status(500).send(err);
-                })
+                });
             });
           }
         })
-        .catch((error) => {
-          console.log('error from getCBAlreadyExists ', error);
+        .catch(error => {
+          console.log("error from getCBAlreadyExists ", error);
           res.status(500).send({
-            error: 'Cannot access database to check if cbemail exists'
+            error: "Cannot access database to check if cbemail exists"
           });
-        })
-
+        });
     } else if (!validator.isEmail(data.formEmail)) {
-      console.log('This isnt a correct email!?');
-      res.send('email');
+      console.log("This isnt a correct email!?");
+      res.send("email");
     }
-  })
+  });
 });
 
 module.exports = router;

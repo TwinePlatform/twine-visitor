@@ -1,60 +1,58 @@
-const validator = require('validator');
+const validator = require("validator");
 
-const express = require('express');
-const jwt = require('jsonwebtoken');
+const express = require("express");
+const jwt = require("jsonwebtoken");
 
-const hashCB = require('../../functions/cbhash');
+const hashCB = require("../../functions/cbhash");
 
 const router = express.Router();
-const getCBlogindetailsvalid = require('../../database/queries/getCBlogindetailsvalid');
+const getCBlogindetailsvalid = require("../../database/queries/getCBlogindetailsvalid");
 
-router.post('/', (req, res, next) => {
-  let body = '';
-  req.on('data', (chunk) => {
+router.post("/", (req, res, next) => {
+  let body = "";
+  req.on("data", chunk => {
     body += chunk;
   });
 
-  req.on('end', () => {
+  req.on("end", () => {
     const data = JSON.parse(body);
     if (data.formEmail.length === 0 || data.formPswd.length === 0) {
       res.send(
         JSON.stringify({
-          reason: 'noinput',
-        }),
+          reason: "noinput"
+        })
       );
     } else if (validator.isEmail(data.formEmail)) {
       data.formPswd = hashCB(data.formPswd);
       getCBlogindetailsvalid(data.formEmail, data.formPswd)
-        .then((result) => {
+        .then(result => {
           if (result) {
             // if CB exists we want to create jwt and send it to the frontend
-            const token = jwt.sign({ email: data.formEmail }, process.env.SECRET);
-            res.send(
-              JSON.stringify({
-                success: true,
-                token,
-              }),
+            const token = jwt.sign(
+              { email: data.formEmail },
+              process.env.SECRET
             );
+            res.send({
+              success: true,
+              token
+            });
           } else {
             // we want to send false
-            res.send(
-              JSON.stringify({
-                success: false,
-              }),
-            );
+            res.send({
+              success: false
+            });
           }
         })
-        .catch((error) => {
-          console.log('error from getCBlogindetailsvalid ', error);
+        .catch(error => {
+          console.log("error from getCBlogindetailsvalid ", error);
           res.status(500).send(error);
         });
-
     } else if (!validator.isEmail(data.formEmail)) {
-      console.log('This isnt a correct email!?');
+      console.log("This isnt a correct email!?");
       res.send(
         JSON.stringify({
-          reason: 'email',
-        }),
+          reason: "email"
+        })
       );
     }
   });
