@@ -5,13 +5,13 @@ const insertUser =
 
 const putUserData = (fullname, sex, yob, email, hashString) => {
   new Promise((resolve, reject) => {
-    dbConnection.query(insertUser, [fullname, sex, yob, email, hashString], (err, res) => {
-      if (err) {
+    dbConnection.query(insertUser, [fullname, sex, yob, email, hashString])
+      .then((result) => {
+        resolve(true);
+      })
+      .catch((error) => {
         return reject('There was an error with the putUserData query');
-      }
-
-      resolve(res);
-    });
+      });
   })
 };
 

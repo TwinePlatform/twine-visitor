@@ -28,7 +28,7 @@ router.post("/", (req, res, next) => {
           const hashedPassword = hashCB(bodyObject.password);
           getCBLoginDetailsValid(payload.email, hashedPassword)
             .then((result) => {
-              if (result.rows[0].exists) {
+              if (result) {
                 getAllUsers()
                   .then(users => res.send({ success: true, users }))
                   .catch(err => {

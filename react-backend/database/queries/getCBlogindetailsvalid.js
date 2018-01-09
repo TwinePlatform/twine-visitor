@@ -5,12 +5,13 @@ const checkCBlogindetails =
 
 const getCBlogindetailsvalid = (email, hash_pwd) => {
   new Promise((resolve, reject) => {
-    dbConnection.query(checkCBlogindetails, [email, hash_pwd], (err, res) => {
-      if (err) {
+    dbConnection.query(checkCBlogindetails, [email, hash_pwd])
+      .then((result) => {
+        resolve(result.rows[0].exists);
+      })
+      .catch((error) => {
         return reject('There was an error with the getCBlogindetailsvalid query');
-      }
-      resolve(res);
-    });
+      });
   })
 };
 

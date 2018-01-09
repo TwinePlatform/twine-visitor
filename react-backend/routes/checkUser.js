@@ -27,7 +27,7 @@ router.post('/', (req, res, next) => {
         } else if (validator.isEmail(data.formEmail) && validator.isAlpha(name, ['en-GB'])) {
           getUserAlreadyExists(data.formSender.toLowerCase(), data.formEmail)
             .then((result) => {
-              res.send(result.rows[0].exists);
+              res.send(result);
             })
             .catch((error) => {
               console.log('error from getUserAlreadyExists ', error);

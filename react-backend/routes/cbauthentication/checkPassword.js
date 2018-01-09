@@ -44,14 +44,12 @@ router.post('/', (req, res, next) => {
             const password = hash(data.formPswd);
             console.log(password);
             putNewPassword(password, data.token)
-              .then((result) => {
+              .then(() => {
                 res.send(true);
               })
               .catch((error) => {
                 console.log('error from putNewPassword ', error);
-                res.status(500).send({
-                  error: 'Cannot access database to change password',
-                })
+                res.status(500).send(error)
               })
           }
         })

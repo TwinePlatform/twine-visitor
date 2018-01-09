@@ -26,7 +26,7 @@ router.post('/', (req, res, next) => {
       data.formPswd = hashCB(data.formPswd);
       getCBlogindetailsvalid(data.formEmail, data.formPswd)
         .then((result) => {
-          if (result.rows[0].exists) {
+          if (result) {
             // if CB exists we want to create jwt and send it to the frontend
             const token = jwt.sign({ email: data.formEmail }, process.env.SECRET);
             res.send(

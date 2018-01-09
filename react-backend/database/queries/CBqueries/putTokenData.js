@@ -5,13 +5,13 @@ const insertToken =
 
 const putTokenData = (token, tokenExpire, formEmail) => {
   new Promise((resolve, reject) => {
-    dbConnection.query(insertToken, [token, tokenExpire, formEmail], (err, res) => {
-      if (err) {
+    dbConnection.query(insertToken, [token, tokenExpire, formEmail])
+      .then((result) => {
+        resolve(res);
+      })
+      .catch((error) => {
         return reject('There was an error with the putTokenData query');
-      }
-      resolve(res);
-    }
-    );
+      });
   })
 };
 

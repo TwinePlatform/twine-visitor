@@ -5,12 +5,13 @@ const insertVisit =
 
 const putVisitsData = (hashString, activitiesName) => {
   new Promise((resolve, reject) => {
-    dbConnection.query(insertVisit, [hashString, activitiesName], (err, res) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(res);
-    });
+    dbConnection.query(insertVisit, [hashString, activitiesName])
+      .then((result) => {
+        resolve(true);
+      })
+      .catch((error) => {
+        return reject('There was an error with the putVisitsData query');
+      });
   })
 };
 

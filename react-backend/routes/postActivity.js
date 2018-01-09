@@ -25,7 +25,7 @@ router.post('/', (req, res, next) => {
             res.send('success');
           })
           .catch((error) => {
-            console.log('I am an error from putVisitsData ', error);
+            console.log(error);
             res.status(500).send(error);
           });
       });

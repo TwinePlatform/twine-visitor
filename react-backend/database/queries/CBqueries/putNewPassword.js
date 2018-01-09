@@ -7,14 +7,14 @@ const putNewPassword = (password, token) => {
   new Promise((resolve, reject) => {
 
 
-    dbConnection.query(insertNewPassword, [password, token], (err, res) => {
-      if (err) {
+    dbConnection.query(insertNewPassword, [password, token])
+      .then((result) => {
+        resolve(true);
+      })
+      .catch((error) => {
         return reject('There was an error with the putNewPassword query');
-      }
-
-      resolve(res);
-    });
-  });
+      });
+  })
 };
 
 module.exports = putNewPassword;
