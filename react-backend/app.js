@@ -23,7 +23,6 @@ const checkCBlogin = require('./routes/cbauthentication/checkCBlogin');
 const checkPassword = require('./routes/cbauthentication/checkPassword');
 const CBPasswordResetInstigator = require('./routes/cbauthentication/CBPasswordResetInstigator');
 const isAuthenticated = require('./routes/cbauthentication/isAuthenticated');
-const frontEndRoutes = require('./frontEndRoutes');
 
 const app = express();
 
@@ -33,10 +32,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
-
-frontEndRoutes.forEach(route =>
-  app.use(route, express.static(path.join(__dirname, 'client/build/index.html'))),
-);
 
 app.use('/qrgenerator', isAuthenticated, qrgenerator);
 app.use('/getUsername', isAuthenticated, getUsername);
@@ -54,6 +49,8 @@ app.use('/registerCB', registerCB);
 app.use('/checkCBlogin', checkCBlogin);
 app.use('/checkPassword', checkPassword);
 app.use('/CBPasswordResetInstigator', CBPasswordResetInstigator);
+
+app.get('/*', express.static(path.join(__dirname, 'client/build/index.html')));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
