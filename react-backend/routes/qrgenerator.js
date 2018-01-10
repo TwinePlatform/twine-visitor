@@ -1,57 +1,49 @@
-const express = require('express');
+const express = require("express");
 
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const hash = require('../functions/hash');
-const qrcodemaker = require('../functions/qrcodemaker');
-const putUserData = require('../database/queries/putFormData');
-const { sendQrCode } = require('./sendQrCode');
+const hash = require("../functions/hash");
+const qrcodemaker = require("../functions/qrcodemaker");
+const putUserData = require("../database/queries/putFormData");
+const { sendQrCode } = require("./sendQrCode");
 
 let details = {};
-let hashString = '';
+let hashString = "";
 
-router.post('/', (req, res, next) => {
-  jwt.verify(req.headers.authorization, process.env.SECRET, (err, payload) => {
-    if (err) {
-      console.log(err);
-      res.send(JSON.stringify({ error: 'Not logged in' }));
-    } else {
-      let body = '';
-      req.on('data', (chunk) => {
-        body += chunk;
-      });
+router.post("/", (req, res, next) => {
+  let body = "";
+  req.on("data", chunk => {
+    body += chunk;
+  });
 
-      req.on('end', () => {
-        new Promise((resolve, reject) => {
-          details = JSON.parse(body);
-          hashString = hash(details);
-          details.formHash = hashString;
-          const name = details.formSender.toLowerCase();
+  req.on("end", () => {
+    new Promise((resolve, reject) => {
+      details = JSON.parse(body);
+      hashString = hash(details);
+      details.formHash = hashString;
+      const name = details.formSender.toLowerCase();
 
-          putUserData(
-            name,
-            details.formSex,
-            details.formYear,
-            details.formEmail,
-            details.formHash)
-            .then((result) => {
-              sendQrCode(details.formEmail, details.formSender, details.formHash);
-            })
-            .catch((error) => {
-              res.status(500).send(error);
-            });
-
-
-          resolve(hashString);
+      putUserData(
+        name,
+        details.formSex,
+        details.formYear,
+        details.formEmail,
+        details.formHash
+      )
+        .then(result => {
+          sendQrCode(details.formEmail, details.formSender, details.formHash);
         })
-          .then(qrcodemaker)
-          .then(result => res.send(result))
-          .catch((err) => {
-            console.log(err);
-            res.status(500).send(err);
-          });
+        .catch(error => {
+          res.status(500).send(error);
+        });
+
+      resolve(hashString);
+    })
+      .then(qrcodemaker)
+      .then(result => res.send(result))
+      .catch(err => {
+        console.log(err);
+        res.status(500).send(err);
       });
-    }
   });
 });
 

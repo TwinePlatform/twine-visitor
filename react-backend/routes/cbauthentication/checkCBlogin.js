@@ -17,11 +17,9 @@ router.post("/", (req, res, next) => {
   req.on("end", () => {
     const data = JSON.parse(body);
     if (data.formEmail.length === 0 || data.formPswd.length === 0) {
-      res.send(
-        JSON.stringify({
-          reason: "noinput"
-        })
-      );
+      res.send({
+        reason: "noinput"
+      });
     } else if (validator.isEmail(data.formEmail)) {
       data.formPswd = hashCB(data.formPswd);
       getCBlogindetailsvalid(data.formEmail, data.formPswd)
@@ -49,11 +47,9 @@ router.post("/", (req, res, next) => {
         });
     } else if (!validator.isEmail(data.formEmail)) {
       console.log("This isnt a correct email!?");
-      res.send(
-        JSON.stringify({
-          reason: "email"
-        })
-      );
+      res.send({
+        reason: "email"
+      });
     }
   });
 });

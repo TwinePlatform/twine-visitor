@@ -1,7 +1,5 @@
 const express = require("express");
 
-const jwt = require("jsonwebtoken");
-
 const router = express.Router();
 
 const getAllUsers = require("../database/queries/getAllUsers");
@@ -26,10 +24,10 @@ router.post("/", (req, res, next) => {
           res.send(JSON.stringify({ success: false, reason: "not logged in" }));
         } else {
           const hashedPassword = hashCB(bodyObject.password);
-          getCBLoginDetailsValid(payload.email, hashedPassword)
+          getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
             .then(result => {
               if (result) {
-                getAllUsers()
+                getAllUsers(req.auth.cb_id)
                   .then(users => res.send({ success: true, users }))
                   .catch(err => {
                     console.log(err);
