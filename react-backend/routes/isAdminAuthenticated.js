@@ -14,13 +14,9 @@ router.post('/', (req, res, next) => {
   req.on('end', () => {
     const bodyObject = JSON.parse(body);
     const hashedPassword = hashCB(bodyObject.password);
-    getCBLoginDetailsValid(
-      req.auth.cb_email,
-      hashedPassword,
-      (error, result) => {
-        if (error) {
-          res.status(500).send(error);
-        } else if (result.rows[0].exists) {
+    getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
+      .then(result => {
+        if (result) {
           res.send({ success: true });
         } else {
           res.send({
@@ -28,8 +24,10 @@ router.post('/', (req, res, next) => {
             reason: 'incorrect password'
           });
         }
-      }
-    );
+      })
+      .catch(error => {
+        res.status(500).send(error);
+      });
   });
 });
 
