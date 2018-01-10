@@ -15,37 +15,26 @@ router.post('/', (req, res, next) => {
 
   req.on('end', () => {
     const bodyObject = JSON.parse(body);
-    jwt.verify(
-      req.headers.authorization,
-      process.env.SECRET,
-      (err, payload) => {
-        if (err) {
-          console.log(err);
-          res.send(JSON.stringify({ success: false, reason: 'not logged in' }));
-        } else {
-          const hashedPassword = hashCB(bodyObject.password);
-          getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
-            .then(result => {
-              if (result) {
-                getAllUsers(req.auth.cb_id)
-                  .then(users => res.send({ success: true, users }))
-                  .catch(err => {
-                    console.log(err);
-                    res.status(500).send(err);
-                  });
-              } else {
-                res.send({
-                  success: false,
-                  reason: 'incorrect password'
-                });
-              }
-            })
-            .catch(error => {
-              res.status(500).send(error);
+    const hashedPassword = hashCB(bodyObject.password);
+    getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
+      .then(result => {
+        if (result) {
+          getAllUsers(req.auth.cb_id)
+            .then(users => res.send({ success: true, users }))
+            .catch(err => {
+              console.log(err);
+              res.status(500).send(err);
             });
+        } else {
+          res.send({
+            success: false,
+            reason: 'incorrect password'
+          });
         }
-      }
-    );
+      })
+      .catch(error => {
+        res.status(500).send(error);
+      });
   });
 });
 
