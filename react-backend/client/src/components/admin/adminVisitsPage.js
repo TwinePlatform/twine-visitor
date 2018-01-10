@@ -10,9 +10,14 @@ export class AdminVisitsPage extends Component {
       users: [],
       reauthenticated: false,
       failure: false,
-      password: '',
+      password: ''
     };
   }
+
+  headers = new Headers({
+    Authorization: localStorage.getItem('token'),
+    'Content-Type': 'application/json'
+  });
 
   handleChange = e => {
     let newState = {};
@@ -20,15 +25,39 @@ export class AdminVisitsPage extends Component {
     this.setState(newState);
   };
 
+  updateResults = filterBy => {
+    fetch('/fetchVisitsFilteredBy', {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify({ filterBy })
+    })
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error('500');
+        } else {
+          return res.json();
+        }
+      })
+      .then(users => {
+        this.setState(users);
+      })
+      .catch(error => {
+        this.props.history.push('/internalServerError');
+      });
+  };
+
+  filter = e => {
+    const filterBy = e.target.value;
+    this.updateResults(filterBy);
+  };
+
   authenticate = event => {
     event.preventDefault();
-    const headers = new Headers({
-      Authorization: localStorage.getItem('token'),
-    });
+
     fetch('/all-users', {
       method: 'POST',
-      headers,
-      body: JSON.stringify({ password: this.state.password }),
+      headers: this.headers,
+      body: JSON.stringify({ password: this.state.password })
     })
       .then(res => {
         if (res.status === 500) {
@@ -67,6 +96,15 @@ export class AdminVisitsPage extends Component {
     return this.state.reauthenticated ? (
       <div>
         <h1>Visitor Data</h1>
+        <select onChange={this.filter}>
+          <option defaultValue value="date">
+            Sort by
+          </option>
+          <option value="yearofbirth">Year of Birth </option>
+          <option value="sex">Gender </option>
+          <option value="activity">Activity </option>
+          <option value="date">Date of visit </option>
+        </select>
         <table>
           <thead>
             <tr>
@@ -92,7 +130,9 @@ export class AdminVisitsPage extends Component {
           </tbody>
         </table>
         <Link to="/admin">
-          <button className="Button ButtonBack">Back to the admin menu page</button>
+          <button className="Button ButtonBack">
+            Back to the admin menu page
+          </button>
         </Link>
         <br />
         <Logoutbutton
@@ -103,7 +143,9 @@ export class AdminVisitsPage extends Component {
       </div>
     ) : (
       <div>
-        <div className="ErrorText">{this.state.failure ? this.passwordError : ''}</div>
+        <div className="ErrorText">
+          {this.state.failure ? this.passwordError : ''}
+        </div>
         <form className="Signup" onSubmit={this.authenticate}>
           <label className="Form__Label">
             Please, type your password
