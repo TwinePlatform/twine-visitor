@@ -7,6 +7,7 @@ import {
   removeActivity,
   findById,
   updateActivity,
+  updateById,
 } from './activitiesLib/activityHelpers';
 
 export class AdminActivitiesPage extends Component {
@@ -44,10 +45,23 @@ export class AdminActivitiesPage extends Component {
       });
   }
 
+  handleActivityFromDb = (activities, activity) => res => {
+    const newActivities = updateById(activities, res.id, activity.id);
+    this.setState({ activities: newActivities });
+  };
+
+  handleFetchError = res => {
+    if (res.status === 500) throw new Error();
+    return res;
+  };
+
   toggleDay = (day, id) => {
     const activity = findById(id, this.state.activities);
     const updatedActivity = { ...activity, [day]: !activity[day] };
-    const updatedActivities = updateActivity(this.state.activities, updatedActivity);
+    const updatedActivities = updateActivity(
+      this.state.activities,
+      updatedActivity
+    );
     console.log(updatedActivities);
     this.setState({ activities: updatedActivities });
     fetch('/updateActivityDay', {
@@ -55,11 +69,7 @@ export class AdminActivitiesPage extends Component {
       headers: this.headers,
       body: JSON.stringify(updatedActivity),
     })
-      .then(res => {
-        if (res.status === 500) {
-          throw new Error();
-        }
-      })
+      .then(this.handleFetchError)
       .catch(error => {
         console.log('error with toggleDay');
         this.props.history.push('/admin');
@@ -75,11 +85,7 @@ export class AdminActivitiesPage extends Component {
       headers: this.headers,
       body: JSON.stringify(id),
     })
-      .then(res => {
-        if (res.status === 500) {
-          throw new Error();
-        }
-      })
+      .then(this.handleFetchError)
       .catch(error => {
         console.log('error with removing activities');
         this.props.history.push('/admin');
@@ -111,11 +117,8 @@ export class AdminActivitiesPage extends Component {
       headers: this.headers,
       body: JSON.stringify(newActivity),
     })
-      .then(res => {
-        if (res.status === 500) {
-          throw new Error();
-        }
-      })
+      .then(this.handleFetchError)
+      .then(this.handleActivityFromDb(updatedActivities, newActivity))
       .catch(error => {
         console.log('error with adding activities');
         this.props.history.push('/admin');
@@ -136,12 +139,16 @@ export class AdminActivitiesPage extends Component {
   };
 
   render() {
-    const submitHandler = this.state.currentActivity ? this.handleSubmit : this.handleEmptySubmit;
+    const submitHandler = this.state.currentActivity
+      ? this.handleSubmit
+      : this.handleEmptySubmit;
     return (
       <div>
         <h2>Update Activities</h2>
         <div className="Activities">
-          {this.state.errorMessage && <span className="ErrorText">{this.state.errorMessage}</span>}
+          {this.state.errorMessage && (
+            <span className="ErrorText">{this.state.errorMessage}</span>
+          )}
           <ActivityForm
             handleInputChange={this.handleInputChange}
             currentActivity={this.state.currentActivity}

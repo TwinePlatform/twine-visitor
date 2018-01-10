@@ -11,5 +11,12 @@ export const findById = (id, list) => list.find(item => item.id === id);
 
 export const updateActivity = (list, updated) => {
   const updatedIndex = list.findIndex(item => item.id === updated.id);
-  return [...list.slice(0, updatedIndex), updated, ...list.slice(updatedIndex + 1)];
+  return [
+    ...list.slice(0, updatedIndex),
+    updated,
+    ...list.slice(updatedIndex + 1),
+  ];
 };
+
+export const updateById = (list, id, newId) =>
+  updateActivity(list, { ...findById(id), id: newId });
