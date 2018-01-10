@@ -59,7 +59,7 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   if (err === 'notauthorized') {
     return res.status(401).send({ error: 'Not logged in' });
   }

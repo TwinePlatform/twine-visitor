@@ -25,6 +25,7 @@ export class AdminActivitiesPage extends Component {
   });
 
   handleActivityFromDb = activity => res => {
+    console.log(res);
     const newActivities = updateId(this.state.activities, activity.id, res.id);
     this.setState({ activities: newActivities });
   };
@@ -57,10 +58,7 @@ export class AdminActivitiesPage extends Component {
       this.state.activities,
       updatedActivity
     );
-<<<<<<< HEAD
-=======
-    console.log(updatedActivities);
->>>>>>> master
+
     this.setState({ activities: updatedActivities });
 
     fetch('/updateActivityDay', {
@@ -82,7 +80,7 @@ export class AdminActivitiesPage extends Component {
     fetch('/removeActivity', {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify(id),
+      body: JSON.stringify({ id }),
     })
       .then(this.handleFetchError)
       .catch(error => this.setErrorMessage(error, 'Error removing activity'));
@@ -108,10 +106,11 @@ export class AdminActivitiesPage extends Component {
       currentActivity: '',
       errorMessage: '',
     });
+
     fetch('/addActivity', {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify(newActivity.name),
+      body: JSON.stringify({ name: newActivity.name }),
     })
       .then(this.handleFetchError)
       .then(res => res.json())
