@@ -13,7 +13,7 @@ router.post('/', (req, res, next) => {
   req.on('end', () => {
     const data = JSON.parse(body);
     const name = data.formSender.split(' ').join('');
-    console.log(data.formSender);
+
     if (data.formSender.length === 0 || data.formEmail.length === 0) {
       res.send('noinput');
     } else if (

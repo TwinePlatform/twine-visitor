@@ -17,11 +17,11 @@ const activitiesToday = require('./routes/activities_today');
 const activitiesAdd = require('./routes/activities_add');
 const activitiesUpdate = require('./routes/activities_update');
 const activitiesDelete = require('./routes/activities_delete');
-const checkCB = require('./routes/cbauthentication/checkCB');
+const checkCB = require('./routes/cbauthentication/cb_register_check');
 const registerCB = require('./routes/cbauthentication/registerCB');
-const checkCBlogin = require('./routes/cbauthentication/checkCBlogin');
-const checkPassword = require('./routes/cbauthentication/checkPassword');
-const CBPasswordResetInstigator = require('./routes/cbauthentication/CBPasswordResetInstigator');
+const cbLogin = require('./routes/cbauthentication/cb_login');
+const cbPasswordChange = require('./routes/cbauthentication/cb_password_change');
+const CBPasswordResetInstigator = require('./routes/cbauthentication/cb_password_reset');
 const isAuthenticated = require('./routes/cbauthentication/isAuthenticated');
 
 const app = express();
@@ -47,8 +47,8 @@ app.use('/updateActivityDay', isAuthenticated, activitiesUpdate);
 app.use('/removeActivity', isAuthenticated, activitiesDelete);
 app.use('/checkCB', checkCB);
 app.use('/registerCB', registerCB);
-app.use('/checkCBlogin', checkCBlogin);
-app.use('/checkPassword', checkPassword);
+app.use('/checkCBlogin', cbLogin);
+app.use('/checkPassword', cbPasswordChange);
 app.use('/CBPasswordResetInstigator', CBPasswordResetInstigator);
 
 app.get('/*', express.static(path.join(__dirname, 'client/build/index.html')));
