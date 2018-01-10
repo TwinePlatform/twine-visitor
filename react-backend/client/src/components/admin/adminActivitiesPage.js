@@ -23,8 +23,8 @@ export class AdminActivitiesPage extends Component {
     Authorization: localStorage.getItem('token'),
   });
 
-  handleActivityFromDb = (activities, activity) => res => {
-    const newActivities = updateId(activities, activity.id, res.id);
+  handleActivityFromDb = activity => res => {
+    const newActivities = updateId(this.state.activities, activity.id, res.id);
     this.setState({ activities: newActivities });
   };
 
@@ -106,11 +106,11 @@ export class AdminActivitiesPage extends Component {
     fetch('/addActivity', {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify(newActivity),
+      body: JSON.stringify(newActivity.name),
     })
       .then(this.handleFetchError)
       .then(res => res.json())
-      .then(this.handleActivityFromDb(updatedActivities, newActivity))
+      .then(this.handleActivityFromDb(newActivity))
       .catch(error => this.setErrorMessage(error, 'Error adding activity'));
   };
 

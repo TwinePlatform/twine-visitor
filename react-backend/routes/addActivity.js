@@ -5,15 +5,14 @@ const router = express.Router();
 const insertActivity = require('../database/queries/insertActivity');
 
 router.post('/', (req, res, next) => {
-  console.log(req.auth.email);
   let body = '';
   req.on('data', (chunk) => {
     body += chunk;
   });
 
   req.on('end', () => {
-    const activityToAdd = JSON.parse(body);
-    insertActivity(activityToAdd.name, req.auth.cb_id)
+    const activityName = JSON.parse(body);
+    insertActivity(activityName, req.auth.cb_id)
       .then((id) => {
         res.send({ id });
       })
