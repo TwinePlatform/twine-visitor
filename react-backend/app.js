@@ -6,10 +6,10 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const qrGenerator = require('./routes/qr_generator');
-const visitorName = require('./routes/visitor_name');
 const visitorsAll = require('./routes/visitors_all');
 const visitorsFiltered = require('./routes/visitors_filtered');
 const adminAuthenticated = require('./routes/admin_authenticated');
+const visitorName = require('./routes/visitor_name');
 const visitorCheck = require('./routes/visitor_check');
 const visitorActivity = require('./routes/visitor_activity');
 const activitiesAll = require('./routes/activities_all');
@@ -17,11 +17,11 @@ const activitiesToday = require('./routes/activities_today');
 const activitiesAdd = require('./routes/activities_add');
 const activitiesUpdate = require('./routes/activities_update');
 const activitiesDelete = require('./routes/activities_delete');
-const checkCB = require('./routes/cbauthentication/cb_register_check');
-const registerCB = require('./routes/cbauthentication/cb_register');
+const cbRegisterCheck = require('./routes/cbauthentication/cb_register_check');
+const cbRegister = require('./routes/cbauthentication/cb_register');
 const cbLogin = require('./routes/cbauthentication/cb_login');
 const cbPasswordChange = require('./routes/cbauthentication/cb_password_change');
-const CBPasswordResetInstigator = require('./routes/cbauthentication/cb_password_reset');
+const cbPasswordReset = require('./routes/cbauthentication/cb_password_reset');
 const isAuthenticated = require('./routes/cbauthentication/isAuthenticated');
 
 const app = express();
@@ -45,11 +45,11 @@ app.use('/activitiesForToday', isAuthenticated, activitiesToday);
 app.use('/addActivity', isAuthenticated, activitiesAdd);
 app.use('/updateActivityDay', isAuthenticated, activitiesUpdate);
 app.use('/removeActivity', isAuthenticated, activitiesDelete);
-app.use('/checkCB', checkCB);
-app.use('/registerCB', registerCB);
+app.use('/checkCB', cbRegisterCheck);
+app.use('/registerCB', cbRegister);
 app.use('/checkCBlogin', cbLogin);
 app.use('/checkPassword', cbPasswordChange);
-app.use('/CBPasswordResetInstigator', CBPasswordResetInstigator);
+app.use('/CBPasswordResetInstigator', cbPasswordReset);
 
 app.get('/*', express.static(path.join(__dirname, 'client/build/index.html')));
 
