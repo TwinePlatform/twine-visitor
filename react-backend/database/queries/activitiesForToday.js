@@ -17,11 +17,10 @@ const activitiesForToday = (cbId, day) => {
   return new Promise((resolve, reject) => {
     if (!dayQuery) return reject(new Error('Incorrect day supplied to query'));
 
-    dbConnection.query(dayQuery, [cbId], (err, res) => {
-      if (err) return reject(err);
-
-      resolve(res.rows);
-    });
+    dbConnection
+      .query(dayQuery, [cbId])
+      .then(res => resolve(res.rows))
+      .catch(reject);
   });
 };
 
