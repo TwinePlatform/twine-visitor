@@ -13,7 +13,7 @@ const updateActivity = (
   saturday,
   sunday,
   cb_id,
-  cb,
+  cb
 ) =>
   new Promise((resolve, reject) => {
     dbConnection
@@ -26,12 +26,12 @@ const updateActivity = (
         friday,
         saturday,
         sunday,
-        cb_id,
+        cb_id
       ])
-      .then((res) => {
+      .then(res => {
         resolve(res);
       })
-      .catch((err) => {
+      .catch(err => {
         reject(err);
       });
   });

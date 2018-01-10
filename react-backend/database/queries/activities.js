@@ -5,15 +5,17 @@ const getActivitiesQuery =
 
 const activities = cb_id =>
   new Promise((resolve, reject) => {
-    dbConnection.query(getActivitiesQuery, [cb_id], (err, res) => {
-      if (err) {
-        return reject(err);
-      }
-      // if (res.rowCount === 0) {
-      //   return reject('No activities found');
-      // }
-      resolve(res.rows);
-    });
+    dbConnection
+      .query(getActivitiesQuery, [cb_id])
+      .then(result => {
+        if (result.rowCount === 0) {
+          return reject('No activities found');
+        }
+        resolve(result.rows);
+      })
+      .catch(error => {
+        return reject(error);
+      });
   });
 
 module.exports = activities;

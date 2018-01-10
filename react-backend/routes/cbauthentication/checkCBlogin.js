@@ -10,7 +10,7 @@ const getCBlogindetailsvalid = require('../../database/queries/getCBlogindetails
 
 router.post('/', (req, res, next) => {
   let body = '';
-  req.on('data', (chunk) => {
+  req.on('data', chunk => {
     body += chunk;
   });
 
@@ -18,32 +18,37 @@ router.post('/', (req, res, next) => {
     const data = JSON.parse(body);
     if (data.formEmail.length === 0 || data.formPswd.length === 0) {
       res.send({
-        reason: 'noinput',
+        reason: 'noinput'
       });
     } else if (validator.isEmail(data.formEmail)) {
       data.formPswd = hashCB(data.formPswd);
-      getCBlogindetailsvalid(data.formEmail, data.formPswd, (error, result) => {
-        if (error) {
+      getCBlogindetailsvalid(data.formEmail, data.formPswd)
+        .then(result => {
+          if (result) {
+            // if CB exists we want to create jwt and send it to the frontend
+            const token = jwt.sign(
+              { email: data.formEmail },
+              process.env.SECRET
+            );
+            res.send({
+              success: true,
+              token
+            });
+          } else {
+            // we want to send false
+            res.send({
+              success: false
+            });
+          }
+        })
+        .catch(error => {
           console.log('error from getCBlogindetailsvalid ', error);
           res.status(500).send(error);
-        } else if (result.rows[0].exists) {
-          // if CB exists we want to create jwt and send it to the frontend
-          const token = jwt.sign({ email: data.formEmail }, process.env.SECRET);
-          res.send({
-            success: true,
-            token,
-          });
-        } else {
-          // we want to send false
-          res.send({
-            success: false,
-          });
-        }
-      });
+        });
     } else if (!validator.isEmail(data.formEmail)) {
       console.log('This isnt a correct email!?');
       res.send({
-        reason: 'email',
+        reason: 'email'
       });
     }
   });

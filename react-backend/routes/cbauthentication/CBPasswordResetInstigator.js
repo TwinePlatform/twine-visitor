@@ -20,25 +20,28 @@ router.post('/', (req, res, next) => {
     if (data.formEmail.length === 0) {
       res.send('noinput');
     } else if (validator.isEmail(data.formEmail)) {
-      getCBAlreadyExists(data.formEmail, (error, result) => {
-        if (error) {
+      getCBAlreadyExists(data.formEmail)
+        .then(cbExists => {
+          res.send(cbExists);
+          if (cbExists) {
+            resetTokenGen().then(token => {
+              putToken(token, tokenExpire, data.formEmail)
+                .then(result => {
+                  console.log(token);
+                  sendResetEmail(data.formEmail, token);
+                })
+                .catch(error => {
+                  res.status(500).send(err);
+                });
+            });
+          }
+        })
+        .catch(error => {
           console.log('error from getCBAlreadyExists ', error);
           res.status(500).send({
             error: 'Cannot access database to check if cbemail exists'
           });
-        } else {
-          res.send(result.rows[0].exists);
-          if (result.rows[0].exists) {
-            resetTokenGen().then(token => {
-              putToken(token, tokenExpire, data.formEmail, err => {
-                if (err) throw err;
-                console.log(token);
-                sendResetEmail(data.formEmail, token);
-              });
-            });
-          }
-        }
-      });
+        });
     } else if (!validator.isEmail(data.formEmail)) {
       console.log('This isnt a correct email!?');
       res.send('email');

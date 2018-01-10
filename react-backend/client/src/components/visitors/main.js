@@ -28,7 +28,7 @@ class Main extends Component {
       hash: '',
       users: [],
       url: '',
-      error: [],
+      error: []
     };
   }
 
@@ -43,7 +43,7 @@ class Main extends Component {
   }
 
   headers = new Headers({
-    Authorization: localStorage.getItem('token'),
+    Authorization: localStorage.getItem('token')
   });
 
   handleSwitch = e => {
@@ -51,13 +51,13 @@ class Main extends Component {
 
     const checkData = {
       formSender: this.state.fullname,
-      formEmail: this.state.email,
+      formEmail: this.state.email
     };
 
     fetch('/checkUser', {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify(checkData),
+      body: JSON.stringify(checkData)
     })
       .then(res => {
         if (res.status === 500) {
@@ -80,7 +80,7 @@ class Main extends Component {
           case 'emailname':
             this.setError([
               errorMessages.NAME_ERROR,
-              errorMessages.EMAIL_ERROR,
+              errorMessages.EMAIL_ERROR
             ]);
             break;
           case 'true':
@@ -107,12 +107,12 @@ class Main extends Component {
       formEmail: this.state.email,
       formSex: this.state.sex,
       formYear: this.state.year,
-      formHash: this.state.hash,
+      formHash: this.state.hash
     };
     fetch('/qrgenerator', {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify(formData),
+      body: JSON.stringify(formData)
     })
       .then(res => {
         if (res.status === 500) {

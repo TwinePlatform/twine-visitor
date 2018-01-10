@@ -10,7 +10,7 @@ router.post('/', (req, res, next) => {
   // TODO: use res.body!
   console.log('i am here in registerCB');
   let body = '';
-  req.on('data', (chunk) => {
+  req.on('data', chunk => {
     body += chunk;
   });
 
@@ -21,16 +21,17 @@ router.post('/', (req, res, next) => {
       details.formPswd = hashCB(details.formPswd);
       const name = details.formName.toLowerCase();
 
-      putCBData(name, details.formEmail, details.formGenre, details.formPswd, (err, res) => {
-        if (err) {
-          reject(err);
-        } else {
-          sendCBemail(details.formEmail, details.formName);
-        }
-        resolve(details);
-        console.log(" I've finished with registerCB");
+      putCBData(
+        name,
+        details.formEmail,
+        details.formGenre,
+        details.formPswd
+      ).then(result => {
+        sendCBemail(details.formEmail, details.formName);
       });
-    }).catch((err) => {
+      resolve(details);
+      console.log(" I've finished with registerCB");
+    }).catch(err => {
       console.log(err);
       res.status(500).send(err);
     });

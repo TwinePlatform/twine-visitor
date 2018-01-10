@@ -9,30 +9,32 @@ const getCBLoginDetailsValid = require('../database/queries/getCBlogindetailsval
 
 router.post('/', (req, res, next) => {
   let body = '';
-  req.on('data', (chunk) => {
+  req.on('data', chunk => {
     body += chunk;
   });
 
   req.on('end', () => {
     const bodyObject = JSON.parse(body);
     const hashedPassword = hashCB(bodyObject.password);
-    getCBLoginDetailsValid(req.auth.cb_email, hashedPassword, (error, result) => {
-      if (error) {
-        res.status(500).send(error);
-      } else if (result.rows[0].exists) {
-        getAllUsers(req.auth.cb_id)
-          .then(users => res.send({ success: true, users }))
-          .catch((err) => {
-            console.log(err);
-            res.status(500).send(err);
+    getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
+      .then(result => {
+        if (result) {
+          getAllUsers(req.auth.cb_id)
+            .then(users => res.send({ success: true, users }))
+            .catch(err => {
+              console.log(err);
+              res.status(500).send(err);
+            });
+        } else {
+          res.send({
+            success: false,
+            reason: 'incorrect password'
           });
-      } else {
-        res.send({
-          success: false,
-          reason: 'incorrect password',
-        });
-      }
-    });
+        }
+      })
+      .catch(error => {
+        res.status(500).send(error);
+      });
   });
 });
 

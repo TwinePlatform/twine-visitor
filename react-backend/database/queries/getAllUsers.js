@@ -5,15 +5,17 @@ const getAllUsersQuery =
 
 const getAllUsers = cb_id =>
   new Promise((resolve, reject) => {
-    dbConnection.query(getAllUsersQuery, [cb_id], (err, res) => {
-      if (err) {
-        return reject(err);
-      }
-      if (res.rowCount === 0) {
-        return reject('No user found');
-      }
-      resolve(res.rows);
-    });
+    dbConnection
+      .query(getAllUsersQuery, [cb_id])
+      .then(result => {
+        if (result.rowCount === 0) {
+          return reject('No user found');
+        }
+        resolve(result.rows);
+      })
+      .catch(error => {
+        reject('There was an error with the getAllUsers query');
+      });
   });
 
 module.exports = getAllUsers;

@@ -13,5 +13,5 @@ const sendQrCode = function(email, name, hash) {
 };
 
 module.exports = {
-  sendQrCode,
+  sendQrCode
 };

@@ -11,7 +11,7 @@ let hashString = '';
 
 router.post('/', (req, res, next) => {
   let body = '';
-  req.on('data', (chunk) => {
+  req.on('data', chunk => {
     body += chunk;
   });
 
@@ -27,20 +27,20 @@ router.post('/', (req, res, next) => {
         details.formSex,
         details.formYear,
         details.formEmail,
-        details.formHash,
-        (err, res) => {
-          if (err) {
-            reject(err);
-          } else {
-            sendQrCode(details.formEmail, details.formSender, details.formHash);
-            resolve(hashString);
-          }
-        },
-      );
+        details.formHash
+      )
+        .then(result => {
+          sendQrCode(details.formEmail, details.formSender, details.formHash);
+        })
+        .catch(error => {
+          res.status(500).send(error);
+        });
+
+      resolve(hashString);
     })
       .then(qrcodemaker)
       .then(result => res.send(result))
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         res.status(500).send(err);
       });

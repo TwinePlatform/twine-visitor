@@ -7,7 +7,7 @@ const insertActivity = (name, cb_id) =>
     dbConnection
       .query(insertInfo, [name, cb_id])
       .then(res => resolve(res))
-      .catch((err) => {
+      .catch(err => {
         reject(err);
       });
   });
