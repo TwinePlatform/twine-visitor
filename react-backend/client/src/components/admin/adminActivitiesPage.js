@@ -23,6 +23,22 @@ export class AdminActivitiesPage extends Component {
     'Content-Type': 'application/json',
   });
 
+  handleActivityFromDb = activity => res => {
+    console.log(res);
+    const newActivities = updateId(this.state.activities, activity.id, res.id);
+    this.setState({ activities: newActivities });
+  };
+
+  handleFetchError = res => {
+    if (res.status === 500) throw new Error();
+    return res;
+  };
+
+  setErrorMessage = (error, errorString) => {
+    // console.log(error) // Uncomment to display full errors in the console.
+    this.setState({ errorMessage: errorString });
+  };
+
   componentDidMount() {
     fetch('/activities', {
       method: 'GET',
@@ -52,7 +68,7 @@ export class AdminActivitiesPage extends Component {
       this.state.activities,
       updatedActivity
     );
-    console.log(updatedActivities);
+
     this.setState({ activities: updatedActivities });
     fetch('/updateActivityDay', {
       method: 'POST',
@@ -77,7 +93,7 @@ export class AdminActivitiesPage extends Component {
     fetch('/removeActivity', {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify(id),
+      body: JSON.stringify({ id }),
     })
       .then(res => {
         if (res.status === 500) {
@@ -110,10 +126,11 @@ export class AdminActivitiesPage extends Component {
       currentActivity: '',
       errorMessage: '',
     });
+
     fetch('/addActivity', {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify(newActivity),
+      body: JSON.stringify({ name: newActivity.name }),
     })
       .then(res => {
         if (res.status === 500) {

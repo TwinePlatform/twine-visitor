@@ -4,7 +4,7 @@ const deleteActivity = require('../database/queries/deleteActivity');
 const router = express.Router();
 
 router.post('/', (req, res, next) => {
-  deleteActivity(req.body, req.auth.cb_id)
+  deleteActivity(req.body.id, req.auth.cb_id)
     .then(() => res.send('success'))
     .catch(next);
 });
