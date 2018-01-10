@@ -10,12 +10,13 @@ export class AdminVisitsPage extends Component {
       users: [],
       reauthenticated: false,
       failure: false,
-      password: '',
+      password: ''
     };
   }
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
+    'Content-Type': 'application/json'
   });
 
   handleChange = e => {
@@ -28,7 +29,7 @@ export class AdminVisitsPage extends Component {
     fetch('/fetchVisitsFilteredBy', {
       method: 'POST',
       headers: this.headers,
-      body: filterBy,
+      body: filterBy
     })
       .then(res => {
         if (res.status === 500) {
@@ -56,7 +57,7 @@ export class AdminVisitsPage extends Component {
     fetch('/all-users', {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify({ password: this.state.password }),
+      body: JSON.stringify({ password: this.state.password })
     })
       .then(res => {
         if (res.status === 500) {
@@ -96,7 +97,7 @@ export class AdminVisitsPage extends Component {
       <div>
         <h1>Visitor Data</h1>
         <select onChange={this.filter}>
-          <option defaultValue value="">
+          <option defaultValue value="date">
             Sort by
           </option>
           <option value="yearofbirth">Year of Birth </option>
@@ -129,7 +130,9 @@ export class AdminVisitsPage extends Component {
           </tbody>
         </table>
         <Link to="/admin">
-          <button className="Button ButtonBack">Back to the admin menu page</button>
+          <button className="Button ButtonBack">
+            Back to the admin menu page
+          </button>
         </Link>
         <br />
         <Logoutbutton
@@ -140,7 +143,9 @@ export class AdminVisitsPage extends Component {
       </div>
     ) : (
       <div>
-        <div className="ErrorText">{this.state.failure ? this.passwordError : ''}</div>
+        <div className="ErrorText">
+          {this.state.failure ? this.passwordError : ''}
+        </div>
         <form className="Signup" onSubmit={this.authenticate}>
           <label className="Form__Label">
             Please, type your password
