@@ -1,3 +1,6 @@
 {
-  "extends": "airbnb"
+  "extends": ["airbnb", "prettier"],
+  "rules": {
+    "consistent-return": 0
+  }
 }
