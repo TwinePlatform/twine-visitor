@@ -1,7 +1,7 @@
-const dbConnection = require("../../dbConnection");
+const dbConnection = require('../../dbConnection');
 
 const insertNewPassword =
-  "UPDATE cbusiness SET hash_pwd = $1, tokenexpire = 0 WHERE token = $2";
+  'UPDATE cbusiness SET hash_pwd = $1, tokenexpire = 0 WHERE token = $2';
 
 const putNewPassword = (password, token) => {
   return new Promise((resolve, reject) => {
@@ -11,7 +11,7 @@ const putNewPassword = (password, token) => {
         resolve(true);
       })
       .catch(error => {
-        reject("There was an error with the putNewPassword query");
+        reject('There was an error with the putNewPassword query');
       });
   });
 };

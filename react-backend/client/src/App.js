@@ -75,7 +75,10 @@ class App extends Component {
               path="/visitor"
               render={props =>
                 this.state.loggedIn ? (
-                  <HomeVisitor {...props} updateLoggedIn={this.updateLoggedIn} />
+                  <HomeVisitor
+                    {...props}
+                    updateLoggedIn={this.updateLoggedIn}
+                  />
                 ) : (
                   <Redirect to="/logincb" />
                 )
@@ -84,14 +87,22 @@ class App extends Component {
             <Route
               path="/visitor/signup"
               render={props =>
-                this.state.loggedIn ? <Main {...props} /> : <Redirect to="/logincb" />
+                this.state.loggedIn ? (
+                  <Main {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
               }
             />
             <Route
               exact
               path="/visitor/login"
               render={props =>
-                this.state.loggedIn ? <QRCode {...props} /> : <Redirect to="/logincb" />
+                this.state.loggedIn ? (
+                  <QRCode {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
               }
             />
 
@@ -99,7 +110,11 @@ class App extends Component {
               exact
               path="/visitor/qrerror"
               render={props =>
-                this.state.loggedIn ? <QrError {...props} /> : <Redirect to="/logincb" />
+                this.state.loggedIn ? (
+                  <QrError {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
               }
             />
 
@@ -107,7 +122,11 @@ class App extends Component {
               exact
               path="/visitor/end"
               render={props =>
-                this.state.loggedIn ? <Thanks {...props} /> : <Redirect to="/logincb" />
+                this.state.loggedIn ? (
+                  <Thanks {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
               }
             />
 
@@ -116,7 +135,10 @@ class App extends Component {
               path="/admin"
               render={props =>
                 this.state.loggedIn ? (
-                  <AdminMenuPage {...props} updateLoggedIn={this.updateLoggedIn} />
+                  <AdminMenuPage
+                    {...props}
+                    updateLoggedIn={this.updateLoggedIn}
+                  />
                 ) : (
                   <Redirect to="/logincb" />
                 )
@@ -139,11 +161,19 @@ class App extends Component {
               exact
               path="/admin/visits"
               render={props =>
-                this.state.loggedIn ? <AdminVisitsPage {...props} /> : <Redirect to="/logincb" />
+                this.state.loggedIn ? (
+                  <AdminVisitsPage {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
               }
             />
 
-            <Route exact path="/internalServerError" component={InternalServerError} />
+            <Route
+              exact
+              path="/internalServerError"
+              component={InternalServerError}
+            />
             <Route component={NotFound} />
           </Switch>
         </div>

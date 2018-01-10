@@ -1,24 +1,24 @@
-const validator = require("validator");
+const validator = require('validator');
 
-const express = require("express");
-const jwt = require("jsonwebtoken");
+const express = require('express');
+const jwt = require('jsonwebtoken');
 
-const hashCB = require("../../functions/cbhash");
+const hashCB = require('../../functions/cbhash');
 
 const router = express.Router();
-const getCBlogindetailsvalid = require("../../database/queries/getCBlogindetailsvalid");
+const getCBlogindetailsvalid = require('../../database/queries/getCBlogindetailsvalid');
 
-router.post("/", (req, res, next) => {
-  let body = "";
-  req.on("data", chunk => {
+router.post('/', (req, res, next) => {
+  let body = '';
+  req.on('data', chunk => {
     body += chunk;
   });
 
-  req.on("end", () => {
+  req.on('end', () => {
     const data = JSON.parse(body);
     if (data.formEmail.length === 0 || data.formPswd.length === 0) {
       res.send({
-        reason: "noinput"
+        reason: 'noinput'
       });
     } else if (validator.isEmail(data.formEmail)) {
       data.formPswd = hashCB(data.formPswd);
@@ -42,13 +42,13 @@ router.post("/", (req, res, next) => {
           }
         })
         .catch(error => {
-          console.log("error from getCBlogindetailsvalid ", error);
+          console.log('error from getCBlogindetailsvalid ', error);
           res.status(500).send(error);
         });
     } else if (!validator.isEmail(data.formEmail)) {
-      console.log("This isnt a correct email!?");
+      console.log('This isnt a correct email!?');
       res.send({
-        reason: "email"
+        reason: 'email'
       });
     }
   });

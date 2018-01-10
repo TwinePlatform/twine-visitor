@@ -1,7 +1,7 @@
-const dbConnection = require("../../dbConnection");
+const dbConnection = require('../../dbConnection');
 
 const insertToken =
-  "UPDATE cbusiness SET token = $1, tokenExpire = $2 WHERE email = $3";
+  'UPDATE cbusiness SET token = $1, tokenExpire = $2 WHERE email = $3';
 
 const putTokenData = (token, tokenExpire, formEmail) => {
   return new Promise((resolve, reject) => {
@@ -11,7 +11,7 @@ const putTokenData = (token, tokenExpire, formEmail) => {
         resolve(result);
       })
       .catch(error => {
-        return reject("There was an error with the putTokenData query");
+        return reject('There was an error with the putTokenData query');
       });
   });
 };

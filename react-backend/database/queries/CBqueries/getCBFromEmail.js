@@ -6,13 +6,13 @@ const getCBFromEmail = email =>
   new Promise((resolve, reject) => {
     dbConnection
       .query(getCBQuery, [email])
-      .then((res) => {
+      .then(res => {
         if (res.rowCount) {
           return resolve(res.rows[0]);
         }
         reject('no results found');
       })
-      .catch((err) => {
+      .catch(err => {
         reject(err);
       });
   });

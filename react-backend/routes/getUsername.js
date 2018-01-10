@@ -15,7 +15,7 @@ router.post('/', (req, res, next) => {
 
   getHash(hashToCheck)
     .then(fullname => res.send(fullname))
-    .catch((err) => {
+    .catch(err => {
       res.send({ fullname: 'there is no registered user', hash: '0' });
     });
 });

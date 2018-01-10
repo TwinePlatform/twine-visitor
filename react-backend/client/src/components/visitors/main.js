@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { Input } from "./input";
-import { Select } from "./select";
-import { Button } from "./button";
-import { Route, Link, Switch } from "react-router-dom";
-import qrcodelogo from "../../qrcodelogo.png";
-import { FormPrivacy } from "../visitors/form_privacy";
-import { FormPrivacy2 } from "../visitors/form_privacy2";
-import errorMessages from "../errors";
+import React, { Component } from 'react';
+import { Input } from './input';
+import { Select } from './select';
+import { Button } from './button';
+import { Route, Link, Switch } from 'react-router-dom';
+import qrcodelogo from '../../qrcodelogo.png';
+import { FormPrivacy } from '../visitors/form_privacy';
+import { FormPrivacy2 } from '../visitors/form_privacy2';
+import errorMessages from '../errors';
 
 const generateYearsArray = (startYear, currentYear) =>
   Array.from({ length: currentYear + 1 - startYear }, (v, i) => startYear + i);
@@ -21,13 +21,13 @@ class Main extends Component {
     super(props);
 
     this.state = {
-      fullname: "",
-      email: "",
-      sex: "male",
+      fullname: '',
+      email: '',
+      sex: 'male',
       year: 1980,
-      hash: "",
+      hash: '',
       users: [],
-      url: "",
+      url: '',
       error: []
     };
   }
@@ -43,7 +43,7 @@ class Main extends Component {
   }
 
   headers = new Headers({
-    Authorization: localStorage.getItem("token")
+    Authorization: localStorage.getItem('token')
   });
 
   handleSwitch = e => {
@@ -54,8 +54,8 @@ class Main extends Component {
       formEmail: this.state.email
     };
 
-    fetch("/checkUser", {
-      method: "POST",
+    fetch('/checkUser', {
+      method: 'POST',
       headers: this.headers,
       body: JSON.stringify(checkData)
     })
@@ -68,25 +68,25 @@ class Main extends Component {
       })
       .then(data => {
         switch (data) {
-          case "false":
-            this.props.history.push("/visitor/signup/step2");
+          case 'false':
+            this.props.history.push('/visitor/signup/step2');
             break;
-          case "email":
+          case 'email':
             this.setError([errorMessages.EMAIL_ERROR]);
             break;
-          case "name":
+          case 'name':
             this.setError([errorMessages.NAME_ERROR]);
             break;
-          case "emailname":
+          case 'emailname':
             this.setError([
               errorMessages.NAME_ERROR,
               errorMessages.EMAIL_ERROR
             ]);
             break;
-          case "true":
+          case 'true':
             this.setError([errorMessages.USER_EXISTS_ERROR]);
             break;
-          case "noinput":
+          case 'noinput':
             this.setError([errorMessages.NO_INPUT_ERROR]);
             break;
           default:
@@ -95,7 +95,7 @@ class Main extends Component {
         }
       })
       .catch(error => {
-        this.props.history.push("/internalServerError");
+        this.props.history.push('/internalServerError');
       });
   };
 
@@ -109,8 +109,8 @@ class Main extends Component {
       formYear: this.state.year,
       formHash: this.state.hash
     };
-    fetch("/qrgenerator", {
-      method: "POST",
+    fetch('/qrgenerator', {
+      method: 'POST',
       headers: this.headers,
       body: JSON.stringify(formData)
     })
@@ -124,10 +124,10 @@ class Main extends Component {
       .then(data => {
         this.setState({ url: data });
       })
-      .then(() => this.props.history.push("/visitor/signup/thankyou"))
+      .then(() => this.props.history.push('/visitor/signup/thankyou'))
       .catch(error => {
-        console.log("ERROR HAPPENING AT FETCH /qrgenerator", error);
-        this.props.history.push("/visitor/login");
+        console.log('ERROR HAPPENING AT FETCH /qrgenerator', error);
+        this.props.history.push('/visitor/login');
       });
   };
 
@@ -150,8 +150,8 @@ class Main extends Component {
                 <Input question="Your Email" option="email" />
               </form>
               <button onClick={this.handleSwitch} className="Button">
-                {" "}
-                Next{" "}
+                {' '}
+                Next{' '}
               </button>
             </section>
           </Route>
@@ -166,7 +166,7 @@ class Main extends Component {
                 <Select
                   question="Select Your Sex"
                   option="sex"
-                  choices={["male", "female", "prefer not to say"]}
+                  choices={['male', 'female', 'prefer not to say']}
                 />
                 <Select
                   question="Year of Birth"

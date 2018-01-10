@@ -1,7 +1,7 @@
-const dbConnection = require("../dbConnection");
+const dbConnection = require('../dbConnection');
 
 const getActivitiesQuery =
-  "SELECT id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday FROM activities WHERE cb_id=$1 AND deleted=false";
+  'SELECT id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday FROM activities WHERE cb_id=$1 AND deleted=false';
 
 const activities = cb_id =>
   new Promise((resolve, reject) => {
@@ -9,7 +9,7 @@ const activities = cb_id =>
       .query(getActivitiesQuery, [cb_id])
       .then(result => {
         if (result.rowCount === 0) {
-          return reject("No activities found");
+          return reject('No activities found');
         }
         resolve(result.rows);
       })

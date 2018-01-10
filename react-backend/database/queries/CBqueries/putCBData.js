@@ -1,7 +1,7 @@
-const dbConnection = require("../../dbConnection");
+const dbConnection = require('../../dbConnection');
 
 const insertCB =
-  "INSERT INTO cbusiness (org_name, email, genre, hash_pwd) VALUES ($1, $2, $3, $4)";
+  'INSERT INTO cbusiness (org_name, email, genre, hash_pwd) VALUES ($1, $2, $3, $4)';
 
 const putCBData = (org_name, email, genre, hash_pwd) => {
   return new Promise((resolve, reject) => {
@@ -11,7 +11,7 @@ const putCBData = (org_name, email, genre, hash_pwd) => {
         resolve(result);
       })
       .catch(error => {
-        reject("There was an error with the putCBData query");
+        reject('There was an error with the putCBData query');
       });
   });
 };

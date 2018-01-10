@@ -1,7 +1,7 @@
-const dbConnection = require("../dbConnection");
+const dbConnection = require('../dbConnection');
 
 const insertUser =
-  "INSERT INTO users (fullName, sex, yearOfBirth, email, hash) VALUES ($1, $2, $3, $4, $5)";
+  'INSERT INTO users (fullName, sex, yearOfBirth, email, hash) VALUES ($1, $2, $3, $4, $5)';
 
 const putUserData = (fullname, sex, yob, email, hashString) => {
   return new Promise((resolve, reject) => {
@@ -11,7 +11,7 @@ const putUserData = (fullname, sex, yob, email, hashString) => {
         resolve(true);
       })
       .catch(error => {
-        reject("There was an error with the putUserData query");
+        reject('There was an error with the putUserData query');
       });
   });
 };

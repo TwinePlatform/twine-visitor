@@ -6,11 +6,13 @@ const hash = require('../../functions/cbhash');
 const checkExpire = require('../../database/queries/CBqueries/checkExpire');
 const checkExists = require('../../database/queries/CBqueries/checkToken');
 
-const strongPassword = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})');
+const strongPassword = new RegExp(
+  '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
+);
 
 router.post('/', (req, res, next) => {
   let body = '';
-  req.on('data', (chunk) => {
+  req.on('data', chunk => {
     body += chunk;
   });
 
@@ -26,7 +28,7 @@ router.post('/', (req, res, next) => {
       res.send('noinput');
     } else {
       Promise.all([checkExists(data.token), checkExpire(data.token)])
-        .then((result) => {
+        .then(result => {
           if (!result[0]) {
             console.log('Token does not match');
             res.send('tokenmatch');
@@ -47,13 +49,13 @@ router.post('/', (req, res, next) => {
               .then(() => {
                 res.send(true);
               })
-              .catch((error) => {
+              .catch(error => {
                 console.log('error from putNewPassword ', error);
-                res.status(500).send(error)
-              })
+                res.status(500).send(error);
+              });
           }
         })
-        .catch((err) => {
+        .catch(err => {
           res.status(500).send(err);
         });
     }

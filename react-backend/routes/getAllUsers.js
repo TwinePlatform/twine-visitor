@@ -1,19 +1,19 @@
-const express = require("express");
+const express = require('express');
 
 const router = express.Router();
 
-const getAllUsers = require("../database/queries/getAllUsers");
+const getAllUsers = require('../database/queries/getAllUsers');
 
-const hashCB = require("../functions/cbhash");
-const getCBLoginDetailsValid = require("../database/queries/getCBlogindetailsvalid");
+const hashCB = require('../functions/cbhash');
+const getCBLoginDetailsValid = require('../database/queries/getCBlogindetailsvalid');
 
-router.post("/", (req, res, next) => {
-  let body = "";
-  req.on("data", chunk => {
+router.post('/', (req, res, next) => {
+  let body = '';
+  req.on('data', chunk => {
     body += chunk;
   });
 
-  req.on("end", () => {
+  req.on('end', () => {
     const bodyObject = JSON.parse(body);
     jwt.verify(
       req.headers.authorization,
@@ -21,7 +21,7 @@ router.post("/", (req, res, next) => {
       (err, payload) => {
         if (err) {
           console.log(err);
-          res.send(JSON.stringify({ success: false, reason: "not logged in" }));
+          res.send(JSON.stringify({ success: false, reason: 'not logged in' }));
         } else {
           const hashedPassword = hashCB(bodyObject.password);
           getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
@@ -36,7 +36,7 @@ router.post("/", (req, res, next) => {
               } else {
                 res.send({
                   success: false,
-                  reason: "incorrect password"
+                  reason: 'incorrect password'
                 });
               }
             })

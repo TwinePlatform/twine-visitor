@@ -7,7 +7,7 @@ const updateActivity = require('../database/queries/updateActivity');
 router.post('/', (req, res, next) => {
   console.log('I am a community business id: ', req.auth);
   let body = '';
-  req.on('data', (chunk) => {
+  req.on('data', chunk => {
     body += chunk;
   });
 
@@ -22,12 +22,12 @@ router.post('/', (req, res, next) => {
       activityToUpdate.friday,
       activityToUpdate.saturday,
       activityToUpdate.sunday,
-      req.auth.cb_id,
+      req.auth.cb_id
     )
-      .then((result) => {
+      .then(result => {
         res.send('success');
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('I am an error from updateActivity ', error);
         res.status(500).send(error);
       });

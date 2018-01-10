@@ -1,21 +1,21 @@
-const express = require("express");
+const express = require('express');
 
 const router = express.Router();
-const hash = require("../functions/hash");
-const qrcodemaker = require("../functions/qrcodemaker");
-const putUserData = require("../database/queries/putFormData");
-const { sendQrCode } = require("./sendQrCode");
+const hash = require('../functions/hash');
+const qrcodemaker = require('../functions/qrcodemaker');
+const putUserData = require('../database/queries/putFormData');
+const { sendQrCode } = require('./sendQrCode');
 
 let details = {};
-let hashString = "";
+let hashString = '';
 
-router.post("/", (req, res, next) => {
-  let body = "";
-  req.on("data", chunk => {
+router.post('/', (req, res, next) => {
+  let body = '';
+  req.on('data', chunk => {
     body += chunk;
   });
 
-  req.on("end", () => {
+  req.on('end', () => {
     new Promise((resolve, reject) => {
       details = JSON.parse(body);
       hashString = hash(details);

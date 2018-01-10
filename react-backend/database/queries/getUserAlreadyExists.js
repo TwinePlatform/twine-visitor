@@ -1,7 +1,7 @@
-const dbConnection = require("../dbConnection");
+const dbConnection = require('../dbConnection');
 
 const checkFullname =
-  "SELECT EXISTS(SELECT 1 FROM users WHERE fullname = $1 AND email = $2)";
+  'SELECT EXISTS(SELECT 1 FROM users WHERE fullname = $1 AND email = $2)';
 
 const getUserAlreadyExists = (fullname, email) => {
   return new Promise((resolve, reject) => {
@@ -11,7 +11,7 @@ const getUserAlreadyExists = (fullname, email) => {
         resolve(result.rows[0].exists);
       })
       .catch(error => {
-        return reject("There was an error with the getUserAlreadyExists query");
+        return reject('There was an error with the getUserAlreadyExists query');
       });
   });
 };

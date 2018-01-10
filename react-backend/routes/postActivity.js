@@ -1,21 +1,21 @@
-const express = require("express");
+const express = require('express');
 
 const router = express.Router();
 
-const putVisitsData = require("../database/queries/putVisitsData");
+const putVisitsData = require('../database/queries/putVisitsData');
 
-router.post("/", (req, res, next) => {
-  let body = "";
-  req.on("data", chunk => {
+router.post('/', (req, res, next) => {
+  let body = '';
+  req.on('data', chunk => {
     body += chunk;
   });
 
-  req.on("end", () => {
+  req.on('end', () => {
     const visitToAdd = JSON.parse(body);
     console.log(visitToAdd);
     putVisitsData(visitToAdd.hash, visitToAdd.activity)
       .then(result => {
-        res.send("success");
+        res.send('success');
       })
       .catch(error => {
         console.log(error);

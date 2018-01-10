@@ -1,7 +1,7 @@
-const dbConnection = require("../dbConnection");
+const dbConnection = require('../dbConnection');
 
 const checkCBlogindetails =
-  "SELECT EXISTS(SELECT 1 FROM cbusiness WHERE email = $1 AND hash_pwd = $2)";
+  'SELECT EXISTS(SELECT 1 FROM cbusiness WHERE email = $1 AND hash_pwd = $2)';
 
 const getCBlogindetailsvalid = (email, hash_pwd) => {
   return new Promise((resolve, reject) => {
@@ -11,7 +11,7 @@ const getCBlogindetailsvalid = (email, hash_pwd) => {
         resolve(result.rows[0].exists);
       })
       .catch(error => {
-        reject("There was an error with the getCBlogindetailsvalid query");
+        reject('There was an error with the getCBlogindetailsvalid query');
       });
   });
 };
