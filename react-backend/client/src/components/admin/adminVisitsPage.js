@@ -14,20 +14,48 @@ export class AdminVisitsPage extends Component {
     };
   }
 
+  headers = new Headers({
+    Authorization: localStorage.getItem('token'),
+  });
+
   handleChange = e => {
     let newState = {};
     newState[e.target.name] = e.target.value;
     this.setState(newState);
   };
 
+  updateResults = filterBy => {
+    fetch('/fetchVisitsFilteredBy', {
+      method: 'POST',
+      headers: this.headers,
+      body: filterBy,
+    })
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error('500');
+        } else {
+          return res.json();
+        }
+      })
+      .then(users => {
+        this.setState(users);
+      })
+      .catch(error => {
+        this.props.history.push('/internalServerError');
+      });
+  };
+
+  filter = e => {
+    const filterBy = e.target.value;
+    this.updateResults(filterBy);
+  };
+
   authenticate = event => {
     event.preventDefault();
-    const headers = new Headers({
-      Authorization: localStorage.getItem('token'),
-    });
+
     fetch('/all-users', {
       method: 'POST',
-      headers,
+      headers: this.headers,
       body: JSON.stringify({ password: this.state.password }),
     })
       .then(res => {
@@ -67,6 +95,12 @@ export class AdminVisitsPage extends Component {
     return this.state.reauthenticated ? (
       <div>
         <h1>Visitor Data</h1>
+        <select onChange={this.filter}>
+          <option defaultValue value="">
+            Filter by
+          </option>
+          <option value="yearofbirth">yearofbirth </option>
+        </select>
         <table>
           <thead>
             <tr>
