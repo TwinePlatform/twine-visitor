@@ -7,6 +7,7 @@ import {
   removeActivity,
   findById,
   updateActivity,
+  updateId,
 } from './activitiesLib/activityHelpers';
 
 export class AdminActivitiesPage extends Component {
