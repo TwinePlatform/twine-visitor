@@ -14,8 +14,8 @@ router.post('/', (req, res, next) => {
   req.on('end', () => {
     const activityToAdd = JSON.parse(body);
     insertActivity(activityToAdd.name, req.auth.cb_id)
-      .then((result) => {
-        res.send(result.id);
+      .then((id) => {
+        res.send({ id });
       })
       .catch((error) => {
         console.log('I am an error from insertActivity ', error);

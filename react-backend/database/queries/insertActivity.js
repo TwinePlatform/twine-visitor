@@ -7,7 +7,7 @@ const insertActivity = (name, cbId) =>
   new Promise((resolve, reject) => {
     dbConnection
       .query(insertInfo, [name, cbId])
-      .then(res => resolve(res))
+      .then(res => resolve(res.rows[0].id))
       .catch((err) => {
         reject(err);
       });

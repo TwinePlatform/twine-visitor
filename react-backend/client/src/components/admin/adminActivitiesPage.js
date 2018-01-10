@@ -7,7 +7,7 @@ import {
   removeActivity,
   findById,
   updateActivity,
-  updateById,
+  updateId,
 } from './activitiesLib/activityHelpers';
 
 export class AdminActivitiesPage extends Component {
@@ -23,30 +23,8 @@ export class AdminActivitiesPage extends Component {
     Authorization: localStorage.getItem('token'),
   });
 
-  componentDidMount() {
-    fetch('/activities', {
-      method: 'GET',
-      headers: this.headers,
-    })
-      .then(res => {
-        if (res.status === 500) {
-          throw new Error();
-        } else {
-          return res.json();
-        }
-      })
-      .then(res => res.activities)
-      .then(activities => {
-        this.setState({ activities });
-      })
-      .catch(error => {
-        console.log('error with fetching activities');
-        this.props.history.push('/admin');
-      });
-  }
-
   handleActivityFromDb = (activities, activity) => res => {
-    const newActivities = updateById(activities, res.id, activity.id);
+    const newActivities = updateId(activities, activity.id, res.id);
     this.setState({ activities: newActivities });
   };
 
@@ -55,6 +33,22 @@ export class AdminActivitiesPage extends Component {
     return res;
   };
 
+  setErrorMessage = (error, errorString) => {
+    // console.log(error) // Uncomment to display full errors in the console.
+    this.setState({ errorMessage: errorString });
+  };
+
+  componentDidMount() {
+    fetch('/activities', {
+      method: 'GET',
+      headers: this.headers,
+    })
+      .then(this.handleFetchError)
+      .then(res => res.json())
+      .then(({ activities }) => this.setState({ activities }))
+      .catch(error => this.setErrorMessage(error, 'Error fetching activities'));
+  }
+
   toggleDay = (day, id) => {
     const activity = findById(id, this.state.activities);
     const updatedActivity = { ...activity, [day]: !activity[day] };
@@ -62,34 +56,31 @@ export class AdminActivitiesPage extends Component {
       this.state.activities,
       updatedActivity
     );
-    console.log(updatedActivities);
     this.setState({ activities: updatedActivities });
+
     fetch('/updateActivityDay', {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify(updatedActivity),
     })
       .then(this.handleFetchError)
-      .catch(error => {
-        console.log('error with toggleDay');
-        this.props.history.push('/admin');
-      });
+      .catch(error =>
+        this.setErrorMessage(error, 'Error setting activity day')
+      );
   };
 
   handleRemove = (id, event) => {
     event.preventDefault();
     const updatedActivities = removeActivity(this.state.activities, id);
     this.setState({ activities: updatedActivities });
+
     fetch('/removeActivity', {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify(id),
     })
       .then(this.handleFetchError)
-      .catch(error => {
-        console.log('error with removing activities');
-        this.props.history.push('/admin');
-      });
+      .catch(error => this.setErrorMessage(error, 'Error removing activity'));
   };
 
   handleSubmit = event => {
@@ -118,11 +109,9 @@ export class AdminActivitiesPage extends Component {
       body: JSON.stringify(newActivity),
     })
       .then(this.handleFetchError)
+      .then(res => res.json())
       .then(this.handleActivityFromDb(updatedActivities, newActivity))
-      .catch(error => {
-        console.log('error with adding activities');
-        this.props.history.push('/admin');
-      });
+      .catch(error => this.setErrorMessage(error, 'Error adding activity'));
   };
 
   handleEmptySubmit = event => {
