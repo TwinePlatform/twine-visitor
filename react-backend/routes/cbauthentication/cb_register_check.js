@@ -21,7 +21,7 @@ router.post('/', (req, res, next) => {
 
     const isEmail = validator.isEmail(data.formEmail);
     const isName = validator.isAlpha(orgName, ['en-GB']);
-    const emptyInput = checkHasLength([
+    const notEmptyInput = checkHasLength([
       data.formName,
       data.formEmail,
       data.formGenre,
@@ -43,11 +43,11 @@ router.post('/', (req, res, next) => {
           }
         })
         .catch(next);
-    } else if (emptyInput || !isEmail || !isName) {
+    } else if (!notEmptyInput || !isEmail || !isName) {
       const email = !isEmail ? 'email' : '';
       const isAlpha = !isName ? 'name' : '';
 
-      res.send((emptyInput && 'noinput') || email + isAlpha);
+      res.send((!notEmptyInput && 'noinput') || email + isAlpha);
     }
   });
 });
