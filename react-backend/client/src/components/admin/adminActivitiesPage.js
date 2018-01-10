@@ -21,6 +21,7 @@ export class AdminActivitiesPage extends Component {
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
+    'Content-Type': 'application/json',
   });
 
   handleActivityFromDb = activity => res => {
@@ -56,6 +57,10 @@ export class AdminActivitiesPage extends Component {
       this.state.activities,
       updatedActivity
     );
+<<<<<<< HEAD
+=======
+    console.log(updatedActivities);
+>>>>>>> master
     this.setState({ activities: updatedActivities });
 
     fetch('/updateActivityDay', {
