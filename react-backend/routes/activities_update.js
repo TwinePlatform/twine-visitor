@@ -16,9 +16,7 @@ router.post('/', (req, res, next) => {
     activity.sunday,
     req.auth.cb_id,
   )
-    .then(() => {
-      res.send('success');
-    })
+    .then(() => res.send('success'))
     .catch(next);
 });
 
