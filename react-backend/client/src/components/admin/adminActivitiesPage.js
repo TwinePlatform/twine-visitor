@@ -20,6 +20,7 @@ export class AdminActivitiesPage extends Component {
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
+    'Content-Type': 'application/json',
   });
 
   componentDidMount() {
@@ -47,7 +48,10 @@ export class AdminActivitiesPage extends Component {
   toggleDay = (day, id) => {
     const activity = findById(id, this.state.activities);
     const updatedActivity = { ...activity, [day]: !activity[day] };
-    const updatedActivities = updateActivity(this.state.activities, updatedActivity);
+    const updatedActivities = updateActivity(
+      this.state.activities,
+      updatedActivity
+    );
     console.log(updatedActivities);
     this.setState({ activities: updatedActivities });
     fetch('/updateActivityDay', {
@@ -136,12 +140,16 @@ export class AdminActivitiesPage extends Component {
   };
 
   render() {
-    const submitHandler = this.state.currentActivity ? this.handleSubmit : this.handleEmptySubmit;
+    const submitHandler = this.state.currentActivity
+      ? this.handleSubmit
+      : this.handleEmptySubmit;
     return (
       <div>
         <h2>Update Activities</h2>
         <div className="Activities">
-          {this.state.errorMessage && <span className="ErrorText">{this.state.errorMessage}</span>}
+          {this.state.errorMessage && (
+            <span className="ErrorText">{this.state.errorMessage}</span>
+          )}
           <ActivityForm
             handleInputChange={this.handleInputChange}
             currentActivity={this.state.currentActivity}
