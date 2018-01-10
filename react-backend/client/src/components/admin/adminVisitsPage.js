@@ -29,7 +29,7 @@ export class AdminVisitsPage extends Component {
     fetch('/fetchVisitsFilteredBy', {
       method: 'POST',
       headers: this.headers,
-      body: filterBy
+      body: JSON.stringify({ filterBy })
     })
       .then(res => {
         if (res.status === 500) {
