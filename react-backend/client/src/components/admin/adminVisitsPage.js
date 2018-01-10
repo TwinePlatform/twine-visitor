@@ -97,9 +97,12 @@ export class AdminVisitsPage extends Component {
         <h1>Visitor Data</h1>
         <select onChange={this.filter}>
           <option defaultValue value="">
-            Filter by
+            Sort by
           </option>
-          <option value="yearofbirth">yearofbirth </option>
+          <option value="yearofbirth">Year of Birth </option>
+          <option value="sex">Gender </option>
+          <option value="activity">Activity </option>
+          <option value="date">Date of visit </option>
         </select>
         <table>
           <thead>
