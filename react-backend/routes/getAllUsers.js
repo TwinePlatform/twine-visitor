@@ -1,31 +1,27 @@
 const express = require('express');
+const hashCB = require('../functions/cbhash');
+const getAllUsers = require('../database/queries/getAllUsers');
+const getCBLoginDetailsValid = require('../database/queries/getCBlogindetailsvalid');
 
 const router = express.Router();
 
-const getAllUsers = require('../database/queries/getAllUsers');
-
-const hashCB = require('../functions/cbhash');
-const getCBLoginDetailsValid = require('../database/queries/getCBlogindetailsvalid');
-
 router.post('/', (req, res, next) => {
   const hashedPassword = hashCB(req.body.password);
-  getCBLoginDetailsValid(req.auth.cb_email, hashedPassword, (error, result) => {
-    if (error) {
-      res.status(500).send(error);
-    } else if (result.rows[0].exists) {
-      getAllUsers(req.auth.cb_id)
-        .then(users => res.send({ success: true, users }))
-        .catch(err => {
-          console.log(err);
-          res.status(500).send(err);
-        });
-    } else {
+  getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
+    .then(exists => {
+      if (!exists) throw new Error('Incorrect password');
+      console.log('hi');
+      return req.auth.cb_id;
+    })
+    .then(getAllUsers)
+    .then(users => res.send({ success: true, users }))
+    .catch(err => {
+      if (err.message !== 'Incorrect password') return next(err);
       res.send({
         success: false,
-        reason: 'incorrect password'
+        reason: 'incorrect password',
       });
-    }
-  });
+    });
 });
 
 module.exports = router;

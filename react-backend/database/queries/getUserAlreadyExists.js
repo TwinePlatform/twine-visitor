@@ -5,6 +5,7 @@ const checkFullname =
 
 const getUserAlreadyExists = (fullname, email) =>
   new Promise((resolve, reject) => {
+    console.log(fullname, email);
     dbConnection
       .query(checkFullname, [fullname, email])
       .then(res => resolve(res.rows[0].exists))

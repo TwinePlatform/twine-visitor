@@ -7,25 +7,22 @@ const getCBLoginDetailsValid = require('../database/queries/getCBlogindetailsval
 
 router.post('/', (req, res, next) => {
   let body = '';
-  req.on('data', (chunk) => {
+  req.on('data', chunk => {
     body += chunk;
   });
 
   req.on('end', () => {
     const bodyObject = JSON.parse(body);
     const hashedPassword = hashCB(bodyObject.password);
-    getCBLoginDetailsValid(req.auth.cb_email, hashedPassword, (error, result) => {
-      if (error) {
-        res.status(500).send(error);
-      } else if (result.rows[0].exists) {
-        res.send({ success: true });
-      } else {
-        res.send({
-          success: false,
-          reason: 'incorrect password',
-        });
-      }
-    });
+    getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
+      .then(exists => {
+        const loggedIn = exists
+          ? { success: true }
+          : { success: false, reason: 'incorrect password' };
+
+        res.send(loggedIn);
+      })
+      .catch(next);
   });
 });
 

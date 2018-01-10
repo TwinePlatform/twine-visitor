@@ -1,9 +1,8 @@
 const validator = require('validator');
-
 const express = require('express');
+const getUserAlreadyExists = require('../database/queries/getUserAlreadyExists');
 
 const router = express.Router();
-const getUserAlreadyExists = require('../database/queries/getUserAlreadyExists');
 
 router.post('/', (req, res, next) => {
   let body = '';
@@ -22,7 +21,9 @@ router.post('/', (req, res, next) => {
       validator.isAlpha(name, ['en-GB'])
     ) {
       getUserAlreadyExists(data.formSender.toLowerCase(), data.formEmail)
-        .then(res.send)
+        .then(exists => {
+          res.send(exists);
+        })
         .catch(next);
     } else if (
       !validator.isEmail(data.formEmail) &&
