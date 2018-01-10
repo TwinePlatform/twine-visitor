@@ -10,7 +10,6 @@ router.post('/', (req, res, next) => {
   getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
     .then(exists => {
       if (!exists) throw new Error('Incorrect password');
-      console.log('hi');
       return req.auth.cb_id;
     })
     .then(getAllUsers)

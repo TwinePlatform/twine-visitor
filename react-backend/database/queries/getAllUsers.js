@@ -1,7 +1,11 @@
 const dbConnection = require('../dbConnection');
 
-const getAllUsersQuery =
-  'Select users.id, users.sex, users.yearofbirth, activities.name, visits.date from users inner join visits on users.id=visits.usersid inner join activities on visits.activitiesid = activities.id where activities.cb_id = $1';
+const getAllUsersQuery = `
+  SELECT users.id, users.sex, users.yearofbirth, activities.name, visits.date
+  FROM users
+  INNER JOIN visits ON users.id=visits.usersid
+  INNER JOIN activities ON visits.activitiesid = activities.id
+  WHERE activities.cb_id = $1`;
 
 const getAllUsers = cbId =>
   new Promise((resolve, reject) => {
