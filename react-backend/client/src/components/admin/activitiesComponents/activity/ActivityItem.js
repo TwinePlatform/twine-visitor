@@ -1,9 +1,17 @@
 import React from 'react';
 import { partial } from '../../activitiesLib/utils';
 
-export const ActivityItem = (props) => {
+export const ActivityItem = props => {
   const handleRemove = partial(props.handleRemove, props.id);
-  const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+  const days = [
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday'
+  ];
   return (
     <li>
       <span className="delete-item">
