@@ -1,17 +1,16 @@
-const QrCodeMaker = require('../functions/qrcodemaker');
+const qrCodeMaker = require('../functions/qrcodemaker');
 const generatePdf = require('../functions/pdfgenerator');
 const sendemail = require('../functions/sendemail');
 
-const sendQrCode = function(email, name, hash) {
+const sendQrCode = (email, name, hash) => {
   if (!email) return console.log('Missing the person to deliver this email to');
-  QrCodeMaker(hash)
+
+  qrCodeMaker(hash)
     .then(generatePdf)
     .then(pdf => sendemail(email, name, pdf))
     .catch(err => {
-      console.log(err);
+      console.log('Failed to send email ', err);
     });
 };
 
-module.exports = {
-  sendQrCode,
-};
+module.exports = sendQrCode;
