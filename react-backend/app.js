@@ -6,7 +6,9 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const qrGenerator = require('./routes/qr_generator');
+const listAllUsers = require('./routes/list_all_users');
 const visitorsAll = require('./routes/visitors_all');
+const usersFiltered = require('./routes/users_filtered');
 const visitorsFiltered = require('./routes/visitors_filtered');
 const adminAuthenticated = require('./routes/admin_authenticated');
 const visitorName = require('./routes/visitor_name');
@@ -35,7 +37,9 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use('/qrgenerator', isAuthenticated, qrGenerator);
 app.use('/getUsername', isAuthenticated, visitorName);
+app.use('/list-all-users', isAuthenticated, listAllUsers);
 app.use('/all-users', isAuthenticated, visitorsAll);
+app.use('/fetchUsersFilteredBy', isAuthenticated, usersFiltered);
 app.use('/fetchVisitsFilteredBy', isAuthenticated, visitorsFiltered);
 app.use('/isAdminAuthenticated', isAuthenticated, adminAuthenticated);
 app.use('/checkUser', isAuthenticated, visitorCheck);
