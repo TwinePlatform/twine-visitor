@@ -24,6 +24,7 @@ export class AdminMenuPage extends Component {
     event.preventDefault();
     const headers = new Headers({
       Authorization: localStorage.getItem('token'),
+      'Content-Type': 'application/json',
     });
     fetch('/isAdminAuthenticated', {
       method: 'POST',
@@ -96,7 +97,9 @@ export class AdminMenuPage extends Component {
       </div>
     ) : (
       <div>
-        <div className="ErrorText">{this.state.failure ? this.passwordError : ''}</div>
+        <div className="ErrorText">
+          {this.state.failure ? this.passwordError : ''}
+        </div>
         <form className="Signup" onSubmit={this.authenticate}>
           <label className="Form__Label">
             Please, type your password
