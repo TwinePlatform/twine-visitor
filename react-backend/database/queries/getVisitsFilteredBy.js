@@ -1,11 +1,12 @@
 const dbConnection = require('../dbConnection');
 
-const query = filterBy =>
-  `Select users.id, users.sex, users.yearofbirth, activities.name, visits.date from users inner join visits on users.id=visits.usersid inner join activities on visits.activitiesid = activities.id where activities.cb_id = $1 ${filterBy}`;
+const query = (filterBy, orderBy) =>
+  `Select users.id, users.sex, users.yearofbirth, activities.name, visits.date from users inner join visits on users.id=visits.usersid inner join activities on visits.activitiesid = activities.id where activities.cb_id = $1 ${filterBy} ${orderBy}`;
 
 const arrayMatch = (arr, search) => {
   return arr.some(el => el === search);
 };
+
 const getFiltersQuery = filterBy => {
   if (!filterBy) return '';
 
@@ -78,20 +79,26 @@ const getFiltersQuery = filterBy => {
   return 'and (' + filterByQuery.join(') AND (') + ')';
 };
 
-const getVisitsFilteredBy = (cb_id, filterBy = '') => {
-  const filterByQuery = query(getFiltersQuery(filterBy));
-  // const filterByQuery = {
-  //   male: query("users.sex = 'male'"),
-  //   female: query("users.sex = 'female'"),
-  //   prefer_not_to_say: query("users.sex = 'prefer not to say'")
-  // }[filterBy];
+const getSortQuery = orderBy => {
+  if (!orderBy) return '';
 
+  const field = {
+    yearofbirth: 'users.yearofbirth',
+    sex: 'users.sex',
+    activity: 'activities.name',
+    date: 'visits.date'
+  }[orderBy];
+
+  if (field) return ' ORDER BY ' + field;
+  return '';
+};
+
+const getVisitsFilteredBy = (cb_id, { filterBy, orderBy }) => {
+  const myQuery = query(getFiltersQuery(filterBy), getSortQuery(orderBy));
+  console.log(orderBy);
   return new Promise((resolve, reject) => {
-    // if (!filterByQuery)
-    //   return reject(new Error('Incorrect filterBy supplied to query'));
-
     dbConnection
-      .query(filterByQuery, [cb_id])
+      .query(myQuery, [cb_id])
       .then(res => resolve(res.rows))
       .catch(reject);
   });

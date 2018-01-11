@@ -12,7 +12,8 @@ export class AdminVisitsPage extends Component {
       failure: false,
       password: '',
       activities: [],
-      filters: []
+      filters: [],
+      orderBy: ''
     };
   }
 
@@ -57,32 +58,14 @@ export class AdminVisitsPage extends Component {
       });
   }
 
-  updateSortedResults = sortBy => {
-    fetch('/fetchVisitsSortedBy', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({ sortBy })
-    })
-      .then(res => {
-        if (res.status === 500) {
-          throw new Error('500');
-        } else {
-          return res.json();
-        }
-      })
-      .then(users => {
-        this.setState(users);
-      })
-      .catch(error => {
-        this.props.history.push('/internalServerError');
-      });
-  };
-
-  updateFilteredResults = filterBy => {
+  updateResults = () => {
     fetch('/fetchVisitsFilteredBy', {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify({ filterBy })
+      body: JSON.stringify({
+        filterBy: this.state.filters,
+        orderBy: this.state.orderBy
+      })
     })
       .then(res => {
         if (res.status === 500) {
@@ -100,8 +83,12 @@ export class AdminVisitsPage extends Component {
   };
 
   sort = e => {
-    const sortBy = e.target.value;
-    this.updateSortedResults(sortBy);
+    this.setState(
+      {
+        orderBy: e.target.value
+      },
+      this.updateResults
+    );
   };
 
   filter = (group, e) => {
@@ -114,13 +101,12 @@ export class AdminVisitsPage extends Component {
       newFilters = newFilters.filter(el => el !== filterBy);
     }
 
-    this.setState({
-      filters: newFilters
-    });
-
-    console.log(newFilters);
-
-    this.updateFilteredResults(newFilters);
+    this.setState(
+      {
+        filters: newFilters
+      },
+      this.updateResults
+    );
   };
 
   authenticate = event => {
@@ -169,15 +155,19 @@ export class AdminVisitsPage extends Component {
       <div>
         <h1>Visitor Data</h1>
         <form>
-          <select onChange={this.sort}>
-            <option defaultValue value="date">
-              Sort by
-            </option>
-            <option value="yearofbirth">Year of Birth </option>
-            <option value="sex">Gender </option>
-            <option value="activity">Activity </option>
-            <option value="date">Date of visit </option>{' '}
-          </select>
+          <label className="Form__Label">
+            Sort by
+            <br />
+            <select onChange={this.sort}>
+              <option defaultValue value="date">
+                Sort by
+              </option>
+              <option value="yearofbirth">Year of Birth </option>
+              <option value="sex">Gender </option>
+              <option value="activity">Activity </option>
+              <option value="date">Date of visit </option>{' '}
+            </select>
+          </label>
           <label className="Form__Label">
             Filter by Gender
             <br />
