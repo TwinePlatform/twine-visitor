@@ -308,7 +308,7 @@ export class AdminVisitsPage extends Component {
               className="Form__Input"
               type="password"
               name="password"
-              value={'Cats2017' || this.state.password}
+              value={this.state.password}
               onChange={this.handleChange}
             />
           </label>
