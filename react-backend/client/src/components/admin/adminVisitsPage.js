@@ -118,6 +118,8 @@ export class AdminVisitsPage extends Component {
       filters: newFilters
     });
 
+    console.log(newFilters);
+
     this.updateFilteredResults(newFilters);
   };
 
@@ -202,6 +204,50 @@ export class AdminVisitsPage extends Component {
                 onChange={this.filter.bind(this, 'gender')}
               />
               Prefer not to say
+            </label>
+          </label>
+          <label className="Form__Label">
+            Filter by age
+            <br />
+            <label>
+              <input
+                type="checkbox"
+                value="0-17"
+                onChange={this.filter.bind(this, 'age')}
+              />
+              0-17
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="18-34"
+                onChange={this.filter.bind(this, 'age')}
+              />
+              18-34
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="35-50"
+                onChange={this.filter.bind(this, 'age')}
+              />
+              35-50
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="51-69"
+                onChange={this.filter.bind(this, 'age')}
+              />
+              51-69
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="70-more"
+                onChange={this.filter.bind(this, 'age')}
+              />
+              70-more
             </label>
           </label>
           <label className="Form__Label">

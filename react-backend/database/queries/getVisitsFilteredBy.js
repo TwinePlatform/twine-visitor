@@ -39,12 +39,42 @@ const getFiltersQuery = filterBy => {
     group = [];
   }
 
+  // GROUP 3 - age
+  const today = new Date();
+  const getYearOfBirth0_17 = today.getFullYear() - 17;
+  const getYearOfBirth18_34 = today.getFullYear() - 34;
+  const getYearOfBirth35_50 = today.getFullYear() - 50;
+  const getYearOfBirth51_69 = today.getFullYear() - 69;
+  const getYearOfBirth70_more = today.getFullYear() - 70;
+  if (arrayMatch(filters, 'age@0-17'))
+    group.push(`(users.yearofbirth > ${getYearOfBirth0_17})`);
+  if (arrayMatch(filters, 'age@18-34'))
+    group.push(
+      `(users.yearofbirth <= ${getYearOfBirth0_17} and users.yearofbirth > ${getYearOfBirth18_34})`
+    );
+  if (arrayMatch(filters, 'age@35-50'))
+    group.push(
+      `(users.yearofbirth <= ${getYearOfBirth18_34} and users.yearofbirth > ${getYearOfBirth35_50})`
+    );
+  if (arrayMatch(filters, 'age@51-69'))
+    group.push(
+      `(users.yearofbirth <= ${getYearOfBirth35_50} and users.yearofbirth > ${getYearOfBirth51_69})`
+    );
+  if (arrayMatch(filters, 'age@70-more'))
+    group.push(`(users.yearofbirth <= ${getYearOfBirth51_69})`);
+
+  if (group.length) {
+    filterByQuery.push(group.join(' OR '));
+    group = [];
+  }
+
   // ----> Finalize
 
   // I have no filters at all
   if (!filterByQuery.length) return '';
 
   // I have some filters
+  console.log(filterByQuery);
   return 'and (' + filterByQuery.join(') AND (') + ')';
 };
 
