@@ -39,29 +39,21 @@ const getFiltersQuery = filterBy => {
     group = [];
   }
 
-  if (group.length) {
-    filterByQuery.push(group.join(' OR '));
-    group = [];
-  }
-
   // ----> Finalize
 
   // I have no filters at all
   if (!filterByQuery.length) return '';
 
   // I have some filters
-  return 'and ' + filterByQuery.join(' AND ');
+  return 'and (' + filterByQuery.join(') AND (') + ')';
 };
 
 const getVisitsFilteredBy = (cb_id, filterBy = '') => {
   const filterByQuery = query(getFiltersQuery(filterBy));
-  console.log(filterByQuery);
   // const filterByQuery = {
   //   male: query("users.sex = 'male'"),
   //   female: query("users.sex = 'female'"),
   //   prefer_not_to_say: query("users.sex = 'prefer not to say'")
-  //   // activity: query('activities.name'),
-  //   // date: query('visits.date')
   // }[filterBy];
 
   return new Promise((resolve, reject) => {
