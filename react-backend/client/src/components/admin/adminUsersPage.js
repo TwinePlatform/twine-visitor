@@ -24,7 +24,8 @@ export class AdminUsersPage extends Component {
 
   handleChange = e => {
     let newState = {};
-    this.setState({ [e.target.name]: e.target.value });
+    newState[e.target.name] = e.target.value;
+    this.setState(newState);
   };
 
   handleFetchError = res => {
@@ -46,9 +47,13 @@ export class AdminUsersPage extends Component {
         orderBy: this.state.orderBy,
       }),
     })
-      .then(this.handleFetchError)
-      .then(res.json())
-
+      .then(res => {
+        if (res.status === 500) {
+          throw new Error('500');
+        } else {
+          return res.json();
+        }
+      })
       .then(users => {
         this.setState(users);
       })
@@ -69,9 +74,12 @@ export class AdminUsersPage extends Component {
   filter = (group, e) => {
     const filterBy = group + '@' + e.target.value;
     const isAdding = e.target.checked;
-    const newFilters = const newFilters = isAdding
-    ? [...this.state.filters, filterBy]
-    : newFilters.filters(filter => filter !== filterBy);
+    let newFilters = [...this.state.filters];
+    if (isAdding) {
+      newFilters.push(filterBy);
+    } else {
+      newFilters = newFilters.filter(el => el !== filterBy);
+    }
 
     this.setState(
       {
@@ -96,18 +104,18 @@ export class AdminUsersPage extends Component {
           return res.json();
         }
       })
-      .then(this.handleFetchError).then(res.json())
       .then(res => {
         if (res.success) {
           return res.users;
-        } else if (res.error === 'Not logged in') {
+        } else {
+          if (res.error === 'Not logged in') {
             throw new Error('Not logged in');
           } else {
             this.setState({ failure: true });
             throw new Error('password');
           }
         }
-      )
+      })
       .then(users => {
         this.setState({ users, reauthenticated: true });
       })
