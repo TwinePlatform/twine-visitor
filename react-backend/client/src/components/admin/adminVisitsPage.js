@@ -46,11 +46,7 @@ export class AdminVisitsPage extends Component {
       .then(this.handleFetchError)
       .then(res => res.json())
       .then(res => {
-        const arrayOfActivities = [];
-        res.activities.forEach(activity => {
-          arrayOfActivities.push(activity.name);
-        });
-        return arrayOfActivities;
+        return res.activities.map(activity => activity.name);
       })
       .then(activities => this.setState({ activities }))
       .catch(error => {
@@ -67,13 +63,8 @@ export class AdminVisitsPage extends Component {
         orderBy: this.state.orderBy
       })
     })
-      .then(res => {
-        if (res.status === 500) {
-          throw new Error('500');
-        } else {
-          return res.json();
-        }
-      })
+      .then(this.handleFetchError)
+      .then(res => res.json())
       .then(users => {
         this.setState(users);
       })
@@ -91,15 +82,13 @@ export class AdminVisitsPage extends Component {
     );
   };
 
-  filter = (group, e) => {
+  filter = group => e => {
     const filterBy = group + '@' + e.target.value;
     const isAdding = e.target.checked;
-    let newFilters = [...this.state.filters];
-    if (isAdding) {
-      newFilters.push(filterBy);
-    } else {
-      newFilters = newFilters.filter(el => el !== filterBy);
-    }
+
+    const newFilters = isAdding
+      ? [...this.state.filters, filterBy]
+      : this.state.filters.filter(filter => filter !== filterBy);
 
     this.setState(
       {
@@ -175,7 +164,7 @@ export class AdminVisitsPage extends Component {
               <input
                 type="checkbox"
                 value="male"
-                onChange={this.filter.bind(this, 'gender')}
+                onChange={this.filter('gender')}
               />
               Male
             </label>
@@ -183,7 +172,7 @@ export class AdminVisitsPage extends Component {
               <input
                 type="checkbox"
                 value="female"
-                onChange={this.filter.bind(this, 'gender')}
+                onChange={this.filter('gender')}
               />
               Female
             </label>
@@ -191,7 +180,7 @@ export class AdminVisitsPage extends Component {
               <input
                 type="checkbox"
                 value="prefer_not_to_say"
-                onChange={this.filter.bind(this, 'gender')}
+                onChange={this.filter('gender')}
               />
               Prefer not to say
             </label>
@@ -203,7 +192,7 @@ export class AdminVisitsPage extends Component {
               <input
                 type="checkbox"
                 value="0-17"
-                onChange={this.filter.bind(this, 'age')}
+                onChange={this.filter('age')}
               />
               0-17
             </label>
@@ -211,7 +200,7 @@ export class AdminVisitsPage extends Component {
               <input
                 type="checkbox"
                 value="18-34"
-                onChange={this.filter.bind(this, 'age')}
+                onChange={this.filter('age')}
               />
               18-34
             </label>
@@ -219,7 +208,7 @@ export class AdminVisitsPage extends Component {
               <input
                 type="checkbox"
                 value="35-50"
-                onChange={this.filter.bind(this, 'age')}
+                onChange={this.filter('age')}
               />
               35-50
             </label>
@@ -227,7 +216,7 @@ export class AdminVisitsPage extends Component {
               <input
                 type="checkbox"
                 value="51-69"
-                onChange={this.filter.bind(this, 'age')}
+                onChange={this.filter('age')}
               />
               51-69
             </label>
@@ -235,7 +224,7 @@ export class AdminVisitsPage extends Component {
               <input
                 type="checkbox"
                 value="70-more"
-                onChange={this.filter.bind(this, 'age')}
+                onChange={this.filter('age')}
               />
               70-more
             </label>
@@ -248,7 +237,7 @@ export class AdminVisitsPage extends Component {
                 <input
                   type="checkbox"
                   value={activity}
-                  onChange={this.filter.bind(this, 'activity')}
+                  onChange={this.filter('activity')}
                 />
                 {activity}
               </label>
