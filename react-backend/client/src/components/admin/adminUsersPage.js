@@ -38,26 +38,6 @@ export class AdminUsersPage extends Component {
     this.setState({ errorMessage: errorString });
   };
 
-  // componentDidMount() {
-  //   fetch('/activities', {
-  //     method: 'GET',
-  //     headers: this.headers,
-  //   })
-  //     .then(this.handleFetchError)
-  //     .then(res => res.json())
-  //     .then(res => {
-  //       const arrayOfActivities = [];
-  //       res.activities.forEach(activity => {
-  //         arrayOfActivities.push(activity.name);
-  //       });
-  //       return arrayOfActivities;
-  //     })
-  //     .then(activities => this.setState({ activities }))
-  //     .catch(error => {
-  //       this.setErrorMessage(error, 'Error fetching activities');
-  //     });
-  // }
-
   updateResults = () => {
     fetch('/fetchUsersFilteredBy', {
       method: 'POST',
