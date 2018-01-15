@@ -2,85 +2,100 @@ const dbConnection = require('../dbConnection');
 
 const query = (filterBy, orderBy) =>
   `SELECT users.id, users.sex, users.yearofbirth, activities.name, visits.date
-FROM users INNER JOIN visits ON users.id=visits.usersid 
-INNER JOIN activities ON visits.activitiesid = activities.id 
-WHERE activities.cb_id = $1 ${filterBy} ${orderBy}`;
+  FROM users INNER JOIN visits ON users.id=visits.usersid
+  INNER JOIN activities ON visits.activitiesid = activities.id
+  WHERE activities.cb_id = $1 ${filterBy} ${orderBy}`;
 
-const arrayMatch = (arr, search) => {
-  return arr.some(el => el === search);
+const getValidatedFilters = filterArray => {
+  const validFilterTypes = {
+    gender: ['male', 'female', 'prefer_not_to_say'],
+    age: ['0-17', '18-34', '35-50', '51-69', '70-more'],
+  };
+
+  return filterArray.reduce((acc, el) => {
+    try {
+      const [type, filter] = el.split('@');
+      const toInsert = acc[type] ? [...acc[type], filter] : [filter];
+
+      return type === 'activity' ||
+        (validFilterTypes[type] && validFilterTypes[type].includes(filter))
+        ? { ...acc, [type]: toInsert }
+        : acc;
+    } catch (error) {
+      return acc;
+    }
+  }, {});
 };
 
-const getFiltersQuery = filterBy => {
-  if (!filterBy) return '';
+const buildGenderQuery = genderQueries => {
+  const validQueries = {
+    male: "users.sex = 'male'",
+    female: "users.sex = 'female'",
+    prefer_not_to_say: "users.sex = 'prefer not to say'",
+  };
 
-  let filters = filterBy;
+  return genderQueries
+    ? genderQueries.map(gender => validQueries[gender]).join(' OR ')
+    : '';
+};
 
-  let filterByQuery = [];
-
-  let group = [];
-
-  // GROUP 1 - Gender
-  if (arrayMatch(filters, 'gender@male')) group.push("users.sex = 'male'");
-
-  if (arrayMatch(filters, 'gender@female')) group.push("users.sex = 'female'");
-
-  if (arrayMatch(filters, 'gender@prefer_not_to_say'))
-    group.push("users.sex = 'prefer not to say'");
-
-  if (group.length) {
-    filterByQuery.push(group.join(' OR '));
-    group = [];
-  }
-
-  // GROUP 2 - activities
-  group = filters
-    .filter(el => el.match(/^activity@/))
-    .map(el => el.replace('activity@', ''))
-    .map(el => `activities.name = '${el}'`);
-
-  if (group.length) {
-    filterByQuery.push(group.join(' OR '));
-    group = [];
-  }
-
-  // GROUP 3 - age
+const getDate = age => {
   const today = new Date();
-  const getYearOfBirth0_17 = today.getFullYear() - 17;
-  const getYearOfBirth18_34 = today.getFullYear() - 34;
-  const getYearOfBirth35_50 = today.getFullYear() - 50;
-  const getYearOfBirth51_69 = today.getFullYear() - 69;
-  const getYearOfBirth70_more = today.getFullYear() - 70;
-  if (arrayMatch(filters, 'age@0-17'))
-    group.push(`(users.yearofbirth > ${getYearOfBirth0_17})`);
-  if (arrayMatch(filters, 'age@18-34'))
-    group.push(
-      `(users.yearofbirth <= ${getYearOfBirth0_17} and users.yearofbirth > ${getYearOfBirth18_34})`
-    );
-  if (arrayMatch(filters, 'age@35-50'))
-    group.push(
-      `(users.yearofbirth <= ${getYearOfBirth18_34} and users.yearofbirth > ${getYearOfBirth35_50})`
-    );
-  if (arrayMatch(filters, 'age@51-69'))
-    group.push(
-      `(users.yearofbirth <= ${getYearOfBirth35_50} and users.yearofbirth > ${getYearOfBirth51_69})`
-    );
-  if (arrayMatch(filters, 'age@70-more'))
-    group.push(`(users.yearofbirth <= ${getYearOfBirth51_69})`);
-
-  if (group.length) {
-    filterByQuery.push(group.join(' OR '));
-    group = [];
-  }
-
-  // ----> Finalize
-
-  // I have no filters at all
-  if (!filterByQuery.length) return '';
-
-  // I have some filters
-  console.log(filterByQuery);
-  return 'and (' + filterByQuery.join(') AND (') + ')';
+  return today.getFullYear() - age;
 };
+
+const buildAgeQuery = ageQuery =>
+  ageQuery
+    ? ageQuery
+        .map(ageRange => {
+          const [low, high] = ageRange.split('-').map(num => Number(num));
+          const edgeCaseQuery = {
+            '0-17': `(users.yearofbirth > ${getDate(high)})`,
+            '70-more': `(users.yearofbirth <= ${getDate(low)})`,
+          }[ageRange];
+
+          return (
+            edgeCaseQuery ||
+            `(users.yearofbirth <= ${getDate(low - 1)}
+            AND users.yearofbirth > ${getDate(high)})`
+          );
+        })
+        .join(' OR ')
+    : '';
+
+const buildActivityQueries = filters => {
+  const [queries, values] = filters.reduce(
+    (acc, activity, index) => {
+      const [queries, values] = acc;
+      // $ values taking into account 0 index and the cb_id that's already set
+      const newQuery = [...queries, `activities.name = $${index + 2}`];
+      const newValue = [...values, activity];
+
+      return [newQuery, newValue];
+    },
+    [[], []]
+  );
+
+  return [queries.join(' OR '), values];
+};
+
+const buildFilterQueries = validatedFilters => {
+  const genderQuery = buildGenderQuery(validatedFilters.gender);
+  const ageQuery = buildAgeQuery(validatedFilters.age);
+
+  const [activityQuery, activityValues] = validatedFilters.activity
+    ? buildActivityQueries(validatedFilters.activity)
+    : ['', []];
+
+  const combinedQueries = [genderQuery, ageQuery, activityQuery]
+    .map(query => (query ? `AND (${query}) ` : ''))
+    .join('');
+
+  return [combinedQueries, activityValues];
+};
+
+const combineQueries = filterBy =>
+  filterBy ? buildFilterQueries(getValidatedFilters(filterBy)) : ['', []];
 
 const getSortQuery = orderBy => {
   if (!orderBy) return '';
@@ -89,18 +104,21 @@ const getSortQuery = orderBy => {
     yearofbirth: 'users.yearofbirth',
     sex: 'users.sex',
     activity: 'activities.name',
-    date: 'visits.date'
+    date: 'visits.date',
   }[orderBy];
 
-  if (field) return ' ORDER BY ' + field;
-  return '';
+  return field ? ` ORDER BY ${field}` : '';
 };
 
-const getVisitsFilteredBy = (cb_id, { filterBy, orderBy }) => {
-  const myQuery = query(getFiltersQuery(filterBy), getSortQuery(orderBy));
+const getVisitsFilteredBy = (cbId, { filterBy, orderBy }) => {
+  const [filterQueries, values] = combineQueries(filterBy);
+  const combinedValues = [cbId, ...values];
+
+  const myQuery = query(filterQueries, getSortQuery(orderBy));
+
   return new Promise((resolve, reject) => {
     dbConnection
-      .query(myQuery, [cb_id])
+      .query(myQuery, combinedValues)
       .then(res => resolve(res.rows))
       .catch(reject);
   });
