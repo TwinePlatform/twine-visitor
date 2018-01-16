@@ -19,7 +19,7 @@ const getValidatedFilters = filterArray => {
 
       return type === 'activity' ||
         (validFilterTypes[type] && validFilterTypes[type].includes(filter))
-        ? { ...acc, [type]: toInsert }
+        ? Object.assign(acc, { [type]: toInsert })
         : acc;
     } catch (error) {
       return acc;
@@ -95,10 +95,10 @@ const buildFilterQueries = validatedFilters => {
 };
 
 const combineQueries = filterBy =>
-  filterBy ? buildFilterQueries(getValidatedFilters(filterBy)) : ['', []];
+  buildFilterQueries(getValidatedFilters(filterBy));
 
 const getSortQuery = orderBy => {
-  if (!orderBy) return '';
+  if (!orderBy || typeof orderBy !== 'string') return '';
 
   const field = {
     yearofbirth: 'users.yearofbirth',
@@ -110,7 +110,8 @@ const getSortQuery = orderBy => {
   return field ? ` ORDER BY ${field}` : '';
 };
 
-const getVisitsFilteredBy = (cbId, { filterBy, orderBy }) => {
+// Destructure and supply default arguments
+const getVisitsFilteredBy = (cbId, { filterBy = [], orderBy = '' } = {}) => {
   const [filterQueries, values] = combineQueries(filterBy);
   const combinedValues = [cbId, ...values];
 
