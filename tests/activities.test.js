@@ -92,7 +92,7 @@ test('Tests insertActivity inserts an activity', async (t) => {
     activitiesPostInsert.length,
     'Inserted activity!',
   );
-  t.equal(newId.id, 6, 'Query returns the id of the new activity');
+  t.equal(newId, 6, 'Query returns the id of the new activity');
 
   try {
     await insertActivity('', 2);

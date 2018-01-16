@@ -184,5 +184,4 @@ test('Sorts by field', async (t) => {
     t.fail('Failed to sort');
     t.end();
   }
-  process.exit(0);
 });
