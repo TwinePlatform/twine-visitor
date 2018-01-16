@@ -3,7 +3,7 @@ const connect = require('./dbConnection.js');
 
 const rebuild = () =>
   new Promise((resolve, reject) => {
-    const sql = fs.readFileSync(`${__dirname}/dbBuild.sql`).toString();
+    const sql = fs.readFileSync(`${__dirname}/dbBuildTest.sql`).toString();
 
     connect
       .query(sql)
