@@ -63,8 +63,10 @@ const buildAgeQuery = ageQuery =>
         .join(' OR ')
     : '';
 
-const buildActivityQueries = filters => {
-  const [queries, values] = filters.reduce(
+const buildActivityQueries = validFilters => {
+  if (!validFilters) return ['', []];
+
+  const [queries, values] = validFilters.reduce(
     (acc, activity, index) => {
       const [queries, values] = acc;
       // $ values taking into account 0 index and the cb_id that's already set
@@ -79,19 +81,17 @@ const buildActivityQueries = filters => {
   return [queries.join(' OR '), values];
 };
 
-const buildFilterQueries = validatedFilters => {
-  const genderQuery = buildGenderQuery(validatedFilters.gender);
-  const ageQuery = buildAgeQuery(validatedFilters.age);
+const buildFilterQueries = validFilters => {
+  const genderQuery = buildGenderQuery(validFilters.gender);
+  const ageQuery = buildAgeQuery(validFilters.age);
 
-  const [activityQuery, activityValues] = validatedFilters.activity
-    ? buildActivityQueries(validatedFilters.activity)
-    : ['', []];
+  const [activQuery, activValue] = buildActivityQueries(validFilters.activity);
 
-  const combinedQueries = [genderQuery, ageQuery, activityQuery]
+  const combinedQueries = [genderQuery, ageQuery, activQuery]
     .map(query => (query ? `AND (${query}) ` : ''))
     .join('');
 
-  return [combinedQueries, activityValues];
+  return [combinedQueries, activValue];
 };
 
 const combineQueries = filterBy =>
