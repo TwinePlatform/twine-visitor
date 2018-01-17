@@ -1,7 +1,7 @@
 const dbConnection = require('../dbConnection');
 
 const putNewUserDetailsQuery =
-  'UPDATE users SET users.fullname = $3, users.sex = $4, users.yearofbirth = $5, users.email = $6 WHERE users.id = $2 AND users.cb_id = $1';
+  'UPDATE users SET fullname = $3, sex = $4, yearofbirth = $5, email = $6 WHERE id = $2 AND cb_id = $1 RETURNING *';
 
 const putNewUserDetails = (cbId, userId, fullName, sex, yearOfBirth, email) =>
   new Promise((resolve, reject) => {
@@ -12,13 +12,13 @@ const putNewUserDetails = (cbId, userId, fullName, sex, yearOfBirth, email) =>
         fullName,
         sex,
         yearOfBirth,
-        email,
+        email
       ])
       .then(res => {
         if (res.rowCount === 0) {
           return reject('No user found');
         }
-        return resolve(res.rows);
+        return resolve(res.rows[0]);
       })
       .catch(reject);
   });
