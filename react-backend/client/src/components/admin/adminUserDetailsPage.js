@@ -95,6 +95,38 @@ export class AdminUserDetailsPage extends Component {
       });
   };
 
+  resendQR = () => {
+    fetch('/qr-send', {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify({
+        email: this.state.email,
+        name: this.state.userFullName,
+        hash: this.state.hash,
+        password: this.state.password,
+      }),
+    })
+      .then(this.handleFetchError)
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          console.log('Sucess!');
+        } else if (res.error === 'Not logged in') {
+          throw new Error('Not logged in');
+        } else {
+          this.setState({ failure: true });
+          throw new Error('password');
+        }
+      })
+      .catch(error => {
+        if (!this.state.failure) {
+          this.props.history.push('/logincb');
+        } else if (error === '500') {
+          this.props.history.push('/internalServerError');
+        }
+      });
+  };
+
   authenticate = event => {
     event.preventDefault();
 
@@ -127,41 +159,6 @@ export class AdminUserDetailsPage extends Component {
           this.props.history.push('/internalServerError');
         }
       });
-
-    // fetch('/qr-user-gen', {
-    //   method: 'POST',
-    //   headers: this.headers,
-    //   body: JSON.stringify({
-    //     password: this.state.password,
-    //     hash: this.state.hash,
-    //   }),
-    // })
-    //   .then(this.handleFetchError)
-    //   .then(res => res.json())
-    //   .then(res => {
-    //     if (res.success) {
-    //       console.log(res);
-    //       return res.qr;
-    //     } else if (res.error === 'Not logged in') {
-    //       throw new Error('Not logged in');
-    //     } else {
-    //       this.setState({ failure: true });
-    //       throw new Error('password');
-    //     }
-    //   })
-    //   .then(qr => {
-    //     console.log(qr);
-    //     this.setState({
-    //       url: qr,
-    //     });
-    //   })
-    //   .catch(error => {
-    //     if (!this.state.failure) {
-    //       this.props.history.push('/logincb');
-    //     } else if (error === '500') {
-    //       this.props.history.push('/internalServerError');
-    //     }
-    //   });
   };
 
   passwordError = <span>The password is incorrect. Please try again.</span>;
@@ -177,35 +174,42 @@ export class AdminUserDetailsPage extends Component {
 
     return (
       <div>
-        <h1>{this.state.userFullName}s Details</h1>
-        <table>
-          <tbody>
-            <tr>
-              <td>User Id</td>
-              <td>{this.state.userId}</td>
-            </tr>
-            <tr>
-              <td> User Full Name </td>
-              <td>{this.state.userFullName}</td>
-            </tr>
-            <tr>
-              <td>User Sex</td>
-              <td>{this.state.sex}</td>
-            </tr>
-            <tr>
-              <td> User Year of Birth </td>
-              <td>{this.state.yearOfBirth}</td>
-            </tr>
-            <tr>
-              <td>User email</td>
-              <td>{this.state.email}</td>
-            </tr>
-            <tr>
-              <td>User Signup Date</td>
-              <td>{this.state.signupDate}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div>
+          <h1>{this.state.userFullName}s Details</h1>
+          <table>
+            <tbody>
+              <tr>
+                <td>User Id</td>
+                <td>{this.state.userId}</td>
+              </tr>
+              <tr>
+                <td> User Full Name </td>
+                <td>{this.state.userFullName}</td>
+              </tr>
+              <tr>
+                <td>User Sex</td>
+                <td>{this.state.sex}</td>
+              </tr>
+              <tr>
+                <td> User Year of Birth </td>
+                <td>{this.state.yearOfBirth}</td>
+              </tr>
+              <tr>
+                <td>User email</td>
+                <td>{this.state.email}</td>
+              </tr>
+              <tr>
+                <td>User Signup Date</td>
+                <td>{this.state.signupDate}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div>
+            <button className="Button" onClick={this.resendQR}>
+              Resend QR Code
+            </button>
+          </div>
+        </div>
         <h2>Edit {this.state.userFullName}s Details</h2>
         {this.state.errorMessage && (
           <span className="ErrorText">{this.state.errorMessage}</span>

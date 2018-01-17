@@ -5,6 +5,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+const qrSend = require('./routes/qr_user_send');
 const qrGenerator = require('./routes/qr_generator');
 const qrUserGen = require('./routes/qr_user_gen');
 const userDetails = require('./routes/user_details');
@@ -38,6 +39,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
+app.use('/qr-send', isAuthenticated, qrSend);
 app.use('/qrgenerator', isAuthenticated, qrGenerator);
 app.use('/qr-user-gen', isAuthenticated, qrUserGen);
 app.use('/getUsername', isAuthenticated, visitorName);
