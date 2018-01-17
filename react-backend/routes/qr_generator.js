@@ -18,6 +18,7 @@ router.post('/', (req, res, next) => {
     const name = details.formSender.toLowerCase();
 
     putUserData(
+      req.auth.cb_id,
       name,
       details.formSex,
       details.formYear,
