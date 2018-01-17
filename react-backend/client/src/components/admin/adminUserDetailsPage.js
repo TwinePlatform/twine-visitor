@@ -33,7 +33,8 @@ export class AdminUserDetailsPage extends Component {
         .join(' ')
         .slice(0, 19),
       hash: user.hash,
-      reauthenticated: true
+      reauthenticated: true,
+      errorMessage: ''
     });
   };
 
@@ -43,7 +44,10 @@ export class AdminUserDetailsPage extends Component {
   });
 
   handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({
+      [e.target.name]: e.target.value,
+      errorMessage: ''
+    });
   };
 
   handleChangeSex = e => {
@@ -58,6 +62,13 @@ export class AdminUserDetailsPage extends Component {
   setErrorMessage = (error, errorString) => {
     // console.log(error) // Uncomment to display full errors in the console.
     this.setState({ errorMessage: errorString });
+  };
+
+  handleEmptySubmit = event => {
+    event.preventDefault();
+    this.setState({
+      errorMessage: 'Please do not leave empty input fields'
+    });
   };
 
   handleSubmit = event => {
@@ -120,6 +131,14 @@ export class AdminUserDetailsPage extends Component {
   passwordError = <span>The password is incorrect. Please try again.</span>;
 
   renderAuthenticated = () => {
+    const submitHandler =
+      this.state.userFullName &&
+      this.state.sex &&
+      this.state.yearOfBirth &&
+      this.state.email
+        ? this.handleSubmit
+        : this.handleEmptySubmit;
+
     return (
       <div>
         <h1>{this.state.userFullName}s Details</h1>
@@ -152,6 +171,9 @@ export class AdminUserDetailsPage extends Component {
           </tbody>
         </table>
         <h2>Edit {this.state.userFullName}s Details</h2>
+        {this.state.errorMessage && (
+          <span className="ErrorText">{this.state.errorMessage}</span>
+        )}
 
         <form>
           <label className="Form__Label">
@@ -196,7 +218,7 @@ export class AdminUserDetailsPage extends Component {
               value={this.state.email}
             />
           </label>
-          <button className="Button" onClick={this.handleSubmit}>
+          <button className="Button" onClick={submitHandler}>
             Submit
           </button>
         </form>
