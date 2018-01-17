@@ -6,23 +6,25 @@ import { Logoutbutton } from '../visitors/logoutbutton';
 export class AdminUserDetailsPage extends Component {
   constructor(props) {
     super(props);
+    const userId = this.props.location.pathname.split('/').reverse()[0];
+
     this.state = {
       reauthenticated: false,
       failure: false,
       password: '',
-      userId: '1',
+      userId,
       userFullName: '',
       sex: '',
       yearOfBirth: '',
       email: '',
       signupDate: '',
-      hash: '',
+      hash: ''
     };
   }
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   });
 
   handleChange = e => {
@@ -48,8 +50,8 @@ export class AdminUserDetailsPage extends Component {
         userFullName: this.state.userFullName,
         sex: this.state.sex,
         yearOfBirth: this.state.yearOfBirth,
-        email: this.state.email,
-      }),
+        email: this.state.email
+      })
     })
       .then(this.handleFetchError)
       .then(res => res.json())
@@ -61,7 +63,7 @@ export class AdminUserDetailsPage extends Component {
           email: details.email,
           signupDate: details.date,
           hash: details.hash,
-          reauthenticated: true,
+          reauthenticated: true
         });
       })
       .catch(error => {
@@ -77,8 +79,8 @@ export class AdminUserDetailsPage extends Component {
       headers: this.headers,
       body: JSON.stringify({
         password: this.state.password,
-        userId: this.state.userId,
-      }),
+        userId: this.state.userId
+      })
     })
       .then(this.handleFetchError)
       .then(res => res.json())
@@ -95,13 +97,13 @@ export class AdminUserDetailsPage extends Component {
       })
       .then(details => {
         this.setState({
-          userFullName: details.fullname,
-          sex: details.sex,
-          yearOfBirth: details.yearofbirth,
-          email: details.email,
-          signupDate: details.date,
-          hash: details.hash,
-          reauthenticated: true,
+          userFullName: details[0].fullname,
+          sex: details[0].sex,
+          yearOfBirth: details[0].yearofbirth,
+          email: details[0].email,
+          signupDate: details[0].date,
+          hash: details[0].hash,
+          reauthenticated: true
         });
       })
       .catch(error => {

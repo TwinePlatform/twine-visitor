@@ -10,15 +10,14 @@ router.post('/', (req, res, next) => {
   getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
     .then(exists => {
       if (!exists) throw new Error('Incorrect password');
-      return req.auth.cb_id;
     })
-    .then(getUserDetails(req.auth.cb_id, req.body.userId))
+    .then(() => getUserDetails(req.auth.cb_id, req.body.userId))
     .then(details => res.send({ success: true, details }))
     .catch(err => {
       if (err.message !== 'Incorrect password') return next(err);
       res.send({
         success: false,
-        reason: 'incorrect password',
+        reason: 'incorrect password'
       });
     });
 });
