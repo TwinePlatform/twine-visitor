@@ -15,7 +15,7 @@ const activitiesForToday = (cbId, day) => {
   }[day];
 
   return new Promise((resolve, reject) => {
-    if (!dayQuery) return reject(new Error('Incorrect day supplied to query'));
+    if (!dayQuery || !cbId) return reject(new Error('Incorrect arguments'));
 
     dbConnection
       .query(dayQuery, [cbId])
