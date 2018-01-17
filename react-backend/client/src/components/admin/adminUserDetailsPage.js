@@ -95,6 +95,41 @@ export class AdminUserDetailsPage extends Component {
       });
   };
 
+  displayQR = () => {
+    fetch('/qr-user-gen', {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify({
+        hash: this.state.hash,
+        password: this.state.password,
+      }),
+    })
+      .then(this.handleFetchError)
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          return res.qr;
+        } else if (res.error === 'Not logged in') {
+          throw new Error('Not logged in');
+        } else {
+          this.setState({ failure: true });
+          throw new Error('password');
+        }
+      })
+      .then(qr =>
+        this.setState({
+          url: qr,
+        })
+      )
+      .catch(error => {
+        if (!this.state.failure) {
+          this.props.history.push('/logincb');
+        } else if (error === '500') {
+          this.props.history.push('/internalServerError');
+        }
+      });
+  };
+
   resendQR = () => {
     fetch('/qr-send', {
       method: 'POST',
@@ -205,8 +240,16 @@ export class AdminUserDetailsPage extends Component {
             </tbody>
           </table>
           <div>
+            <img
+              className="QR__image"
+              src={this.state.url}
+              alt="This is your QRcode"
+            />
+            <button className="Button" onClick={this.displayQR}>
+              Show QR Code
+            </button>
             <button className="Button" onClick={this.resendQR}>
-              Resend QR Code
+              Re-email QR Code
             </button>
           </div>
         </div>
