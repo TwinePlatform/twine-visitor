@@ -18,13 +18,14 @@ export class AdminUserDetailsPage extends Component {
       yearOfBirth: '',
       email: '',
       signupDate: '',
-      hash: ''
+      hash: '',
+      url: '',
     };
   }
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   });
 
   handleChange = e => {
@@ -50,8 +51,8 @@ export class AdminUserDetailsPage extends Component {
         userFullName: this.state.userFullName,
         sex: this.state.sex,
         yearOfBirth: this.state.yearOfBirth,
-        email: this.state.email
-      })
+        email: this.state.email,
+      }),
     })
       .then(this.handleFetchError)
       .then(res => res.json())
@@ -63,7 +64,7 @@ export class AdminUserDetailsPage extends Component {
           email: details.email,
           signupDate: details.date,
           hash: details.hash,
-          reauthenticated: true
+          reauthenticated: true,
         });
       })
       .catch(error => {
@@ -79,8 +80,8 @@ export class AdminUserDetailsPage extends Component {
       headers: this.headers,
       body: JSON.stringify({
         password: this.state.password,
-        userId: this.state.userId
-      })
+        userId: this.state.userId,
+      }),
     })
       .then(this.handleFetchError)
       .then(res => res.json())
@@ -103,7 +104,7 @@ export class AdminUserDetailsPage extends Component {
           email: details[0].email,
           signupDate: details[0].date,
           hash: details[0].hash,
-          reauthenticated: true
+          reauthenticated: true,
         });
       })
       .catch(error => {
@@ -113,6 +114,41 @@ export class AdminUserDetailsPage extends Component {
           this.props.history.push('/internalServerError');
         }
       });
+
+    // fetch('/qr-user-gen', {
+    //   method: 'POST',
+    //   headers: this.headers,
+    //   body: JSON.stringify({
+    //     password: this.state.password,
+    //     hash: this.state.hash,
+    //   }),
+    // })
+    //   .then(this.handleFetchError)
+    //   .then(res => res.json())
+    //   .then(res => {
+    //     if (res.success) {
+    //       console.log(res);
+    //       return res.qr;
+    //     } else if (res.error === 'Not logged in') {
+    //       throw new Error('Not logged in');
+    //     } else {
+    //       this.setState({ failure: true });
+    //       throw new Error('password');
+    //     }
+    //   })
+    //   .then(qr => {
+    //     console.log(qr);
+    //     this.setState({
+    //       url: qr,
+    //     });
+    //   })
+    //   .catch(error => {
+    //     if (!this.state.failure) {
+    //       this.props.history.push('/logincb');
+    //     } else if (error === '500') {
+    //       this.props.history.push('/internalServerError');
+    //     }
+    //   });
   };
 
   passwordError = <span>The password is incorrect. Please try again.</span>;
@@ -120,7 +156,7 @@ export class AdminUserDetailsPage extends Component {
   renderAuthenticated = () => {
     return (
       <div>
-        <h1>{this.state.userFullName}'s Details</h1>
+        <h1 className="capitalise">{this.state.userFullName}'s Details</h1>
         <table>
           <thead>
             <tr>

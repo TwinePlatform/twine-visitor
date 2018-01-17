@@ -1,6 +1,6 @@
 const express = require('express');
 const hashCB = require('../functions/cbhash');
-const getUserDetails = require('../database/queries/getUserDetails');
+const qrCodeMaker = require('../functions/qrcodemaker');
 const getCBLoginDetailsValid = require('../database/queries/getCBlogindetailsvalid');
 
 const router = express.Router();
@@ -11,8 +11,8 @@ router.post('/', (req, res, next) => {
     .then(exists => {
       if (!exists) throw new Error('Incorrect password');
     })
-    .then(() => getUserDetails(req.auth.cb_id, req.body.userId))
-    .then(details => res.send({ success: true, details }))
+    .then(() => qrCodeMaker(req.body.hash))
+    .then(qr => res.send({ success: true, qr }))
     .catch(err => {
       if (err.message !== 'Incorrect password') return next(err);
       res.send({
