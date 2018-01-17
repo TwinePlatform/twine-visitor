@@ -1,10 +1,9 @@
 const dbConnection = require('../dbConnection');
 
-const query = (filterBy, orderBy) =>
-  `SELECT users.id, users.sex, users.yearofbirth, activities.name, visits.date
-FROM users INNER JOIN visits ON users.id=visits.usersid 
-INNER JOIN activities ON visits.activitiesid = activities.id 
-WHERE activities.cb_id = $1 ${filterBy} ${orderBy}`;
+const query = (filterBy, orderBy) => `
+SELECT users.id, users.fullName, users.sex, users.yearofbirth, users.email, users.date
+FROM users
+WHERE users.cb_id = $1 ${filterBy} ${orderBy}`;
 
 const arrayMatch = (arr, search) => {
   return arr.some(el => el === search);
@@ -26,17 +25,6 @@ const getFiltersQuery = filterBy => {
 
   if (arrayMatch(filters, 'gender@prefer_not_to_say'))
     group.push("users.sex = 'prefer not to say'");
-
-  if (group.length) {
-    filterByQuery.push(group.join(' OR '));
-    group = [];
-  }
-
-  // GROUP 2 - activities
-  group = filters
-    .filter(el => el.match(/^activity@/))
-    .map(el => el.replace('activity@', ''))
-    .map(el => `activities.name = '${el}'`);
 
   if (group.length) {
     filterByQuery.push(group.join(' OR '));
@@ -86,18 +74,20 @@ const getSortQuery = orderBy => {
   if (!orderBy) return '';
 
   const field = {
+    name: 'users.fullName',
     yearofbirth: 'users.yearofbirth',
     sex: 'users.sex',
-    activity: 'activities.name',
-    date: 'visits.date',
+    email: 'users.email',
+    date: 'users.date',
   }[orderBy];
 
   if (field) return ' ORDER BY ' + field;
   return '';
 };
 
-const getVisitsFilteredBy = (cb_id, { filterBy, orderBy }) => {
+const getUsersFilteredBy = (cb_id, { filterBy, orderBy }) => {
   const myQuery = query(getFiltersQuery(filterBy), getSortQuery(orderBy));
+  console.log(orderBy);
   return new Promise((resolve, reject) => {
     dbConnection
       .query(myQuery, [cb_id])
@@ -106,4 +96,4 @@ const getVisitsFilteredBy = (cb_id, { filterBy, orderBy }) => {
   });
 };
 
-module.exports = getVisitsFilteredBy;
+module.exports = getUsersFilteredBy;

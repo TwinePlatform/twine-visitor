@@ -289,8 +289,18 @@ th {
   padding-top: 20px;
   display: inline-block;
   text-align: left;
-  width: 70%;
-  margin: 0 15%;
+  width: 80%;
+  margin: 0 10%;
+}
+
+.Checkbox__Div {
+  display: table;
+  float: left;
+  margin-right: 30px;
+}
+
+#Table__Row {
+  display: table-row;
 }
 
 ul {
