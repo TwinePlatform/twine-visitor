@@ -11,7 +11,7 @@ router.post('/', (req, res, next) => {
 
   req.on('end', () => {
     const visitToAdd = JSON.parse(body);
-    putVisitsData(visitToAdd.hash, visitToAdd.activity)
+    putVisitsData(visitToAdd.hash, visitToAdd.activity, req.auth.cb_id)
       .then(() => res.send('success'))
       .catch(next);
   });
