@@ -13,7 +13,7 @@ router.post('/', (req, res, next) => {
       if (!exists) throw new Error('Incorrect password');
       return req.auth.cb_id;
     })
-    .then(
+    .then(() =>
       putNewUserDetails(
         req.auth.cb_id,
         req.body.userId,
@@ -23,13 +23,12 @@ router.post('/', (req, res, next) => {
         req.body.email
       )
     )
-    .then(getUserDetails(req.auth.cb_id, req.body.userId))
     .then(details => res.send({ success: true, details }))
     .catch(err => {
       if (err.message !== 'Incorrect password') return next(err);
       res.send({
         success: false,
-        reason: 'incorrect password',
+        reason: 'incorrect password'
       });
     });
 });

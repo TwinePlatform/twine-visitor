@@ -22,6 +22,21 @@ export class AdminUserDetailsPage extends Component {
     };
   }
 
+  setUser = user => {
+    this.setState({
+      userFullName: user.fullname,
+      sex: user.sex,
+      yearOfBirth: user.yearofbirth,
+      email: user.email,
+      signupDate: user.date
+        .split('T')
+        .join(' ')
+        .slice(0, 19),
+      hash: user.hash,
+      reauthenticated: true
+    });
+  };
+
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
     'Content-Type': 'application/json'
@@ -29,6 +44,10 @@ export class AdminUserDetailsPage extends Component {
 
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
+  };
+
+  handleChangeSex = e => {
+    this.setState({ sex: e.target.value });
   };
 
   handleFetchError = res => {
@@ -41,7 +60,8 @@ export class AdminUserDetailsPage extends Component {
     this.setState({ errorMessage: errorString });
   };
 
-  updateResults = () => {
+  handleSubmit = event => {
+    event.preventDefault();
     fetch('/fetchNewUserDetails', {
       method: 'POST',
       headers: this.headers,
@@ -50,22 +70,14 @@ export class AdminUserDetailsPage extends Component {
         userFullName: this.state.userFullName,
         sex: this.state.sex,
         yearOfBirth: this.state.yearOfBirth,
-        email: this.state.email
+        email: this.state.email,
+        password: this.state.password
       })
     })
       .then(this.handleFetchError)
       .then(res => res.json())
-      .then(details => {
-        this.setState({
-          userFullName: details.fullname,
-          sex: details.sex,
-          yearOfBirth: details.yearofbirth,
-          email: details.email,
-          signupDate: details.date,
-          hash: details.hash,
-          reauthenticated: true
-        });
-      })
+      .then(res => res.details)
+      .then(this.setUser)
       .catch(error => {
         this.props.history.push('/internalServerError');
       });
@@ -86,7 +98,6 @@ export class AdminUserDetailsPage extends Component {
       .then(res => res.json())
       .then(res => {
         if (res.success) {
-          console.log(res);
           return res.details;
         } else if (res.error === 'Not logged in') {
           throw new Error('Not logged in');
@@ -95,17 +106,8 @@ export class AdminUserDetailsPage extends Component {
           throw new Error('password');
         }
       })
-      .then(details => {
-        this.setState({
-          userFullName: details[0].fullname,
-          sex: details[0].sex,
-          yearOfBirth: details[0].yearofbirth,
-          email: details[0].email,
-          signupDate: details[0].date,
-          hash: details[0].hash,
-          reauthenticated: true
-        });
-      })
+      .then(details => details[0])
+      .then(this.setUser)
       .catch(error => {
         if (!this.state.failure) {
           this.props.history.push('/logincb');
@@ -120,72 +122,87 @@ export class AdminUserDetailsPage extends Component {
   renderAuthenticated = () => {
     return (
       <div>
-        <h1>{this.state.userFullName}'s Details</h1>
+        <h1>{this.state.userFullName}s Details</h1>
         <table>
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>Name</th>
-              <th>Gender</th>
-              <th>Year of Birth</th>
-              <th>Email</th>
-              <th>Date of Signup</th>
-              <th>QR Hash</th>
-            </tr>
-          </thead>
           <tbody>
             <tr>
+              <td>User Id</td>
               <td>{this.state.userId}</td>
-              <td>{this.state.userFullName}</td>
-              <td>{this.state.sex}</td>
-              <td>{this.state.yearOfBirth}</td>
-              <td>{this.state.email}</td>
-              <td>{this.state.signupDate}</td>
-              <td>{this.state.hash}</td>
             </tr>
-            <tr id="edit__row">
-              <td />
-              <td>
-                <form>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder={this.state.userFullName}
-                  />
-                </form>
-              </td>
-              <td>
-                <form>
-                  <input type="text" name="sex" placeholder={this.state.sex} />
-                </form>
-              </td>
-              <td>
-                <form>
-                  <input
-                    type="text"
-                    name="yob"
-                    placeholder={this.state.yearOfBirth}
-                  />
-                </form>
-              </td>
-              <td>
-                <form>
-                  <input
-                    type="text"
-                    name="email"
-                    placeholder={this.state.email}
-                  />
-                </form>
-              </td>
-              <td />
-              <td />
+            <tr>
+              <td> User Full Name </td>
+              <td>{this.state.userFullName}</td>
+            </tr>
+            <tr>
+              <td>User Sex</td>
+              <td>{this.state.sex}</td>
+            </tr>
+            <tr>
+              <td> User Year of Birth </td>
+              <td>{this.state.yearOfBirth}</td>
+            </tr>
+            <tr>
+              <td>User email</td>
+              <td>{this.state.email}</td>
+            </tr>
+            <tr>
+              <td>User Signup Date</td>
+              <td>{this.state.signupDate}</td>
             </tr>
           </tbody>
         </table>
-        <Link to="/admin">
-          <button className="Button ButtonBack">
-            Back to the admin menu page
+        <h2>Edit {this.state.userFullName}s Details</h2>
+
+        <form>
+          <label className="Form__Label">
+            Edit Full Name
+            <input
+              className="Form__Input"
+              type="text"
+              name="userFullName"
+              onChange={this.handleChange}
+              value={this.state.userFullName}
+            />
+          </label>
+          <label className="Form__Label">
+            Edit Sex
+            <select className="Form__Input" onChange={this.handleChangeSex}>
+              <option defaultValue value={this.state.sex}>
+                Change sex: {this.state.sex}
+              </option>
+              <option value="prefer not to say">prefer not to say</option>
+              <option value="male">male</option>
+              <option value="female">female</option>
+            </select>
+          </label>
+          <label className="Form__Label">
+            Edit Year of Birth
+            <input
+              type="text"
+              className="Form__Input"
+              name="yearOfBirth"
+              onChange={this.handleChange}
+              value={this.state.yearOfBirth}
+            />
+          </label>
+
+          <label className="Form__Label">
+            Edit Email
+            <input
+              className="Form__Input"
+              type="text"
+              name="email"
+              onChange={this.handleChange}
+              value={this.state.email}
+            />
+          </label>
+          <button className="Button" onClick={this.handleSubmit}>
+            Submit
           </button>
+        </form>
+
+        <Link to="/admin/users">
+          <button className="Button ButtonBack">Back to all users</button>
         </Link>
         <br />
         <Logoutbutton
