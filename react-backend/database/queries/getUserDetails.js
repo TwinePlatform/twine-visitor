@@ -10,9 +10,6 @@ const getUserDetails = (cbId, userId) =>
     dbConnection
       .query(getUserDetailsQuery, [cbId, userId])
       .then(res => {
-        // if (res.rowCount === 0) {
-        //   return reject('No user found');
-        // }
         return resolve(res.rows);
       })
       .catch(reject);
