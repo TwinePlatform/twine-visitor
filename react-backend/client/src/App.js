@@ -185,7 +185,7 @@ class App extends Component {
 
             <Route
               exact
-              path="/admin/user/*"
+              path="/admin/user/:userId"
               render={props =>
                 this.state.loggedIn ? (
                   <AdminUserDetailsPage {...props} />

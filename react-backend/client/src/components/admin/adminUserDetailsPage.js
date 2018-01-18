@@ -6,7 +6,7 @@ import { Logoutbutton } from '../visitors/logoutbutton';
 export class AdminUserDetailsPage extends Component {
   constructor(props) {
     super(props);
-    const userId = this.props.location.pathname.split('/').reverse()[0];
+    const userId = this.props.match.params.userId;
 
     this.state = {
       reauthenticated: false,
