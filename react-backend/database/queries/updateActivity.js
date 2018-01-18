@@ -1,7 +1,9 @@
 const dbConnection = require('../dbConnection');
 
-const updateActivityQuery =
-  'UPDATE activities SET monday = $2, tuesday = $3, wednesday=$4, thursday=$5, friday=$6, saturday=$7, sunday=$8 WHERE id = $1 AND cb_id = $9';
+const updateActivityQuery = `
+UPDATE activities SET monday = $2, tuesday = $3, wednesday=$4,
+thursday=$5, friday=$6, saturday=$7, sunday=$8
+WHERE id = $1 AND cb_id = $9`;
 
 const updateActivity = (
   id,
@@ -12,10 +14,10 @@ const updateActivity = (
   friday,
   saturday,
   sunday,
-  cb_id,
-  cb,
+  cbId
 ) =>
   new Promise((resolve, reject) => {
+    if (!id || !cbId) reject(new Error('Bad query arguments'));
     dbConnection
       .query(updateActivityQuery, [
         id,
@@ -26,14 +28,10 @@ const updateActivity = (
         friday,
         saturday,
         sunday,
-        cb_id,
+        cbId,
       ])
-      .then((res) => {
-        resolve(res);
-      })
-      .catch((err) => {
-        reject(err);
-      });
+      .then(resolve)
+      .catch(reject);
   });
 
 module.exports = updateActivity;
