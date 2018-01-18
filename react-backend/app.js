@@ -5,7 +5,11 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+const qrSend = require('./routes/qr_user_send');
 const qrGenerator = require('./routes/qr_generator');
+const qrUserGen = require('./routes/qr_user_gen');
+const userDetails = require('./routes/user_details');
+const userDetailsNew = require('./routes/user_details_new');
 const usersAll = require('./routes/users_all');
 const visitorsAll = require('./routes/visitors_all');
 const usersFiltered = require('./routes/users_filtered');
@@ -35,10 +39,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
+app.use('/qr-send', isAuthenticated, qrSend);
 app.use('/qrgenerator', isAuthenticated, qrGenerator);
+app.use('/qr-user-gen', isAuthenticated, qrUserGen);
 app.use('/getUsername', isAuthenticated, visitorName);
+app.use('/user-details', isAuthenticated, userDetails);
 app.use('/users-all', isAuthenticated, usersAll);
 app.use('/all-users', isAuthenticated, visitorsAll);
+app.use('/fetchNewUserDetails', isAuthenticated, userDetailsNew);
 app.use('/fetchUsersFilteredBy', isAuthenticated, usersFiltered);
 app.use('/fetchVisitsFilteredBy', isAuthenticated, visitorsFiltered);
 app.use('/isAdminAuthenticated', isAuthenticated, adminAuthenticated);
