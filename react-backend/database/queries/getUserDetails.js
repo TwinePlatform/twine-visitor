@@ -1,21 +1,21 @@
 const dbConnection = require('../dbConnection');
 
-const getAllUsersQuery = `
-  SELECT users.id, users.fullName, users.sex, users.yearofbirth, users.email, users.date
+const getUserDetailsQuery = `
+  SELECT *
   FROM users
-  WHERE users.cb_id = $1`;
+  WHERE cb_id = $1 AND id = $2`;
 
-const getUserList = cbId =>
+const getUserDetails = (cbId, userId) =>
   new Promise((resolve, reject) => {
     dbConnection
-      .query(getAllUsersQuery, [cbId])
+      .query(getUserDetailsQuery, [cbId, userId])
       .then(res => {
         // if (res.rowCount === 0) {
         //   return reject('No user found');
         // }
-        resolve(res.rows);
+        return resolve(res.rows);
       })
       .catch(reject);
   });
 
-module.exports = getUserList;
+module.exports = getUserDetails;
