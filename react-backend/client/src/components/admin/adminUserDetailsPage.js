@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
+import qrcodelogo from '../../qrcodelogo.png';
 
 export class AdminUserDetailsPage extends Component {
   constructor(props) {
@@ -226,7 +227,7 @@ export class AdminUserDetailsPage extends Component {
 
     return (
       <div>
-        <div>
+        <div className="hidden-printer">
           <div>
             <h1>{this.state.userFullName}s Details</h1>
             <table>
@@ -345,11 +346,7 @@ export class AdminUserDetailsPage extends Component {
         </div>
         <div className="visible-printer qr-code-to-print">
           <div className="dashed">
-            <img
-              height="182"
-              src={this.state.qrcodelogo}
-              alt="Power to change Logo"
-            />
+            <img height="182" src={qrcodelogo} alt="Power to change Logo" />
             <img
               className="QR__image"
               src={this.state.url}
