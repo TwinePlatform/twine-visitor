@@ -10,23 +10,32 @@ export const ActivityItem = props => {
     'thursday',
     'friday',
     'saturday',
-    'sunday'
+    'sunday',
   ];
   return (
-    <li>
-      <span className="delete-item">
-        <button onClick={handleRemove}> X </button>
-      </span>
-      {props.name}
-      {days.map(day => (
-        <input
-          key={day}
-          type="checkbox"
-          onChange={() => props.toggleDay(day, props.id)}
-          //! ! means it's a boolean for sure
-          checked={!!props[day]}
-        />
-      ))}
-    </li>
+    <div className="Checkbox__Div">
+      <li>
+        <span className="delete-item">
+          <button onClick={handleRemove}> X </button>
+        </span>
+        <div style={{ fontWeight: 'bold' }}>{props.name}</div>
+        {days.map(day => (
+          <div id="Table__Row">
+            <br />
+            <label className="Form__Label" id="Table__Row">
+              {day}
+              <br />
+              <input
+                key={day}
+                type="checkbox"
+                onChange={() => props.toggleDay(day, props.id)}
+                //! ! means it's a boolean for sure
+                checked={!!props[day]}
+              />{' '}
+            </label>
+          </div>
+        ))}
+      </li>
+    </div>
   );
 };

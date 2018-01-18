@@ -77,8 +77,8 @@ export class AdminMenuPage extends Component {
           <button className="Button">Visits</button>
         </Link>
         <br />
-        <Link to="/admin/visitorsinfo">
-          <button className="Button">Visitors Info</button>
+        <Link to="/admin/users">
+          <button className="Button">Users</button>
         </Link>
         <br />
         <Link to="/admin/accountsettings">
