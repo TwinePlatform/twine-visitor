@@ -187,6 +187,7 @@ export class AdminUserDetailsPage extends Component {
       })
       .then(details => details[0])
       .then(this.setUser)
+      .then(this.displayQR)
       .catch(error => {
         if (!this.state.failure) {
           this.props.history.push('/logincb');
@@ -210,111 +211,131 @@ export class AdminUserDetailsPage extends Component {
     return (
       <div>
         <div>
-          <h1>{this.state.userFullName}s Details</h1>
-          <table>
-            <tbody>
-              <tr>
-                <td>User Id</td>
-                <td>{this.state.userId}</td>
-              </tr>
-              <tr>
-                <td> User Full Name </td>
-                <td>{this.state.userFullName}</td>
-              </tr>
-              <tr>
-                <td>User Sex</td>
-                <td>{this.state.sex}</td>
-              </tr>
-              <tr>
-                <td> User Year of Birth </td>
-                <td>{this.state.yearOfBirth}</td>
-              </tr>
-              <tr>
-                <td>User email</td>
-                <td>{this.state.email}</td>
-              </tr>
-              <tr>
-                <td>User Signup Date</td>
-                <td>{this.state.signupDate}</td>
-              </tr>
-            </tbody>
-          </table>
           <div>
+            <h1>{this.state.userFullName}s Details</h1>
+            <table>
+              <tbody>
+                <tr>
+                  <td>User Id</td>
+                  <td>{this.state.userId}</td>
+                </tr>
+                <tr>
+                  <td> User Full Name </td>
+                  <td>{this.state.userFullName}</td>
+                </tr>
+                <tr>
+                  <td>User Sex</td>
+                  <td>{this.state.sex}</td>
+                </tr>
+                <tr>
+                  <td> User Year of Birth </td>
+                  <td>{this.state.yearOfBirth}</td>
+                </tr>
+                <tr>
+                  <td>User email</td>
+                  <td>{this.state.email}</td>
+                </tr>
+                <tr>
+                  <td>User Signup Date</td>
+                  <td>{this.state.signupDate}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div>
+              <img
+                className="QR__image"
+                src={this.state.url}
+                alt="This is your QRcode"
+              />
+              <button className="Button" onClick={window.print}>
+                Print QR Code
+              </button>
+              <button className="Button" onClick={this.resendQR}>
+                Re-email QR Code
+              </button>
+            </div>
+          </div>
+          <h2>Edit {this.state.userFullName}s Details</h2>
+          {this.state.errorMessage && (
+            <span className="ErrorText">{this.state.errorMessage}</span>
+          )}
+
+          <form>
+            <label className="Form__Label">
+              Edit Full Name
+              <input
+                className="Form__Input"
+                type="text"
+                name="userFullName"
+                onChange={this.handleChange}
+                value={this.state.userFullName}
+              />
+            </label>
+            <label className="Form__Label">
+              Edit Sex
+              <select className="Form__Input" onChange={this.handleChangeSex}>
+                <option defaultValue value={this.state.sex}>
+                  Change sex: {this.state.sex}
+                </option>
+                <option value="prefer not to say">prefer not to say</option>
+                <option value="male">male</option>
+                <option value="female">female</option>
+              </select>
+            </label>
+            <label className="Form__Label">
+              Edit Year of Birth
+              <input
+                type="text"
+                className="Form__Input"
+                name="yearOfBirth"
+                onChange={this.handleChange}
+                value={this.state.yearOfBirth}
+              />
+            </label>
+
+            <label className="Form__Label">
+              Edit Email
+              <input
+                className="Form__Input"
+                type="text"
+                name="email"
+                onChange={this.handleChange}
+                value={this.state.email}
+              />
+            </label>
+            <button className="Button" onClick={submitHandler}>
+              Submit
+            </button>
+          </form>
+
+          <Link to="/admin/users">
+            <button className="Button ButtonBack">Back to all users</button>
+          </Link>
+          <br />
+          <Logoutbutton
+            updateLoggedIn={this.props.updateLoggedIn}
+            redirectUser={this.props.history.push}
+          />
+          <br />
+        </div>
+        <div className="visible-printer qr-code-to-print">
+          <div className="dashed">
+            <img
+              height="182"
+              src={this.state.qrcodelogo}
+              alt="Power to change Logo"
+            />
             <img
               className="QR__image"
               src={this.state.url}
               alt="This is your QRcode"
             />
-            <button className="Button" onClick={this.displayQR}>
-              Show QR Code
-            </button>
-            <button className="Button" onClick={this.resendQR}>
-              Re-email QR Code
-            </button>
+            <h5>
+              Please print this QR code and <br /> bring it with you to access
+              next time
+            </h5>
           </div>
         </div>
-        <h2>Edit {this.state.userFullName}s Details</h2>
-        {this.state.errorMessage && (
-          <span className="ErrorText">{this.state.errorMessage}</span>
-        )}
-
-        <form>
-          <label className="Form__Label">
-            Edit Full Name
-            <input
-              className="Form__Input"
-              type="text"
-              name="userFullName"
-              onChange={this.handleChange}
-              value={this.state.userFullName}
-            />
-          </label>
-          <label className="Form__Label">
-            Edit Sex
-            <select className="Form__Input" onChange={this.handleChangeSex}>
-              <option defaultValue value={this.state.sex}>
-                Change sex: {this.state.sex}
-              </option>
-              <option value="prefer not to say">prefer not to say</option>
-              <option value="male">male</option>
-              <option value="female">female</option>
-            </select>
-          </label>
-          <label className="Form__Label">
-            Edit Year of Birth
-            <input
-              type="text"
-              className="Form__Input"
-              name="yearOfBirth"
-              onChange={this.handleChange}
-              value={this.state.yearOfBirth}
-            />
-          </label>
-
-          <label className="Form__Label">
-            Edit Email
-            <input
-              className="Form__Input"
-              type="text"
-              name="email"
-              onChange={this.handleChange}
-              value={this.state.email}
-            />
-          </label>
-          <button className="Button" onClick={submitHandler}>
-            Submit
-          </button>
-        </form>
-
-        <Link to="/admin/users">
-          <button className="Button ButtonBack">Back to all users</button>
-        </Link>
-        <br />
-        <Logoutbutton
-          updateLoggedIn={this.props.updateLoggedIn}
-          redirectUser={this.props.history.push}
-        />
-        <br />
       </div>
     );
   };
