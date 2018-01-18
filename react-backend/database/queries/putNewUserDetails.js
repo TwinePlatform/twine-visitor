@@ -15,9 +15,7 @@ const putNewUserDetails = (cbId, userId, fullName, sex, yearOfBirth, email) =>
         email
       ])
       .then(res => {
-        if (res.rowCount === 0) {
-          return reject('No user found');
-        }
+        if !res.rowCount return reject('No user found');
         return resolve(res.rows[0]);
       })
       .catch(reject);
