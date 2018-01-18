@@ -15,11 +15,13 @@ export class AdminCBSettingsPage extends Component {
       genre: '',
       email: '',
       signupDate: '',
+      id: ''
     };
   }
 
   setCB = cb => {
     this.setState({
+      id: cb.id,
       org_name: cb.org_name,
       genre: cb.genre,
       email: cb.email,
@@ -28,19 +30,28 @@ export class AdminCBSettingsPage extends Component {
         .join(' ')
         .slice(0, 19),
       reauthenticated: true,
-      errorMessage: '',
+      errorMessage: ''
     });
+  };
+
+  submitConfirmation = () => {
+    this.setState({
+      successMessage: 'The account details have been successfully updated'
+    });
+    setTimeout(() => {
+      this.setState({ successMessage: '' });
+    }, 5000);
   };
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   });
 
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value,
-      errorMessage: '',
+      errorMessage: ''
     });
   };
 
@@ -57,7 +68,7 @@ export class AdminCBSettingsPage extends Component {
   handleEmptySubmit = event => {
     event.preventDefault();
     this.setState({
-      errorMessage: 'Please do not leave empty input fields',
+      errorMessage: 'Please do not leave empty input fields'
     });
   };
 
@@ -70,13 +81,14 @@ export class AdminCBSettingsPage extends Component {
         org_name: this.state.org_name,
         genre: this.state.genre,
         email: this.state.email,
-        password: this.state.password,
-      }),
+        password: this.state.password
+      })
     })
       .then(this.handleFetchError)
       .then(res => res.json())
       .then(res => res.details)
       .then(this.setCB)
+      .then(this.submitConfirmation)
       .catch(error => {
         this.props.history.push('/internalServerError');
       });
@@ -89,8 +101,8 @@ export class AdminCBSettingsPage extends Component {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify({
-        password: this.state.password,
-      }),
+        password: this.state.password
+      })
     })
       .then(this.handleFetchError)
       .then(res => res.json())
@@ -119,10 +131,7 @@ export class AdminCBSettingsPage extends Component {
 
   renderAuthenticated = () => {
     const submitHandler =
-      this.state.userFullName &&
-      this.state.sex &&
-      this.state.yearOfBirth &&
-      this.state.email
+      this.state.org_name && this.state.genre && this.state.email
         ? this.handleSubmit
         : this.handleEmptySubmit;
 
@@ -134,7 +143,7 @@ export class AdminCBSettingsPage extends Component {
             <tbody>
               <tr>
                 <td>Business Id</td>
-                <td>{this.auth.cb_id}</td>
+                <td>{this.state.id}</td>
               </tr>
               <tr>
                 <td> Business Name </td>
@@ -158,6 +167,9 @@ export class AdminCBSettingsPage extends Component {
         <h2>Edit {this.state.org_name}s Details</h2>
         {this.state.errorMessage && (
           <span className="ErrorText">{this.state.errorMessage}</span>
+        )}
+        {this.state.successMessage && (
+          <span className="SuccessText">{this.state.successMessage}</span>
         )}
 
         <form>

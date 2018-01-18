@@ -25,7 +25,7 @@ router.post('/', (req, res, next) => {
       if (err.message !== 'Incorrect password') return next(err);
       res.send({
         success: false,
-        reason: 'incorrect password',
+        reason: 'incorrect password'
       });
     });
 });
