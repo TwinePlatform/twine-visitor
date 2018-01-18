@@ -21,6 +21,7 @@ import { AdminActivitiesPage } from './components/admin/adminActivitiesPage';
 import { AdminVisitsPage } from './components/admin/adminVisitsPage';
 import { AdminUsersPage } from './components/admin/adminUsersPage';
 import { AdminUserDetailsPage } from './components/admin/adminUserDetailsPage';
+import { AdminCBSettingsPage } from './components/admin/adminCBSettingsPage';
 
 import { NotFound } from './components/NotFound';
 import { InternalServerError } from './components/InternalServerError';
@@ -189,6 +190,18 @@ class App extends Component {
               render={props =>
                 this.state.loggedIn ? (
                   <AdminUserDetailsPage {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
+              }
+            />
+
+            <Route
+              exact
+              path="/admin/accountSettings"
+              render={props =>
+                this.state.loggedIn ? (
+                  <AdminCBSettingsPage {...props} />
                 ) : (
                   <Redirect to="/logincb" />
                 )

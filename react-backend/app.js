@@ -5,6 +5,8 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+const newCBDetails = require('./routes/new_cb_details');
+const cbDetails = require('./routes/cb_details');
 const qrSend = require('./routes/qr_user_send');
 const qrGenerator = require('./routes/qr_generator');
 const qrUserGen = require('./routes/qr_user_gen');
@@ -39,6 +41,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
+app.use('/fetchNewCBDetails', isAuthenticated, newCBDetails);
+app.use('/cb-details', isAuthenticated, cbDetails);
 app.use('/qr-send', isAuthenticated, qrSend);
 app.use('/qrgenerator', isAuthenticated, qrGenerator);
 app.use('/qr-user-gen', isAuthenticated, qrUserGen);
