@@ -221,7 +221,9 @@ export class AdminUsersPage extends Component {
             {this.state.users.map(user => (
               <tr key={user.id}>
                 <td>{user.id}</td>
-                <td>{user.fullname}</td>
+                <td>
+                  <Link to={`/admin/user/${user.id}`}>{user.fullname}</Link>
+                </td>
                 <td>{user.sex}</td>
                 <td>{user.yearofbirth}</td>
                 <td>{user.email}</td>
