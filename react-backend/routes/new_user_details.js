@@ -1,7 +1,6 @@
 const express = require('express');
 const hashCB = require('../functions/cbhash');
 const putNewUserDetails = require('../database/queries/putNewUserDetails');
-const getUserDetails = require('../database/queries/getUserDetails');
 const getCBLoginDetailsValid = require('../database/queries/getCBlogindetailsvalid');
 
 const router = express.Router();
@@ -28,7 +27,7 @@ router.post('/', (req, res, next) => {
       if (err.message !== 'Incorrect password') return next(err);
       res.send({
         success: false,
-        reason: 'incorrect password'
+        reason: 'incorrect password',
       });
     });
 });

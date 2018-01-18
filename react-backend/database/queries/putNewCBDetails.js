@@ -1,26 +1,18 @@
 const dbConnection = require('../dbConnection');
 
-const putNewUserDetailsQuery =
-  'UPDATE users SET fullname = $3, sex = $4, yearofbirth = $5, email = $6 WHERE id = $2 AND cb_id = $1 RETURNING *';
+const putNewCBDetailsQuery =
+  'UPDATE cbusiness SET org_name = $3 genre = $5, email = $6 WHERE id = $1 RETURNING *';
 
-const putNewUserDetails = (cbId, userId, fullName, sex, yearOfBirth, email) =>
+const putNewCBDetails = (cbId, org_name, genre, email) =>
   new Promise((resolve, reject) => {
     dbConnection
-      .query(putNewUserDetailsQuery, [
-        cbId,
-        userId,
-        fullName,
-        sex,
-        yearOfBirth,
-        email
-      ])
+      .query(putNewCBDetailsQuery, [cbId, org_name, genre, email])
       .then(res => {
-        if (res.rowCount === 0) {
-          return reject('No user found');
-        }
+        if (!res.rowCount) return reject('No user found');
+
         return resolve(res.rows[0]);
       })
       .catch(reject);
   });
 
-module.exports = putNewUserDetails;
+module.exports = putNewCBDetails;

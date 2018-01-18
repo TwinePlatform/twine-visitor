@@ -76,7 +76,7 @@ export class AdminCBSettingsPage extends Component {
       .then(this.handleFetchError)
       .then(res => res.json())
       .then(res => res.details)
-      .then(this.setUser)
+      .then(this.setCB)
       .catch(error => {
         this.props.history.push('/internalServerError');
       });
@@ -105,8 +105,7 @@ export class AdminCBSettingsPage extends Component {
         }
       })
       .then(details => details[0])
-      .then(this.setUser)
-      .then(this.displayQR)
+      .then(this.setCB)
       .catch(error => {
         if (!this.state.failure) {
           this.props.history.push('/logincb');

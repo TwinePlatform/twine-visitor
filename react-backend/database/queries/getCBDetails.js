@@ -3,7 +3,7 @@ const dbConnection = require('../dbConnection');
 const getCBDetailsQuery = `
   SELECT *
   FROM cbusiness
-  WHERE cb_id = $1`;
+  WHERE id = $1`;
 
 const getCBDetails = cbId =>
   new Promise((resolve, reject) => {

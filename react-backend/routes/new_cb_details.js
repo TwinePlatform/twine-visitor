@@ -1,7 +1,6 @@
 const express = require('express');
 const hashCB = require('../functions/cbhash');
-const putNewUserDetails = require('../database/queries/putNewUserDetails');
-const getUserDetails = require('../database/queries/getUserDetails');
+const putNewCBDetails = require('../database/queries/putNewCBDetails');
 const getCBLoginDetailsValid = require('../database/queries/getCBlogindetailsvalid');
 
 const router = express.Router();
@@ -14,12 +13,10 @@ router.post('/', (req, res, next) => {
       return req.auth.cb_id;
     })
     .then(() =>
-      putNewUserDetails(
+      putNewCBDetails(
         req.auth.cb_id,
-        req.body.userId,
-        req.body.userFullName,
-        req.body.sex,
-        req.body.yearOfBirth,
+        req.body.org_name,
+        req.body.genre,
         req.body.email
       )
     )
