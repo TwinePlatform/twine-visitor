@@ -19,7 +19,7 @@ export class AdminUserDetailsPage extends Component {
       email: '',
       signupDate: '',
       hash: '',
-      url: '',
+      url: ''
     };
   }
 
@@ -35,19 +35,28 @@ export class AdminUserDetailsPage extends Component {
         .slice(0, 19),
       hash: user.hash,
       reauthenticated: true,
-      errorMessage: '',
+      errorMessage: ''
     });
+  };
+
+  submitConfirmation = () => {
+    this.setState({
+      successMessage: 'The user details have been successfully updated'
+    });
+    setTimeout(() => {
+      this.setState({ successMessage: '' });
+    }, 5000);
   };
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   });
 
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value,
-      errorMessage: '',
+      errorMessage: ''
     });
   };
 
@@ -68,7 +77,7 @@ export class AdminUserDetailsPage extends Component {
   handleEmptySubmit = event => {
     event.preventDefault();
     this.setState({
-      errorMessage: 'Please do not leave empty input fields',
+      errorMessage: 'Please do not leave empty input fields'
     });
   };
 
@@ -83,13 +92,14 @@ export class AdminUserDetailsPage extends Component {
         sex: this.state.sex,
         yearOfBirth: this.state.yearOfBirth,
         email: this.state.email,
-        password: this.state.password,
-      }),
+        password: this.state.password
+      })
     })
       .then(this.handleFetchError)
       .then(res => res.json())
       .then(res => res.details)
       .then(this.setUser)
+      .then(this.submitConfirmation)
       .catch(error => {
         this.props.history.push('/internalServerError');
       });
@@ -101,8 +111,8 @@ export class AdminUserDetailsPage extends Component {
       headers: this.headers,
       body: JSON.stringify({
         hash: this.state.hash,
-        password: this.state.password,
-      }),
+        password: this.state.password
+      })
     })
       .then(this.handleFetchError)
       .then(res => res.json())
@@ -118,7 +128,7 @@ export class AdminUserDetailsPage extends Component {
       })
       .then(qr =>
         this.setState({
-          url: qr,
+          url: qr
         })
       )
       .catch(error => {
@@ -138,13 +148,19 @@ export class AdminUserDetailsPage extends Component {
         email: this.state.email,
         name: this.state.userFullName,
         hash: this.state.hash,
-        password: this.state.password,
-      }),
+        password: this.state.password
+      })
     })
       .then(this.handleFetchError)
       .then(res => res.json())
       .then(res => {
         if (res.success) {
+          this.setState({
+            successMessage: 'The email has been successfully resent'
+          });
+          setTimeout(() => {
+            this.setState({ successMessage: '' });
+          }, 5000);
           console.log('Sucess!');
         } else if (res.error === 'Not logged in') {
           throw new Error('Not logged in');
@@ -170,8 +186,8 @@ export class AdminUserDetailsPage extends Component {
       headers: this.headers,
       body: JSON.stringify({
         password: this.state.password,
-        userId: this.state.userId,
-      }),
+        userId: this.state.userId
+      })
     })
       .then(this.handleFetchError)
       .then(res => res.json())
@@ -250,6 +266,11 @@ export class AdminUserDetailsPage extends Component {
               <button className="Button" onClick={window.print}>
                 Print QR Code
               </button>
+              <br />
+              {this.state.successMessage ===
+                'The email has been successfully resent' && (
+                <span className="SuccessText">{this.state.successMessage}</span>
+              )}
               <button className="Button" onClick={this.resendQR}>
                 Re-email QR Code
               </button>
@@ -303,6 +324,10 @@ export class AdminUserDetailsPage extends Component {
                 value={this.state.email}
               />
             </label>
+            {this.state.successMessage ===
+              'The user details have been successfully updated' && (
+              <span className="SuccessText">{this.state.successMessage}</span>
+            )}
             <button className="Button" onClick={submitHandler}>
               Submit
             </button>

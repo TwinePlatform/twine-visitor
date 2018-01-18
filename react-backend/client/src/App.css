@@ -127,6 +127,11 @@ body,
   text-align: center;
 }
 
+.SuccessText {
+  color: green;
+  padding: 2%;
+}
+
 .hidden {
   display: none;
 }
