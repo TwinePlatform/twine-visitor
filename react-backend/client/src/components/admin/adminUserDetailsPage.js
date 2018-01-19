@@ -44,9 +44,6 @@ export class AdminUserDetailsPage extends Component {
     this.setState({
       successMessage: 'The user details have been successfully updated'
     });
-    setTimeout(() => {
-      this.setState({ successMessage: '' });
-    }, 5000);
   };
 
   headers = new Headers({
@@ -57,7 +54,8 @@ export class AdminUserDetailsPage extends Component {
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value,
-      errorMessage: ''
+      errorMessage: '',
+      successMessage: ''
     });
   };
 
@@ -159,10 +157,6 @@ export class AdminUserDetailsPage extends Component {
           this.setState({
             successMessage: 'The email has been successfully resent'
           });
-          setTimeout(() => {
-            this.setState({ successMessage: '' });
-          }, 5000);
-          console.log('Sucess!');
         } else if (res.error === 'Not logged in') {
           throw new Error('Not logged in');
         } else {

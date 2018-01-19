@@ -38,9 +38,6 @@ export class AdminCBSettingsPage extends Component {
     this.setState({
       successMessage: 'The account details have been successfully updated'
     });
-    setTimeout(() => {
-      this.setState({ successMessage: '' });
-    }, 5000);
   };
 
   headers = new Headers({
@@ -51,12 +48,13 @@ export class AdminCBSettingsPage extends Component {
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value,
-      errorMessage: ''
+      errorMessage: '',
+      successMessage: ''
     });
   };
 
   handleChangeGenre = e => {
-    this.setState({ genre: e.target.value });
+    this.setState({ genre: e.target.value, successMessage: '' });
   };
 
   handleFetchError = res => {
