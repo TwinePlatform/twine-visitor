@@ -81,7 +81,7 @@ export class AdminMenuPage extends Component {
           <button className="Button">Users</button>
         </Link>
         <br />
-        <Link to="/admin/accountsettings">
+        <Link to="/admin/accountSettings">
           <button className="Button">Account Settings</button>
         </Link>
         <br />
