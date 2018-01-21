@@ -16,6 +16,7 @@ import { QrError } from './components/visitors/qrerror';
 import { Thanks } from './components/visitors/thanks';
 import { HomeVisitor } from './components/visitors/homeVisitor';
 
+import { AdminLogin } from './components/admin/admin_login';
 import { AdminMenuPage } from './components/admin/adminMenuPage';
 import { AdminActivitiesPage } from './components/admin/adminActivitiesPage';
 import { AdminVisitsPage } from './components/admin/adminVisitsPage';
@@ -127,6 +128,18 @@ class App extends Component {
               render={props =>
                 this.state.loggedIn ? (
                   <Thanks {...props} />
+                ) : (
+                  <Redirect to="/logincb" />
+                )
+              }
+            />
+
+            <Route
+              exact
+              path="/admin/login"
+              render={props =>
+                this.state.loggedIn ? (
+                  <AdminLogin {...props} />
                 ) : (
                   <Redirect to="/logincb" />
                 )

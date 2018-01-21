@@ -14,9 +14,9 @@ router.post('/', (req, res, next) => {
     activity.friday,
     activity.saturday,
     activity.sunday,
-    req.auth.cb_id,
+    req.auth.cb_id
   )
-    .then(() => res.send('success'))
+    .then(() => res.send({ success: 'success', token: req.auth.adminToken }))
     .catch(next);
 });
 

@@ -17,7 +17,7 @@ router.get('/', (req, res, next) => {
   const today = days[currentDate.getDay()];
 
   activitiesForToday(req.auth.cb_id, today)
-    .then(activities => res.send({ activities }))
+    .then(activities => res.send({ activities, token: req.auth.adminToken }))
     .catch(next);
 });
 

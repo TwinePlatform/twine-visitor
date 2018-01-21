@@ -12,7 +12,7 @@ export class Home extends Component {
           <button className="Button">Visitor</button>
         </Link>
         <br />
-        <Link to="/admin">
+        <Link to="/admin/login">
           <button className="Button">Admin</button>
         </Link>
         <br />

@@ -74,11 +74,11 @@ VALUES
 INSERT INTO activities
   (name, cb_id, deleted, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
 VALUES
-  ('Yoga', 2, false, true, true, true, true, true, false, false),
-  ('French Lessons', 2, false, true, true, true, true, true, false, false),
-  ('Baking Lessons', 2, false, true, true, true, true, true, false, false),
-  ('Self-Defence Class', 2, false, true, true, true, true, true, false, false),
-  ('Flamenco Dancing', 2, false, true, true, true, true, true, false, false);
+  ('Yoga', 1, false, true, true, true, true, true, false, false),
+  ('French Lessons', 1, false, true, true, true, true, true, false, false),
+  ('Baking Lessons', 1, false, true, true, true, true, true, false, false),
+  ('Self-Defence Class', 1, false, true, true, true, true, true, false, false),
+  ('Flamenco Dancing', 1, false, true, true, true, true, true, false, false);
 
 INSERT INTO visits
   (usersId, activitiesId, cb_id, date)

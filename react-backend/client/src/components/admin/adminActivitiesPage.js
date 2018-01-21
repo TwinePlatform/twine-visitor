@@ -9,6 +9,7 @@ import {
   updateActivity,
   updateId,
 } from './activitiesLib/activityHelpers';
+import { adminPost, adminGet, checkAdmin } from './activitiesLib/admin_helpers';
 
 export class AdminActivitiesPage extends Component {
   constructor() {
@@ -19,13 +20,7 @@ export class AdminActivitiesPage extends Component {
     };
   }
 
-  headers = new Headers({
-    Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
-  });
-
   handleActivityFromDb = activity => res => {
-    console.log(res);
     const newActivities = updateId(this.state.activities, activity.id, res.id);
     this.setState({ activities: newActivities });
   };
@@ -41,14 +36,25 @@ export class AdminActivitiesPage extends Component {
   };
 
   componentDidMount() {
-    fetch('/activities', {
-      method: 'GET',
-      headers: this.headers,
-    })
-      .then(this.handleFetchError)
-      .then(res => res.json())
-      .then(({ activities }) => this.setState({ activities }))
-      .catch(error => this.setErrorMessage(error, 'Error fetching activities'));
+    checkAdmin()
+      .then(() => this.setState({ auth: 'SUCCESS' }))
+      .then(() =>
+        adminGet('/activities')
+          .then(({ activities }) => this.setState({ activities }))
+          .catch(error => {
+            console.log(error);
+            this.setErrorMessage(error, 'Error fetching activities');
+          })
+      )
+      .catch(error => {
+        if (error.message === 500) {
+          this.props.history.push('/internalServerError');
+        } else if (error.message === 'No admin token') {
+          this.props.history.push('/admin/login');
+        } else {
+          this.props.history.push('/admin/login');
+        }
+      });
   }
 
   toggleDay = (day, id) => {
@@ -61,15 +67,14 @@ export class AdminActivitiesPage extends Component {
 
     this.setState({ activities: updatedActivities });
 
-    fetch('/updateActivityDay', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify(updatedActivity),
-    })
-      .then(this.handleFetchError)
-      .catch(error =>
-        this.setErrorMessage(error, 'Error setting activity day')
-      );
+    adminPost('/updateActivityDay', updatedActivity)
+      .then(res => res)
+      .catch(error => {
+        if (error.message === 'No admin token')
+          return this.props.history.push('/admin/login');
+
+        this.setErrorMessage(error, 'Error setting activity day');
+      });
   };
 
   handleRemove = (id, event) => {
@@ -77,13 +82,14 @@ export class AdminActivitiesPage extends Component {
     const updatedActivities = removeActivity(this.state.activities, id);
     this.setState({ activities: updatedActivities });
 
-    fetch('/removeActivity', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({ id }),
-    })
-      .then(this.handleFetchError)
-      .catch(error => this.setErrorMessage(error, 'Error removing activity'));
+    adminPost('/removeActivity', { id })
+      .then(res => res)
+      .catch(error => {
+        if (error.message === 'No admin token')
+          return this.props.history.push('/admin/login');
+
+        this.setErrorMessage(error, 'Error removing activity');
+      });
   };
 
   handleSubmit = event => {
@@ -107,15 +113,14 @@ export class AdminActivitiesPage extends Component {
       errorMessage: '',
     });
 
-    fetch('/addActivity', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({ name: newActivity.name }),
-    })
-      .then(this.handleFetchError)
-      .then(res => res.json())
+    adminPost('/addActivity', { name: newActivity.name })
       .then(this.handleActivityFromDb(newActivity))
-      .catch(error => this.setErrorMessage(error, 'Error adding activity'));
+      .catch(error => {
+        if (error.message === 'No admin token')
+          return this.props.history.push('/admin/login');
+
+        this.setErrorMessage(error, 'Error removing activity');
+      });
   };
 
   handleEmptySubmit = event => {
