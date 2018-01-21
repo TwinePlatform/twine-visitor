@@ -332,7 +332,7 @@ export class AdminUserDetailsPage extends Component {
         <div className="visible-printer qr-code-to-print">
           <div className="dashed">
             {this.state.cb_logo ? (
-              <img height="182" src={this.state.cb_logo} alt="Power to change Logo" />
+              <img height="182" src={this.state.cb_logo} alt="Community business logo" />
             ) : (
               <img height="182" src={qrcodelogo} alt="Power to change Logo" />
             )}
