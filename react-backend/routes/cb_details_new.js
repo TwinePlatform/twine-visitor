@@ -17,15 +17,16 @@ router.post('/', (req, res, next) => {
         req.auth.cb_id,
         req.body.org_name,
         req.body.genre,
-        req.body.email
-      )
+        req.body.email,
+        req.body.uploadedFileCloudinaryUrl,
+      ),
     )
     .then(details => res.send({ success: true, details }))
     .catch(err => {
       if (err.message !== 'Incorrect password') return next(err);
       res.send({
         success: false,
-        reason: 'incorrect password'
+        reason: 'incorrect password',
       });
     });
 });
