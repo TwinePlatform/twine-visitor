@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
 
+const PieChart = require('react-chartjs').Pie;
+
 export class AdminUsersPage extends Component {
   constructor(props) {
     super(props);
@@ -14,7 +16,28 @@ export class AdminUsersPage extends Component {
       activities: [],
       filters: [],
       orderBy: '',
+      maleNumber: 0,
+      femaleNumber: 0,
+      preferNotToSayNumber: 0,
     };
+  }
+
+  componentDidMount() {
+    fetch('/getGenderNumbers', {
+      method: 'GET',
+      headers: this.headers,
+    })
+      .then(this.handleFetchError)
+      .then(res => res.json())
+      .then(res => res.numbers)
+      .then(([female = {}, male = {}, preferNotToSay = {}]) => {
+        this.setState({
+          maleNumber: male.count || 0,
+          femaleNumber: female.count || 0,
+          preferNotToSayNumber: preferNotToSay.count || 0,
+        });
+      })
+      .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
   }
 
   headers = new Headers({
@@ -60,7 +83,7 @@ export class AdminUsersPage extends Component {
       {
         orderBy: e.target.value,
       },
-      this.updateResults
+      this.updateResults,
     );
   };
 
@@ -76,7 +99,7 @@ export class AdminUsersPage extends Component {
       {
         filters: newFilters,
       },
-      this.updateResults
+      this.updateResults,
     );
   };
 
@@ -115,9 +138,32 @@ export class AdminUsersPage extends Component {
   passwordError = <span>The password is incorrect. Please try again.</span>;
 
   renderAuthenticated = () => {
+    const chartData = [
+      {
+        value: this.state.maleNumber,
+        color: '#F7464A',
+        highlight: '#FF5A5E',
+        label: 'Male',
+      },
+      {
+        value: this.state.femaleNumber,
+        color: '#46BFBD',
+        highlight: '#5AD3D1',
+        label: 'Female',
+      },
+      {
+        value: this.state.preferNotToSayNumber,
+        color: '#FDB45C',
+        highlight: '#FFC870',
+        label: 'Prefer not to say',
+      },
+    ];
+
     return (
       <div>
         <h1>User Data</h1>
+        <h2>Users by Gender</h2>
+        <PieChart data={chartData} />
         <form>
           <label className="Form__Label">
             Sort by
@@ -136,27 +182,15 @@ export class AdminUsersPage extends Component {
             Filter by Gender
             <br />
             <label>
-              <input
-                type="checkbox"
-                value="male"
-                onChange={this.filter('gender')}
-              />
+              <input type="checkbox" value="male" onChange={this.filter('gender')} />
               Male
             </label>
             <label>
-              <input
-                type="checkbox"
-                value="female"
-                onChange={this.filter('gender')}
-              />
+              <input type="checkbox" value="female" onChange={this.filter('gender')} />
               Female
             </label>
             <label>
-              <input
-                type="checkbox"
-                value="prefer_not_to_say"
-                onChange={this.filter('gender')}
-              />
+              <input type="checkbox" value="prefer_not_to_say" onChange={this.filter('gender')} />
               Prefer not to say
             </label>
           </label>
@@ -164,43 +198,23 @@ export class AdminUsersPage extends Component {
             Filter by age
             <br />
             <label>
-              <input
-                type="checkbox"
-                value="0-17"
-                onChange={this.filter('age')}
-              />
+              <input type="checkbox" value="0-17" onChange={this.filter('age')} />
               0-17
             </label>
             <label>
-              <input
-                type="checkbox"
-                value="18-34"
-                onChange={this.filter('age')}
-              />
+              <input type="checkbox" value="18-34" onChange={this.filter('age')} />
               18-34
             </label>
             <label>
-              <input
-                type="checkbox"
-                value="35-50"
-                onChange={this.filter('age')}
-              />
+              <input type="checkbox" value="35-50" onChange={this.filter('age')} />
               35-50
             </label>
             <label>
-              <input
-                type="checkbox"
-                value="51-69"
-                onChange={this.filter('age')}
-              />
+              <input type="checkbox" value="51-69" onChange={this.filter('age')} />
               51-69
             </label>
             <label>
-              <input
-                type="checkbox"
-                value="70-more"
-                onChange={this.filter('age')}
-              />
+              <input type="checkbox" value="70-more" onChange={this.filter('age')} />
               70-more
             </label>
           </label>
@@ -235,9 +249,7 @@ export class AdminUsersPage extends Component {
           </tbody>
         </table>
         <Link to="/admin">
-          <button className="Button ButtonBack">
-            Back to the admin menu page
-          </button>
+          <button className="Button ButtonBack">Back to the admin menu page</button>
         </Link>
         <br />
         <Logoutbutton
@@ -252,9 +264,7 @@ export class AdminUsersPage extends Component {
   renderNotAuthenticated = () => {
     return (
       <div>
-        <div className="ErrorText">
-          {this.state.failure ? this.passwordError : ''}
-        </div>
+        <div className="ErrorText">{this.state.failure ? this.passwordError : ''}</div>
         <form className="Signup" onSubmit={this.authenticate}>
           <label className="Form__Label">
             Please, type your password
@@ -276,8 +286,6 @@ export class AdminUsersPage extends Component {
   };
 
   render() {
-    return this.state.reauthenticated
-      ? this.renderAuthenticated()
-      : this.renderNotAuthenticated();
+    return this.state.reauthenticated ? this.renderAuthenticated() : this.renderNotAuthenticated();
   }
 }
