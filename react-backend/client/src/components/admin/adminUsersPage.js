@@ -4,6 +4,7 @@ import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
 
 const PieChart = require('react-chartjs').Pie;
+// const BarChart = require('react-chartjs').Bar;
 
 export class AdminUsersPage extends Component {
   constructor(props) {
@@ -78,9 +79,26 @@ export class AdminUsersPage extends Component {
           }));
         };
 
+        // const getAgeGroupsForChart = ageGroups => {
+        //   if (!ageGroups) return [];
+        //
+        //   let labelsAgeGroups = [];
+        //   labelsAgeGroups.forEach(el => labelsAgeGroups.push(el.agegroups));
+        //   let dataAgeGroups = [];
+        //   dataAgeGroups.forEach(el => dataAgeGroups.push(el.agecount));
+        //
+        //   return {
+        //     labels: labelsAgeGroups,
+        //     fillColor: 'rgba(220,220,220,0.5)',
+        //     strokeColor: 'rgba(220,220,220,0.8)',
+        //     highlightFill: 'rgba(220,220,220,0.75)',
+        //     highlightStroke: 'rgba(220,220,220,1)',
+        //     data: dataAgeGroups,
+        //   };
+        // };
+
         const getAgeGroupsForChart = ageGroups => {
           if (!ageGroups) return [];
-
           return ageGroups.map(({ agegroups, agecount }, index) => ({
             value: agecount,
             color: getColorPair(index)[0],
@@ -199,12 +217,28 @@ export class AdminUsersPage extends Component {
     return (
       <div>
         <h1>User Data</h1>
-        <h2>Users by Gender</h2>
-        <PieChart data={this.state.genderNumbers} />
-        <h2>Reason for visiting</h2>
-        <PieChart data={this.state.activities} />
-        <h2>Users by Age Band</h2>
-        <PieChart data={this.state.ageGroups} />
+        <table>
+          <thead>
+            <tr>
+              <th>Users by Gender</th>
+              <th>Reason for Visiting</th>
+              <th>Users by Age Band</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <PieChart data={this.state.genderNumbers} />
+              </td>
+              <td>
+                <PieChart data={this.state.activities} />
+              </td>
+              <td>
+                <PieChart data={this.state.ageGroups} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <form>
           <label className="Form__Label">
             Sort by
