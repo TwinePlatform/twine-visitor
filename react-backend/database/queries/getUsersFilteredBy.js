@@ -105,6 +105,9 @@ const visitorsByAge = filterBy => `WITH groupage AS (SELECT CASE
 const activitiesNumbersQuery = filterBy =>
   `SELECT activities.name, COUNT(visits.usersId) FROM activities, visits, users WHERE activities.id = visits.activitiesId AND users.id = visits.usersId AND activities.cb_id = $1 ${filterBy} GROUP BY activities.name`;
 
+const genderNumbersQuery = filterBy =>
+  `SELECT users.sex, COUNT(users.sex) FROM users WHERE users.cb_id = $1 ${filterBy} GROUP BY users.sex`;
+
 const getUsersFilteredBy = (cb_id, { filterBy, orderBy }) =>
   new Promise((resolve, reject) => {
     if (!cb_id) return reject(new Error('No Community Business ID supplied'));
@@ -113,16 +116,26 @@ const getUsersFilteredBy = (cb_id, { filterBy, orderBy }) =>
     const getActivitiesNumbers = activitiesNumbersQuery(
       getFiltersQuery(filterBy),
     );
+    const getGenderNumbers = genderNumbersQuery(getFiltersQuery(filterBy));
     Promise.all([
       dbConnection.query(myQuery, [cb_id]),
       dbConnection.query(getVisitorsByAge, [cb_id]),
       dbConnection.query(getActivitiesNumbers, [cb_id]),
+      dbConnection.query(getGenderNumbers, [cb_id]),
     ])
-      .then(([resultGeneral, resultVisitorsByAge, resultActivitiesNumbers]) => [
-        resultGeneral.rows,
-        resultVisitorsByAge.rows,
-        resultActivitiesNumbers.rows,
-      ])
+      .then(
+        ([
+          resultGeneral,
+          resultVisitorsByAge,
+          resultActivitiesNumbers,
+          resultGenderNumbers,
+        ]) => [
+          resultGeneral.rows,
+          resultVisitorsByAge.rows,
+          resultActivitiesNumbers.rows,
+          resultGenderNumbers.rows,
+        ],
+      )
       .then(res => resolve(res))
       .catch(reject);
   });

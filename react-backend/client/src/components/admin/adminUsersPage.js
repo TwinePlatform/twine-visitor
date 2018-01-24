@@ -152,6 +152,7 @@ export class AdminUsersPage extends Component {
           users: res.users[0],
           ageGroups: this.getAgeGroupsForChart(res.users[1]),
           activities: this.getActivitiesForChart(res.users[2]),
+          genderNumbers: this.getGendersForChart(res.users[3]),
         });
       })
       .catch(error => {
