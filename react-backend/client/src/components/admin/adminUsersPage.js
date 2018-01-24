@@ -17,6 +17,7 @@ export class AdminUsersPage extends Component {
       filters: [],
       orderBy: '',
       genderNumbers: [],
+      ageGroups: [],
     };
   }
 
@@ -28,7 +29,7 @@ export class AdminUsersPage extends Component {
       .then(this.handleFetchError)
       .then(res => res.json())
       .then(res => res.numbers)
-      .then(([genderNumbers, activitiesNumbers]) => {
+      .then(([genderNumbers, activitiesNumbers, ageGroups]) => {
         const getColorPair = index => {
           const colors = [
             {
@@ -77,9 +78,21 @@ export class AdminUsersPage extends Component {
           }));
         };
 
+        const getAgeGroupsForChart = ageGroups => {
+          if (!ageGroups) return [];
+
+          return ageGroups.map(({ agegroups, agecount }, index) => ({
+            value: agecount,
+            color: getColorPair(index)[0],
+            highlight: getColorPair(index)[1],
+            label: agegroups,
+          }));
+        };
+
         this.setState({
           genderNumbers: getGendersForChart(genderNumbers),
           activities: getActivitiesForChart(activitiesNumbers),
+          ageGroups: getAgeGroupsForChart(ageGroups),
         });
       })
       .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
@@ -190,6 +203,8 @@ export class AdminUsersPage extends Component {
         <PieChart data={this.state.genderNumbers} />
         <h2>Reason for visiting</h2>
         <PieChart data={this.state.activities} />
+        <h2>Users by Age Band</h2>
+        <PieChart data={this.state.ageGroups} />
         <form>
           <label className="Form__Label">
             Sort by
