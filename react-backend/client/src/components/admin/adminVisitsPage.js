@@ -2,81 +2,83 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
+import { adminPost, adminGet, checkAdmin } from './activitiesLib/admin_helpers';
 
 export class AdminVisitsPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      auth: 'PENDING',
       users: [],
-      reauthenticated: false,
-      failure: false,
       password: '',
       activities: [],
       filters: [],
-      orderBy: ''
+      orderBy: '',
     };
   }
 
-  headers = new Headers({
-    Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json'
-  });
-
-  handleChange = e => {
-    let newState = {};
-    newState[e.target.name] = e.target.value;
-    this.setState(newState);
-  };
-
-  handleFetchError = res => {
-    if (res.status === 500) throw new Error();
-    return res;
-  };
-
   setErrorMessage = (error, errorString) => {
-    // console.log(error) // Uncomment to display full errors in the console.
+    // console.log(error); // Uncomment to display full errors in the console.
     this.setState({ errorMessage: errorString });
   };
 
   componentDidMount() {
-    fetch('/activities', {
-      method: 'GET',
-      headers: this.headers
-    })
-      .then(this.handleFetchError)
-      .then(res => res.json())
-      .then(res => {
-        return res.activities.map(activity => activity.name);
+    checkAdmin()
+      .then(() => this.setState({ auth: 'SUCCESS' }))
+      .then(() => {
+        adminGet('/activities')
+          .then(({ activities }) => activities.map(activity => activity.name))
+          .then(activities => this.setState({ activities }))
+          .catch(error => {
+            if (error.message === 'No admin token')
+              return this.props.history.push('/admin/login');
+
+            this.setErrorMessage(error, 'Error fetching activities');
+          });
+
+        adminPost('/all-users', { password: this.state.password })
+          .then(({ users }) => this.setState({ users }))
+          .catch(error => {
+            if (error.message === 'No admin token')
+              return this.props.history.push('/admin/login');
+
+            this.setErrorMessage(error, 'Error setting activity day');
+          });
       })
-      .then(activities => this.setState({ activities }))
       .catch(error => {
-        this.setErrorMessage(error, 'Error fetching activities');
+        const message =
+          {
+            500: '/internalServerError',
+            'No admin token': '/admin/login',
+          }[error.message] || '/admin/login';
+
+        this.props.history.push(message);
       });
   }
 
   updateResults = () => {
-    fetch('/fetchVisitsFilteredBy', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({
-        filterBy: this.state.filters,
-        orderBy: this.state.orderBy
-      })
+    adminPost('/fetchVisitsFilteredBy', {
+      filterBy: this.state.filters,
+      orderBy: this.state.orderBy,
     })
-      .then(this.handleFetchError)
-      .then(res => res.json())
-      .then(users => {
+      .then(({ users }) => {
         this.setState(users);
       })
       .catch(error => {
-        this.props.history.push('/internalServerError');
+        const message =
+          {
+            500: '/internalServerError',
+            'No admin token': '/admin/login',
+          }[error.message] || '/admin/login';
+
+        this.props.history.push(message);
       });
   };
 
   sort = e => {
     this.setState(
       {
-        orderBy: e.target.value
+        orderBy: e.target.value,
       },
       this.updateResults
     );
@@ -92,55 +94,14 @@ export class AdminVisitsPage extends Component {
 
     this.setState(
       {
-        filters: newFilters
+        filters: newFilters,
       },
       this.updateResults
     );
   };
 
-  authenticate = event => {
-    event.preventDefault();
-
-    fetch('/all-users', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({ password: this.state.password })
-    })
-      .then(res => {
-        if (res.status === 500) {
-          throw new Error('500');
-        } else {
-          return res.json();
-        }
-      })
-      .then(res => {
-        if (res.success) {
-          return res.users;
-        } else {
-          if (res.error === 'Not logged in') {
-            throw new Error('Not logged in');
-          } else {
-            this.setState({ failure: true });
-            throw new Error('password');
-          }
-        }
-      })
-      .then(users => {
-        this.setState({ users, reauthenticated: true });
-      })
-      .catch(error => {
-        if (!this.state.failure) {
-          this.props.history.push('/logincb');
-        } else if (error === '500') {
-          this.props.history.push('/internalServerError');
-        }
-      });
-  };
-
-  passwordError = <span>The password is incorrect. Please try again.</span>;
-
-  renderAuthenticated = () => {
-    return (
+  render() {
+    return this.state.auth === 'SUCCESS' ? (
       <div>
         <h1>Visitor Data</h1>
         <form>
@@ -281,38 +242,8 @@ export class AdminVisitsPage extends Component {
         />
         <br />
       </div>
+    ) : (
+      <div> CHECKING ADMIN... </div>
     );
-  };
-
-  renderNotAuthenticated = () => {
-    return (
-      <div>
-        <div className="ErrorText">
-          {this.state.failure ? this.passwordError : ''}
-        </div>
-        <form className="Signup" onSubmit={this.authenticate}>
-          <label className="Form__Label">
-            Please, type your password
-            <input
-              className="Form__Input"
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleChange}
-            />
-          </label>
-          <Button />
-        </form>
-        <Link to="/pswdresetcb">
-          <button className="Button ButtonBack">Reset Password</button>
-        </Link>
-      </div>
-    );
-  };
-
-  render() {
-    return this.state.reauthenticated
-      ? this.renderAuthenticated()
-      : this.renderNotAuthenticated();
   }
 }
