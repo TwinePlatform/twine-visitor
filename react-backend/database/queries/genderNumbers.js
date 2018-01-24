@@ -1,5 +1,7 @@
 const dbConnection = require('../dbConnection');
 
+const getActivitiesQuery = 'SELECT name FROM activities WHERE cb_id=$1';
+
 const getGenderNumbersQuery =
   'SELECT sex, COUNT(sex) FROM users WHERE cb_id = $1 GROUP BY sex';
 
@@ -33,12 +35,19 @@ const genderNumbers = cbId =>
       dbConnection.query(getGenderNumbersQuery, [cbId]),
       dbConnection.query(getActivitiesNumbersQuery, [cbId]),
       dbConnection.query(getVisitorsByAge, [cbId]),
+      dbConnection.query(getActivitiesQuery, [cbId]),
     ])
       .then(
-        ([resultGenderCount, resultActivitiesCount, resultVisitorsByAge]) => [
+        ([
+          resultGenderCount,
+          resultActivitiesCount,
+          resultVisitorsByAge,
+          resultActivities,
+        ]) => [
           resultGenderCount.rows,
           resultActivitiesCount.rows,
           resultVisitorsByAge.rows,
+          resultActivities.rows,
         ],
       )
       .then(res => resolve(res))

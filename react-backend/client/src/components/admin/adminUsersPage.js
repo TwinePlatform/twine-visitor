@@ -14,11 +14,12 @@ export class AdminUsersPage extends Component {
       reauthenticated: false,
       failure: false,
       password: '',
-      activities: [],
       filters: [],
       orderBy: '',
       genderNumbers: [],
       ageGroups: [],
+      activitiesGroups: [],
+      activities: [],
     };
   }
 
@@ -88,7 +89,7 @@ export class AdminUsersPage extends Component {
       .then(this.handleFetchError)
       .then(res => res.json())
       .then(res => res.numbers)
-      .then(([genderNumbers, activitiesNumbers, ageGroups]) => {
+      .then(([genderNumbers, activitiesNumbers, ageGroups, activities]) => {
         // const getAgeGroupsForChart = ageGroups => {
         //   if (!ageGroups) return [];
         //
@@ -106,11 +107,11 @@ export class AdminUsersPage extends Component {
         //     data: dataAgeGroups,
         //   };
         // };
-
         this.setState({
           genderNumbers: this.getGendersForChart(genderNumbers),
-          activities: this.getActivitiesForChart(activitiesNumbers),
+          activitiesGroups: this.getActivitiesForChart(activitiesNumbers),
           ageGroups: this.getAgeGroupsForChart(ageGroups),
+          activities: activities.map(activity => activity.name),
         });
       })
       .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
@@ -151,7 +152,7 @@ export class AdminUsersPage extends Component {
         this.setState({
           users: res.users[0],
           ageGroups: this.getAgeGroupsForChart(res.users[1]),
-          activities: this.getActivitiesForChart(res.users[2]),
+          activitiesGroups: this.getActivitiesForChart(res.users[2]),
           genderNumbers: this.getGendersForChart(res.users[3]),
         });
       })
@@ -223,42 +224,7 @@ export class AdminUsersPage extends Component {
     return (
       <div>
         <h1>User Data</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>Users by Gender</th>
-              <th>Reason for Visiting</th>
-              <th>Users by Age Band</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <PieChart data={this.state.genderNumbers} />
-              </td>
-              <td>
-                <PieChart data={this.state.activities} />
-              </td>
-              <td>
-                <PieChart data={this.state.ageGroups} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
         <form>
-          <label className="Form__Label">
-            Sort by
-            <br />
-            <select onChange={this.sort}>
-              <option defaultValue value="date">
-                Sort by
-              </option>
-              <option value="name">Name </option>
-              <option value="yearofbirth">Year of Birth </option>
-              <option value="sex">Gender </option>
-              <option value="date">Date of Signup </option>{' '}
-            </select>
-          </label>
           <label className="Form__Label">
             Filter by Gender
             <br />
@@ -299,8 +265,54 @@ export class AdminUsersPage extends Component {
               70-more
             </label>
           </label>
+          <label className="Form__Label">
+            Filter by Activity
+            <br />
+            {this.state.activities.map(activity => (
+              <label key={activity}>
+                <input type="checkbox" value={activity} onChange={this.filter('activity')} />
+                {activity}
+              </label>
+            ))}
+          </label>
         </form>
-
+        <table>
+          <thead>
+            <tr>
+              <th>Users by Gender</th>
+              <th>Reason for Visiting</th>
+              <th>Users by Age Band</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <PieChart data={this.state.genderNumbers} />
+              </td>
+              <td>
+                <PieChart data={this.state.activitiesGroups} />
+              </td>
+              <td>
+                <PieChart data={this.state.ageGroups} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <form>
+          <label className="Form__Label">
+            Sort by
+            <br />
+            <select onChange={this.sort}>
+              <option defaultValue value="date">
+                Sort by
+              </option>
+              <option value="name">Name </option>
+              <option value="yearofbirth">Year of Birth </option>
+              <option value="sex">Gender </option>
+              <option value="date">Date of Signup </option>{' '}
+            </select>
+          </label>
+        </form>
         <table>
           <thead>
             <tr>
