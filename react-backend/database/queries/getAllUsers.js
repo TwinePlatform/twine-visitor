@@ -11,12 +11,7 @@ const getAllUsers = cbId =>
   new Promise((resolve, reject) => {
     dbConnection
       .query(getAllUsersQuery, [cbId])
-      .then(res => {
-        if (res.rowCount === 0) {
-          return reject('No user found');
-        }
-        resolve(res.rows);
-      })
+      .then(res => resolve(res.rows))
       .catch(reject);
   });
 

@@ -16,9 +16,7 @@ export class AdminUsersPage extends Component {
       activities: [],
       filters: [],
       orderBy: '',
-      maleNumber: 0,
-      femaleNumber: 0,
-      preferNotToSayNumber: 0,
+      genderNumbers: [],
     };
   }
 
@@ -30,11 +28,58 @@ export class AdminUsersPage extends Component {
       .then(this.handleFetchError)
       .then(res => res.json())
       .then(res => res.numbers)
-      .then(([female = {}, male = {}, preferNotToSay = {}]) => {
+      .then(([genderNumbers, activitiesNumbers]) => {
+        const getColorPair = index => {
+          const colors = [
+            {
+              color: '#F7464A',
+              highlight: '#FF5A5E',
+            },
+            {
+              color: '#46BFBD',
+              highlight: '#5AD3D1',
+            },
+            {
+              color: '#FDB45C',
+              highlight: '#FFC870',
+            },
+            {
+              color: '#949FB1',
+              highlight: '#A8B3C5',
+            },
+            {
+              color: '#4D5360',
+              highlight: '#616774',
+            },
+          ];
+          return colors[index % colors.length];
+        };
+
+        const getActivitiesForChart = activities => {
+          if (!activities) return [];
+
+          return activitiesNumbers.map(({ name, count }, index) => ({
+            value: count,
+            color: getColorPair(index).color,
+            highlight: getColorPair(index).highlight,
+            label: name,
+          }));
+        };
+
+        const getGendersForChart = genders => {
+          if (!genders) return [];
+
+          return genders.map(({ sex, count }, index) => ({
+            value: count,
+            color: getColorPair(index)[0],
+            highlight: getColorPair(index)[1],
+            label: sex,
+          }));
+        };
+
         this.setState({
-          maleNumber: male.count || 0,
-          femaleNumber: female.count || 0,
-          preferNotToSayNumber: preferNotToSay.count || 0,
+          genderNumbers: getGendersForChart(genderNumbers),
+          activities: getActivitiesForChart(activitiesNumbers),
         });
       })
       .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
@@ -138,32 +183,13 @@ export class AdminUsersPage extends Component {
   passwordError = <span>The password is incorrect. Please try again.</span>;
 
   renderAuthenticated = () => {
-    const chartData = [
-      {
-        value: this.state.maleNumber,
-        color: '#F7464A',
-        highlight: '#FF5A5E',
-        label: 'Male',
-      },
-      {
-        value: this.state.femaleNumber,
-        color: '#46BFBD',
-        highlight: '#5AD3D1',
-        label: 'Female',
-      },
-      {
-        value: this.state.preferNotToSayNumber,
-        color: '#FDB45C',
-        highlight: '#FFC870',
-        label: 'Prefer not to say',
-      },
-    ];
-
     return (
       <div>
         <h1>User Data</h1>
         <h2>Users by Gender</h2>
-        <PieChart data={chartData} />
+        <PieChart data={this.state.genderNumbers} />
+        <h2>Reason for visiting</h2>
+        <PieChart data={this.state.activities} />
         <form>
           <label className="Form__Label">
             Sort by
@@ -286,6 +312,7 @@ export class AdminUsersPage extends Component {
   };
 
   render() {
+    return this.renderAuthenticated();
     return this.state.reauthenticated ? this.renderAuthenticated() : this.renderNotAuthenticated();
   }
 }
