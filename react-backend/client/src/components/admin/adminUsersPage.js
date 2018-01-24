@@ -4,7 +4,6 @@ import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
 
 const PieChart = require('react-chartjs').Pie;
-// const BarChart = require('react-chartjs').Bar;
 
 export class AdminUsersPage extends Component {
   constructor(props) {
@@ -90,23 +89,6 @@ export class AdminUsersPage extends Component {
       .then(res => res.json())
       .then(res => res.numbers)
       .then(([genderNumbers, activitiesNumbers, ageGroups, activities]) => {
-        // const getAgeGroupsForChart = ageGroups => {
-        //   if (!ageGroups) return [];
-        //
-        //   let labelsAgeGroups = [];
-        //   labelsAgeGroups.forEach(el => labelsAgeGroups.push(el.agegroups));
-        //   let dataAgeGroups = [];
-        //   dataAgeGroups.forEach(el => dataAgeGroups.push(el.agecount));
-        //
-        //   return {
-        //     labels: labelsAgeGroups,
-        //     fillColor: 'rgba(220,220,220,0.5)',
-        //     strokeColor: 'rgba(220,220,220,0.8)',
-        //     highlightFill: 'rgba(220,220,220,0.75)',
-        //     highlightStroke: 'rgba(220,220,220,1)',
-        //     data: dataAgeGroups,
-        //   };
-        // };
         this.setState({
           genderNumbers: this.getGendersForChart(genderNumbers),
           activitiesGroups: this.getActivitiesForChart(activitiesNumbers),
