@@ -22,6 +22,64 @@ export class AdminUsersPage extends Component {
     };
   }
 
+  getColorPair = index => {
+    const colors = [
+      {
+        color: '#F7464A',
+        highlight: '#FF5A5E',
+      },
+      {
+        color: '#46BFBD',
+        highlight: '#5AD3D1',
+      },
+      {
+        color: '#FDB45C',
+        highlight: '#FFC870',
+      },
+      {
+        color: '#949FB1',
+        highlight: '#A8B3C5',
+      },
+      {
+        color: '#4D5360',
+        highlight: '#616774',
+      },
+    ];
+    return colors[index % colors.length];
+  };
+
+  getActivitiesForChart = activities => {
+    if (!activities) return [];
+
+    return activities.map(({ name, count }, index) => ({
+      value: count,
+      color: this.getColorPair(index).color,
+      highlight: this.getColorPair(index).highlight,
+      label: name,
+    }));
+  };
+
+  getGendersForChart = genders => {
+    if (!genders) return [];
+
+    return genders.map(({ sex, count }, index) => ({
+      value: count,
+      color: this.getColorPair(index)[0],
+      highlight: this.getColorPair(index)[1],
+      label: sex,
+    }));
+  };
+
+  getAgeGroupsForChart = ageGroups => {
+    if (!ageGroups) return [];
+    return ageGroups.map(({ agegroups, agecount }, index) => ({
+      value: agecount,
+      color: this.getColorPair(index)[0],
+      highlight: this.getColorPair(index)[1],
+      label: agegroups,
+    }));
+  };
+
   componentDidMount() {
     fetch('/getGenderNumbers', {
       method: 'GET',
@@ -31,54 +89,6 @@ export class AdminUsersPage extends Component {
       .then(res => res.json())
       .then(res => res.numbers)
       .then(([genderNumbers, activitiesNumbers, ageGroups]) => {
-        const getColorPair = index => {
-          const colors = [
-            {
-              color: '#F7464A',
-              highlight: '#FF5A5E',
-            },
-            {
-              color: '#46BFBD',
-              highlight: '#5AD3D1',
-            },
-            {
-              color: '#FDB45C',
-              highlight: '#FFC870',
-            },
-            {
-              color: '#949FB1',
-              highlight: '#A8B3C5',
-            },
-            {
-              color: '#4D5360',
-              highlight: '#616774',
-            },
-          ];
-          return colors[index % colors.length];
-        };
-
-        const getActivitiesForChart = activities => {
-          if (!activities) return [];
-
-          return activitiesNumbers.map(({ name, count }, index) => ({
-            value: count,
-            color: getColorPair(index).color,
-            highlight: getColorPair(index).highlight,
-            label: name,
-          }));
-        };
-
-        const getGendersForChart = genders => {
-          if (!genders) return [];
-
-          return genders.map(({ sex, count }, index) => ({
-            value: count,
-            color: getColorPair(index)[0],
-            highlight: getColorPair(index)[1],
-            label: sex,
-          }));
-        };
-
         // const getAgeGroupsForChart = ageGroups => {
         //   if (!ageGroups) return [];
         //
@@ -97,20 +107,10 @@ export class AdminUsersPage extends Component {
         //   };
         // };
 
-        const getAgeGroupsForChart = ageGroups => {
-          if (!ageGroups) return [];
-          return ageGroups.map(({ agegroups, agecount }, index) => ({
-            value: agecount,
-            color: getColorPair(index)[0],
-            highlight: getColorPair(index)[1],
-            label: agegroups,
-          }));
-        };
-
         this.setState({
-          genderNumbers: getGendersForChart(genderNumbers),
-          activities: getActivitiesForChart(activitiesNumbers),
-          ageGroups: getAgeGroupsForChart(ageGroups),
+          genderNumbers: this.getGendersForChart(genderNumbers),
+          activities: this.getActivitiesForChart(activitiesNumbers),
+          ageGroups: this.getAgeGroupsForChart(ageGroups),
         });
       })
       .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
@@ -146,8 +146,11 @@ export class AdminUsersPage extends Component {
     })
       .then(this.handleFetchError)
       .then(res => res.json())
-      .then(users => {
-        this.setState(users);
+      .then(res => {
+        this.setState({
+          users: res.users[0],
+          ageGroups: this.getAgeGroupsForChart(res.users[1]),
+        });
       })
       .catch(error => {
         this.props.history.push('/internalServerError');
