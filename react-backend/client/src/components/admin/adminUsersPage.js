@@ -131,12 +131,15 @@ export class AdminUsersPage extends Component {
       .then(res => res.json())
       .then(res => {
         console.log(res);
-        this.setState({
-          users: res.users[0],
-          ageGroups: this.getAgeGroupsForChart(res.users[1]),
-          activitiesGroups: this.getActivitiesForChart(res.users[2]),
-          genderNumbers: this.getGendersForChart(res.users[3]),
-        });
+        this.setState(
+          {
+            users: res.users[0],
+            ageGroups: this.getAgeGroupsForChart(res.users[1]),
+            activitiesGroups: this.getActivitiesForChart(res.users[2]),
+            genderNumbers: this.getGendersForChart(res.users[3]),
+          },
+          () => console.log(this.state.users),
+        );
       })
       .catch(error => {
         this.props.history.push('/internalServerError');

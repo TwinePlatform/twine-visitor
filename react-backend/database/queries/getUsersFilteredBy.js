@@ -1,11 +1,11 @@
 const dbConnection = require('../dbConnection');
 
 const query = (filterBy, orderBy) => `
-SELECT users.id, users.fullName, users.sex, users.yearofbirth, users.email, users.date
+SELECT DISTINCT ON (users.id) users.id, users.fullName, users.sex, users.yearofbirth, users.email, users.date
 FROM users
-INNER JOIN visits
+FULL OUTER JOIN visits
 ON visits.usersId = users.id
-INNER JOIN activities
+FULL OUTER JOIN activities
 ON activities.id = visits.activitiesId
 WHERE users.cb_id = $1 ${filterBy} ${orderBy}`;
 
@@ -117,11 +117,11 @@ const getSortQuery = orderBy => {
 
 const visitorsByAge = filterBy => `WITH filteredUsers AS
 (
-  SELECT users.yearofbirth
+  SELECT DISTINCT ON (users.id) users.id, users.yearofbirth
   FROM users
-  INNER JOIN visits
+  FULL OUTER JOIN visits
   ON visits.usersId = users.id
-  INNER JOIN activities
+  FULL OUTER JOIN activities
   ON activities.id = visits.activitiesId
   WHERE users.cb_id = $1 ${filterBy}
 ),
@@ -148,14 +148,20 @@ const activitiesNumbersQuery = filterBy =>
   `SELECT activities.name, COUNT(visits.usersId) FROM activities, visits, users WHERE activities.id = visits.activitiesId AND users.id = visits.usersId AND activities.cb_id = $1
   ${filterBy} GROUP BY activities.name`;
 
-const genderNumbersQuery = filterBy =>
-  `SELECT users.sex, COUNT(users.sex) FROM users
-  INNER JOIN visits
+const genderNumbersQuery = filterBy => `WITH filteredUsers AS
+(
+  SELECT DISTINCT ON (users.id)
+  users.id, users.sex
+  FROM users
+  FULL OUTER JOIN visits
   ON visits.usersId = users.id
-  INNER JOIN activities
+  FULL OUTER JOIN activities
   ON activities.id = visits.activitiesId
-  WHERE users.cb_id = $1
-  ${filterBy} GROUP BY users.sex`;
+  WHERE users.cb_id = $1 ${filterBy}
+)
+  SELECT filteredUsers.sex, COUNT(filteredUsers.sex) FROM filteredUsers
+
+  GROUP BY filteredUsers.sex`;
 
 const getUsersFilteredBy = (cb_id, { filterBy = [], orderBy = '' } = {}) =>
   new Promise((resolve, reject) => {
