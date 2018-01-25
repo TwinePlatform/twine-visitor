@@ -49,6 +49,7 @@
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.1.0",
     "morgan": "~1.8.1",
+    "node-base64-image": "^1.0.4",
     "pdfmake": "^0.1.35",
     "pg": "^7.4.1",
     "postmark": "^1.5.0",

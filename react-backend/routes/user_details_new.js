@@ -20,15 +20,15 @@ router.post('/', (req, res, next) => {
         req.body.userFullName,
         req.body.sex,
         req.body.yearOfBirth,
-        req.body.email
-      )
+        req.body.email,
+      ),
     )
     .then(details => res.send({ success: true, details }))
     .catch(err => {
       if (err.message !== 'Incorrect password') return next(err);
       res.send({
         success: false,
-        reason: 'incorrect password'
+        reason: 'incorrect password',
       });
     });
 });
