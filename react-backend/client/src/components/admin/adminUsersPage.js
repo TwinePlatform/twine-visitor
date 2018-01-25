@@ -4,6 +4,7 @@ import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
 
 const PieChart = require('react-chartjs').Pie;
+const BarChart = require('react-chartjs').Bar;
 
 export class AdminUsersPage extends Component {
   constructor(props) {
@@ -16,6 +17,8 @@ export class AdminUsersPage extends Component {
       filters: [],
       orderBy: '',
       genderNumbers: [],
+      visits: [],
+      visitNumbers: [],
       ageGroups: [],
       activitiesGroups: [],
       activities: [],
@@ -70,6 +73,31 @@ export class AdminUsersPage extends Component {
     }));
   };
 
+  getVisitsWeek = visits => {
+    if (!visits) return [];
+
+    let week = visits.map({ date }, index => {
+      if (date) {
+      }
+    });
+
+    if (visits[0].date.getDate() < Date().getDate())
+      return visits.map(({ date }, index) => ({
+        value: date,
+        color: this.getColorPair(index)[0],
+        highlight: this.getColorPair(index)[1],
+        label: [
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+          'Sunday',
+        ],
+      }));
+  };
+
   getAgeGroupsForChart = ageGroups => {
     if (!ageGroups) return [];
     return ageGroups.map(({ agegroups, agecount }, index) => ({
@@ -88,15 +116,27 @@ export class AdminUsersPage extends Component {
       .then(this.handleFetchError)
       .then(res => res.json())
       .then(res => res.numbers)
-      .then(([genderNumbers, activitiesNumbers, ageGroups, activities]) => {
-        this.setState({
-          genderNumbers: this.getGendersForChart(genderNumbers),
-          activitiesGroups: this.getActivitiesForChart(activitiesNumbers),
-          ageGroups: this.getAgeGroupsForChart(ageGroups),
-          activities: activities.map(activity => activity.name),
-        });
-      })
-      .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
+      .then(
+        ([
+          visitsNumbers,
+          genderNumbers,
+          activitiesNumbers,
+          ageGroups,
+          activities,
+        ]) => {
+          this.setState({
+            visits: visitsNumbers,
+            // visitNumbers: this.getVisitsWeek(this.state.visits),
+            genderNumbers: this.getGendersForChart(genderNumbers),
+            activitiesGroups: this.getActivitiesForChart(activitiesNumbers),
+            ageGroups: this.getAgeGroupsForChart(ageGroups),
+            activities: activities.map(activity => activity.name),
+          });
+        }
+      )
+      .catch(error =>
+        this.setErrorMessage(error, 'Error fetching gender numbers')
+      );
   }
 
   headers = new Headers({
@@ -148,7 +188,7 @@ export class AdminUsersPage extends Component {
       {
         orderBy: e.target.value,
       },
-      this.updateResults,
+      this.updateResults
     );
   };
 
@@ -164,7 +204,7 @@ export class AdminUsersPage extends Component {
       {
         filters: newFilters,
       },
-      this.updateResults,
+      this.updateResults
     );
   };
 
@@ -211,15 +251,27 @@ export class AdminUsersPage extends Component {
             Filter by Gender
             <br />
             <label>
-              <input type="checkbox" value="male" onChange={this.filter('gender')} />
+              <input
+                type="checkbox"
+                value="male"
+                onChange={this.filter('gender')}
+              />
               Male
             </label>
             <label>
-              <input type="checkbox" value="female" onChange={this.filter('gender')} />
+              <input
+                type="checkbox"
+                value="female"
+                onChange={this.filter('gender')}
+              />
               Female
             </label>
             <label>
-              <input type="checkbox" value="prefer_not_to_say" onChange={this.filter('gender')} />
+              <input
+                type="checkbox"
+                value="prefer_not_to_say"
+                onChange={this.filter('gender')}
+              />
               Prefer not to say
             </label>
           </label>
@@ -227,23 +279,43 @@ export class AdminUsersPage extends Component {
             Filter by age
             <br />
             <label>
-              <input type="checkbox" value="0-17" onChange={this.filter('age')} />
+              <input
+                type="checkbox"
+                value="0-17"
+                onChange={this.filter('age')}
+              />
               0-17
             </label>
             <label>
-              <input type="checkbox" value="18-34" onChange={this.filter('age')} />
+              <input
+                type="checkbox"
+                value="18-34"
+                onChange={this.filter('age')}
+              />
               18-34
             </label>
             <label>
-              <input type="checkbox" value="35-50" onChange={this.filter('age')} />
+              <input
+                type="checkbox"
+                value="35-50"
+                onChange={this.filter('age')}
+              />
               35-50
             </label>
             <label>
-              <input type="checkbox" value="51-69" onChange={this.filter('age')} />
+              <input
+                type="checkbox"
+                value="51-69"
+                onChange={this.filter('age')}
+              />
               51-69
             </label>
             <label>
-              <input type="checkbox" value="70-more" onChange={this.filter('age')} />
+              <input
+                type="checkbox"
+                value="70-more"
+                onChange={this.filter('age')}
+              />
               70-more
             </label>
           </label>
@@ -252,7 +324,11 @@ export class AdminUsersPage extends Component {
             <br />
             {this.state.activities.map(activity => (
               <label key={activity}>
-                <input type="checkbox" value={activity} onChange={this.filter('activity')} />
+                <input
+                  type="checkbox"
+                  value={activity}
+                  onChange={this.filter('activity')}
+                />
                 {activity}
               </label>
             ))}
@@ -276,6 +352,9 @@ export class AdminUsersPage extends Component {
               </td>
               <td>
                 <PieChart data={this.state.ageGroups} />
+              </td>
+              <td>
+                <BarChart data={this.state.visitNumbers} />
               </td>
             </tr>
           </tbody>
@@ -324,7 +403,9 @@ export class AdminUsersPage extends Component {
           </tbody>
         </table>
         <Link to="/admin">
-          <button className="Button ButtonBack">Back to the admin menu page</button>
+          <button className="Button ButtonBack">
+            Back to the admin menu page
+          </button>
         </Link>
         <br />
         <Logoutbutton
@@ -339,7 +420,9 @@ export class AdminUsersPage extends Component {
   renderNotAuthenticated = () => {
     return (
       <div>
-        <div className="ErrorText">{this.state.failure ? this.passwordError : ''}</div>
+        <div className="ErrorText">
+          {this.state.failure ? this.passwordError : ''}
+        </div>
         <form className="Signup" onSubmit={this.authenticate}>
           <label className="Form__Label">
             Please, type your password
@@ -362,6 +445,8 @@ export class AdminUsersPage extends Component {
 
   render() {
     return this.renderAuthenticated();
-    return this.state.reauthenticated ? this.renderAuthenticated() : this.renderNotAuthenticated();
+    return this.state.reauthenticated
+      ? this.renderAuthenticated()
+      : this.renderNotAuthenticated();
   }
 }

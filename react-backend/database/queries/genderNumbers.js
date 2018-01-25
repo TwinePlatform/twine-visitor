@@ -15,6 +15,8 @@ const getYearOfBirth35_50 = today.getFullYear() - 50;
 const getYearOfBirth51_69 = today.getFullYear() - 69;
 const getYearOfBirth70_more = today.getFullYear() - 70;
 
+const getVisitsNumbersQuery = 'SELECT date FROM visits WHERE cb_id = $1';
+
 const getVisitorsByAge = `WITH groupage AS (SELECT CASE
   WHEN yearofbirth > ${getYearOfBirth0_17} THEN '0-17'
   WHEN yearofbirth > ${getYearOfBirth18_34} AND yearofbirth <= ${getYearOfBirth0_17} THEN '18-34'
@@ -32,6 +34,7 @@ const genderNumbers = cbId =>
     if (!cbId) return reject(new Error('No Community Business ID supplied'));
 
     Promise.all([
+      dbConnection.query(getVisitsNumbersQuery, [cbId]),
       dbConnection.query(getGenderNumbersQuery, [cbId]),
       dbConnection.query(getActivitiesNumbersQuery, [cbId]),
       dbConnection.query(getVisitorsByAge, [cbId]),
@@ -39,16 +42,18 @@ const genderNumbers = cbId =>
     ])
       .then(
         ([
+          resultVisitsCount,
           resultGenderCount,
           resultActivitiesCount,
           resultVisitorsByAge,
           resultActivities,
         ]) => [
+          resultVisitsCount.rows,
           resultGenderCount.rows,
           resultActivitiesCount.rows,
           resultVisitorsByAge.rows,
           resultActivities.rows,
-        ],
+        ]
       )
       .then(res => resolve(res))
       .catch(reject);
