@@ -13,9 +13,7 @@ const getCBFromEmail = email =>
         }
         reject('no results found');
       })
-      .catch(err => {
-        reject(err);
-      });
+      .catch(reject);
   });
 
 module.exports = getCBFromEmail;

@@ -4,9 +4,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
 
-const CLOUDINARY_UPLOAD_PRESET = 'cklrrn9k';
-const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dqzxe8mav/upload';
-
 export class AdminCBSettingsPage extends Component {
   constructor(props) {
     super(props);
@@ -25,6 +22,11 @@ export class AdminCBSettingsPage extends Component {
     };
   }
 
+  handleImageUrl = () => {
+    this.setState({
+      uploadedFileCloudinaryUrl: !this.state.uploadedFileCloudinaryUrl,
+    });
+  };
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
     'Content-Type': 'application/json',
@@ -46,6 +48,8 @@ export class AdminCBSettingsPage extends Component {
   }
 
   handleImageUpload(file) {
+    const CLOUDINARY_UPLOAD_PRESET = 'cklrrn9k';
+    const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dqzxe8mav/upload';
     const cloudinaryForm = new FormData();
     cloudinaryForm.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
     cloudinaryForm.append('file', file);
@@ -135,6 +139,7 @@ export class AdminCBSettingsPage extends Component {
       .then(res => res.details)
       .then(this.setCB)
       .then(this.submitConfirmation)
+      .then(this.handleImageUrl)
       .catch(error => {
         this.props.history.push('/internalServerError');
       });
@@ -281,11 +286,19 @@ export class AdminCBSettingsPage extends Component {
           </label>
         </form>
         <div className="Dropzone">
-          <Dropzone multiple={false} accept="image/*" onDrop={this.onImageDrop.bind(this)}>
+          <Dropzone
+            className={this.state.uploadedFileCloudinaryUrl ? 'hidden' : ''}
+            multiple={false}
+            accept="image/*"
+            onDrop={this.onImageDrop.bind(this)}
+          >
             <p>Drop a logo or click to select a file to upload.</p>
           </Dropzone>
           {this.state.uploadedFileCloudinaryUrl && (
-            <img src={this.state.uploadedFileCloudinaryUrl} alt="This is the uploaded logo" />
+            <React.Fragment>
+              <button onClick={this.handleImageUrl}>X</button>
+              <img src={this.state.uploadedFileCloudinaryUrl} alt="This is the uploaded logo" />
+            </React.Fragment>
           )}
         </div>
         <button className="Button" onClick={submitHandler}>
@@ -329,7 +342,6 @@ export class AdminCBSettingsPage extends Component {
   };
 
   render() {
-    console.log(this.state.cbLogo);
     return this.state.reauthenticated ? this.renderAuthenticated() : this.renderNotAuthenticated();
   }
 }

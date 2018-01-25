@@ -99,19 +99,16 @@ getPdf = (
   };
 
   const printer = new PdfPrinter(fontDescriptors);
-
   const doc = printer.createPdfKitDocument(docDefinition);
 
   const chunks = [];
-  let result;
 
   doc.on('data', chunk => {
     chunks.push(chunk);
   });
+
   doc.on('end', () => {
-    result = Buffer.concat(chunks);
-    resolve(result.toString('base64'));
-    reject("Couldn't generate PDF");
+    resolve(Buffer.concat(chunks).toString('base64'));
   });
   doc.end();
 };
