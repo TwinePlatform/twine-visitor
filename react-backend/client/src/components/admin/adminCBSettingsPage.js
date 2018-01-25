@@ -22,9 +22,9 @@ export class AdminCBSettingsPage extends Component {
     };
   }
 
-  handleImageUrl = () => {
+  clearUploadUrl = () => {
     this.setState({
-      uploadedFileCloudinaryUrl: !this.state.uploadedFileCloudinaryUrl,
+      uploadedFileCloudinaryUrl: '',
     });
   };
   headers = new Headers({
@@ -139,7 +139,7 @@ export class AdminCBSettingsPage extends Component {
       .then(res => res.details)
       .then(this.setCB)
       .then(this.submitConfirmation)
-      .then(this.handleImageUrl)
+      .then(this.clearUploadUrl)
       .catch(error => {
         this.props.history.push('/internalServerError');
       });
@@ -296,7 +296,7 @@ export class AdminCBSettingsPage extends Component {
           </Dropzone>
           {this.state.uploadedFileCloudinaryUrl && (
             <React.Fragment>
-              <button onClick={this.handleImageUrl}>X</button>
+              <button onClick={this.clearUploadUrl}>X</button>
               <img src={this.state.uploadedFileCloudinaryUrl} alt="This is the uploaded logo" />
             </React.Fragment>
           )}
