@@ -18,35 +18,7 @@ export class AdminUsersPage extends Component {
       orderBy: '',
       genderNumbers: [],
       visits: [],
-      visitNumbers: {
-        labels: [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-        ],
-        datasets: [
-          {
-            label: 'My First dataset',
-            fillColor: 'rgba(220,220,220,0.5)',
-            strokeColor: 'rgba(220,220,220,0.8)',
-            highlightFill: 'rgba(220,220,220,0.75)',
-            highlightStroke: 'rgba(220,220,220,1)',
-            data: [65, 59, 80, 81, 56, 55, 40],
-          },
-          {
-            label: 'My Second dataset',
-            fillColor: 'rgba(151,187,205,0.5)',
-            strokeColor: 'rgba(151,187,205,0.8)',
-            highlightFill: 'rgba(151,187,205,0.75)',
-            highlightStroke: 'rgba(151,187,205,1)',
-            data: [28, 48, 40, 19, 86, 27, 90],
-          },
-        ],
-      },
+      visitNumbers: [],
       ageGroups: [],
       activitiesGroups: [],
       activities: [],
@@ -103,7 +75,6 @@ export class AdminUsersPage extends Component {
 
   getVisitsWeek = visits => {
     if (!visits) return [];
-
     let visitCount = {
       0: 0,
       1: 0,
@@ -114,21 +85,42 @@ export class AdminUsersPage extends Component {
       6: 0,
     };
 
-    let dayName = {
-      0: 'Monday',
-      1: 'Tuesday',
-      2: 'Wednesday',
-      3: 'Thursday',
-      4: 'Friday',
-      5: 'Saturday',
-      6: 'Sunday',
-    };
-
-    visits.map({ date }, index => {
-      if (date > Date.now() - 604800000) {
-        visitCount[date.getDay()]++;
+    Object.values(visits).forEach(function(key) {
+      if (key.date > Date.now() - 604800000) {
+        let num = new Date(key.date);
+        visitCount[num.getDay()]++;
       }
     });
+
+    let dayName = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
+
+    const buildDaysWithOffset = (num, array) => {
+      return Array.from({ length: 7 }, (_, index) => array[(index + num) % 7]);
+    };
+
+    const dayWeek = new Date();
+    // console.log(buildDaysWithOffset(dayWeek.getDay(), visitCount));
+    return {
+      labels: buildDaysWithOffset(dayWeek.getDay(), dayName),
+      datasets: [
+        {
+          label: 'Visits over the last week',
+          fillColor: 'rgba(220,220,220,0.5)',
+          strokeColor: 'rgba(220,220,220,0.8)',
+          highlightFill: 'rgba(220,220,220,0.75)',
+          highlightStroke: 'rgba(220,220,220,1)',
+          data: buildDaysWithOffset(dayWeek.getDay(), visitCount),
+        },
+      ],
+    };
   };
 
   getAgeGroupsForChart = ageGroups => {
@@ -159,7 +151,7 @@ export class AdminUsersPage extends Component {
         ]) => {
           this.setState({
             visits: visitsNumbers,
-            // visitNumbers: this.getVisitsWeek(this.state.visits),
+            visitNumbers: this.getVisitsWeek(visitsNumbers),
             genderNumbers: this.getGendersForChart(genderNumbers),
             activitiesGroups: this.getActivitiesForChart(activitiesNumbers),
             ageGroups: this.getAgeGroupsForChart(ageGroups),
