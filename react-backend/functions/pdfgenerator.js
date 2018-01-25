@@ -1,35 +1,37 @@
 const PdfPrinter = require('pdfmake');
 const base64 = require('node-base64-image');
+const { promisify } = require('util');
+
+const encode64 = promisify(base64.encode);
 
 module.exports = (QRcodeBase64Url, image) =>
   new Promise((resolve, reject) => {
     if (image) {
-      base64.encode(image, { string: true }, (err, image) => {
-        if (err) {
-          return reject(err);
-        }
-        const columns = [
-          {
-            image: `data:image/png;base64, ${image}`,
-            margin: [5, 5, 0, 0],
-            fit: [100, 100],
-          },
-          {
-            image: QRcodeBase64Url,
-            margin: [-5, -3, 5, 0],
-            fit: [115, 115],
-          },
-        ];
-        getPdf(
-          QRcodeBase64Url,
-          image,
-          columns,
-          [0, 10, 10, 0],
-          'center',
-          resolve,
-          reject,
-        );
-      });
+      encode64(image, { string: true })
+        .then(image => {
+          const columns = [
+            {
+              image: `data:image/png;base64, ${image}`,
+              margin: [5, 5, 0, 0],
+              fit: [100, 100],
+            },
+            {
+              image: QRcodeBase64Url,
+              margin: [-5, -3, 5, 0],
+              fit: [115, 115],
+            },
+          ];
+          getPdf(
+            QRcodeBase64Url,
+            image,
+            columns,
+            [0, 10, 10, 0],
+            'center',
+            resolve,
+            reject,
+          );
+        })
+        .catch(reject);
     } else {
       const columns = [
         {
