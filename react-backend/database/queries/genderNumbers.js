@@ -15,7 +15,8 @@ const getYearOfBirth35_50 = today.getFullYear() - 50;
 const getYearOfBirth51_69 = today.getFullYear() - 69;
 const getYearOfBirth70_more = today.getFullYear() - 70;
 
-const getVisitsNumbersQuery = 'SELECT date FROM visits WHERE cb_id = $1';
+const getVisitsNumbersQuery =
+  "SELECT date_part('epoch',date)*1000 as date FROM visits WHERE cb_id = $1";
 
 const getVisitorsByAge = `WITH groupage AS (SELECT CASE
   WHEN yearofbirth > ${getYearOfBirth0_17} THEN '0-17'
