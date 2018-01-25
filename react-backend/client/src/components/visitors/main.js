@@ -11,10 +11,7 @@ import errorMessages from '../errors';
 const generateYearsArray = (startYear, currentYear) =>
   Array.from({ length: currentYear + 1 - startYear }, (v, i) => startYear + i);
 
-const years = generateYearsArray(
-  new Date().getFullYear() - 113,
-  new Date().getFullYear()
-);
+const years = generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear());
 
 class Main extends Component {
   constructor(props) {
@@ -29,6 +26,7 @@ class Main extends Component {
       users: [],
       url: '',
       error: [],
+      cb_logo: '',
     };
   }
 
@@ -78,10 +76,7 @@ class Main extends Component {
             this.setError([errorMessages.NAME_ERROR]);
             break;
           case 'emailname':
-            this.setError([
-              errorMessages.NAME_ERROR,
-              errorMessages.EMAIL_ERROR,
-            ]);
+            this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
             break;
           case 'true':
             this.setError([errorMessages.USER_EXISTS_ERROR]);
@@ -118,11 +113,11 @@ class Main extends Component {
         if (res.status === 500) {
           throw new Error();
         } else {
-          return res.text();
+          return res.json();
         }
       })
-      .then(data => {
-        this.setState({ url: data });
+      .then(res => {
+        this.setState({ url: res.qr, cb_logo: res.cb_logo });
       })
       .then(() => this.props.history.push('/visitor/signup/thankyou'))
       .catch(error => {
@@ -141,9 +136,7 @@ class Main extends Component {
             <section className="Main col-9">
               <h1>Please tell us about yourself</h1>
               {error && (
-                <div className="ErrorText">
-                  {error.map((el, i) => <span key={i}>{el}</span>)}
-                </div>
+                <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
               )}
               <form className="Signup" onChange={this.handleChange}>
                 <Input question="Your Full Name" option="fullname" />
@@ -158,21 +151,13 @@ class Main extends Component {
           <Route exact path="/visitor/signup/step2">
             <section className="Main col-9">
               <h1>Please tell us about yourself</h1>
-              <form
-                className="Signup"
-                onChange={this.handleChange}
-                onSubmit={this.handleSubmit}
-              >
+              <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
                 <Select
                   question="Select Your Sex"
                   option="sex"
                   choices={['male', 'female', 'prefer not to say']}
                 />
-                <Select
-                  question="Year of Birth"
-                  option="year"
-                  choices={years}
-                />
+                <Select question="Year of Birth" option="year" choices={years} />
                 <Button />
               </form>
             </section>
@@ -182,15 +167,11 @@ class Main extends Component {
             <section className="col-12">
               <div className="hidden-printer col-12">
                 <h1>
-                  Here is your QR code. Please print this page and use the code
-                  to sign in when you visit us.
+                  Here is your QR code. Please print this page and use the code to sign in when you
+                  visit us.
                 </h1>
                 <h2>We have also emailed you a copy.</h2>
-                <img
-                  className="QR__image"
-                  src={url}
-                  alt="This is your QRcode"
-                />
+                <img className="QR__image" src={url} alt="This is your QRcode" />
                 <Link to="/visitor">
                   <button className="Button">Next</button>
                 </Link>
@@ -202,19 +183,14 @@ class Main extends Component {
               {/*This is the print layout of the QRcode*/}
               <div className="visible-printer qr-code-to-print">
                 <div className="dashed">
-                  <img
-                    height="182"
-                    src={qrcodelogo}
-                    alt="Power to change Logo"
-                  />
-                  <img
-                    className="QR__image"
-                    src={url}
-                    alt="This is your QRcode"
-                  />
+                  {this.state.cb_logo ? (
+                    <img height="182" src={this.state.cb_logo} alt="Community business logo" />
+                  ) : (
+                    <img height="182" src={qrcodelogo} alt="Power to change Logo" />
+                  )}
+                  <img className="QR__image" src={url} alt="This is your QRcode" />
                   <h5>
-                    Please print this QR code and <br /> bring it with you to
-                    access next time
+                    Please print this QR code and <br /> bring it with you to access next time
                   </h5>
                 </div>
               </div>

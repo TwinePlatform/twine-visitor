@@ -13,6 +13,7 @@ const isAuthenticated = (req, res, next) => {
         req.auth.cb_email = payload.email;
         req.auth.cb_id = cb.id;
         req.auth.cb_name = cb.org_name;
+        req.auth.cb_logo = cb.uploadedfilecloudinaryurl;
         next();
       })
       .catch(err => {

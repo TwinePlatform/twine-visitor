@@ -6,13 +6,14 @@ const getCBLoginDetailsValid = require('../database/queries/getCBlogindetailsval
 const router = express.Router();
 
 router.post('/', (req, res, next) => {
+  console.log('I am req.auth: ', req.auth);
   const hashedPassword = hashCB(req.body.password);
   getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
     .then(exists => {
       if (!exists) throw new Error('Incorrect password');
     })
     .then(() => qrCodeMaker(req.body.hash))
-    .then(qr => res.send({ success: true, qr }))
+    .then(qr => res.send({ success: true, qr, cb_logo: req.auth.cb_logo }))
     .catch(err => {
       if (err.message !== 'Incorrect password') return next(err);
       res.send({

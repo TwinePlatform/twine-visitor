@@ -23,14 +23,19 @@ router.post('/', (req, res, next) => {
       details.formSex,
       details.formYear,
       details.formEmail,
-      hashString
+      hashString,
     )
       .then(() => {
-        sendQrCode(details.formEmail, details.formSender, hashString);
+        sendQrCode(
+          details.formEmail,
+          details.formSender,
+          hashString,
+          req.auth.cb_logo,
+        );
         return hashString;
       })
       .then(qrcodemaker)
-      .then(qr => res.send(qr))
+      .then(qr => res.send({ qr, cb_logo: req.auth.cb_logo }))
       .catch(next);
   });
 });

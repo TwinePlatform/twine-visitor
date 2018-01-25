@@ -54,10 +54,7 @@ export class AdminActivitiesPage extends Component {
   toggleDay = (day, id) => {
     const activity = findById(id, this.state.activities);
     const updatedActivity = { ...activity, [day]: !activity[day] };
-    const updatedActivities = updateActivity(
-      this.state.activities,
-      updatedActivity
-    );
+    const updatedActivities = updateActivity(this.state.activities, updatedActivity);
 
     this.setState({ activities: updatedActivities });
 
@@ -67,9 +64,7 @@ export class AdminActivitiesPage extends Component {
       body: JSON.stringify(updatedActivity),
     })
       .then(this.handleFetchError)
-      .catch(error =>
-        this.setErrorMessage(error, 'Error setting activity day')
-      );
+      .catch(error => this.setErrorMessage(error, 'Error setting activity day'));
   };
 
   handleRemove = (id, event) => {
@@ -132,16 +127,12 @@ export class AdminActivitiesPage extends Component {
   };
 
   render() {
-    const submitHandler = this.state.currentActivity
-      ? this.handleSubmit
-      : this.handleEmptySubmit;
+    const submitHandler = this.state.currentActivity ? this.handleSubmit : this.handleEmptySubmit;
     return (
       <div>
         <h2>Update Activities</h2>
         <div className="Activities">
-          {this.state.errorMessage && (
-            <span className="ErrorText">{this.state.errorMessage}</span>
-          )}
+          {this.state.errorMessage && <span className="ErrorText">{this.state.errorMessage}</span>}
           <ActivityForm
             handleInputChange={this.handleInputChange}
             currentActivity={this.state.currentActivity}

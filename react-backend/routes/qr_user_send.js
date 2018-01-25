@@ -14,7 +14,7 @@ router.post('/', (req, res, next) => {
       if (!exists) throw new Error('Incorrect password');
     })
     .then(() => qrCodeMaker(req.body.hash))
-    .then(generatePdf)
+    .then(QRcodeBase64Url => generatePdf(QRcodeBase64Url, req.auth.cb_logo))
     .then(pdf => sendEmail(req.body.email, req.body.name, pdf))
     .then(() => res.send({ success: true }))
     .catch(err => {

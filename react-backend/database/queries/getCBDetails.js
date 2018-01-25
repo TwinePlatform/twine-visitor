@@ -9,12 +9,7 @@ const getCBDetails = cbId =>
   new Promise((resolve, reject) => {
     dbConnection
       .query(getCBDetailsQuery, [cbId])
-      .then(res => {
-        // if (res.rowCount === 0) {
-        //   return reject('No user found');
-        // }
-        return resolve(res.rows);
-      })
+      .then(res => resolve(res.rows))
       .catch(reject);
   });
 
