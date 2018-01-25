@@ -361,7 +361,6 @@ export class AdminUsersPage extends Component {
   };
 
   render() {
-    return this.renderAuthenticated();
     return this.state.reauthenticated ? this.renderAuthenticated() : this.renderNotAuthenticated();
   }
 }

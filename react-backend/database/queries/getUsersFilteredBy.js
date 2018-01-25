@@ -3,6 +3,10 @@ const dbConnection = require('../dbConnection');
 const query = (filterBy, orderBy) => `
 SELECT users.id, users.fullName, users.sex, users.yearofbirth, users.email, users.date
 FROM users
+INNER JOIN visits
+ON visits.usersId = users.id
+INNER JOIN activities
+ON activities.id = visits.activitiesId
 WHERE users.cb_id = $1 ${filterBy} ${orderBy}`;
 
 const getValidatedFilters = filterArray => {
@@ -111,30 +115,47 @@ const getSortQuery = orderBy => {
   return '';
 };
 
-const today = new Date();
-const getYearOfBirth0_17 = today.getFullYear() - 17;
-const getYearOfBirth18_34 = today.getFullYear() - 34;
-const getYearOfBirth35_50 = today.getFullYear() - 50;
-const getYearOfBirth51_69 = today.getFullYear() - 69;
-const getYearOfBirth70_more = today.getFullYear() - 70;
-
-const visitorsByAge = filterBy => `WITH groupage AS (SELECT CASE
-  WHEN users.yearofbirth > ${getYearOfBirth0_17} THEN '0-17'
-  WHEN users.yearofbirth > ${getYearOfBirth18_34} AND users.yearofbirth <= ${getYearOfBirth0_17} THEN '18-34'
-  WHEN users.yearofbirth > ${getYearOfBirth35_50} AND users.yearofbirth <= ${getYearOfBirth18_34} THEN '35-50'
-  WHEN users.yearofbirth > ${getYearOfBirth51_69} AND users.yearofbirth <= ${getYearOfBirth35_50} THEN '51-69'
-  WHEN users.yearofbirth <= ${getYearOfBirth51_69} THEN '70+'
+const visitorsByAge = filterBy => `WITH filteredUsers AS
+(
+  SELECT users.yearofbirth
+  FROM users
+  INNER JOIN visits
+  ON visits.usersId = users.id
+  INNER JOIN activities
+  ON activities.id = visits.activitiesId
+  WHERE users.cb_id = $1 ${filterBy}
+),
+groupage AS (SELECT CASE
+  WHEN filteredUsers.yearofbirth > ${getDate(17)} THEN '0-17'
+  WHEN filteredUsers.yearofbirth > ${getDate(
+    34,
+  )} AND filteredUsers.yearofbirth <= ${getDate(17)} THEN '18-34'
+  WHEN filteredUsers.yearofbirth > ${getDate(
+    50,
+  )} AND filteredUsers.yearofbirth <= ${getDate(34)} THEN '35-50'
+  WHEN filteredUsers.yearofbirth > ${getDate(
+    69,
+  )} AND filteredUsers.yearofbirth <= ${getDate(50)} THEN '51-69'
+  WHEN filteredUsers.yearofbirth <= ${getDate(69)} THEN '70+'
   END AS ageGroups
-  FROM users WHERE cb_id = $1 ${filterBy})
+  FROM filteredUsers
+)
   SELECT COUNT(ageGroups) AS ageCount, ageGroups
   FROM groupage
   GROUP BY ageGroups`;
 
 const activitiesNumbersQuery = filterBy =>
-  `SELECT activities.name, COUNT(visits.usersId) FROM activities, visits, users WHERE activities.id = visits.activitiesId AND users.id = visits.usersId AND activities.cb_id = $1 ${filterBy} GROUP BY activities.name`;
+  `SELECT activities.name, COUNT(visits.usersId) FROM activities, visits, users WHERE activities.id = visits.activitiesId AND users.id = visits.usersId AND activities.cb_id = $1
+  ${filterBy} GROUP BY activities.name`;
 
 const genderNumbersQuery = filterBy =>
-  `SELECT users.sex, COUNT(users.sex) FROM users WHERE users.cb_id = $1 ${filterBy} GROUP BY users.sex`;
+  `SELECT users.sex, COUNT(users.sex) FROM users
+  INNER JOIN visits
+  ON visits.usersId = users.id
+  INNER JOIN activities
+  ON activities.id = visits.activitiesId
+  WHERE users.cb_id = $1
+  ${filterBy} GROUP BY users.sex`;
 
 const getUsersFilteredBy = (cb_id, { filterBy = [], orderBy = '' } = {}) =>
   new Promise((resolve, reject) => {
@@ -143,14 +164,30 @@ const getUsersFilteredBy = (cb_id, { filterBy = [], orderBy = '' } = {}) =>
     const combinedValues = [cb_id, ...values];
 
     const myQuery = query(filterQueries, getSortQuery(orderBy));
+    //     const myQuery = `SELECT users.id, users.fullName, users.sex, users.yearofbirth, users.email, users.date
+    // FROM users
+    // INNER JOIN visits
+    // ON visits.usersId = users.id
+    // INNER JOIN activities
+    // ON activities.id = visits.activitiesId
+    // WHERE users.cb_id = $1 AND (activities.name = $2)`;
     const getVisitorsByAge = visitorsByAge(filterQueries);
     const getActivitiesNumbers = activitiesNumbersQuery(filterQueries);
     const getGenderNumbers = genderNumbersQuery(filterQueries);
+    // console.log(myQuery, combinedValues);
+    // dbConnection
+    //   .query(myQuery, combinedValues)
+    //   .then(res => {
+    //     console.log(getVisitorsByAge);
+    //     return dbConnection.query(getVisitorsByAge, combinedValues);
+    //   })
+    //   .then(console.log)
+    //   .catch(reject);
     Promise.all([
-      dbConnection.query(myQuery, [cb_id]),
-      dbConnection.query(getVisitorsByAge, [cb_id]),
-      dbConnection.query(getActivitiesNumbers, [cb_id]),
-      dbConnection.query(getGenderNumbers, [cb_id]),
+      dbConnection.query(myQuery, combinedValues),
+      dbConnection.query(getVisitorsByAge, combinedValues),
+      dbConnection.query(getActivitiesNumbers, combinedValues),
+      dbConnection.query(getGenderNumbers, combinedValues),
     ])
       .then(
         ([
