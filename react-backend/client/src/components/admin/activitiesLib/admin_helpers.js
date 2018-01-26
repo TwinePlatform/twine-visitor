@@ -23,9 +23,9 @@ export const authenticatedPost = (url, body) =>
       .catch(reject);
   });
 
-export const adminPost = (url, body) =>
+export const adminPost = (that, url, body) =>
   new Promise((resolve, reject) => {
-    const adminToken = localStorage.getItem('adminToken');
+    const adminToken = that.props.auth;
 
     if (!adminToken) return reject(new Error('Not logged in'));
 
@@ -41,18 +41,22 @@ export const adminPost = (url, body) =>
       .then(res => res.json())
       .then((res) => {
         if (res.token) {
-          localStorage.setItem('adminToken', res.token);
-          return resolve(res);
+          return that.props.updateAdminToken(res.token).then(() => {
+            resolve(res);
+          });
         }
 
         throw new Error('No admin token');
       })
-      .catch(reject);
+      .catch((error) => {
+        that.props.updateAdminToken('');
+        reject(error);
+      });
   });
 
-export const adminGet = (url, body) =>
+export const adminGet = (that, url, body) =>
   new Promise((resolve, reject) => {
-    const adminToken = localStorage.getItem('adminToken');
+    const adminToken = that.props.auth;
 
     if (!adminToken) return reject(new Error('Not logged in'));
 
@@ -67,22 +71,24 @@ export const adminGet = (url, body) =>
       .then(res => res.json())
       .then((res) => {
         if (res.token) {
-          localStorage.setItem('adminToken', res.token);
-          return resolve(res);
+          return that.props.updateAdminToken(res.token).then(() => {
+            resolve(res);
+          });
         }
 
         throw new Error('No admin token');
       })
-      .catch(reject);
+      .catch((error) => {
+        that.props.updateAdminToken('');
+        reject(error);
+      });
   });
 
-export const checkAdmin = () =>
+export const checkAdmin = that =>
   new Promise((resolve, reject) => {
-    const adminToken = localStorage.getItem('adminToken');
+    const adminToken = that.props.auth;
 
-    if (!adminToken) {
-      throw new Error('No admin token');
-    }
+    if (!adminToken) return reject(new Error('No admin token'));
 
     fetch('/check-admin-token', {
       method: 'POST',
@@ -97,12 +103,14 @@ export const checkAdmin = () =>
         const { success, token, error } = res;
 
         if (success && token) {
-          localStorage.setItem('adminToken', token);
-          return resolve(true);
+          return that.props.updateAdminToken(token).then(resolve);
         }
-        const errorMessage = error || 'Unknown error';
 
+        const errorMessage = error || 'Unknown error';
         throw new Error(errorMessage);
       })
-      .catch(reject);
+      .catch((error) => {
+        that.props.updateAdminToken('');
+        reject(error);
+      });
   });
