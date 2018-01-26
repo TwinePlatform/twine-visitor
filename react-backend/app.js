@@ -52,6 +52,7 @@ app.use('/getUsername', isAuthenticated, visitorName);
 app.use('/user-details', isAuthenticated, userDetails);
 app.use('/users-all', isAuthenticated, usersAll);
 app.use('/all-users', isAuthenticated, visitorsAll);
+app.use('/all-users', adminIsAuthenticated, visitorsAll);
 app.use('/fetchNewUserDetails', isAuthenticated, userDetailsNew);
 app.use('/fetchUsersFilteredBy', isAuthenticated, usersFiltered);
 app.use('/fetchVisitsFilteredBy', adminIsAuthenticated, visitorsFiltered);

@@ -10,7 +10,6 @@ export class AdminVisitsPage extends Component {
     this.state = {
       auth: 'PENDING',
       users: [],
-      password: '',
       activities: [],
       filters: [],
       orderBy: '',
@@ -23,56 +22,25 @@ export class AdminVisitsPage extends Component {
   };
 
   componentDidMount() {
-    checkAdmin()
-      .then(() => this.setState({ auth: 'SUCCESS' }))
-      .then(() => {
-        adminGet('/activities')
-          .then(({ activities }) => activities.map(activity => activity.name))
-          .then(activities => this.setState({ activities }))
-          .catch(error => {
-            if (error.message === 'No admin token')
-              return this.props.history.push('/admin/login');
-
-            this.setErrorMessage(error, 'Error fetching activities');
-          });
-
-        adminPost('/all-users', { password: this.state.password })
-          .then(({ users }) => this.setState({ users }))
-          .catch(error => {
-            if (error.message === 'No admin token')
-              return this.props.history.push('/admin/login');
-
-            this.setErrorMessage(error, 'Error setting activity day');
-          });
+    Promise.all([adminGet(this, '/activities'), adminPost(this, '/all-users')])
+      .then(([{ activities }, { users }]) => {
+        const activityNames = activities.map(activity => activity.name);
+        this.setState({ auth: 'SUCCESS', activities: activityNames, users });
       })
-      .catch(error => {
-        const message =
-          {
-            500: '/internalServerError',
-            'No admin token': '/admin/login',
-          }[error.message] || '/admin/login';
-
-        this.props.history.push(message);
-      });
+      .catch(error =>
+        this.setErrorMessage(error, 'Error fetching activities and users')
+      );
   }
 
   updateResults = () => {
-    adminPost('/fetchVisitsFilteredBy', {
+    adminPost(this, '/fetchVisitsFilteredBy', {
       filterBy: this.state.filters,
       orderBy: this.state.orderBy,
     })
       .then(({ users }) => {
-        this.setState(users);
+        this.setState({ users });
       })
-      .catch(error => {
-        const message =
-          {
-            500: '/internalServerError',
-            'No admin token': '/admin/login',
-          }[error.message] || '/admin/login';
-
-        this.props.history.push(message);
-      });
+      .catch(error => false);
   };
 
   sort = e => {
