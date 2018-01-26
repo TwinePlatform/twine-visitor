@@ -12,7 +12,7 @@ const getAllUsers = cbId =>
     dbConnection
       .query(getAllUsersQuery, [cbId])
       .then(res => {
-        if (res.rowCount === 0) {
+        if (!res.rowCount) {
           return reject('No user found');
         }
         resolve(res.rows);

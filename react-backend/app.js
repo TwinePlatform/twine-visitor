@@ -54,7 +54,7 @@ app.use('/users-all', isAuthenticated, usersAll);
 app.use('/all-users', isAuthenticated, visitorsAll);
 app.use('/all-users', adminIsAuthenticated, visitorsAll);
 app.use('/fetchNewUserDetails', isAuthenticated, userDetailsNew);
-app.use('/fetchUsersFilteredBy', isAuthenticated, usersFiltered);
+app.use('/fetchUsersFilteredBy', adminIsAuthenticated, usersFiltered);
 app.use('/fetchVisitsFilteredBy', adminIsAuthenticated, visitorsFiltered);
 app.use('/isAdminAuthenticated', isAuthenticated, adminLogin);
 app.use('/check-admin-token', adminIsAuthenticated, adminCheck);
