@@ -58,7 +58,7 @@ app.use('/fetchVisitsFilteredBy', isAuthenticated, visitorsFiltered);
 app.use('/isAdminAuthenticated', isAuthenticated, adminLogin);
 app.use('/check-admin-token', adminIsAuthenticated, adminCheck);
 app.use('/checkUser', isAuthenticated, visitorCheck);
-app.use('/postActivity', adminIsAuthenticated, visitorActivity);
+app.use('/postActivity', isAuthenticated, visitorActivity);
 app.use('/activities', adminIsAuthenticated, activitiesAll);
 app.use('/activitiesForToday', isAuthenticated, activitiesToday);
 app.use('/addActivity', adminIsAuthenticated, activitiesAdd);
