@@ -8,14 +8,13 @@ export class AdminMenuPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: '',
       auth: 'PENDING',
       errorMessage: '',
     };
   }
 
   componentDidMount() {
-    checkAdmin()
+    checkAdmin(this)
       .then(() => this.setState({ auth: 'SUCCESS' }))
       .catch(error => {
         if (error.message === 500) {
