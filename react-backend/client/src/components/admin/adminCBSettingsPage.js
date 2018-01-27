@@ -9,9 +9,6 @@ export class AdminCBSettingsPage extends Component {
 
     this.state = {
       auth: 'PENDING',
-      reauthenticated: false,
-      failure: false,
-      password: '',
       org_name: '',
       genre: '',
       email: '',
@@ -43,7 +40,6 @@ export class AdminCBSettingsPage extends Component {
       genre: cb.genre,
       email: cb.email,
       signupDate: cb.date.replace(/T/g, ' ').slice(0, 19),
-      reauthenticated: true,
       errorMessage: '',
       auth: 'SUCCESS',
     });
@@ -77,13 +73,12 @@ export class AdminCBSettingsPage extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    const { org_name, genre, email, password } = this.state;
+    const { org_name, genre, email } = this.state;
 
     adminPost(this, '/fetchNewCBDetails', {
       org_name,
       genre,
       email,
-      password,
     })
       .then(res => res.details)
       .then(this.setCB)
