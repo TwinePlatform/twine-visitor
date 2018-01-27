@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
+import { checkAdmin, adminPost, adminGet } from './activitiesLib/admin_helpers';
 
 export class AdminCBSettingsPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      auth: 'PENDING',
       reauthenticated: false,
       failure: false,
       password: '',
@@ -15,8 +17,24 @@ export class AdminCBSettingsPage extends Component {
       genre: '',
       email: '',
       signupDate: '',
-      id: ''
+      id: '',
+      errorMessage: '',
     };
+  }
+
+  componentDidMount() {
+    adminPost(this, '/cb-details')
+      .then(res => res.details[0])
+      .then(this.setCB)
+      .catch(error => {
+        if (error.message === 500) {
+          this.props.history.push('/internalServerError');
+        } else if (error.message === 'No admin token') {
+          this.props.history.push('/admin/login');
+        } else {
+          this.props.history.push('/admin/login');
+        }
+      });
   }
 
   setCB = cb => {
@@ -25,31 +43,24 @@ export class AdminCBSettingsPage extends Component {
       org_name: cb.org_name,
       genre: cb.genre,
       email: cb.email,
-      signupDate: cb.date
-        .split('T')
-        .join(' ')
-        .slice(0, 19),
+      signupDate: cb.date.replace(/T/g, ' ').slice(0, 19),
       reauthenticated: true,
-      errorMessage: ''
+      errorMessage: '',
+      auth: 'SUCCESS',
     });
   };
 
   submitConfirmation = () => {
     this.setState({
-      successMessage: 'The account details have been successfully updated'
+      successMessage: 'The account details have been successfully updated',
     });
   };
-
-  headers = new Headers({
-    Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json'
-  });
 
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value,
       errorMessage: '',
-      successMessage: ''
+      successMessage: '',
     });
   };
 
@@ -57,87 +68,37 @@ export class AdminCBSettingsPage extends Component {
     this.setState({ genre: e.target.value, successMessage: '' });
   };
 
-  handleFetchError = res => {
-    if (res.status === 500) throw new Error();
-    return res;
-  };
-
-  setErrorMessage = (error, errorString) => {
-    // console.log(error) // Uncomment to display full errors in the console.
-    this.setState({ errorMessage: errorString });
-  };
-
   handleEmptySubmit = event => {
     event.preventDefault();
     this.setState({
-      errorMessage: 'Please do not leave empty input fields'
+      errorMessage: 'Please do not leave empty input fields',
     });
   };
 
   handleSubmit = event => {
     event.preventDefault();
-    fetch('/fetchNewCBDetails', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({
-        org_name: this.state.org_name,
-        genre: this.state.genre,
-        email: this.state.email,
-        password: this.state.password
-      })
+
+    const { org_name, genre, email, password } = this.state;
+
+    adminPost(this, '/fetchNewCBDetails', {
+      org_name,
+      genre,
+      email,
+      password,
     })
-      .then(this.handleFetchError)
-      .then(res => res.json())
       .then(res => res.details)
       .then(this.setCB)
       .then(this.submitConfirmation)
-      .catch(error => {
-        this.props.history.push('/internalServerError');
-      });
+      .catch(error => this.props.history.push('/internalServerError'));
   };
 
-  authenticate = event => {
-    event.preventDefault();
-
-    fetch('/cb-details', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({
-        password: this.state.password
-      })
-    })
-      .then(this.handleFetchError)
-      .then(res => res.json())
-      .then(res => {
-        if (res.success) {
-          return res.details;
-        } else if (res.error === 'Not logged in') {
-          throw new Error('Not logged in');
-        } else {
-          this.setState({ failure: true });
-          throw new Error('password');
-        }
-      })
-      .then(details => details[0])
-      .then(this.setCB)
-      .catch(error => {
-        if (!this.state.failure) {
-          this.props.history.push('/logincb');
-        } else if (error === '500') {
-          this.props.history.push('/internalServerError');
-        }
-      });
-  };
-
-  passwordError = <span>The password is incorrect. Please try again.</span>;
-
-  renderAuthenticated = () => {
+  render() {
     const submitHandler =
       this.state.org_name && this.state.genre && this.state.email
         ? this.handleSubmit
         : this.handleEmptySubmit;
 
-    return (
+    return this.state.auth === 'SUCCESS' ? (
       <div>
         <div>
           <h1>{this.state.org_name}s Details</h1>
@@ -243,8 +204,10 @@ export class AdminCBSettingsPage extends Component {
           </button>
         </form>
 
-        <Link to="/admin/users">
-          <button className="Button ButtonBack">Back to all users</button>
+        <Link to="/admin">
+          <button className="Button ButtonBack">
+            Back to the admin menu page
+          </button>
         </Link>
         <br />
         <Logoutbutton
@@ -253,38 +216,8 @@ export class AdminCBSettingsPage extends Component {
         />
         <br />
       </div>
+    ) : (
+      <div>Checking admin details</div>
     );
-  };
-
-  renderNotAuthenticated = () => {
-    return (
-      <div>
-        <div className="ErrorText">
-          {this.state.failure ? this.passwordError : ''}
-        </div>
-        <form className="Signup" onSubmit={this.authenticate}>
-          <label className="Form__Label">
-            Please, type your password
-            <input
-              className="Form__Input"
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleChange}
-            />
-          </label>
-          <Button />
-        </form>
-        <Link to="/pswdresetcb">
-          <button className="Button ButtonBack">Reset Password</button>
-        </Link>
-      </div>
-    );
-  };
-
-  render() {
-    return this.state.reauthenticated
-      ? this.renderAuthenticated()
-      : this.renderNotAuthenticated();
   }
 }
