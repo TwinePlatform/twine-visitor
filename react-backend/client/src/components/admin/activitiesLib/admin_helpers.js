@@ -1,5 +1,6 @@
 const handleFetchError = (res) => {
   if (res.status === 500) throw new Error(500);
+  if (res.status === 401) throw new Error(401);
   return res;
 };
 

@@ -3,7 +3,9 @@ const qrCodeMaker = require('../functions/qrcodemaker');
 
 router.post('/', (req, res, next) => {
   qrCodeMaker(req.body.hash)
-    .then(qr => res.send({ token: req.auth.adminToken, qr }))
+    .then(qr =>
+      res.send({ token: req.auth.adminToken, qr, cb_logo: req.auth.cb_logo })
+    )
     .catch(next);
 });
 

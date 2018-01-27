@@ -15,6 +15,7 @@ const isAuthenticated = (req, res, next) => {
         req.auth.cb_name = cb.org_name;
         req.auth.admin = false;
         req.auth.adminToken = null;
+        req.auth.cb_logo = cb.uploadedfilecloudinaryurl;
         next();
       })
       .catch(err => {

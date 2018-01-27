@@ -14,6 +14,7 @@ CREATE TABLE cbusiness
   org_name VARCHAR(100) NOT NULL,
   genre VARCHAR(100) NOT NULL,
   email VARCHAR(100) NOT NULL UNIQUE,
+  uploadedFileCloudinaryUrl VARCHAR(200),
   hash_pwd VARCHAR(64) NOT NULL,
   token VARCHAR(100),
   tokenExpire BIGINT,

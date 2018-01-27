@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { Logoutbutton } from '../visitors/logoutbutton';
 import { adminPost } from './activitiesLib/admin_helpers';
@@ -15,6 +16,8 @@ export class AdminCBSettingsPage extends Component {
       signupDate: '',
       id: '',
       errorMessage: '',
+      uploadedFileCloudinaryUrl: '',
+      cbLogo: '',
     };
   }
 
@@ -33,6 +36,56 @@ export class AdminCBSettingsPage extends Component {
       });
   }
 
+  clearUploadUrl = () => {
+    this.setState({
+      uploadedFileCloudinaryUrl: '',
+    });
+  };
+
+  setErrorMessage = (error, errorString) => {
+    // console.log(error) // Uncomment to display full errors in the console.
+    this.setState({ errorMessage: errorString });
+  };
+
+  onImageDrop(files) {
+    this.setState({
+      uploadedFile: files[0],
+      errorMessage: '',
+      successMessage: '',
+    });
+
+    this.handleImageUpload(files[0]);
+  }
+
+  handleImageUpload(file) {
+    const CLOUDINARY_UPLOAD_PRESET = 'cklrrn9k';
+    const CLOUDINARY_UPLOAD_URL =
+      'https://api.cloudinary.com/v1_1/dqzxe8mav/upload';
+    const cloudinaryForm = new FormData();
+    cloudinaryForm.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+    cloudinaryForm.append('file', file);
+
+    fetch(CLOUDINARY_UPLOAD_URL, {
+      method: 'POST',
+      body: cloudinaryForm,
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.secure_url) {
+          this.setState({
+            uploadedFileCloudinaryUrl: res.secure_url,
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        this.setErrorMessage(err, 'Failed to upload the logo');
+      });
+  }
+
   setCB = cb => {
     this.setState({
       id: cb.id,
@@ -41,6 +94,7 @@ export class AdminCBSettingsPage extends Component {
       email: cb.email,
       signupDate: cb.date.replace(/T/g, ' ').slice(0, 19),
       errorMessage: '',
+      cbLogo: cb.uploadedfilecloudinaryurl,
       auth: 'SUCCESS',
     });
   };
@@ -73,16 +127,18 @@ export class AdminCBSettingsPage extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    const { org_name, genre, email } = this.state;
+    const { org_name, genre, email, uploadedFileCloudinaryUrl } = this.state;
 
     adminPost(this, '/fetchNewCBDetails', {
       org_name,
       genre,
       email,
+      uploadedFileCloudinaryUrl,
     })
       .then(res => res.details)
       .then(this.setCB)
       .then(this.submitConfirmation)
+      .then(this.clearUploadUrl)
       .catch(error => this.props.history.push('/internalServerError'));
   };
 
@@ -98,6 +154,18 @@ export class AdminCBSettingsPage extends Component {
           <h1>{this.state.org_name}s Details</h1>
           <table>
             <tbody>
+              <tr>
+                <td>Business logo</td>
+                <td>
+                  {this.state.cbLogo && (
+                    <img
+                      className="CB__Logo"
+                      src={this.state.cbLogo}
+                      alt="This is your community business logo"
+                    />
+                  )}
+                </td>
+              </tr>
               <tr>
                 <td>Business Id</td>
                 <td>{this.state.id}</td>
@@ -128,7 +196,6 @@ export class AdminCBSettingsPage extends Component {
         {this.state.successMessage && (
           <span className="SuccessText">{this.state.successMessage}</span>
         )}
-
         <form>
           <label className="Form__Label">
             Edit Business Name
@@ -193,11 +260,29 @@ export class AdminCBSettingsPage extends Component {
               value={this.state.email}
             />
           </label>
-          <button className="Button" onClick={submitHandler}>
-            Submit
-          </button>
         </form>
-
+        <div className="Dropzone">
+          <Dropzone
+            className={this.state.uploadedFileCloudinaryUrl ? 'hidden' : ''}
+            multiple={false}
+            accept="image/*"
+            onDrop={this.onImageDrop.bind(this)}
+          >
+            <p>Drop a logo or click to select a file to upload.</p>
+          </Dropzone>
+          {this.state.uploadedFileCloudinaryUrl && (
+            <React.Fragment>
+              <button onClick={this.clearUploadUrl}>X</button>
+              <img
+                src={this.state.uploadedFileCloudinaryUrl}
+                alt="This is the uploaded logo"
+              />
+            </React.Fragment>
+          )}
+        </div>
+        <button className="Button" onClick={submitHandler}>
+          Submit
+        </button>
         <Link to="/admin">
           <button className="Button ButtonBack">
             Back to the admin menu page

@@ -20,6 +20,7 @@ export class AdminUserDetailsPage extends Component {
       hash: '',
       url: '',
       errorMessage: '',
+      cb_logo: '',
     };
   }
 
@@ -50,10 +51,7 @@ export class AdminUserDetailsPage extends Component {
       sex,
       yearOfBirth: yearofbirth,
       email: email,
-      signupDate: date
-        .split('T')
-        .join(' ')
-        .slice(0, 19),
+      signupDate: date.replace(/T/g, ' ').slice(0, 19),
       hash,
       errorMessage: '',
     });
@@ -102,14 +100,9 @@ export class AdminUserDetailsPage extends Component {
       hash: this.state.hash,
     })
       .then(res => {
-        if (res.qr) return res.qr;
+        if (res.qr) return this.setState({ url: res.qr });
         throw new Error('Unknown error generating QR');
       })
-      .then(qr =>
-        this.setState({
-          url: qr,
-        })
-      )
       .catch(error => {
         console.log('Error', error);
         this.props.history.push('/internalServerError');
@@ -128,7 +121,6 @@ export class AdminUserDetailsPage extends Component {
             successMessage: 'The email has been successfully resent',
           });
         }
-
         throw new Error('Error sending email');
       })
       .catch(error => this.props.history.push('/internalServerError'));
@@ -264,7 +256,15 @@ export class AdminUserDetailsPage extends Component {
         </div>
         <div className="visible-printer qr-code-to-print">
           <div className="dashed">
-            <img height="182" src={qrcodelogo} alt="Power to change Logo" />
+            {this.state.cb_logo ? (
+              <img
+                height="182"
+                src={this.state.cb_logo}
+                alt="Community business logo"
+              />
+            ) : (
+              <img height="182" src={qrcodelogo} alt="Power to change Logo" />
+            )}
             <img
               className="QR__image"
               src={this.state.url}
