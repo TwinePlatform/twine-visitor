@@ -45,9 +45,9 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use('/fetchNewCBDetails', isAuthenticated, cbDetailsNew);
 app.use('/cb-details', isAuthenticated, cbDetails);
-app.use('/qr-send', isAuthenticated, qrSend);
+app.use('/qr-send', adminIsAuthenticated, qrSend);
 app.use('/qrgenerator', isAuthenticated, qrGenerator);
-app.use('/qr-user-gen', isAuthenticated, qrUserGen);
+app.use('/qr-user-gen', adminIsAuthenticated, qrUserGen);
 app.use('/getUsername', isAuthenticated, visitorName);
 app.use('/user-details', adminIsAuthenticated, userDetails);
 app.use('/users-all', adminIsAuthenticated, usersAll);
