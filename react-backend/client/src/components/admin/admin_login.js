@@ -26,14 +26,12 @@ export class AdminLogin extends Component {
         const { success, token, error } = response;
 
         if (success && token) {
-          localStorage.setItem('adminToken', token);
-          this.props.history.push('/admin');
-        } else if (error) {
-          throw new Error(error);
-        } else {
-          throw new Error('Incorrect password');
+          return this.props.updateAdminToken(token);
         }
+
+        throw new Error(error || 'Incorrect password');
       })
+      .then(() => this.props.history.push('/admin'))
       .catch(error => {
         if (error.message === 'Incorrect password') {
           this.setState({
@@ -42,6 +40,7 @@ export class AdminLogin extends Component {
         } else if (error.message === 'Not logged in') {
           this.props.history.push('/logincb');
         } else {
+          console.log(error);
           this.props.history.push('/internalServerError');
         }
       });
