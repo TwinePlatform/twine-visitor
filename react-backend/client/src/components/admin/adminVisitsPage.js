@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
 import { adminPost, adminGet, checkAdmin } from './activitiesLib/admin_helpers';
+import { DropdownSelect, CheckboxGroup } from './filter_components/UserInputs';
 
 export class AdminVisitsPage extends Component {
   constructor(props) {
@@ -72,107 +73,38 @@ export class AdminVisitsPage extends Component {
     return this.state.auth === 'SUCCESS' ? (
       <div>
         <h1>Visitor Data</h1>
-        <form>
-          <label className="Form__Label">
-            Sort by
-            <br />
-            <select onChange={this.sort}>
-              <option defaultValue value="date">
-                Sort by
-              </option>
-              <option value="yearofbirth">Year of Birth </option>
-              <option value="sex">Gender </option>
-              <option value="activity">Activity </option>
-              <option value="date">Date of visit </option>{' '}
-            </select>
-          </label>
-          <label className="Form__Label">
-            Filter by Gender
-            <br />
-            <label>
-              <input
-                type="checkbox"
-                value="male"
-                onChange={this.filter('gender')}
-              />
-              Male
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="female"
-                onChange={this.filter('gender')}
-              />
-              Female
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="prefer_not_to_say"
-                onChange={this.filter('gender')}
-              />
-              Prefer not to say
-            </label>
-          </label>
-          <label className="Form__Label">
-            Filter by age
-            <br />
-            <label>
-              <input
-                type="checkbox"
-                value="0-17"
-                onChange={this.filter('age')}
-              />
-              0-17
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="18-34"
-                onChange={this.filter('age')}
-              />
-              18-34
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="35-50"
-                onChange={this.filter('age')}
-              />
-              35-50
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="51-69"
-                onChange={this.filter('age')}
-              />
-              51-69
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="70-more"
-                onChange={this.filter('age')}
-              />
-              70-more
-            </label>
-          </label>
-          <label className="Form__Label">
-            Filter by Activity
-            <br />
-            {this.state.activities.map(activity => (
-              <label key={activity}>
-                <input
-                  type="checkbox"
-                  value={activity}
-                  onChange={this.filter('activity')}
-                />
-                {activity}
-              </label>
-            ))}
-          </label>
-        </form>
+
+        <DropdownSelect
+          sort={this.sort}
+          default={{ date: 'Sort by' }}
+          label="Sort by"
+          values={{
+            name: 'Name',
+            yearofbirth: 'Year of Birth',
+            sex: 'Gender',
+            date: 'Date of Signup',
+          }}
+        />
+        <CheckboxGroup
+          title="Filter by Gender"
+          values={{
+            male: 'Male',
+            female: 'Female',
+            prefer_not_to_say: 'Prefer not to say',
+          }}
+          change={this.filter('gender')}
+        />
+        <CheckboxGroup
+          title="Filter by Age"
+          values={{
+            '0-17': '0-17',
+            '18-34': '18-34',
+            '35-50': '35-50',
+            '51-69': '51-69',
+            '70-more': '70-more',
+          }}
+          change={this.filter('age')}
+        />
 
         <table>
           <thead>
