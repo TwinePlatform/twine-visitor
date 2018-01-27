@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
 import { checkAdmin } from './activitiesLib/admin_helpers';
 

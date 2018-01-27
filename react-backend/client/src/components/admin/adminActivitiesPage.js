@@ -9,7 +9,7 @@ import {
   updateActivity,
   updateId,
 } from './activitiesLib/activityHelpers';
-import { adminPost, adminGet, checkAdmin } from './activitiesLib/admin_helpers';
+import { adminPost, adminGet } from './activitiesLib/admin_helpers';
 
 export class AdminActivitiesPage extends Component {
   constructor() {

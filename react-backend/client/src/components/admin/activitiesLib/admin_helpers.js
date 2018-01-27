@@ -1,4 +1,4 @@
-export const handleFetchError = (res) => {
+const handleFetchError = (res) => {
   if (res.status === 500) throw new Error(500);
   return res;
 };

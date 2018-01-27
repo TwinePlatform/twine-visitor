@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../visitors/button';
-import { Logoutbutton } from '../visitors/logoutbutton';
-import { handleFetchError } from './activitiesLib/activityHelpers';
 import { authenticatedPost } from './activitiesLib/admin_helpers';
 
 export class AdminLogin extends Component {

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
-import { adminPost, adminGet, checkAdmin } from './activitiesLib/admin_helpers';
+import { adminPost, adminGet } from './activitiesLib/admin_helpers';
 import { DropdownSelect, CheckboxGroup } from './filter_components/UserInputs';
 
 export class AdminVisitsPage extends Component {

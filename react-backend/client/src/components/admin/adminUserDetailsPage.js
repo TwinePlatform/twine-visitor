@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
 import qrcodelogo from '../../qrcodelogo.png';
-import { checkAdmin, adminPost, adminGet } from './activitiesLib/admin_helpers';
+import { adminPost } from './activitiesLib/admin_helpers';
 
 export class AdminUserDetailsPage extends Component {
   constructor(props) {
