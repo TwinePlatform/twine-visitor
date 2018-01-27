@@ -43,8 +43,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.use('/fetchNewCBDetails', isAuthenticated, cbDetailsNew);
-app.use('/cb-details', isAuthenticated, cbDetails);
+app.use('/fetchNewCBDetails', adminIsAuthenticated, cbDetailsNew);
+app.use('/cb-details', adminIsAuthenticated, cbDetails);
 app.use('/qr-send', adminIsAuthenticated, qrSend);
 app.use('/qrgenerator', isAuthenticated, qrGenerator);
 app.use('/qr-user-gen', adminIsAuthenticated, qrUserGen);
