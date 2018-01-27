@@ -15,6 +15,7 @@ export class AdminActivitiesPage extends Component {
   constructor() {
     super();
     this.state = {
+      auth: 'PENDING',
       activities: [],
       currentActivity: '',
     };
@@ -25,27 +26,14 @@ export class AdminActivitiesPage extends Component {
     this.setState({ activities: newActivities });
   };
 
-  handleFetchError = res => {
-    if (res.status === 500) throw new Error();
-    return res;
-  };
-
   setErrorMessage = (error, errorString) => {
     // console.log(error) // Uncomment to display full errors in the console.
     this.setState({ errorMessage: errorString });
   };
 
   componentDidMount() {
-    checkAdmin()
-      .then(() => this.setState({ auth: 'SUCCESS' }))
-      .then(() =>
-        adminGet('/activities')
-          .then(({ activities }) => this.setState({ activities }))
-          .catch(error => {
-            console.log(error);
-            this.setErrorMessage(error, 'Error fetching activities');
-          })
-      )
+    adminGet(this, '/activities')
+      .then(({ activities }) => this.setState({ activities, auth: 'SUCCESS' }))
       .catch(error => {
         if (error.message === 500) {
           this.props.history.push('/internalServerError');
@@ -67,14 +55,9 @@ export class AdminActivitiesPage extends Component {
 
     this.setState({ activities: updatedActivities });
 
-    adminPost('/updateActivityDay', updatedActivity)
+    adminPost(this, '/updateActivityDay', updatedActivity)
       .then(res => res)
-      .catch(error => {
-        if (error.message === 'No admin token')
-          return this.props.history.push('/admin/login');
-
-        this.setErrorMessage(error, 'Error setting activity day');
-      });
+      .catch(error => this.setErrorMessage(error, 'Error setting day'));
   };
 
   handleRemove = (id, event) => {
@@ -82,14 +65,9 @@ export class AdminActivitiesPage extends Component {
     const updatedActivities = removeActivity(this.state.activities, id);
     this.setState({ activities: updatedActivities });
 
-    adminPost('/removeActivity', { id })
+    adminPost(this, '/removeActivity', { id })
       .then(res => res)
-      .catch(error => {
-        if (error.message === 'No admin token')
-          return this.props.history.push('/admin/login');
-
-        this.setErrorMessage(error, 'Error removing activity');
-      });
+      .catch(error => this.setErrorMessage(error, 'Error removing activity'));
   };
 
   handleSubmit = event => {
@@ -113,7 +91,7 @@ export class AdminActivitiesPage extends Component {
       errorMessage: '',
     });
 
-    adminPost('/addActivity', { name: newActivity.name })
+    adminPost(this, '/addActivity', { name: newActivity.name })
       .then(this.handleActivityFromDb(newActivity))
       .catch(error => {
         if (error.message === 'No admin token')
