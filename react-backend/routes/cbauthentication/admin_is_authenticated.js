@@ -7,8 +7,7 @@ const adminIsAuthenticated = (req, res, next) => {
     process.env.ADMIN_SECRET,
     (err, payload) => {
       if (err) {
-        console.log(err);
-        return next('notauthorized');
+        return res.status(401).send({ error: 'Token expired' });
       }
       getCBFromEmail(payload.email)
         .then(cb => {
@@ -28,7 +27,7 @@ const adminIsAuthenticated = (req, res, next) => {
         })
         .catch(err => {
           console.log(err);
-          return next('notauthorized');
+          return res.status(401).send({ error: 'Not logged in' });
         });
     }
   );
