@@ -1,11 +1,9 @@
-const express = require('express');
-const getAllUsers = require('../database/queries/getAllUsers');
-
-const router = express.Router();
+const router = require('express').Router();
+const visitorsAll = require('../database/queries/visitors_all');
 
 router.post('/', (req, res, next) => {
-  getAllUsers(req.auth.cb_id)
-    .then(users => res.send({ users, token: req.auth.adminToken }))
+  visitorsAll(req.auth.cb_id)
+    .then(users => res.send({ users }))
     .catch(next);
 });
 

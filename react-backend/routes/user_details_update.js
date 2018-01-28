@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const putNewUserDetails = require('../database/queries/putNewUserDetails');
+const userUpdate = require('../database/queries/user_details_update');
 
 router.post('/', (req, res, next) => {
-  putNewUserDetails(
+  userUpdate(
     req.auth.cb_id,
     req.body.userId,
     req.body.userFullName,
@@ -10,7 +10,7 @@ router.post('/', (req, res, next) => {
     req.body.yearOfBirth,
     req.body.email
   )
-    .then(details => res.send({ token: req.auth.adminToken, details }))
+    .then(details => res.send({ details }))
     .catch(next);
 });
 

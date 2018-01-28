@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const getUserList = require('../database/queries/listAllUsers');
+const usersAll = require('../database/queries/users_all');
 
 router.get('/', (req, res, next) => {
-  getUserList(req.auth.cb_id)
-    .then(users => res.send({ token: req.auth.adminToken, users }))
+  usersAll(req.auth.cb_id)
+    .then(users => res.send({ users }))
     .catch(err => next(err));
 });
 
