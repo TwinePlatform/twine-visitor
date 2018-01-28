@@ -23,6 +23,7 @@ const adminIsAuthenticated = (req, res, next) => {
           req.auth.cb_name = cb.org_name;
           req.auth.admin = true;
           req.auth.adminToken = token;
+          res.set('Authorization', token);
           next();
         })
         .catch(err => {
