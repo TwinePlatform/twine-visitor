@@ -22,7 +22,7 @@ export class AdminCBSettingsPage extends Component {
   }
 
   componentDidMount() {
-    adminPost(this, '/cb-details')
+    adminPost(this, '/cb/details')
       .then(res => res.details[0])
       .then(this.setCB)
       .catch(error => {
@@ -129,7 +129,7 @@ export class AdminCBSettingsPage extends Component {
 
     const { org_name, genre, email, uploadedFileCloudinaryUrl } = this.state;
 
-    adminPost(this, '/fetchNewCBDetails', {
+    adminPost(this, '/cb/details/update', {
       org_name,
       genre,
       email,

@@ -22,7 +22,10 @@ export class AdminVisitsPage extends Component {
   };
 
   componentDidMount() {
-    Promise.all([adminGet(this, '/activities'), adminPost(this, '/all-users')])
+    Promise.all([
+      adminGet(this, '/activities/all'),
+      adminPost(this, '/visitors/all'),
+    ])
       .then(([{ activities }, { users }]) => {
         const activityNames = activities.map(activity => activity.name);
         this.setState({ auth: 'SUCCESS', activities: activityNames, users });
@@ -33,7 +36,7 @@ export class AdminVisitsPage extends Component {
   }
 
   updateResults = () => {
-    adminPost(this, '/fetchVisitsFilteredBy', {
+    adminPost(this, '/visitors/filtered', {
       filterBy: this.state.filters,
       orderBy: this.state.orderBy,
     })

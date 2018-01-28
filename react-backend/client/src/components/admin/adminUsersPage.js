@@ -17,7 +17,7 @@ export class AdminUsersPage extends Component {
   }
 
   componentDidMount() {
-    adminGet(this, '/users-all')
+    adminGet(this, '/users/all')
       .then(({ users }) => this.setState({ auth: 'SUCCESS', users }))
       .catch(error => false);
   }
@@ -25,7 +25,7 @@ export class AdminUsersPage extends Component {
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   updateResults = () =>
-    adminPost(this, '/fetchUsersFilteredBy', {
+    adminPost(this, '/users/filtered', {
       filterBy: this.state.filters,
       orderBy: this.state.orderBy,
     })
