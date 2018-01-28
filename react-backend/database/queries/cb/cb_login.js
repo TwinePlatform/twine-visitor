@@ -1,4 +1,4 @@
-const dbConnection = require('../dbConnection');
+const dbConnection = require('../../dbConnection');
 
 const checkCBlogindetails = `
   SELECT EXISTS(
@@ -6,7 +6,7 @@ const checkCBlogindetails = `
     WHERE email = $1 AND hash_pwd = $2
   )`;
 
-const getCBlogindetailsvalid = (email, hashedPwd) =>
+const cbLogin = (email, hashedPwd) =>
   new Promise((resolve, reject) => {
     if (!email || !hashedPwd)
       return reject(new Error('Incorrect query arguments'));
@@ -17,4 +17,4 @@ const getCBlogindetailsvalid = (email, hashedPwd) =>
       .catch(reject);
   });
 
-module.exports = getCBlogindetailsvalid;
+module.exports = cbLogin;

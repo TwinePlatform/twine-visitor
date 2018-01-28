@@ -1,4 +1,4 @@
-const dbConnection = require('../dbConnection');
+const dbConnection = require('../../dbConnection');
 
 const checkCB = 'SELECT EXISTS(SELECT 1 FROM cbusiness WHERE email = $1)';
 

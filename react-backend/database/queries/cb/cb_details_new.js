@@ -1,4 +1,4 @@
-const dbConnection = require('../dbConnection');
+const dbConnection = require('../../dbConnection');
 
 const putNewCBDetailsQuery = image =>
   `UPDATE cbusiness
@@ -9,13 +9,13 @@ const putNewCBDetailsQuery = image =>
 
 const putNewCBDetails = (
   id,
-  org_name,
+  orgName,
   genre,
   email,
   uploadedFileCloudinaryUrl
 ) =>
   new Promise((resolve, reject) => {
-    const values = [id, org_name, genre, email];
+    const values = [id, orgName, genre, email];
     const combinedValues = uploadedFileCloudinaryUrl
       ? [...values, uploadedFileCloudinaryUrl]
       : values;
