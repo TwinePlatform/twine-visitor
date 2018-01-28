@@ -33,7 +33,7 @@ class CBlogin extends Component {
       formPswd: this.state.password,
     };
 
-    fetch('/checkCBlogin', {
+    fetch('/cb/login', {
       method: 'POST',
       body: JSON.stringify(checkData),
     })

@@ -64,11 +64,12 @@ app.use('/activitiesForToday', isAuthenticated, activitiesToday);
 app.use('/addActivity', adminIsAuthenticated, activitiesAdd);
 app.use('/updateActivityDay', adminIsAuthenticated, activitiesUpdate);
 app.use('/removeActivity', adminIsAuthenticated, activitiesDelete);
-app.use('/checkCB', cbRegisterCheck);
-app.use('/registerCB', cbRegister);
-app.use('/checkCBlogin', cbLogin);
-app.use('/checkPassword', cbPasswordChange);
-app.use('/CBPasswordResetInstigator', cbPasswordReset);
+// Open routes
+app.use('/cb/register', cbRegister);
+app.use('/cb/register/check', cbRegisterCheck);
+app.use('/cb/login', cbLogin);
+app.use('/cb/pwd/change', cbPasswordChange);
+app.use('/cb/pwd/reset', cbPasswordReset);
 
 app.get('/*', express.static(path.join(__dirname, 'client/build/index.html')));
 
