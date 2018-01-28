@@ -43,20 +43,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.use('/fetchNewCBDetails', adminIsAuthenticated, cbDetailsNew);
-app.use('/cb-details', adminIsAuthenticated, cbDetails);
-app.use('/qr-send', adminIsAuthenticated, qrSend);
-app.use('/qr-user-gen', adminIsAuthenticated, qrUserGen);
-app.use('/user-details', adminIsAuthenticated, userDetails);
-app.use('/users-all', adminIsAuthenticated, usersAll);
-app.use('/all-users', adminIsAuthenticated, visitorsAll);
-app.use('/fetchUsersFilteredBy', adminIsAuthenticated, usersFiltered);
-app.use('/fetchVisitsFilteredBy', adminIsAuthenticated, visitorsFiltered);
-app.use('/check-admin-token', adminIsAuthenticated, adminCheck);
-app.use('/activities', adminIsAuthenticated, activitiesAll);
-app.use('/addActivity', adminIsAuthenticated, activitiesAdd);
-app.use('/updateActivityDay', adminIsAuthenticated, activitiesUpdate);
-app.use('/removeActivity', adminIsAuthenticated, activitiesDelete);
 // Open routes
 app.use('/cb/register', cbRegister);
 app.use('/cb/register/check', cbRegisterCheck);
@@ -71,6 +57,23 @@ app.use('/visit/check', mwIsAuthenticated, visitorCheck);
 app.use('/visit/add', mwIsAuthenticated, visitInsert);
 app.use('/activities/today', mwIsAuthenticated, activitiesToday);
 app.use('/admin/login', mwIsAuthenticated, adminLogin);
+
+// Admin routes
+app.use('/user/qr/email', mwAdminIsAuthenticated, qrSend);
+app.use('/user/qr', mwAdminIsAuthenticated, qrUserGen);
+app.use('/cb/details', mwAdminIsAuthenticated, cbDetails);
+app.use('/cb/details/update', mwAdminIsAuthenticated, cbDetailsNew);
+app.use('/user/details', mwAdminIsAuthenticated, userDetails);
+app.use('/user/details/update', mwAdminIsAuthenticated, userDetailsNew);
+app.use('/users/all', mwAdminIsAuthenticated, usersAll);
+app.use('/users/filtered', mwAdminIsAuthenticated, usersFiltered);
+app.use('/visitors/all', mwAdminIsAuthenticated, visitorsAll);
+app.use('/visitors/filtered', mwAdminIsAuthenticated, visitorsFiltered);
+app.use('/admin/check', mwAdminIsAuthenticated, adminCheck);
+app.use('/activities/all', mwAdminIsAuthenticated, activitiesAll);
+app.use('/activity/add', mwAdminIsAuthenticated, activitiesAdd);
+app.use('/activity/update', mwAdminIsAuthenticated, activitiesUpdate);
+app.use('/activity/delete', mwAdminIsAuthenticated, activitiesDelete);
 
 app.get('/*', express.static(path.join(__dirname, 'client/build/index.html')));
 
