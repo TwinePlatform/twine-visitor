@@ -14,34 +14,33 @@ export class AdminLogin extends Component {
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
-  authenticate = e => {
+  authenticate = async e => {
     e.preventDefault();
 
-    authenticatedPost('/isAdminAuthenticated', {
-      password: this.state.password,
-    })
-      .then(response => {
-        const { success, token, error } = response;
-
-        if (success && token) {
-          return this.props.updateAdminToken(token);
+    try {
+      const { success, token, error } = await authenticatedPost(
+        '/isAdminAuthenticated',
+        {
+          password: this.state.password,
         }
+      );
 
+      if (!success || !token || error) {
         throw new Error(error || 'Incorrect password');
-      })
-      .then(() => this.props.history.push('/admin'))
-      .catch(error => {
-        if (error.message === 'Incorrect password') {
-          this.setState({
-            errorMessage: 'The password is incorrect. Please try again.',
-          });
-        } else if (error.message === 'Not logged in') {
-          this.props.history.push('/logincb');
-        } else {
-          console.log(error);
-          this.props.history.push('/internalServerError');
-        }
-      });
+      }
+
+      await this.props.updateAdminToken(token);
+
+      this.props.history.push('/admin');
+    } catch (error) {
+      if (error.message === 'Incorrect password') {
+        return this.setState({
+          errorMessage: 'Incorrect password. Please try again.',
+        });
+      }
+
+      console.log(error);
+    }
   };
 
   render() {
