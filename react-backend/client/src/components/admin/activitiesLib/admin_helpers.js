@@ -82,5 +82,4 @@ const adminFetch = method => async (that, url, body) => {
 export const adminPost = adminFetch('POST');
 export const adminGet = adminFetch('GET');
 
-export const checkAdmin = that =>
-  adminFetch('POST')(that, '/check-admin-token');
+export const checkAdmin = that => adminFetch('POST')(that, '/admin/check');
