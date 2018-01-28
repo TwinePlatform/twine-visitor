@@ -31,8 +31,8 @@ const cbRegister = require('./routes/cbauthentication/cb_register');
 const cbLogin = require('./routes/cbauthentication/cb_login');
 const cbPasswordChange = require('./routes/cbauthentication/cb_password_change');
 const cbPasswordReset = require('./routes/cbauthentication/cb_password_reset');
-const isAuthenticated = require('./routes/cbauthentication/isAuthenticated');
-const adminIsAuthenticated = require('./routes/cbauthentication/admin_is_authenticated');
+const mwIsAuthenticated = require('./routes/cbauthentication/mw_is_authenticated');
+const mwAdminIsAuthenticated = require('./routes/cbauthentication/mw_admin_is_authenticated');
 
 const app = express();
 

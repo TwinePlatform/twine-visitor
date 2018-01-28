@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const getCBFromEmail = require('../../database/queries/CBqueries/getCBFromEmail');
+const getCBFromEmail = require('../../database/queries/cb/cb_from_email');
 
 const adminIsAuthenticated = (req, res, next) => {
   jwt.verify(
@@ -22,7 +22,6 @@ const adminIsAuthenticated = (req, res, next) => {
           req.auth.cb_id = cb.id;
           req.auth.cb_name = cb.org_name;
           req.auth.admin = true;
-          req.auth.adminToken = token;
           res.set('Authorization', token);
           next();
         })
