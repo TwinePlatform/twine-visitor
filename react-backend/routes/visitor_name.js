@@ -1,14 +1,11 @@
-const express = require('express');
+const router = require('express').Router();
 const validator = require('validator');
-
-const router = express.Router();
-
-const getHash = require('../database/queries/getHash');
+const getHash = require('../database/queries/user_check_hash');
 
 router.post('/', (req, res, next) => {
   const hashToCheck = req.body.user;
 
-  if (!validator.isHash(req.body.user, ['sha256'])) {
+  if (!validator.isHash(hashToCheck, ['sha256'])) {
     return res.send({ fullname: 'Bad hash', hash: '0' });
   }
 
