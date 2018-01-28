@@ -100,7 +100,11 @@ export class AdminUserDetailsPage extends Component {
       hash: this.state.hash,
     })
       .then(res => {
-        if (res.qr) return this.setState({ url: res.qr });
+        if (res.qr)
+          return this.setState({
+            url: res.qr,
+            cb_logo: res.cb_logo,
+          });
         throw new Error('Unknown error generating QR');
       })
       .catch(error => {

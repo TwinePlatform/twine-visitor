@@ -22,6 +22,7 @@ const adminIsAuthenticated = (req, res, next) => {
           req.auth.cb_id = cb.id;
           req.auth.cb_name = cb.org_name;
           req.auth.admin = true;
+          req.auth.cb_logo = cb.uploadedfilecloudinaryurl;
           res.set('Authorization', token);
           next();
         })
