@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const hashCB = require('../functions/cbhash');
-const getCBLoginDetailsValid = require('../database/queries/getCBlogindetailsvalid');
+const cbLogin = require('../database/queries/cb/cb_login');
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ router.post('/', (req, res, next) => {
   const { password } = req.body;
   const hashedPassword = hashCB(password);
 
-  getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
+  cbLogin(req.auth.cb_email, hashedPassword)
     .then(exists => {
       if (exists) {
         const token = jwt.sign(

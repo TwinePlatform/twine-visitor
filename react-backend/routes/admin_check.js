@@ -1,9 +1,5 @@
-const express = require('express');
+const router = require('express').Router();
 
-const router = express.Router();
-
-router.post('/', (req, res) =>
-  res.send({ success: true, token: req.auth.adminToken })
-);
+router.post('/', (req, res) => res.send({ success: true }));
 
 module.exports = router;
