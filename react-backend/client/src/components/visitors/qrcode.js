@@ -9,7 +9,7 @@ function getUserFromQRScan(content) {
     Authorization: localStorage.getItem('token'),
     'Content-Type': 'application/json',
   });
-  return fetch('/getUsername', {
+  return fetch('/user/name-from-scan', {
     method: 'POST',
     headers,
     body: JSON.stringify({ user: content }),
@@ -83,6 +83,11 @@ export class QRCode extends Component {
     Authorization: localStorage.getItem('token'),
   });
 
+  headersPost = new Headers({
+    Authorization: localStorage.getItem('token'),
+    'Content-Type': 'application/json',
+  });
+
   changeActivity = newActivity => {
     this.setState({
       activity: newActivity,
@@ -93,9 +98,9 @@ export class QRCode extends Component {
       activity: newActivity,
     };
 
-    return fetch('/postActivity', {
+    return fetch('/visit/add', {
       method: 'POST',
-      headers: this.headers,
+      headers: this.headersPost,
       body: JSON.stringify(visitInfo),
     })
       .then(res => {
@@ -129,7 +134,7 @@ export class QRCode extends Component {
         });
     }
 
-    fetch('/activitiesForToday', {
+    fetch('/activities/today', {
       method: 'GET',
       headers: this.headers,
     })
