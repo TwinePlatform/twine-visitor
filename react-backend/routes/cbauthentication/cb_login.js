@@ -1,45 +1,29 @@
+const router = require('express').Router();
 const validator = require('validator');
-
-const express = require('express');
 const jwt = require('jsonwebtoken');
-
 const hashCB = require('../../functions/cbhash');
-
-const router = express.Router();
-const getCBlogindetailsvalid = require('../../database/queries/getCBlogindetailsvalid');
+const cbLogin = require('../../database/queries/cb/cb_login');
 const { checkHasLength } = require('../../functions/helpers');
 
 router.post('/', (req, res, next) => {
-  let body = '';
-  req.on('data', chunk => {
-    body += chunk;
-  });
+  const { formEmail, formPswd } = req.body;
+  const notEmail = (!validator.isEmail(formEmail) && 'noinput') || '';
+  const noInput = (!checkHasLength([formEmail, formPswd]) && 'email') || '';
 
-  req.on('end', () => {
-    const data = JSON.parse(body);
-    const isEmail = validator.isEmail(data.formEmail);
-    const hasInput = checkHasLength([data.formEmail, data.formPswd]);
+  const validationError = noInput || notEmail;
 
-    if (isEmail && hasInput) {
-      const passwordHash = hashCB(data.formPswd);
+  if (validationError) return res.send(validationError);
 
-      getCBlogindetailsvalid(data.formEmail, passwordHash)
-        .then(exists => {
-          const token = jwt.sign({ email: data.formEmail }, process.env.SECRET);
-          const loggedIn = exists
-            ? { success: true, token }
-            : { success: false };
+  const passwordHash = hashCB(formPswd);
 
-          res.send(loggedIn);
-        })
-        .catch(next);
-    } else if (!isEmail || !hasInput) {
-      const reason = (!isEmail && 'email') || (!hasInput && 'noinput');
-      res.send({ reason });
-    } else {
-      next(new Error('Unkown error in visitor check'));
-    }
-  });
+  cbLogin(formEmail, passwordHash)
+    .then(exists => {
+      const token = jwt.sign({ email: formEmail }, process.env.SECRET);
+      const loggedIn = exists ? { success: true, token } : { success: false };
+
+      res.send(loggedIn);
+    })
+    .catch(next);
 });
 
 module.exports = router;
