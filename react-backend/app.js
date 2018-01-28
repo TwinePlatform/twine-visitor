@@ -20,7 +20,7 @@ const adminLogin = require('./routes/admin_login');
 const adminCheck = require('./routes/admin_check');
 const visitorName = require('./routes/visitor_name');
 const visitorCheck = require('./routes/visitor_check');
-const visitorActivity = require('./routes/visitor_activity');
+const visitInsert = require('./routes/visit_insert');
 const activitiesAll = require('./routes/activities_all');
 const activitiesToday = require('./routes/activities_today');
 const activitiesAdd = require('./routes/activities_add');
@@ -46,21 +46,14 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 app.use('/fetchNewCBDetails', adminIsAuthenticated, cbDetailsNew);
 app.use('/cb-details', adminIsAuthenticated, cbDetails);
 app.use('/qr-send', adminIsAuthenticated, qrSend);
-app.use('/qrgenerator', isAuthenticated, qrGenerator);
 app.use('/qr-user-gen', adminIsAuthenticated, qrUserGen);
-app.use('/getUsername', isAuthenticated, visitorName);
 app.use('/user-details', adminIsAuthenticated, userDetails);
 app.use('/users-all', adminIsAuthenticated, usersAll);
 app.use('/all-users', adminIsAuthenticated, visitorsAll);
-app.use('/fetchNewUserDetails', isAuthenticated, userDetailsNew);
 app.use('/fetchUsersFilteredBy', adminIsAuthenticated, usersFiltered);
 app.use('/fetchVisitsFilteredBy', adminIsAuthenticated, visitorsFiltered);
-app.use('/isAdminAuthenticated', isAuthenticated, adminLogin);
 app.use('/check-admin-token', adminIsAuthenticated, adminCheck);
-app.use('/checkUser', isAuthenticated, visitorCheck);
-app.use('/postActivity', isAuthenticated, visitorActivity);
 app.use('/activities', adminIsAuthenticated, activitiesAll);
-app.use('/activitiesForToday', isAuthenticated, activitiesToday);
 app.use('/addActivity', adminIsAuthenticated, activitiesAdd);
 app.use('/updateActivityDay', adminIsAuthenticated, activitiesUpdate);
 app.use('/removeActivity', adminIsAuthenticated, activitiesDelete);
@@ -70,6 +63,14 @@ app.use('/cb/register/check', cbRegisterCheck);
 app.use('/cb/login', cbLogin);
 app.use('/cb/pwd/change', cbPasswordChange);
 app.use('/cb/pwd/reset', cbPasswordReset);
+
+// Authenticated routes
+app.use('/qr/generator', mwIsAuthenticated, qrGenerator);
+app.use('/user/name-from-scan', mwIsAuthenticated, visitorName);
+app.use('/visit/check', mwIsAuthenticated, visitorCheck);
+app.use('/visit/add', mwIsAuthenticated, visitInsert);
+app.use('/activities/today', mwIsAuthenticated, activitiesToday);
+app.use('/admin/login', mwIsAuthenticated, adminLogin);
 
 app.get('/*', express.static(path.join(__dirname, 'client/build/index.html')));
 
