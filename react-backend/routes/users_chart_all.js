@@ -1,5 +1,5 @@
 const express = require('express');
-const getGenderNumbers = require('../database/queries/genderNumbers');
+const getGenderNumbers = require('../database/queries/users_chart_all');
 
 const router = express.Router();
 

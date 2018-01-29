@@ -18,11 +18,7 @@ class CBsignup extends Component {
     };
   }
 
-  handleChange = e => {
-    let newState = {};
-    newState[e.target.name] = e.target.value;
-    this.setState(newState);
-  };
+  handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   setError(messagesArray) {
     this.setState({ error: messagesArray });
@@ -52,6 +48,8 @@ class CBsignup extends Component {
         }
       })
       .then(data => {
+        console.log(data);
+
         switch (data) {
           case 'email':
             console.log(data);

@@ -15,11 +15,7 @@ class CBlogin extends Component {
     };
   }
 
-  handleChange = e => {
-    let newState = {};
-    newState[e.target.name] = e.target.value;
-    this.setState(newState);
-  };
+  handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   setError(messagesArray) {
     this.setState({ error: messagesArray });
@@ -35,6 +31,7 @@ class CBlogin extends Component {
 
     fetch('/cb/login', {
       method: 'POST',
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify(checkData),
     })
       .then(res => {

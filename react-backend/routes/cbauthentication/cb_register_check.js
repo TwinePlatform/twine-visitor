@@ -39,10 +39,10 @@ router.post('/', (req, res, next) => {
     (pwdMatch && 'pswdmatch') ||
     null;
 
-  if (validationError) return res.send();
+  if (validationError) return res.send(validationError);
 
   cbCheckExists(formEmail)
-    .then(exists => res.send(exists))
+    .then(res.send)
     .catch(next);
 });
 

@@ -137,7 +137,7 @@ export class AdminUsersPage extends Component {
   };
 
   componentDidMount() {
-    adminGet(this, '/getGenderNumbers')
+    adminGet(this, '/users/chart-all')
       .then(res => res.numbers)
       .then(
         (
