@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post('/', (req, res, next) => {
   deleteActivity(req.body.id, req.auth.cb_id)
-    .then(() => res.send('success'))
+    .then(() => res.send({ success: 'success', token: req.auth.adminToken }))
     .catch(next);
 });
 

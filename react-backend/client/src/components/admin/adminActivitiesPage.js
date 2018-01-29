@@ -9,30 +9,21 @@ import {
   updateActivity,
   updateId,
 } from './activitiesLib/activityHelpers';
+import { adminPost, adminGet } from './activitiesLib/admin_helpers';
 
 export class AdminActivitiesPage extends Component {
   constructor() {
     super();
     this.state = {
+      auth: 'PENDING',
       activities: [],
       currentActivity: '',
     };
   }
 
-  headers = new Headers({
-    Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
-  });
-
   handleActivityFromDb = activity => res => {
-    console.log(res);
     const newActivities = updateId(this.state.activities, activity.id, res.id);
     this.setState({ activities: newActivities });
-  };
-
-  handleFetchError = res => {
-    if (res.status === 500) throw new Error();
-    return res;
   };
 
   setErrorMessage = (error, errorString) => {
@@ -41,30 +32,32 @@ export class AdminActivitiesPage extends Component {
   };
 
   componentDidMount() {
-    fetch('/activities', {
-      method: 'GET',
-      headers: this.headers,
-    })
-      .then(this.handleFetchError)
-      .then(res => res.json())
-      .then(({ activities }) => this.setState({ activities }))
-      .catch(error => this.setErrorMessage(error, 'Error fetching activities'));
+    adminGet(this, '/activities')
+      .then(({ activities }) => this.setState({ activities, auth: 'SUCCESS' }))
+      .catch(error => {
+        if (error.message === 500) {
+          this.props.history.push('/internalServerError');
+        } else if (error.message === 'No admin token') {
+          this.props.history.push('/admin/login');
+        } else {
+          this.props.history.push('/admin/login');
+        }
+      });
   }
 
   toggleDay = (day, id) => {
     const activity = findById(id, this.state.activities);
     const updatedActivity = { ...activity, [day]: !activity[day] };
-    const updatedActivities = updateActivity(this.state.activities, updatedActivity);
+    const updatedActivities = updateActivity(
+      this.state.activities,
+      updatedActivity
+    );
 
     this.setState({ activities: updatedActivities });
 
-    fetch('/updateActivityDay', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify(updatedActivity),
-    })
-      .then(this.handleFetchError)
-      .catch(error => this.setErrorMessage(error, 'Error setting activity day'));
+    adminPost(this, '/updateActivityDay', updatedActivity)
+      .then(res => res)
+      .catch(error => this.setErrorMessage(error, 'Error setting day'));
   };
 
   handleRemove = (id, event) => {
@@ -72,12 +65,8 @@ export class AdminActivitiesPage extends Component {
     const updatedActivities = removeActivity(this.state.activities, id);
     this.setState({ activities: updatedActivities });
 
-    fetch('/removeActivity', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({ id }),
-    })
-      .then(this.handleFetchError)
+    adminPost(this, '/removeActivity', { id })
+      .then(res => res)
       .catch(error => this.setErrorMessage(error, 'Error removing activity'));
   };
 
@@ -102,15 +91,14 @@ export class AdminActivitiesPage extends Component {
       errorMessage: '',
     });
 
-    fetch('/addActivity', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({ name: newActivity.name }),
-    })
-      .then(this.handleFetchError)
-      .then(res => res.json())
+    adminPost(this, '/addActivity', { name: newActivity.name })
       .then(this.handleActivityFromDb(newActivity))
-      .catch(error => this.setErrorMessage(error, 'Error adding activity'));
+      .catch(error => {
+        if (error.message === 'No admin token')
+          return this.props.history.push('/admin/login');
+
+        this.setErrorMessage(error, 'Error removing activity');
+      });
   };
 
   handleEmptySubmit = event => {
@@ -127,12 +115,16 @@ export class AdminActivitiesPage extends Component {
   };
 
   render() {
-    const submitHandler = this.state.currentActivity ? this.handleSubmit : this.handleEmptySubmit;
+    const submitHandler = this.state.currentActivity
+      ? this.handleSubmit
+      : this.handleEmptySubmit;
     return (
       <div>
         <h2>Update Activities</h2>
         <div className="Activities">
-          {this.state.errorMessage && <span className="ErrorText">{this.state.errorMessage}</span>}
+          {this.state.errorMessage && (
+            <span className="ErrorText">{this.state.errorMessage}</span>
+          )}
           <ActivityForm
             handleInputChange={this.handleInputChange}
             currentActivity={this.state.currentActivity}
