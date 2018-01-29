@@ -1,13 +1,14 @@
 const router = require('express').Router();
-const cbDetailsNew = require('../database/queries/cb/cb_details_new');
+const userUpdate = require('../database/queries/user_details_update');
 
 router.post('/', (req, res, next) => {
-  cbDetailsNew(
+  userUpdate(
     req.auth.cb_id,
-    req.body.org_name,
-    req.body.genre,
-    req.body.email,
-    req.body.uploadedFileCloudinaryUrl
+    req.body.userId,
+    req.body.userFullName,
+    req.body.sex,
+    req.body.yearOfBirth,
+    req.body.email
   )
     .then(details => res.send({ details }))
     .catch(next);

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
+import { adminGet, adminPost } from './activitiesLib/admin_helpers';
+import { DropdownSelect, CheckboxGroup } from './filter_components/UserInputs';
 
 const PieChart = require('react-chartjs').Pie;
 const BarChart = require('react-chartjs').Bar;
@@ -10,10 +11,9 @@ export class AdminUsersPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      auth: 'PENDING',
       users: [],
-      reauthenticated: false,
-      failure: false,
-      password: '',
+      activities: [],
       filters: [],
       orderBy: '',
       genderNumbers: [],
@@ -21,7 +21,6 @@ export class AdminUsersPage extends Component {
       visitNumbers: [],
       ageGroups: [],
       activitiesGroups: [],
-      activities: [],
     };
   }
 
@@ -51,6 +50,11 @@ export class AdminUsersPage extends Component {
     return colors[index % colors.length];
   };
 
+  setErrorMessage = (error, errorString) => {
+    // console.log(error) // Uncomment to display full errors in the console.
+    this.setState({ errorMessage: errorString });
+  };
+
   getActivitiesForChart = activities => {
     if (!activities) return [];
 
@@ -67,8 +71,8 @@ export class AdminUsersPage extends Component {
 
     return genders.map(({ sex, count }, index) => ({
       value: count,
-      color: this.getColorPair(index)[0],
-      highlight: this.getColorPair(index)[1],
+      color: this.getColorPair(index).color,
+      highlight: this.getColorPair(index).highlight,
       label: sex,
     }));
   };
@@ -107,7 +111,6 @@ export class AdminUsersPage extends Component {
     };
 
     const dayWeek = new Date();
-    // console.log(buildDaysWithOffset(dayWeek.getDay(), visitCount));
     return {
       labels: buildDaysWithOffset(dayWeek.getDay(), dayName),
       datasets: [
@@ -127,28 +130,25 @@ export class AdminUsersPage extends Component {
     if (!ageGroups) return [];
     return ageGroups.map(({ agegroups, agecount }, index) => ({
       value: agecount,
-      color: this.getColorPair(index)[0],
-      highlight: this.getColorPair(index)[1],
+      color: this.getColorPair(index).color,
+      highlight: this.getColorPair(index).highlight,
       label: agegroups,
     }));
   };
 
   componentDidMount() {
-    fetch('/getGenderNumbers', {
-      method: 'GET',
-      headers: this.headers,
-    })
-      .then(this.handleFetchError)
-      .then(res => res.json())
+    adminGet(this, '/getGenderNumbers')
       .then(res => res.numbers)
       .then(
-        ([
-          visitsNumbers,
-          genderNumbers,
-          activitiesNumbers,
-          ageGroups,
-          activities,
-        ]) => {
+        (
+          [
+            visitsNumbers,
+            genderNumbers,
+            activitiesNumbers,
+            ageGroups,
+            activities,
+          ]
+        ) => {
           this.setState({
             visits: visitsNumbers,
             visitNumbers: this.getVisitsWeek(visitsNumbers),
@@ -157,45 +157,24 @@ export class AdminUsersPage extends Component {
             ageGroups: this.getAgeGroupsForChart(ageGroups),
             activities: activities.map(activity => activity.name),
           });
+
+          return adminGet(this, '/users/all');
         }
       )
+      .then(({ users }) => this.setState({ auth: 'SUCCESS', users }))
       .catch(error =>
         this.setErrorMessage(error, 'Error fetching gender numbers')
       );
   }
 
-  headers = new Headers({
-    Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
-  });
+  handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
-  handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  handleFetchError = res => {
-    if (res.status === 500) throw new Error();
-    return res;
-  };
-
-  setErrorMessage = (error, errorString) => {
-    // console.log(error) // Uncomment to display full errors in the console.
-    this.setState({ errorMessage: errorString });
-  };
-
-  updateResults = () => {
-    fetch('/fetchUsersFilteredBy', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({
-        filterBy: this.state.filters,
-        orderBy: this.state.orderBy,
-      }),
+  updateResults = () =>
+    adminPost(this, '/users/filtered', {
+      filterBy: this.state.filters,
+      orderBy: this.state.orderBy,
     })
-      .then(this.handleFetchError)
-      .then(res => res.json())
       .then(res => {
-        console.log(res);
         this.setState(
           {
             users: res.users[0],
@@ -209,16 +188,8 @@ export class AdminUsersPage extends Component {
       .catch(error => {
         this.props.history.push('/internalServerError');
       });
-  };
 
-  sort = e => {
-    this.setState(
-      {
-        orderBy: e.target.value,
-      },
-      this.updateResults
-    );
-  };
+  sort = e => this.setState({ orderBy: e.target.value }, this.updateResults);
 
   filter = group => e => {
     const filterBy = group + '@' + e.target.value;
@@ -228,125 +199,34 @@ export class AdminUsersPage extends Component {
       ? [...this.state.filters, filterBy]
       : this.state.filters.filter(filter => filter !== filterBy);
 
-    this.setState(
-      {
-        filters: newFilters,
-      },
-      this.updateResults
-    );
+    this.setState({ filters: newFilters }, this.updateResults);
   };
 
-  authenticate = event => {
-    event.preventDefault();
-
-    fetch('/users-all', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({ password: this.state.password }),
-    })
-      .then(this.handleFetchError)
-      .then(res => res.json())
-      .then(res => {
-        if (res.success) {
-          return res.users;
-        } else if (res.error === 'Not logged in') {
-          throw new Error('Not logged in');
-        } else {
-          this.setState({ failure: true });
-          throw new Error('password');
-        }
-      })
-      .then(users => {
-        this.setState({ users, reauthenticated: true });
-      })
-      .catch(error => {
-        if (!this.state.failure) {
-          this.props.history.push('/logincb');
-        } else if (error === '500') {
-          this.props.history.push('/internalServerError');
-        }
-      });
-  };
-
-  passwordError = <span>The password is incorrect. Please try again.</span>;
-
-  renderAuthenticated = () => {
-    return (
-      <div>
+  render() {
+    return this.state.auth === 'SUCCESS' ? (
+      <section>
         <h1>User Data</h1>
         <form>
-          <label className="Form__Label">
-            Filter by Gender
-            <br />
-            <label>
-              <input
-                type="checkbox"
-                value="male"
-                onChange={this.filter('gender')}
-              />
-              Male
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="female"
-                onChange={this.filter('gender')}
-              />
-              Female
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="prefer_not_to_say"
-                onChange={this.filter('gender')}
-              />
-              Prefer not to say
-            </label>
-          </label>
-          <label className="Form__Label">
-            Filter by age
-            <br />
-            <label>
-              <input
-                type="checkbox"
-                value="0-17"
-                onChange={this.filter('age')}
-              />
-              0-17
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="18-34"
-                onChange={this.filter('age')}
-              />
-              18-34
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="35-50"
-                onChange={this.filter('age')}
-              />
-              35-50
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="51-69"
-                onChange={this.filter('age')}
-              />
-              51-69
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="70-more"
-                onChange={this.filter('age')}
-              />
-              70-more
-            </label>
-          </label>
+          <CheckboxGroup
+            title="Filter by Gender"
+            values={{
+              male: 'Male',
+              female: 'Female',
+              prefer_not_to_say: 'Prefer not to say',
+            }}
+            change={this.filter('gender')}
+          />
+          <CheckboxGroup
+            title="Filter by Age"
+            values={{
+              '0-17': '0-17',
+              '18-34': '18-34',
+              '35-50': '35-50',
+              '51-69': '51-69',
+              '70-more': '70-more',
+            }}
+            change={this.filter('age')}
+          />
           <label className="Form__Label">
             Filter by Activity
             <br />
@@ -375,7 +255,10 @@ export class AdminUsersPage extends Component {
           <tbody>
             <tr>
               <td>
-                <PieChart data={this.state.genderNumbers} />
+                <PieChart
+                  data={this.state.genderNumbers}
+                  options={{ animation: { duration: 100 } }}
+                />
               </td>
               <td>
                 <PieChart data={this.state.activitiesGroups} />
@@ -387,19 +270,17 @@ export class AdminUsersPage extends Component {
           </tbody>
         </table>
         <form>
-          <label className="Form__Label">
-            Sort by
-            <br />
-            <select onChange={this.sort}>
-              <option defaultValue value="date">
-                Sort by
-              </option>
-              <option value="name">Name </option>
-              <option value="yearofbirth">Year of Birth </option>
-              <option value="sex">Gender </option>
-              <option value="date">Date of Signup </option>{' '}
-            </select>
-          </label>
+          <DropdownSelect
+            sort={this.sort}
+            default={{ date: 'Sort by' }}
+            label="Sort by"
+            values={{
+              name: 'Name',
+              yearofbirth: 'Year of Birth',
+              sex: 'Gender',
+              date: 'Date of Signup',
+            }}
+          />
         </form>
         <table>
           <thead>
@@ -440,39 +321,9 @@ export class AdminUsersPage extends Component {
           redirectUser={this.props.history.push}
         />
         <br />
-      </div>
+      </section>
+    ) : (
+      <div> CHECKING ADMIN... </div>
     );
-  };
-
-  renderNotAuthenticated = () => {
-    return (
-      <div>
-        <div className="ErrorText">
-          {this.state.failure ? this.passwordError : ''}
-        </div>
-        <form className="Signup" onSubmit={this.authenticate}>
-          <label className="Form__Label">
-            Please, type your password
-            <input
-              className="Form__Input"
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleChange}
-            />
-          </label>
-          <Button />
-        </form>
-        <Link to="/pswdresetcb">
-          <button className="Button ButtonBack">Reset Password</button>
-        </Link>
-      </div>
-    );
-  };
-
-  render() {
-    return this.state.reauthenticated
-      ? this.renderAuthenticated()
-      : this.renderNotAuthenticated();
   }
 }

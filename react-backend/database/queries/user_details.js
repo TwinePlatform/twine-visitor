@@ -9,9 +9,7 @@ const getUserDetails = (cbId, userId) =>
   new Promise((resolve, reject) => {
     dbConnection
       .query(getUserDetailsQuery, [cbId, userId])
-      .then(res => {
-        return resolve(res.rows);
-      })
+      .then(res => resolve(res.rows))
       .catch(reject);
   });
 

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../visitors/button';
 import { Logoutbutton } from '../visitors/logoutbutton';
 import qrcodelogo from '../../qrcodelogo.png';
+import { adminPost } from './activitiesLib/admin_helpers';
 
 export class AdminUserDetailsPage extends Component {
   constructor(props) {
@@ -10,9 +10,7 @@ export class AdminUserDetailsPage extends Component {
     const userId = this.props.match.params.userId;
 
     this.state = {
-      reauthenticated: false,
-      failure: false,
-      password: '',
+      auth: 'PENDING',
       userId,
       userFullName: '',
       sex: '',
@@ -21,22 +19,40 @@ export class AdminUserDetailsPage extends Component {
       signupDate: '',
       hash: '',
       url: '',
+      errorMessage: '',
       cb_logo: '',
     };
   }
 
-  setUser = user => {
+  componentDidMount() {
+    adminPost(this, '/user/details', {
+      userId: this.state.userId,
+    })
+      .then(res => {
+        this.setState({ auth: 'SUCCESS' });
+        return res.details[0];
+      })
+      .then(this.setUser)
+      .then(this.displayQR)
+      .catch(error => {
+        if (error.message === 500) {
+          this.props.history.push('/internalServerError');
+        } else if (error.message === 'No admin token') {
+          this.props.history.push('/admin/login');
+        } else {
+          this.props.history.push('/admin/login');
+        }
+      });
+  }
+
+  setUser = ({ fullname, sex, yearofbirth, email, date, hash }) => {
     this.setState({
-      userFullName: user.fullname,
-      sex: user.sex,
-      yearOfBirth: user.yearofbirth,
-      email: user.email,
-      signupDate: user.date
-        .split('T')
-        .join(' ')
-        .slice(0, 19),
-      hash: user.hash,
-      reauthenticated: true,
+      userFullName: fullname,
+      sex,
+      yearOfBirth: yearofbirth,
+      email: email,
+      signupDate: date.replace(/T/g, ' ').slice(0, 19),
+      hash,
       errorMessage: '',
     });
   };
@@ -47,32 +63,14 @@ export class AdminUserDetailsPage extends Component {
     });
   };
 
-  headers = new Headers({
-    Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
-  });
-
-  handleChange = e => {
+  handleChange = e =>
     this.setState({
       [e.target.name]: e.target.value,
       errorMessage: '',
       successMessage: '',
     });
-  };
 
-  handleChangeSex = e => {
-    this.setState({ sex: e.target.value });
-  };
-
-  handleFetchError = res => {
-    if (res.status === 500) throw new Error();
-    return res;
-  };
-
-  setErrorMessage = (error, errorString) => {
-    // console.log(error) // Uncomment to display full errors in the console.
-    this.setState({ errorMessage: errorString });
-  };
+  handleChangeSex = e => this.setState({ sex: e.target.value });
 
   handleEmptySubmit = event => {
     event.preventDefault();
@@ -83,142 +81,65 @@ export class AdminUserDetailsPage extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    fetch('/fetchNewUserDetails', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({
-        userId: this.state.userId,
-        userFullName: this.state.userFullName,
-        sex: this.state.sex,
-        yearOfBirth: this.state.yearOfBirth,
-        email: this.state.email,
-        password: this.state.password,
-      }),
+
+    adminPost(this, '/user/details/update', {
+      userId: this.state.userId,
+      userFullName: this.state.userFullName,
+      sex: this.state.sex,
+      yearOfBirth: this.state.yearOfBirth,
+      email: this.state.email,
     })
-      .then(this.handleFetchError)
-      .then(res => res.json())
       .then(res => res.details)
       .then(this.setUser)
       .then(this.submitConfirmation)
+      .catch(error => this.props.history.push('/internalServerError'));
+  };
+
+  displayQR = () => {
+    adminPost(this, '/user/qr', {
+      hash: this.state.hash,
+    })
+      .then(res => {
+        if (res.qr)
+          return this.setState({
+            url: res.qr,
+            cb_logo: res.cb_logo,
+          });
+        throw new Error('Unknown error generating QR');
+      })
       .catch(error => {
+        console.log('Error', error);
         this.props.history.push('/internalServerError');
       });
   };
 
-  displayQR = () => {
-    fetch('/qr-user-gen', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({
-        hash: this.state.hash,
-        password: this.state.password,
-      }),
-    })
-      .then(this.handleFetchError)
-      .then(res => res.json())
-      .then(res => {
-        if (res.success) {
-          return res;
-        } else if (res.error === 'Not logged in') {
-          throw new Error('Not logged in');
-        } else {
-          this.setState({ failure: true });
-          throw new Error('password');
-        }
-      })
-      .then(res =>
-        this.setState({
-          url: res.qr,
-          cb_logo: res.cb_logo,
-        }),
-      )
-      .catch(error => {
-        if (!this.state.failure) {
-          this.props.history.push('/logincb');
-        } else if (error === '500') {
-          this.props.history.push('/internalServerError');
-        }
-      });
-  };
-
   resendQR = () => {
-    fetch('/qr-send', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({
-        email: this.state.email,
-        name: this.state.userFullName,
-        hash: this.state.hash,
-        password: this.state.password,
-      }),
+    adminPost(this, '/user/qr/email', {
+      email: this.state.email,
+      name: this.state.userFullName,
+      hash: this.state.hash,
     })
-      .then(this.handleFetchError)
-      .then(res => res.json())
       .then(res => {
         if (res.success) {
-          this.setState({
+          return this.setState({
             successMessage: 'The email has been successfully resent',
           });
-        } else if (res.error === 'Not logged in') {
-          throw new Error('Not logged in');
-        } else {
-          this.setState({ failure: true });
-          throw new Error('password');
         }
+        throw new Error('Error sending email');
       })
-      .catch(error => {
-        if (!this.state.failure) {
-          this.props.history.push('/logincb');
-        } else if (error === '500') {
-          this.props.history.push('/internalServerError');
-        }
-      });
+      .catch(error => this.props.history.push('/internalServerError'));
   };
 
-  authenticate = event => {
-    event.preventDefault();
-
-    fetch('/user-details', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify({
-        password: this.state.password,
-        userId: this.state.userId,
-      }),
-    })
-      .then(this.handleFetchError)
-      .then(res => res.json())
-      .then(res => {
-        if (res.success) {
-          return res.details;
-        } else if (res.error === 'Not logged in') {
-          throw new Error('Not logged in');
-        } else {
-          this.setState({ failure: true });
-          throw new Error('password');
-        }
-      })
-      .then(details => details[0])
-      .then(this.setUser)
-      .then(this.displayQR)
-      .catch(error => {
-        if (!this.state.failure) {
-          this.props.history.push('/logincb');
-        } else if (error === '500') {
-          this.props.history.push('/internalServerError');
-        }
-      });
-  };
-
-  passwordError = <span>The password is incorrect. Please try again.</span>;
-
-  renderAuthenticated = () => {
+  render() {
     const submitHandler =
-      this.state.userFullName && this.state.sex && this.state.yearOfBirth && this.state.email
+      this.state.userFullName &&
+      this.state.sex &&
+      this.state.yearOfBirth &&
+      this.state.email
         ? this.handleSubmit
         : this.handleEmptySubmit;
 
-    return (
+    return this.state.auth === 'SUCCESS' ? (
       <div>
         <div className="hidden-printer">
           <div>
@@ -252,12 +173,17 @@ export class AdminUserDetailsPage extends Component {
               </tbody>
             </table>
             <div>
-              <img className="QR__image" src={this.state.url} alt="This is your QRcode" />
+              <img
+                className="QR__image"
+                src={this.state.url}
+                alt="This is your QRcode"
+              />
               <button className="Button" onClick={window.print}>
                 Print QR Code
               </button>
               <br />
-              {this.state.successMessage === 'The email has been successfully resent' && (
+              {this.state.successMessage ===
+                'The email has been successfully resent' && (
                 <span className="SuccessText">{this.state.successMessage}</span>
               )}
               <button className="Button" onClick={this.resendQR}>
@@ -266,7 +192,9 @@ export class AdminUserDetailsPage extends Component {
             </div>
           </div>
           <h2>Edit {this.state.userFullName}s Details</h2>
-          {this.state.errorMessage && <span className="ErrorText">{this.state.errorMessage}</span>}
+          {this.state.errorMessage && (
+            <span className="ErrorText">{this.state.errorMessage}</span>
+          )}
 
           <form>
             <label className="Form__Label">
@@ -311,7 +239,8 @@ export class AdminUserDetailsPage extends Component {
                 value={this.state.email}
               />
             </label>
-            {this.state.successMessage === 'The user details have been successfully updated' && (
+            {this.state.successMessage ===
+              'The user details have been successfully updated' && (
               <span className="SuccessText">{this.state.successMessage}</span>
             )}
             <button className="Button" onClick={submitHandler}>
@@ -332,45 +261,28 @@ export class AdminUserDetailsPage extends Component {
         <div className="visible-printer qr-code-to-print">
           <div className="dashed">
             {this.state.cb_logo ? (
-              <img height="182" src={this.state.cb_logo} alt="Community business logo" />
+              <img
+                height="182"
+                src={this.state.cb_logo}
+                alt="Community business logo"
+              />
             ) : (
               <img height="182" src={qrcodelogo} alt="Power to change Logo" />
             )}
-            <img className="QR__image" src={this.state.url} alt="This is your QRcode" />
+            <img
+              className="QR__image"
+              src={this.state.url}
+              alt="This is your QRcode"
+            />
             <h5>
-              Please print this QR code and <br /> bring it with you to access next time
+              Please print this QR code and <br /> bring it with you to access
+              next time
             </h5>
           </div>
         </div>
       </div>
+    ) : (
+      <div>Checking admin authentication</div>
     );
-  };
-
-  renderNotAuthenticated = () => {
-    return (
-      <div>
-        <div className="ErrorText">{this.state.failure ? this.passwordError : ''}</div>
-        <form className="Signup" onSubmit={this.authenticate}>
-          <label className="Form__Label">
-            Please, type your password
-            <input
-              className="Form__Input"
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleChange}
-            />
-          </label>
-          <Button />
-        </form>
-        <Link to="/pswdresetcb">
-          <button className="Button ButtonBack">Reset Password</button>
-        </Link>
-      </div>
-    );
-  };
-
-  render() {
-    return this.state.reauthenticated ? this.renderAuthenticated() : this.renderNotAuthenticated();
   }
 }

@@ -1,5 +1,5 @@
 const express = require('express');
-const activitiesForToday = require('../database/queries/activitiesForToday');
+const activitiesForToday = require('../database/queries/activities_today');
 
 const router = express.Router();
 const days = [

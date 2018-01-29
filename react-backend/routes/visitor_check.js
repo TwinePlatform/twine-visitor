@@ -1,47 +1,25 @@
+const router = require('express').Router();
 const validator = require('validator');
-const express = require('express');
-const getUserAlreadyExists = require('../database/queries/getUserAlreadyExists');
-
-const router = express.Router();
+const checkUserExists = require('../database/queries/user_check_exists');
+const { checkHasLength } = require('../functions/helpers');
 
 router.post('/', (req, res, next) => {
-  let body = '';
-  req.on('data', chunk => {
-    body += chunk;
-  });
+  const { formSender, formEmail } = req.body;
+  const name = formSender.split(' ').join('');
 
-  req.on('end', () => {
-    const data = JSON.parse(body);
-    const name = data.formSender.split(' ').join('');
+  const noInput = (!checkHasLength([formSender, formEmail]) && 'noinput') || '';
+  const notEmail = (!validator.isEmail(formEmail) && 'email') || '';
+  const notEnglishName = (!validator.isAlpha(name) && 'name') || '';
 
-    if (data.formSender.length === 0 || data.formEmail.length === 0) {
-      res.send('noinput');
-    } else if (
-      validator.isEmail(data.formEmail) &&
-      validator.isAlpha(name, ['en-GB'])
-    ) {
-      getUserAlreadyExists(data.formSender.toLowerCase(), data.formEmail)
-        .then(exists => {
-          res.send(exists);
-        })
-        .catch(next);
-    } else if (
-      !validator.isEmail(data.formEmail) &&
-      validator.isAlpha(name, ['en-GB'])
-    ) {
-      console.log('This isnt a correct email!?');
-      res.send('email');
-    } else if (
-      validator.isEmail(data.formEmail) &&
-      !validator.isAlpha(name, ['en-GB'])
-    ) {
-      console.log('This isnt a correct name!?');
-      res.send('name');
-    } else {
-      console.log('Both name and email are wrong!!!');
-      res.send('emailname');
-    }
-  });
+  const validationError = noInput || notEmail + notEnglishName;
+
+  if (validationError) return res.send(validationError);
+
+  checkUserExists(formSender.toLowerCase(), formEmail)
+    .then(exists => {
+      res.send(exists);
+    })
+    .catch(next);
 });
 
 module.exports = router;

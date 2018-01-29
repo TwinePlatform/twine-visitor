@@ -4,68 +4,14 @@ const { promisify } = require('util');
 
 const encode64 = promisify(base64.encode);
 
-module.exports = (QRcodeBase64Url, image) =>
-  new Promise((resolve, reject) => {
-    if (image) {
-      encode64(image, { string: true })
-        .then(image => {
-          const columns = [
-            {
-              image: `data:image/png;base64, ${image}`,
-              margin: [5, 5, 0, 0],
-              fit: [100, 100],
-            },
-            {
-              image: QRcodeBase64Url,
-              margin: [-5, -3, 5, 0],
-              fit: [115, 115],
-            },
-          ];
-          getPdf(
-            QRcodeBase64Url,
-            image,
-            columns,
-            [0, 10, 10, 0],
-            'center',
-            resolve,
-            reject,
-          );
-        })
-        .catch(reject);
-    } else {
-      const columns = [
-        {
-          image: `${__dirname}/../public/qrcodelogo.png`,
-          width: 38,
-          height: 129.5,
-          margin: [0, 10, 0, 0],
-        },
-        {
-          image: QRcodeBase64Url,
-          margin: [25, 5, 0, 0],
-          fit: [125, 125],
-        },
-      ];
-      getPdf(
-        QRcodeBase64Url,
-        undefined,
-        columns,
-        [0, -10, 10, 0],
-        'right',
-        resolve,
-        reject,
-      );
-    }
-  });
-
-getPdf = (
+const getPdf = (
   QRcodeBase64Url,
   image,
   columns,
   textMargin,
   textAlignment,
   resolve,
-  reject,
+  reject
 ) => {
   const fontDescriptors = {
     Roboto: {
@@ -112,5 +58,64 @@ getPdf = (
   doc.on('end', () => {
     resolve(Buffer.concat(chunks).toString('base64'));
   });
+
+  doc.on('error', () => {
+    reject('Error building doc');
+  });
   doc.end();
 };
+
+module.exports = (QRcodeBase64Url, image) =>
+  new Promise((resolve, reject) => {
+    console.log('image', image);
+    if (image) {
+      encode64(image, { string: true })
+        .then(image => {
+          const columns = [
+            {
+              image: `data:image/png;base64, ${image}`,
+              margin: [5, 5, 0, 0],
+              fit: [100, 100],
+            },
+            {
+              image: QRcodeBase64Url,
+              margin: [-5, -3, 5, 0],
+              fit: [115, 115],
+            },
+          ];
+          getPdf(
+            QRcodeBase64Url,
+            image,
+            columns,
+            [0, 10, 10, 0],
+            'center',
+            resolve,
+            reject
+          );
+        })
+        .catch(reject);
+    } else {
+      const columns = [
+        {
+          image: `${__dirname}/../public/qrcodelogo.png`,
+          width: 38,
+          height: 129.5,
+          margin: [0, 10, 0, 0],
+        },
+        {
+          image: QRcodeBase64Url,
+          margin: [25, 5, 0, 0],
+          fit: [125, 125],
+        },
+      ];
+      getPdf(
+        QRcodeBase64Url,
+        undefined,
+        columns,
+        [0, -10, 10, 0],
+        'right',
+        resolve,
+        reject
+      );
+    }
+  });

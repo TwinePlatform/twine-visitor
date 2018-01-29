@@ -1,26 +1,10 @@
-const express = require('express');
-const hashCB = require('../functions/cbhash');
-const getAllUsers = require('../database/queries/getAllUsers');
-const getCBLoginDetailsValid = require('../database/queries/getCBlogindetailsvalid');
-
-const router = express.Router();
+const router = require('express').Router();
+const visitorsAll = require('../database/queries/visitors_all');
 
 router.post('/', (req, res, next) => {
-  const hashedPassword = hashCB(req.body.password);
-  getCBLoginDetailsValid(req.auth.cb_email, hashedPassword)
-    .then(exists => {
-      if (!exists) throw new Error('Incorrect password');
-      return req.auth.cb_id;
-    })
-    .then(getAllUsers)
-    .then(users => res.send({ success: true, users }))
-    .catch(err => {
-      if (err.message !== 'Incorrect password') return next(err);
-      res.send({
-        success: false,
-        reason: 'incorrect password',
-      });
-    });
+  visitorsAll(req.auth.cb_id)
+    .then(users => res.send({ users }))
+    .catch(next);
 });
 
 module.exports = router;

@@ -1,15 +1,12 @@
-const checkToken = require('../database/queries/CBqueries/checkToken');
+const checkToken = require('../database/queries/cb/pwd_token_check');
 
-module.exports = token => {
-  return new Promise((resolve, reject) => {
+module.exports = token => new Promise((resolve, reject) => {
     checkToken(token, (error, result) => {
       if (error) {
         console.log('error from checkToken ', error);
         reject(error);
       } else {
-        console.log('checkExists: ', result.rows[0].exists);
         resolve(result.rows[0].exists);
       }
     });
   });
-};

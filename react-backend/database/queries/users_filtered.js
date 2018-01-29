@@ -1,13 +1,14 @@
 const dbConnection = require('../dbConnection');
 
 const query = (filterBy, orderBy) => `
+SELECT * FROM (
 SELECT DISTINCT ON (users.id) users.id, users.fullName, users.sex, users.yearofbirth, users.email, users.date
 FROM users
 FULL OUTER JOIN visits
 ON visits.usersId = users.id
 FULL OUTER JOIN activities
 ON activities.id = visits.activitiesId
-WHERE users.cb_id = $1 ${filterBy} ${orderBy}`;
+WHERE users.cb_id = $1 ${filterBy} ) users ${orderBy}`;
 
 const getValidatedFilters = filterArray => {
   const validFilterTypes = {
@@ -78,7 +79,7 @@ const buildActivityQueries = validFilters => {
 
       return [newQuery, newValue];
     },
-    [[], []],
+    [[], []]
   );
 
   return [queries.join(' OR '), values];
@@ -128,13 +129,13 @@ const visitorsByAge = filterBy => `WITH filteredUsers AS
 groupage AS (SELECT CASE
   WHEN filteredUsers.yearofbirth > ${getDate(17)} THEN '0-17'
   WHEN filteredUsers.yearofbirth > ${getDate(
-    34,
+    34
   )} AND filteredUsers.yearofbirth <= ${getDate(17)} THEN '18-34'
   WHEN filteredUsers.yearofbirth > ${getDate(
-    50,
+    50
   )} AND filteredUsers.yearofbirth <= ${getDate(34)} THEN '35-50'
   WHEN filteredUsers.yearofbirth > ${getDate(
-    69,
+    69
   )} AND filteredUsers.yearofbirth <= ${getDate(50)} THEN '51-69'
   WHEN filteredUsers.yearofbirth <= ${getDate(69)} THEN '70+'
   END AS ageGroups
@@ -170,25 +171,10 @@ const getUsersFilteredBy = (cb_id, { filterBy = [], orderBy = '' } = {}) =>
     const combinedValues = [cb_id, ...values];
 
     const myQuery = query(filterQueries, getSortQuery(orderBy));
-    //     const myQuery = `SELECT users.id, users.fullName, users.sex, users.yearofbirth, users.email, users.date
-    // FROM users
-    // INNER JOIN visits
-    // ON visits.usersId = users.id
-    // INNER JOIN activities
-    // ON activities.id = visits.activitiesId
-    // WHERE users.cb_id = $1 AND (activities.name = $2)`;
     const getVisitorsByAge = visitorsByAge(filterQueries);
     const getActivitiesNumbers = activitiesNumbersQuery(filterQueries);
     const getGenderNumbers = genderNumbersQuery(filterQueries);
-    // console.log(myQuery, combinedValues);
-    // dbConnection
-    //   .query(myQuery, combinedValues)
-    //   .then(res => {
-    //     console.log(getVisitorsByAge);
-    //     return dbConnection.query(getVisitorsByAge, combinedValues);
-    //   })
-    //   .then(console.log)
-    //   .catch(reject);
+
     Promise.all([
       dbConnection.query(myQuery, combinedValues),
       dbConnection.query(getVisitorsByAge, combinedValues),
@@ -196,17 +182,19 @@ const getUsersFilteredBy = (cb_id, { filterBy = [], orderBy = '' } = {}) =>
       dbConnection.query(getGenderNumbers, combinedValues),
     ])
       .then(
-        ([
-          resultGeneral,
-          resultVisitorsByAge,
-          resultActivitiesNumbers,
-          resultGenderNumbers,
-        ]) => [
+        (
+          [
+            resultGeneral,
+            resultVisitorsByAge,
+            resultActivitiesNumbers,
+            resultGenderNumbers,
+          ]
+        ) => [
           resultGeneral.rows,
           resultVisitorsByAge.rows,
           resultActivitiesNumbers.rows,
           resultGenderNumbers.rows,
-        ],
+        ]
       )
       .then(res => resolve(res))
       .catch(reject);
