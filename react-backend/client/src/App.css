@@ -347,3 +347,7 @@ canvas {
   width: 150px;
   height: 150px;
 }
+
+#visitChart {
+  text-align: center;
+}

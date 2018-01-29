@@ -113,9 +113,9 @@ export class AdminUsersPage extends Component {
       datasets: [
         {
           label: 'Visits over the last week',
-          fillColor: 'rgba(220,220,220,0.5)',
+          fillColor: '#F7464A',
           strokeColor: 'rgba(220,220,220,0.8)',
-          highlightFill: 'rgba(220,220,220,0.75)',
+          highlightFill: '#FF5A5E',
           highlightStroke: 'rgba(220,220,220,1)',
           data: buildDaysWithOffset(dayWeek.getDay(), visitCount),
         },
@@ -362,6 +362,8 @@ export class AdminUsersPage extends Component {
             ))}
           </label>
         </form>
+        <h4 id="visitChart">Visitor Numbers</h4>
+        <BarChart data={this.state.visitNumbers} />
         <table>
           <thead>
             <tr>
@@ -380,9 +382,6 @@ export class AdminUsersPage extends Component {
               </td>
               <td>
                 <PieChart data={this.state.ageGroups} />
-              </td>
-              <td>
-                <BarChart data={this.state.visitNumbers} />
               </td>
             </tr>
           </tbody>
