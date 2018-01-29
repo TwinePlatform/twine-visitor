@@ -13,8 +13,9 @@ const qrUserGen = require('./routes/qr_user_gen');
 const userDetails = require('./routes/user_details');
 const userDetailsNew = require('./routes/user_details_update');
 const usersAll = require('./routes/users_all');
-const visitorsAll = require('./routes/visitors_all');
+const usersChartAll = require('./routes/users_chart_all');
 const usersFiltered = require('./routes/users_filtered');
+const visitorsAll = require('./routes/visitors_all');
 const visitorsFiltered = require('./routes/visitors_filtered');
 const adminLogin = require('./routes/admin_login');
 const adminCheck = require('./routes/admin_check');
@@ -31,6 +32,7 @@ const cbRegister = require('./routes/cbauthentication/cb_register');
 const cbLogin = require('./routes/cbauthentication/cb_login');
 const cbPasswordChange = require('./routes/cbauthentication/cb_password_change');
 const cbPasswordReset = require('./routes/cbauthentication/cb_password_reset');
+
 const mwIsAuthenticated = require('./routes/cbauthentication/mw_is_authenticated');
 const mwAdminIsAuthenticated = require('./routes/cbauthentication/mw_admin_is_authenticated');
 
@@ -66,6 +68,7 @@ app.use('/cb/details/update', mwAdminIsAuthenticated, cbDetailsNew);
 app.use('/user/details', mwAdminIsAuthenticated, userDetails);
 app.use('/user/details/update', mwAdminIsAuthenticated, userDetailsNew);
 app.use('/users/all', mwAdminIsAuthenticated, usersAll);
+app.use('/users/chart-all', mwAdminIsAuthenticated, usersChartAll);
 app.use('/users/filtered', mwAdminIsAuthenticated, usersFiltered);
 app.use('/visitors/all', mwAdminIsAuthenticated, visitorsAll);
 app.use('/visitors/filtered', mwAdminIsAuthenticated, visitorsFiltered);

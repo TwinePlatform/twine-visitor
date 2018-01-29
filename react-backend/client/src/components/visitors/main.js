@@ -34,11 +34,7 @@ class Main extends Component {
     };
   }
 
-  handleChange = e => {
-    let newState = {};
-    newState[e.target.name] = e.target.value;
-    this.setState(newState);
-  };
+  handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   setError(messagesArray) {
     this.setState({ error: messagesArray });
@@ -135,7 +131,7 @@ class Main extends Component {
   };
 
   render() {
-    const { error, url } = this.state; //const error = this.state.error
+    const { error, url } = this.state;
 
     return (
       <div className="row">
@@ -232,11 +228,10 @@ class Main extends Component {
               </div>
             </section>
           </Route>
+          <div className="Foreground">
+            <Route exact path="/*" component={NotFound} />
+          </div>
         </Switch>
-
-        <div className="Foreground">
-          <Route exact path="/*" component={NotFound} />
-        </div>
 
         <Route exact path="/visitor/signup" component={FormPrivacy} />
 

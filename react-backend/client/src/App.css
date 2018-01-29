@@ -324,7 +324,11 @@ li span.delete-item a {
 button {
   border-style: none;
 }
-
+/*For Pie Chart*/
+canvas {
+  display: block;
+  margin: auto;
+}
 .Dropzone {
   text-align: center;
 }
@@ -342,4 +346,8 @@ button {
 .CB__Logo {
   width: 150px;
   height: 150px;
+}
+
+#visitChart {
+  text-align: center;
 }

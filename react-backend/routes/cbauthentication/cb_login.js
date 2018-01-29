@@ -7,6 +7,8 @@ const { checkHasLength } = require('../../functions/helpers');
 
 router.post('/', (req, res, next) => {
   const { formEmail, formPswd } = req.body;
+  console.log(req.body);
+
   const notEmail = (!validator.isEmail(formEmail) && 'noinput') || '';
   const noInput = (!checkHasLength([formEmail, formPswd]) && 'email') || '';
 
