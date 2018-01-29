@@ -20,7 +20,8 @@ export class AdminUserDetailsPage extends Component {
       email: '',
       signupDate: '',
       hash: '',
-      url: ''
+      url: '',
+      cb_logo: '',
     };
   }
 
@@ -36,26 +37,26 @@ export class AdminUserDetailsPage extends Component {
         .slice(0, 19),
       hash: user.hash,
       reauthenticated: true,
-      errorMessage: ''
+      errorMessage: '',
     });
   };
 
   submitConfirmation = () => {
     this.setState({
-      successMessage: 'The user details have been successfully updated'
+      successMessage: 'The user details have been successfully updated',
     });
   };
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   });
 
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value,
       errorMessage: '',
-      successMessage: ''
+      successMessage: '',
     });
   };
 
@@ -76,7 +77,7 @@ export class AdminUserDetailsPage extends Component {
   handleEmptySubmit = event => {
     event.preventDefault();
     this.setState({
-      errorMessage: 'Please do not leave empty input fields'
+      errorMessage: 'Please do not leave empty input fields',
     });
   };
 
@@ -91,8 +92,8 @@ export class AdminUserDetailsPage extends Component {
         sex: this.state.sex,
         yearOfBirth: this.state.yearOfBirth,
         email: this.state.email,
-        password: this.state.password
-      })
+        password: this.state.password,
+      }),
     })
       .then(this.handleFetchError)
       .then(res => res.json())
@@ -110,14 +111,14 @@ export class AdminUserDetailsPage extends Component {
       headers: this.headers,
       body: JSON.stringify({
         hash: this.state.hash,
-        password: this.state.password
-      })
+        password: this.state.password,
+      }),
     })
       .then(this.handleFetchError)
       .then(res => res.json())
       .then(res => {
         if (res.success) {
-          return res.qr;
+          return res;
         } else if (res.error === 'Not logged in') {
           throw new Error('Not logged in');
         } else {
@@ -125,10 +126,11 @@ export class AdminUserDetailsPage extends Component {
           throw new Error('password');
         }
       })
-      .then(qr =>
+      .then(res =>
         this.setState({
-          url: qr
-        })
+          url: res.qr,
+          cb_logo: res.cb_logo,
+        }),
       )
       .catch(error => {
         if (!this.state.failure) {
@@ -147,15 +149,15 @@ export class AdminUserDetailsPage extends Component {
         email: this.state.email,
         name: this.state.userFullName,
         hash: this.state.hash,
-        password: this.state.password
-      })
+        password: this.state.password,
+      }),
     })
       .then(this.handleFetchError)
       .then(res => res.json())
       .then(res => {
         if (res.success) {
           this.setState({
-            successMessage: 'The email has been successfully resent'
+            successMessage: 'The email has been successfully resent',
           });
         } else if (res.error === 'Not logged in') {
           throw new Error('Not logged in');
@@ -181,8 +183,8 @@ export class AdminUserDetailsPage extends Component {
       headers: this.headers,
       body: JSON.stringify({
         password: this.state.password,
-        userId: this.state.userId
-      })
+        userId: this.state.userId,
+      }),
     })
       .then(this.handleFetchError)
       .then(res => res.json())
@@ -212,10 +214,7 @@ export class AdminUserDetailsPage extends Component {
 
   renderAuthenticated = () => {
     const submitHandler =
-      this.state.userFullName &&
-      this.state.sex &&
-      this.state.yearOfBirth &&
-      this.state.email
+      this.state.userFullName && this.state.sex && this.state.yearOfBirth && this.state.email
         ? this.handleSubmit
         : this.handleEmptySubmit;
 
@@ -253,17 +252,12 @@ export class AdminUserDetailsPage extends Component {
               </tbody>
             </table>
             <div>
-              <img
-                className="QR__image"
-                src={this.state.url}
-                alt="This is your QRcode"
-              />
+              <img className="QR__image" src={this.state.url} alt="This is your QRcode" />
               <button className="Button" onClick={window.print}>
                 Print QR Code
               </button>
               <br />
-              {this.state.successMessage ===
-                'The email has been successfully resent' && (
+              {this.state.successMessage === 'The email has been successfully resent' && (
                 <span className="SuccessText">{this.state.successMessage}</span>
               )}
               <button className="Button" onClick={this.resendQR}>
@@ -272,9 +266,7 @@ export class AdminUserDetailsPage extends Component {
             </div>
           </div>
           <h2>Edit {this.state.userFullName}s Details</h2>
-          {this.state.errorMessage && (
-            <span className="ErrorText">{this.state.errorMessage}</span>
-          )}
+          {this.state.errorMessage && <span className="ErrorText">{this.state.errorMessage}</span>}
 
           <form>
             <label className="Form__Label">
@@ -319,8 +311,7 @@ export class AdminUserDetailsPage extends Component {
                 value={this.state.email}
               />
             </label>
-            {this.state.successMessage ===
-              'The user details have been successfully updated' && (
+            {this.state.successMessage === 'The user details have been successfully updated' && (
               <span className="SuccessText">{this.state.successMessage}</span>
             )}
             <button className="Button" onClick={submitHandler}>
@@ -340,15 +331,14 @@ export class AdminUserDetailsPage extends Component {
         </div>
         <div className="visible-printer qr-code-to-print">
           <div className="dashed">
-            <img height="182" src={qrcodelogo} alt="Power to change Logo" />
-            <img
-              className="QR__image"
-              src={this.state.url}
-              alt="This is your QRcode"
-            />
+            {this.state.cb_logo ? (
+              <img height="182" src={this.state.cb_logo} alt="Community business logo" />
+            ) : (
+              <img height="182" src={qrcodelogo} alt="Power to change Logo" />
+            )}
+            <img className="QR__image" src={this.state.url} alt="This is your QRcode" />
             <h5>
-              Please print this QR code and <br /> bring it with you to access
-              next time
+              Please print this QR code and <br /> bring it with you to access next time
             </h5>
           </div>
         </div>
@@ -359,9 +349,7 @@ export class AdminUserDetailsPage extends Component {
   renderNotAuthenticated = () => {
     return (
       <div>
-        <div className="ErrorText">
-          {this.state.failure ? this.passwordError : ''}
-        </div>
+        <div className="ErrorText">{this.state.failure ? this.passwordError : ''}</div>
         <form className="Signup" onSubmit={this.authenticate}>
           <label className="Form__Label">
             Please, type your password
@@ -383,8 +371,6 @@ export class AdminUserDetailsPage extends Component {
   };
 
   render() {
-    return this.state.reauthenticated
-      ? this.renderAuthenticated()
-      : this.renderNotAuthenticated();
+    return this.state.reauthenticated ? this.renderAuthenticated() : this.renderNotAuthenticated();
   }
 }

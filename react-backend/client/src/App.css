@@ -330,3 +330,21 @@ canvas {
   display: block;
   margin: auto;
 }
+.Dropzone {
+  text-align: center;
+}
+.Dropzone > div {
+  display: inline-block;
+}
+.Dropzone > img {
+  display: block;
+  margin: auto;
+  padding: 20px;
+  width: 200px;
+  height: 200px;
+}
+
+.CB__Logo {
+  width: 150px;
+  height: 150px;
+}
