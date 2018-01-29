@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const getCBDetails = require('../database/queries/getCBDetails');
+const cbDetails = require('../database/queries/cb/cb_details');
 
 router.post('/', (req, res, next) => {
-  getCBDetails(req.auth.cb_id)
-    .then(details => res.send({ token: req.auth.adminToken, details }))
+  cbDetails(req.auth.cb_id)
+    .then(details => res.send({ details }))
     .catch(next);
 });
 

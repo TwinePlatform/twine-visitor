@@ -11,7 +11,7 @@ const qrSend = require('./routes/qr_user_send');
 const qrGenerator = require('./routes/qr_generator');
 const qrUserGen = require('./routes/qr_user_gen');
 const userDetails = require('./routes/user_details');
-const userDetailsNew = require('./routes/user_details_new');
+const userDetailsNew = require('./routes/user_details_update');
 const usersAll = require('./routes/users_all');
 const visitorsAll = require('./routes/visitors_all');
 const usersFiltered = require('./routes/users_filtered');
@@ -20,7 +20,7 @@ const adminLogin = require('./routes/admin_login');
 const adminCheck = require('./routes/admin_check');
 const visitorName = require('./routes/visitor_name');
 const visitorCheck = require('./routes/visitor_check');
-const visitorActivity = require('./routes/visitor_activity');
+const visitInsert = require('./routes/visit_insert');
 const activitiesAll = require('./routes/activities_all');
 const activitiesToday = require('./routes/activities_today');
 const activitiesAdd = require('./routes/activities_add');
@@ -31,8 +31,8 @@ const cbRegister = require('./routes/cbauthentication/cb_register');
 const cbLogin = require('./routes/cbauthentication/cb_login');
 const cbPasswordChange = require('./routes/cbauthentication/cb_password_change');
 const cbPasswordReset = require('./routes/cbauthentication/cb_password_reset');
-const isAuthenticated = require('./routes/cbauthentication/isAuthenticated');
-const adminIsAuthenticated = require('./routes/cbauthentication/admin_is_authenticated');
+const mwIsAuthenticated = require('./routes/cbauthentication/mw_is_authenticated');
+const mwAdminIsAuthenticated = require('./routes/cbauthentication/mw_admin_is_authenticated');
 
 const app = express();
 
@@ -43,32 +43,37 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.use('/fetchNewCBDetails', adminIsAuthenticated, cbDetailsNew);
-app.use('/cb-details', adminIsAuthenticated, cbDetails);
-app.use('/qr-send', adminIsAuthenticated, qrSend);
-app.use('/qrgenerator', isAuthenticated, qrGenerator);
-app.use('/qr-user-gen', adminIsAuthenticated, qrUserGen);
-app.use('/getUsername', isAuthenticated, visitorName);
-app.use('/user-details', adminIsAuthenticated, userDetails);
-app.use('/users-all', adminIsAuthenticated, usersAll);
-app.use('/all-users', adminIsAuthenticated, visitorsAll);
-app.use('/fetchNewUserDetails', isAuthenticated, userDetailsNew);
-app.use('/fetchUsersFilteredBy', adminIsAuthenticated, usersFiltered);
-app.use('/fetchVisitsFilteredBy', adminIsAuthenticated, visitorsFiltered);
-app.use('/isAdminAuthenticated', isAuthenticated, adminLogin);
-app.use('/check-admin-token', adminIsAuthenticated, adminCheck);
-app.use('/checkUser', isAuthenticated, visitorCheck);
-app.use('/postActivity', isAuthenticated, visitorActivity);
-app.use('/activities', adminIsAuthenticated, activitiesAll);
-app.use('/activitiesForToday', isAuthenticated, activitiesToday);
-app.use('/addActivity', adminIsAuthenticated, activitiesAdd);
-app.use('/updateActivityDay', adminIsAuthenticated, activitiesUpdate);
-app.use('/removeActivity', adminIsAuthenticated, activitiesDelete);
-app.use('/checkCB', cbRegisterCheck);
-app.use('/registerCB', cbRegister);
-app.use('/checkCBlogin', cbLogin);
-app.use('/checkPassword', cbPasswordChange);
-app.use('/CBPasswordResetInstigator', cbPasswordReset);
+// Open routes
+app.use('/cb/register', cbRegister);
+app.use('/cb/register/check', cbRegisterCheck);
+app.use('/cb/login', cbLogin);
+app.use('/cb/pwd/change', cbPasswordChange);
+app.use('/cb/pwd/reset', cbPasswordReset);
+
+// Authenticated routes
+app.use('/qr/generator', mwIsAuthenticated, qrGenerator);
+app.use('/user/name-from-scan', mwIsAuthenticated, visitorName);
+app.use('/visit/check', mwIsAuthenticated, visitorCheck);
+app.use('/visit/add', mwIsAuthenticated, visitInsert);
+app.use('/activities/today', mwIsAuthenticated, activitiesToday);
+app.use('/admin/login', mwIsAuthenticated, adminLogin);
+
+// Admin routes
+app.use('/user/qr/email', mwAdminIsAuthenticated, qrSend);
+app.use('/user/qr', mwAdminIsAuthenticated, qrUserGen);
+app.use('/cb/details', mwAdminIsAuthenticated, cbDetails);
+app.use('/cb/details/update', mwAdminIsAuthenticated, cbDetailsNew);
+app.use('/user/details', mwAdminIsAuthenticated, userDetails);
+app.use('/user/details/update', mwAdminIsAuthenticated, userDetailsNew);
+app.use('/users/all', mwAdminIsAuthenticated, usersAll);
+app.use('/users/filtered', mwAdminIsAuthenticated, usersFiltered);
+app.use('/visitors/all', mwAdminIsAuthenticated, visitorsAll);
+app.use('/visitors/filtered', mwAdminIsAuthenticated, visitorsFiltered);
+app.use('/admin/check', mwAdminIsAuthenticated, adminCheck);
+app.use('/activities/all', mwAdminIsAuthenticated, activitiesAll);
+app.use('/activity/add', mwAdminIsAuthenticated, activitiesAdd);
+app.use('/activity/update', mwAdminIsAuthenticated, activitiesUpdate);
+app.use('/activity/delete', mwAdminIsAuthenticated, activitiesDelete);
 
 app.get('/*', express.static(path.join(__dirname, 'client/build/index.html')));
 

@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const getUserDetails = require('../database/queries/getUserDetails');
+const userDetails = require('../database/queries/user_details');
 
 router.post('/', (req, res, next) => {
-  getUserDetails(req.auth.cb_id, req.body.userId)
-    .then(details => res.send({ token: req.auth.adminToken, details }))
+  userDetails(req.auth.cb_id, req.body.userId)
+    .then(details => res.send({ details }))
     .catch(next);
 });
 

@@ -1,48 +1,42 @@
+const router = require('express').Router();
 const validator = require('validator');
-const getCBAlreadyExists = require('../../database/queries/getCBAlreadyExists');
-const express = require('express');
+const cbCheckExists = require('../../database/queries/cb/cb_check_exists');
 const resetTokenGen = require('../../functions/tokengen');
-const putToken = require('../../database/queries/CBqueries/putTokenData');
+const pwdTokenAdd = require('../../database/queries/cb/pwd_token_add');
 const sendResetEmail = require('../../functions/sendResetEmail');
 
-const router = express.Router();
-
 router.post('/', (req, res, next) => {
-  let body = '';
-  req.on('data', chunk => {
-    body += chunk;
-  });
-
+  const { formEmail } = req.body;
   const tokenExpire = Date.now() + 3600000;
 
-  req.on('end', () => {
-    const data = JSON.parse(body);
-    if (data.formEmail.length === 0) {
-      res.send('noinput');
-    } else if (!validator.isEmail(data.formEmail)) {
-      res.send('email');
-    } else {
-      getCBAlreadyExists(data.formEmail)
-        .then(exists => {
-          res.send(exists);
+  const isEmpty = !formEmail.length;
+  const notEmail = !validator.isEmail(formEmail);
 
-          if (exists) {
-            resetTokenGen()
-              .then(token => {
-                putToken(token, tokenExpire, data.formEmail);
-                return token;
-              })
-              .then(token => {
-                sendResetEmail(data.formEmail, token);
-              })
-              .catch(err => {
-                console.log('Error sending token: ', err);
-              });
-          }
-        })
-        .catch(next);
-    }
-  });
+  const validationError =
+    (isEmpty && 'noinput') || (notEmail && 'email') || null;
+
+  if (validationError) return res.send(validationError);
+
+  cbCheckExists(formEmail)
+    .then(exists => {
+      if (exists) {
+        resetTokenGen()
+          .then(token =>
+            Promise.all([
+              pwdTokenAdd(token, tokenExpire, formEmail),
+              sendResetEmail(formEmail, token),
+            ])
+          )
+          .then(() => res.send(exists))
+          .catch(err => {
+            console.log('Error sending email:', err);
+            res.send('failed');
+          });
+      } else {
+        res.send(exists);
+      }
+    })
+    .catch(next);
 });
 
 module.exports = router;

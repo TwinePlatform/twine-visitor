@@ -19,7 +19,7 @@ export class AdminLogin extends Component {
 
     try {
       const { success, token, error } = await authenticatedPost(
-        '/isAdminAuthenticated',
+        '/admin/login',
         {
           password: this.state.password,
         }

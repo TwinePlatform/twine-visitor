@@ -7,7 +7,7 @@ router.post('/', (req, res, next) => {
   qrCodeMaker(req.body.hash)
     .then(QRcodeBase64Url => generatePdf(QRcodeBase64Url, req.auth.cb_logo))
     .then(pdf => sendEmail(req.body.email, req.body.name, pdf))
-    .then(() => res.send({ token: req.auth.adminToken, success: true }))
+    .then(() => res.send({ success: true }))
     .catch(next);
 });
 

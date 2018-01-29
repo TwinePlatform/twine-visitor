@@ -1,12 +1,12 @@
 const router = require('express').Router();
-const getUsersFilteredBy = require('../database/queries/getUsersFilteredBy');
+const usersFiltered = require('../database/queries/users_filtered');
 
 router.post('/', (req, res, next) => {
-  getUsersFilteredBy(req.auth.cb_id, {
+  usersFiltered(req.auth.cb_id, {
     filterBy: req.body.filterBy,
     orderBy: req.body.orderBy,
   })
-    .then(users => res.send({ token: req.auth.adminToken, users }))
+    .then(users => res.send({ users }))
     .catch(next);
 });
 

@@ -94,6 +94,13 @@ class App extends Component {
             <PrivateRoute
               auth={this.state.loggedIn}
               exact
+              path="/visitor/signup/*"
+              component={Main}
+            />
+
+            <PrivateRoute
+              auth={this.state.loggedIn}
+              exact
               path="/visitor/login"
               component={QRCode}
             />

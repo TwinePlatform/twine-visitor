@@ -1,9 +1,9 @@
 const test = require('tape');
 const activities = require('./../react-backend/database/queries/activities');
-const activitiesForToday = require('./../react-backend/database/queries/activitiesForToday');
-const deleteActivity = require('./../react-backend/database/queries/deleteActivity');
-const insertActivity = require('./../react-backend/database/queries/insertActivity');
-const updateActivity = require('./../react-backend/database/queries/updateActivity');
+const activitiesForToday = require('./../react-backend/database/queries/activities_today');
+const deleteActivity = require('./../react-backend/database/queries/activity_delete');
+const insertActivity = require('./../react-backend/database/queries/activity_add');
+const updateActivity = require('./../react-backend/database/queries/activity_update');
 
 const rebuild = require('./../react-backend/database/database_rebuild');
 const clean = require('./../react-backend/database/database_clean');
