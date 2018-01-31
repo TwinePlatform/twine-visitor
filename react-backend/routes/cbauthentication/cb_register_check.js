@@ -42,7 +42,7 @@ router.post('/', (req, res, next) => {
   if (validationError) return res.send(validationError);
 
   cbCheckExists(formEmail)
-    .then(res.send)
+    .then(exists => res.send(exists))
     .catch(next);
 });
 
