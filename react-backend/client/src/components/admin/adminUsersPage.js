@@ -90,7 +90,7 @@ export class AdminUsersPage extends Component {
     };
 
     Object.values(visits).forEach(function(key) {
-      if (key.date > Date.now() - 604800000) {
+      if (key.date > Date.now() - 691200000) {
         let num = new Date(key.date);
         visitCount[num.getDay()]++;
       }
@@ -140,15 +140,13 @@ export class AdminUsersPage extends Component {
     adminGet(this, '/users/chart-all')
       .then(res => res.numbers)
       .then(
-        (
-          [
-            visitsNumbers,
-            genderNumbers,
-            activitiesNumbers,
-            ageGroups,
-            activities,
-          ]
-        ) => {
+        ([
+          visitsNumbers,
+          genderNumbers,
+          activitiesNumbers,
+          ageGroups,
+          activities,
+        ]) => {
           this.setState({
             visits: visitsNumbers,
             visitNumbers: this.getVisitsWeek(visitsNumbers),
@@ -243,7 +241,12 @@ export class AdminUsersPage extends Component {
           </label>
         </form>
         <h4 id="visitChart">Visitor Numbers</h4>
-        <BarChart data={this.state.visitNumbers} />
+        <div id="barChartDiv">
+          <BarChart
+            data={this.state.visitNumbers}
+            options={{ responsive: true, maintainAspectRatio: false }}
+          />
+        </div>
         <table>
           <thead>
             <tr>
@@ -255,10 +258,7 @@ export class AdminUsersPage extends Component {
           <tbody>
             <tr>
               <td>
-                <PieChart
-                  data={this.state.genderNumbers}
-                  options={{ animation: { duration: 100 } }}
-                />
+                <PieChart data={this.state.genderNumbers} />
               </td>
               <td>
                 <PieChart data={this.state.activitiesGroups} />
