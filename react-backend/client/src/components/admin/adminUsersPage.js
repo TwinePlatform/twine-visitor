@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Logoutbutton } from '../visitors/logoutbutton';
 import { adminGet, adminPost } from './activitiesLib/admin_helpers';
-import { DropdownSelect, CheckboxGroup } from './filter_components/UserInputs';
+import { DropdownSelect, CheckboxGroup } from './sharedComponents/UserInputs';
+import { UsersTable, EmptyUsersTable } from './usersComponents';
+
+import { List, ListItem } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import Subheader from 'material-ui/Subheader';
 
 const PieChart = require('react-chartjs').Pie;
 const BarChart = require('react-chartjs').Bar;
@@ -174,26 +179,23 @@ export class AdminUsersPage extends Component {
       filterBy: this.state.filters,
       orderBy: this.state.orderBy,
     })
-      .then(res => {
-        this.setState(
-          {
-            users: res.users[0],
-            ageGroups: this.getAgeGroupsForChart(res.users[1]),
-            activitiesGroups: this.getActivitiesForChart(res.users[2]),
-            genderNumbers: this.getGendersForChart(res.users[3]),
-          },
-          () => console.log(this.state.users)
-        );
-      })
+      .then(res =>
+        this.setState({
+          users: res.users[0],
+          ageGroups: this.getAgeGroupsForChart(res.users[1]),
+          activitiesGroups: this.getActivitiesForChart(res.users[2]),
+          genderNumbers: this.getGendersForChart(res.users[3]),
+        })
+      )
       .catch(error => {
         this.props.history.push('/internalServerError');
       });
 
-  sort = e => this.setState({ orderBy: e.target.value }, this.updateResults);
+  sort = (a, b, orderBy) => this.setState({ orderBy }, this.updateResults);
 
-  filter = group => e => {
-    const filterBy = group + '@' + e.target.value;
-    const isAdding = e.target.checked;
+  filter = group => (a, b, value) => {
+    const filterBy = group + '@' + value;
+    const isAdding = !this.state.filters.includes(filterBy);
 
     const newFilters = isAdding
       ? [...this.state.filters, filterBy]
@@ -202,9 +204,11 @@ export class AdminUsersPage extends Component {
     this.setState({ filters: newFilters }, this.updateResults);
   };
 
+  goToUser = userId => () => this.props.history.push(`/admin/user/${userId}`);
+
   render() {
     return this.state.auth === 'SUCCESS' ? (
-      <section>
+      <React.Fragment>
         <h1>User Data</h1>
         <form>
           <CheckboxGroup
@@ -269,59 +273,25 @@ export class AdminUsersPage extends Component {
             </tr>
           </tbody>
         </table>
-        <form>
-          <DropdownSelect
-            sort={this.sort}
-            default={{ date: 'Sort by' }}
-            label="Sort by"
-            values={{
-              name: 'Name',
-              yearofbirth: 'Year of Birth',
-              sex: 'Gender',
-              date: 'Date of Signup',
-            }}
-          />
-        </form>
-        <table>
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>Name</th>
-              <th>Gender</th>
-              <th>Year of Birth</th>
-              <th>Email</th>
-              <th>Date of Signup</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.users.map(user => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>
-                  <Link to={`/admin/user/${user.id}`}>{user.fullname}</Link>
-                </td>
-                <td>{user.sex}</td>
-                <td>{user.yearofbirth}</td>
-                <td>{user.email}</td>
-                <td>
-                  {user.date.slice(0, 10)} {user.date.slice(11, 16)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <Link to="/admin">
-          <button className="Button ButtonBack">
-            Back to the admin menu page
-          </button>
-        </Link>
-        <br />
-        <Logoutbutton
-          updateLoggedIn={this.props.updateLoggedIn}
-          redirectUser={this.props.history.push}
+
+        <Subheader>Users</Subheader>
+        <Divider />
+        <DropdownSelect
+          sort={this.sort}
+          value={this.state.orderBy}
+          label="Sort by"
+          values={{
+            name: 'Name',
+            yearofbirth: 'Year of Birth',
+            sex: 'Gender',
+            date: 'Date of Signup',
+          }}
         />
-        <br />
-      </section>
+        {(this.state.users.length && (
+          <UsersTable users={this.state.users} userDetails={this.goToUser} />
+        )) || <EmptyUsersTable />}
+        <footer style={{ height: 25 }} />
+      </React.Fragment>
     ) : (
       <div> CHECKING ADMIN... </div>
     );
