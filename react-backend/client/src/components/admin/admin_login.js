@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../visitors/button';
 import { authenticatedPost } from './activitiesLib/admin_helpers';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import { List, ListItem } from 'material-ui/List';
 
 export class AdminLogin extends Component {
   constructor(props) {
@@ -12,7 +14,8 @@ export class AdminLogin extends Component {
     };
   }
 
-  handleChange = e => this.setState({ [e.target.name]: e.target.value });
+  handlePasswordChange = e =>
+    this.setState({ password: e.target.value, errorMessage: '' });
 
   authenticate = async e => {
     e.preventDefault();
@@ -20,9 +23,7 @@ export class AdminLogin extends Component {
     try {
       const { success, token, error } = await authenticatedPost(
         '/admin/login',
-        {
-          password: this.state.password,
-        }
+        { password: this.state.password }
       );
 
       if (!success || !token || error) {
@@ -45,25 +46,38 @@ export class AdminLogin extends Component {
 
   render() {
     return (
-      <div>
-        <div className="ErrorText">{this.state.errorMessage}</div>
+      <List>
         <form className="Signup" onSubmit={this.authenticate}>
-          <label className="Form__Label">
-            Please, type your password
-            <input
-              className="Form__Input"
+          <ListItem disabled>
+            <TextField
+              hintText="Enter your password here"
+              floatingLabelText="Administrator Password"
+              errorText={this.state.errorMessage}
               type="password"
               name="password"
-              onChange={this.handleChange}
+              fullWidth={true}
+              onChange={this.handlePasswordChange}
               value={this.state.password}
+              errorStyle={{
+                float: 'left',
+              }}
+              className="Pad-Bottom"
+              autoFocus
             />
-          </label>
-          <Button />
+          </ListItem>
+          <ListItem disabled>
+            <RaisedButton
+              type="submit"
+              label="continue"
+              primary={true}
+              className="Rightpad"
+            />
+            <Link to="/pswdresetcb">
+              <RaisedButton type="submit" label="reset password" />
+            </Link>
+          </ListItem>
         </form>
-        <Link to="/pswdresetcb">
-          <button className="Button ButtonBack">Reset Password</button>
-        </Link>
-      </div>
+      </List>
     );
   }
 }
