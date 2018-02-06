@@ -57,9 +57,33 @@ class App extends Component {
     });
 
   render() {
+    const adminProps = {
+      auth: this.state.adminToken,
+      updateAdminToken: this.updateAdminToken,
+      linkFunction: this.logout,
+      exact: true,
+      updateLoggedIn: this.updateLoggedIn,
+    };
+
+    const routeProps = {
+      auth: this.state.loggedIn,
+      linkFunction: this.signup,
+      linkText: 'Signup',
+      linkTo: '/visitor/signup',
+      exact: true,
+    };
+
     return (
-      <div className="Container">
-        <div className="Foreground">
+      <MuiThemeProvider>
+        <Paper
+          style={{
+            width: '100%',
+            maxWidth: 950,
+            margin: '0 auto',
+            boxSizing: 'border-box',
+          }}
+          zDepth={2}
+        >
           <Switch>
             <PrivateRoute
               auth={this.state.loggedIn}
@@ -189,8 +213,8 @@ class App extends Component {
             />
             <Route component={NotFound} />
           </Switch>
-        </div>
-      </div>
+        </Paper>
+      </MuiThemeProvider>
     );
   }
 }
