@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Logoutbutton } from '../visitors/logoutbutton';
 import { adminGet, adminPost } from './activitiesLib/admin_helpers';
-import { DropdownSelect, CheckboxGroup } from './sharedComponents/UserInputs';
+import {
+  DropdownSelect,
+  CheckboxGroup,
+  DropdownMultiSelect,
+} from './sharedComponents/UserInputs';
 import { UsersTable, EmptyUsersTable } from './usersComponents';
 
 import { List, ListItem } from 'material-ui/List';
@@ -16,7 +20,7 @@ export class AdminUsersPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      auth: 'PENDING',
+      loaded: 'PENDING',
       users: [],
       activities: [],
       filters: [],
@@ -166,7 +170,7 @@ export class AdminUsersPage extends Component {
           return adminGet(this, '/users/all');
         }
       )
-      .then(({ users }) => this.setState({ auth: 'SUCCESS', users }))
+      .then(({ users }) => this.setState({ loaded: 'SUCCESS', users }))
       .catch(error =>
         this.setErrorMessage(error, 'Error fetching gender numbers')
       );
@@ -207,72 +211,76 @@ export class AdminUsersPage extends Component {
   goToUser = userId => () => this.props.history.push(`/admin/user/${userId}`);
 
   render() {
-    return this.state.auth === 'SUCCESS' ? (
+    const activityValues = this.state.activities.reduce((acc, activity) => {
+      return { ...acc, [activity]: activity };
+    }, {});
+
+    return (
       <React.Fragment>
-        <h1>User Data</h1>
-        <form>
-          <CheckboxGroup
-            title="Filter by Gender"
-            values={{
-              male: 'Male',
-              female: 'Female',
-              prefer_not_to_say: 'Prefer not to say',
-            }}
-            change={this.filter('gender')}
+        <DropdownMultiSelect
+          title="Filter by Gender"
+          values={{
+            male: 'Male',
+            female: 'Female',
+            prefer_not_to_say: 'Prefer not to say',
+          }}
+          type="gender"
+          checkedValues={this.state.filters}
+          change={this.filter('gender')}
+        />
+        <DropdownMultiSelect
+          title="Filter by Age"
+          values={{
+            '0-17': '0-17',
+            '18-34': '18-34',
+            '35-50': '35-50',
+            '51-69': '51-69',
+            '70-more': '70-more',
+          }}
+          type="age"
+          checkedValues={this.state.filters}
+          change={this.filter('age')}
+        />
+        {this.state.activities.length && (
+          <DropdownMultiSelect
+            title="Filter by Activity"
+            values={activityValues}
+            type="activity"
+            checkedValues={this.state.filters}
+            change={this.filter('activity')}
           />
-          <CheckboxGroup
-            title="Filter by Age"
-            values={{
-              '0-17': '0-17',
-              '18-34': '18-34',
-              '35-50': '35-50',
-              '51-69': '51-69',
-              '70-more': '70-more',
-            }}
-            change={this.filter('age')}
-          />
-          <label className="Form__Label">
-            Filter by Activity
-            <br />
-            {this.state.activities.map(activity => (
-              <label key={activity}>
-                <input
-                  type="checkbox"
-                  value={activity}
-                  onChange={this.filter('activity')}
-                />
-                {activity}
-              </label>
-            ))}
-          </label>
-        </form>
-        <h4 id="visitChart">Visitor Numbers</h4>
-        <BarChart data={this.state.visitNumbers} />
-        <table>
-          <thead>
-            <tr>
-              <th>Users by Gender</th>
-              <th>Reason for Visiting</th>
-              <th>Users by Age Band</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <PieChart
-                  data={this.state.genderNumbers}
-                  options={{ animation: { duration: 100 } }}
-                />
-              </td>
-              <td>
-                <PieChart data={this.state.activitiesGroups} />
-              </td>
-              <td>
-                <PieChart data={this.state.ageGroups} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        )}
+        {this.state.loaded === 'SUCCESS' && (
+          <React.Fragment>
+            <h4 id="visitChart">Visitor Numbers</h4>
+            <BarChart data={this.state.visitNumbers} />
+            <table>
+              <thead>
+                <tr>
+                  <th>Users by Gender</th>
+                  <th>Reason for Visiting</th>
+                  <th>Users by Age Band</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <PieChart
+                      data={this.state.genderNumbers}
+                      options={{ animation: { duration: 100 } }}
+                    />
+                  </td>
+                  <td>
+                    <PieChart data={this.state.activitiesGroups} />
+                  </td>
+                  <td>
+                    <PieChart data={this.state.ageGroups} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </React.Fragment>
+        )}
 
         <Subheader>Users</Subheader>
         <Divider />
@@ -292,8 +300,6 @@ export class AdminUsersPage extends Component {
         )) || <EmptyUsersTable />}
         <footer style={{ height: 25 }} />
       </React.Fragment>
-    ) : (
-      <div> CHECKING ADMIN... </div>
     );
   }
 }
