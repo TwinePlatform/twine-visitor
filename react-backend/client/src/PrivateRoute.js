@@ -1,12 +1,16 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import MainAppBar from './components/sharedComponents/MainAppBar';
 
 const ProtectedRoute = ({ auth, component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
       (auth ? (
-        <Component {...props} {...rest} />
+        <React.Fragment>
+          <MainAppBar {...rest} />
+          <Component {...props} {...rest} />
+        </React.Fragment>
       ) : (
         <Redirect
           to={{

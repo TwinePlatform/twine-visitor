@@ -85,12 +85,7 @@ class App extends Component {
           zDepth={2}
         >
           <Switch>
-            <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
-              path="/"
-              component={Home}
-            />
+            <PrivateRoute path="/" component={Home} {...routeProps} />
 
             <Route exact path="/signupcb" component={CBsignup} />
             <Route exact path="/newPassword" component={NewPassword} />
@@ -108,102 +103,108 @@ class App extends Component {
             />
 
             <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
               path="/visitor"
               component={HomeVisitor}
+              title="Visitor dashboard"
+              home
+              {...routeProps}
             />
 
             <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
               path="/visitor/signup"
               component={Main}
+              title="Visitor signup"
+              back="/visitor"
+              {...routeProps}
             />
 
             <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
               path="/visitor/signup/*"
               component={Main}
+              title="Visitor signup"
+              back="/visitor/signup"
+              {...routeProps}
             />
 
             <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
               path="/visitor/login"
               component={QRCode}
+              title="Visitor login"
+              back="/visitor"
+              {...routeProps}
             />
 
             <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
               path="/visitor/qrerror"
               component={QrError}
+              title="Visitor QR error"
+              back="/visitor"
+              {...routeProps}
             />
 
             <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
               path="/visitor/end"
               component={Thanks}
+              title="Visitor login"
+              home
+              {...routeProps}
             />
 
             <PrivateRoute
-              auth={this.state.loggedIn}
-              updateAdminToken={this.updateAdminToken}
-              exact
               path="/admin/login"
               component={AdminLogin}
+              updateAdminToken={this.updateAdminToken}
+              title="Admin login"
+              home
+              {...routeProps}
             />
 
             <AdminRoute
-              auth={this.state.adminToken}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin"
-              updateLoggedIn={this.updateLoggedIn}
               component={AdminMenuPage}
+              title="Admin Dashboard"
+              path="/admin"
+              home
+              {...adminProps}
             />
 
             <AdminRoute
-              auth={this.state.adminToken}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin/activities"
               component={AdminActivitiesPage}
+              title="Activity Dashboard"
+              path="/admin/activities"
+              back="/admin"
+              {...adminProps}
             />
 
             <AdminRoute
-              auth={this.state.adminToken}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin/visits"
               component={AdminVisitsPage}
+              title="Visitor Dashboard"
+              path="/admin/visits"
+              back="/admin"
+              {...adminProps}
             />
 
             <AdminRoute
-              auth={this.state.adminToken}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin/users"
               component={AdminUsersPage}
+              title="Users Dashboard"
+              path="/admin/users"
+              back="/admin"
+              {...adminProps}
             />
 
             <AdminRoute
-              auth={this.state.adminToken}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin/user/:userId"
               component={AdminUserDetailsPage}
+              title="User Details"
+              path="/admin/user/:userId"
+              back="/admin/users"
+              {...adminProps}
             />
 
             <AdminRoute
-              auth={this.state.adminToken}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin/accountSettings"
               component={AdminCBSettingsPage}
+              path="/admin/accountSettings"
+              title="Account Settings"
+              back="/admin"
+              {...adminProps}
             />
 
             <Route
