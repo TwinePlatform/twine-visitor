@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Paper from 'material-ui/Paper';
 
 import './App.css';
 
 import PrivateRoute from './PrivateRoute';
 import AdminRoute from './AdminRoute';
-
 import Home from './components/home';
 
 import { CBsignup } from './components/authentication/signupcb';
@@ -43,6 +44,11 @@ class App extends Component {
   updateLoggedIn = () => {
     const loggedIn = localStorage.getItem('token');
     this.setState({ loggedIn });
+  };
+
+  logout = () => {
+    localStorage.removeItem('token');
+    this.setState({ loggedIn: false, adminToken: '' });
   };
 
   updateAdminToken = adminToken =>
