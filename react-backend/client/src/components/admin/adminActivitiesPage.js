@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { ActivityForm, ActivityList } from './activitiesComponents/activity';
+import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
+import { List, ListItem } from 'material-ui/List';
+
+import {
+  ActivityForm,
+  ActivityList,
+  ActivityEmptyList,
+} from './activitiesComponents/activity';
 import {
   addActivity,
   generateId,
@@ -10,14 +17,15 @@ import {
   updateId,
 } from './activitiesLib/activityHelpers';
 import { adminPost, adminGet } from './activitiesLib/admin_helpers';
+import { IntroText } from './sharedComponents/IntroText';
 
 export class AdminActivitiesPage extends Component {
   constructor() {
     super();
     this.state = {
-      auth: 'PENDING',
       activities: [],
       currentActivity: '',
+      deleteModal: false,
     };
   }
 
@@ -31,9 +39,11 @@ export class AdminActivitiesPage extends Component {
     this.setState({ errorMessage: errorString });
   };
 
+  openDeleteModal = deleteModal => () => this.setState({ deleteModal });
+
   componentDidMount() {
     adminGet(this, '/activities/all')
-      .then(({ activities }) => this.setState({ activities, auth: 'SUCCESS' }))
+      .then(({ activities }) => this.setState({ activities }))
       .catch(error => {
         if (error.message === 500) {
           this.props.history.push('/internalServerError');
@@ -61,7 +71,6 @@ export class AdminActivitiesPage extends Component {
   };
 
   handleRemove = (id, event) => {
-    event.preventDefault();
     const updatedActivities = removeActivity(this.state.activities, id);
     this.setState({ activities: updatedActivities });
 
@@ -119,27 +128,29 @@ export class AdminActivitiesPage extends Component {
       ? this.handleSubmit
       : this.handleEmptySubmit;
     return (
-      <div>
-        <h2>Update Activities</h2>
-        <div className="Activities">
-          {this.state.errorMessage && (
-            <span className="ErrorText">{this.state.errorMessage}</span>
-          )}
-          <ActivityForm
-            handleInputChange={this.handleInputChange}
-            currentActivity={this.state.currentActivity}
-            handleSubmit={submitHandler}
-          />
-          <ActivityList
-            toggleDay={this.toggleDay}
-            activities={this.state.activities}
-            handleRemove={this.handleRemove}
-          />
-        </div>
-        <Link to="/admin">
-          <button className="Button ButtonBack">Back to the Menu Page</button>
-        </Link>
-      </div>
+      <React.Fragment>
+        <IntroText text="Use the forms on this page to add new business activities and choose
+        the days activities run on." />
+        <Subheader>Add a new activity</Subheader>
+        <Divider />
+        <ActivityForm
+          handleInputChange={this.handleInputChange}
+          currentActivity={this.state.currentActivity}
+          handleSubmit={submitHandler}
+        />
+        {(this.state.activities.length && (
+          <React.Fragment>
+            <Subheader>Activity settings</Subheader>
+            <ActivityList
+              openDeleteModal={this.openDeleteModal}
+              deleteModal={this.state.deleteModal}
+              toggleDay={this.toggleDay}
+              activities={this.state.activities}
+              handleRemove={this.handleRemove}
+            />
+          </React.Fragment>
+        )) || <ActivityEmptyList />}
+      </React.Fragment>
     );
   }
 }
