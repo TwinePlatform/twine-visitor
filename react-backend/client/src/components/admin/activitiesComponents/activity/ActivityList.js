@@ -1,17 +1,24 @@
 import React from 'react';
+import { List } from 'material-ui/List';
 import { ActivityItem } from './ActivityItem';
 
-export const ActivityList = props => (
-  <div className="Activity-List">
-    <ul>
-      {props.activities.map(activity => (
-        <ActivityItem
-          toggleDay={props.toggleDay}
-          key={activity.id}
-          {...activity}
-          handleRemove={props.handleRemove}
-        />
-      ))}
-    </ul>
-  </div>
+export const ActivityList = ({
+  activities,
+  openDeleteModal,
+  deleteModal,
+  toggleDay,
+  handleRemove,
+}) => (
+  <List>
+    {activities.map(activity => (
+      <ActivityItem
+        openDeleteModal={openDeleteModal}
+        deleteModal={deleteModal}
+        toggleDay={toggleDay}
+        key={activity.id}
+        {...activity}
+        handleRemove={handleRemove}
+      />
+    ))}
+  </List>
 );
