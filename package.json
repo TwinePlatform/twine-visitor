@@ -9,7 +9,9 @@
   "scripts": {
     "start": "node ./react-backend/app.js",
     "devstart": "nodemon ./react-backend/bin/www",
-    "heroku-postbuild": "cd react-backend/client && npm install --only=dev && npm install && npm run build",
+    "postinstall": "cd react-backend/client && npm install",
+    "heroku-postbuild":
+      "cd react-backend/client && npm install --only=dev && npm install && npm run build",
     "db_build": "node ./react-backend/database/dbBuild",
     "test": "NODE_ENV=test nyc tape tests/*.test.js | tap-spec",
     "coverage": "NODE_ENV=test istanbul cover tape tests/*.test.js"

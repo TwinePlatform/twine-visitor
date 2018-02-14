@@ -10,3 +10,8 @@ services:
 
 before_script:
   - psql -c 'create database datapower_test;' -U postgres
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
