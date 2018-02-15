@@ -136,31 +136,11 @@ body,
   display: none;
 }
 
-h1 {
-  text-align: center;
-  padding-bottom: 20px;
-  margin: 0;
-  padding-top: 50px;
-}
-
-h2 {
-  text-align: center;
-}
-
 .Policy {
   text-align: center;
   display: inline-block;
   padding: 4%;
   font-size: 0.9rem;
-}
-
-table {
-  text-align: center;
-  margin: auto;
-}
-
-th {
-  padding-bottom: 5%;
 }
 
 .QR__image {

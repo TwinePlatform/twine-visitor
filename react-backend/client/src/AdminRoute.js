@@ -1,4 +1,5 @@
 import React from 'react';
+import MainAppBar from './components/sharedComponents/MainAppBar';
 import { Route, Redirect } from 'react-router-dom';
 
 const AdminRoute = ({ auth, component: Component, ...rest }) => (
@@ -6,7 +7,10 @@ const AdminRoute = ({ auth, component: Component, ...rest }) => (
     {...rest}
     render={props =>
       (auth ? (
-        <Component {...props} {...rest} auth={auth} />
+        <React.Fragment>
+          <MainAppBar {...rest} />
+          <Component {...props} {...rest} auth={auth} />
+        </React.Fragment>
       ) : (
         <Redirect
           to={{
