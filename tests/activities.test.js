@@ -27,7 +27,7 @@ test('Tests activities responds with the correct data', async (t) => {
 
   const activityArrayEmpty = await activities(2);
 
-  t.deepEqual(activityArrayEmpty, []);
+  t.deepEqual(activityArrayEmpty, [], 'No error if activities is called on empty table');
   t.end();
 });
 
