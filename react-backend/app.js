@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const routes = require('./router');
 
+const router = express.Router();
 const app = express();
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -15,7 +16,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.get('/api', routes);
+router.use('/api', routes);
+app.use(router);
 app.get('/*', express.static(path.join(__dirname, 'client/build/index.html')));
 
 // catch 404 and forward to error handler
