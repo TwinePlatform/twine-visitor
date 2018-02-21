@@ -4,9 +4,8 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const routes = require('./router');
+const apiRoutes = require('./router');
 
-const router = express.Router();
 const app = express();
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -16,8 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-router.use('/api', routes);
-app.use(router);
+app.use('/api', apiRoutes);
 app.get('/*', express.static(path.join(__dirname, 'client/build/index.html')));
 
 // catch 404 and forward to error handler

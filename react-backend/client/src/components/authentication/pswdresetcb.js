@@ -31,7 +31,7 @@ class CBPswdReset extends Component {
       formEmail: this.state.email,
     };
 
-    fetch('api/cb/pwd/reset', {
+    fetch('/api/cb/pwd/reset', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(checkData),

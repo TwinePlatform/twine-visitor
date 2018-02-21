@@ -35,7 +35,7 @@ class CBsignup extends Component {
       formPswdConfirm: this.state.confirm_password,
     };
 
-    fetch('api/cb/register/check', {
+    fetch('/api/cb/register/check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(checkData),
@@ -80,7 +80,7 @@ class CBsignup extends Component {
               formGenre: this.state.genre,
               formPswd: this.state.password,
             };
-            fetch('api/cb/register', {
+            fetch('/api/cb/register', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(CBData),

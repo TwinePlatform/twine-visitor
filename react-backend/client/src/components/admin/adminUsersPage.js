@@ -129,7 +129,7 @@ export class AdminUsersPage extends Component {
   };
 
   componentDidMount() {
-    adminGet(this, 'api/users/chart-all')
+    adminGet(this, '/api/users/chart-all')
       .then(res => res.numbers)
       .then(([visitsNumbers, genderNumbers, activitiesNumbers, ageGroups, activities]) => {
         this.setState({
@@ -141,7 +141,7 @@ export class AdminUsersPage extends Component {
           activities: activities.map(activity => activity.name),
         });
 
-        return adminGet(this, 'api/users/all');
+        return adminGet(this, '/api/users/all');
       })
       .then(({ users }) => this.setState({ auth: 'SUCCESS', users }))
       .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
@@ -150,7 +150,7 @@ export class AdminUsersPage extends Component {
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   updateResults = () =>
-    adminPost(this, 'api/users/filtered', {
+    adminPost(this, '/api/users/filtered', {
       filterBy: this.state.filters,
       orderBy: this.state.orderBy,
     })

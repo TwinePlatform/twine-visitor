@@ -50,7 +50,7 @@ class Main extends Component {
       formEmail: this.state.email,
     };
 
-    fetch('api/visit/check', {
+    fetch('/api/visit/check', {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify(checkData),
@@ -102,7 +102,7 @@ class Main extends Component {
       formYear: this.state.year,
       formHash: this.state.hash,
     };
-    fetch('api/qr/generator', {
+    fetch('/api/qr/generator', {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify(formData),

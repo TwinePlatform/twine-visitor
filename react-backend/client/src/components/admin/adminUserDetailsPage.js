@@ -25,7 +25,7 @@ export class AdminUserDetailsPage extends Component {
   }
 
   componentDidMount() {
-    adminPost(this, 'api/user/details', {
+    adminPost(this, '/api/user/details', {
       userId: this.state.userId,
     })
       .then(res => {
@@ -82,7 +82,7 @@ export class AdminUserDetailsPage extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    adminPost(this, 'api/user/details/update', {
+    adminPost(this, '/api/user/details/update', {
       userId: this.state.userId,
       userFullName: this.state.userFullName,
       sex: this.state.sex,
@@ -96,7 +96,7 @@ export class AdminUserDetailsPage extends Component {
   };
 
   displayQR = () => {
-    adminPost(this, 'api/user/qr', {
+    adminPost(this, '/api/user/qr', {
       hash: this.state.hash,
     })
       .then(res => {
@@ -114,7 +114,7 @@ export class AdminUserDetailsPage extends Component {
   };
 
   resendQR = () => {
-    adminPost(this, 'api/user/qr/email', {
+    adminPost(this, '/api/user/qr/email', {
       email: this.state.email,
       name: this.state.userFullName,
       hash: this.state.hash,

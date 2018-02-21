@@ -35,7 +35,7 @@ class NewPassword extends Component {
       token: this.state.token,
     };
 
-    fetch('api/cb/pwd/change', {
+    fetch('/api/cb/pwd/change', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(checkData),

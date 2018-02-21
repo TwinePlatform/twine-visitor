@@ -32,7 +32,7 @@ export class AdminActivitiesPage extends Component {
   };
 
   componentDidMount() {
-    adminGet(this, 'api/activities/all')
+    adminGet(this, '/api/activities/all')
       .then(({ activities }) => this.setState({ activities, auth: 'SUCCESS' }))
       .catch(error => {
         if (error.message === 500) {
@@ -52,7 +52,7 @@ export class AdminActivitiesPage extends Component {
 
     this.setState({ activities: updatedActivities });
 
-    adminPost(this, 'api/activity/update', updatedActivity)
+    adminPost(this, '/api/activity/update', updatedActivity)
       .then(res => res)
       .catch(error => this.setErrorMessage(error, 'Error setting day'));
   };
@@ -62,7 +62,7 @@ export class AdminActivitiesPage extends Component {
     const updatedActivities = removeActivity(this.state.activities, id);
     this.setState({ activities: updatedActivities });
 
-    adminPost(this, 'api/activity/delete', { id })
+    adminPost(this, '/api/activity/delete', { id })
       .then(res => res)
       .catch(error => this.setErrorMessage(error, 'Error removing activity'));
   };
@@ -88,7 +88,7 @@ export class AdminActivitiesPage extends Component {
       errorMessage: '',
     });
 
-    adminPost(this, 'api/activity/add', { name: newActivity.name })
+    adminPost(this, '/api/activity/add', { name: newActivity.name })
       .then(this.handleActivityFromDb(newActivity))
       .catch(error => {
         if (error.message === 'No admin token') return this.props.history.push('/admin/login');
