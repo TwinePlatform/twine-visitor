@@ -45,7 +45,8 @@ CREATE TABLE activities
   thursday BOOLEAN DEFAULT false,
   friday BOOLEAN DEFAULT false,
   saturday BOOLEAN DEFAULT false,
-  sunday BOOLEAN DEFAULT false
+  sunday BOOLEAN DEFAULT false,
+  date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE visits
@@ -73,13 +74,13 @@ VALUES
   (1, 'aldous huxley', 'female', 1993, 'sometimes@gmail.com', '2017-05-15 12:24:52', 'bcec143de6d9e45c28a9a376f1728f8227e36586ad0a770cf1417b282f1d1afa');
 
 INSERT INTO activities
-  (name, cb_id, deleted, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
+  (name, cb_id, deleted, monday, tuesday, wednesday, thursday, friday, saturday, sunday, date)
 VALUES
-  ('Yoga', 1, false, true, true, true, true, true, false, false),
-  ('French Lessons', 1, false, true, true, true, true, true, false, false),
-  ('Baking Lessons', 1, false, true, true, true, true, true, false, false),
-  ('Self-Defence Class', 1, false, true, true, true, true, true, false, false),
-  ('Flamenco Dancing', 1, false, true, true, true, true, true, false, false);
+  ('Yoga', 1, false, true, true, true, true, true, false, false, '2017-05-15 12:24:57'),
+  ('French Lessons', 1, false, true, true, true, true, true, false, false, '2017-12-22 12:24:57'),
+  ('Baking Lessons', 1, false, true, true, true, true, true, false, false, '2017-11-13 12:24:57'),
+  ('Self-Defence Class', 1, false, true, true, true, true, true, false, false, '2018-01-02 12:24:57'),
+  ('Flamenco Dancing', 1, false, true, true, true, true, true, false, false, '2018-02-15 12:24:57');
 
 INSERT INTO visits
   (usersId, activitiesId, cb_id, date)
