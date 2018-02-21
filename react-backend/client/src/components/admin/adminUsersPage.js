@@ -96,15 +96,7 @@ export class AdminUsersPage extends Component {
       }
     });
 
-    let dayName = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ];
+    let dayName = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     const buildDaysWithOffset = (num, array) => {
       return Array.from({ length: 7 }, (_, index) => array[(index + num) % 7]);
@@ -137,38 +129,28 @@ export class AdminUsersPage extends Component {
   };
 
   componentDidMount() {
-    adminGet(this, '/users/chart-all')
+    adminGet(this, 'api/users/chart-all')
       .then(res => res.numbers)
-      .then(
-        ([
-          visitsNumbers,
-          genderNumbers,
-          activitiesNumbers,
-          ageGroups,
-          activities,
-        ]) => {
-          this.setState({
-            visits: visitsNumbers,
-            visitNumbers: this.getVisitsWeek(visitsNumbers),
-            genderNumbers: this.getGendersForChart(genderNumbers),
-            activitiesGroups: this.getActivitiesForChart(activitiesNumbers),
-            ageGroups: this.getAgeGroupsForChart(ageGroups),
-            activities: activities.map(activity => activity.name),
-          });
+      .then(([visitsNumbers, genderNumbers, activitiesNumbers, ageGroups, activities]) => {
+        this.setState({
+          visits: visitsNumbers,
+          visitNumbers: this.getVisitsWeek(visitsNumbers),
+          genderNumbers: this.getGendersForChart(genderNumbers),
+          activitiesGroups: this.getActivitiesForChart(activitiesNumbers),
+          ageGroups: this.getAgeGroupsForChart(ageGroups),
+          activities: activities.map(activity => activity.name),
+        });
 
-          return adminGet(this, '/users/all');
-        }
-      )
+        return adminGet(this, 'api/users/all');
+      })
       .then(({ users }) => this.setState({ auth: 'SUCCESS', users }))
-      .catch(error =>
-        this.setErrorMessage(error, 'Error fetching gender numbers')
-      );
+      .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
   }
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   updateResults = () =>
-    adminPost(this, '/users/filtered', {
+    adminPost(this, 'api/users/filtered', {
       filterBy: this.state.filters,
       orderBy: this.state.orderBy,
     })
@@ -180,7 +162,7 @@ export class AdminUsersPage extends Component {
             activitiesGroups: this.getActivitiesForChart(res.users[2]),
             genderNumbers: this.getGendersForChart(res.users[3]),
           },
-          () => console.log(this.state.users)
+          () => console.log(this.state.users),
         );
       })
       .catch(error => {
@@ -230,11 +212,7 @@ export class AdminUsersPage extends Component {
             <br />
             {this.state.activities.map(activity => (
               <label key={activity}>
-                <input
-                  type="checkbox"
-                  value={activity}
-                  onChange={this.filter('activity')}
-                />
+                <input type="checkbox" value={activity} onChange={this.filter('activity')} />
                 {activity}
               </label>
             ))}
@@ -311,9 +289,7 @@ export class AdminUsersPage extends Component {
           </tbody>
         </table>
         <Link to="/admin">
-          <button className="Button ButtonBack">
-            Back to the admin menu page
-          </button>
+          <button className="Button ButtonBack">Back to the admin menu page</button>
         </Link>
         <br />
         <Logoutbutton

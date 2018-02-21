@@ -35,7 +35,7 @@ class NewPassword extends Component {
       token: this.state.token,
     };
 
-    fetch('/cb/pwd/change', {
+    fetch('api/cb/pwd/change', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(checkData),
@@ -82,22 +82,12 @@ class NewPassword extends Component {
       <section>
         <h1>Please enter a new password</h1>
         {error && (
-          <div className="ErrorText">
-            {error.map((el, i) => <span key={i}>{el}</span>)}
-          </div>
+          <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
         )}
-        <form
-          className="Signup"
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-        >
+        <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
           <Input type="text" question="Enter Security Token" option="token" />
           <Input type="password" question="Enter Password" option="password" />
-          <Input
-            type="password"
-            question="Confirm Password"
-            option="confirm_password"
-          />
+          <Input type="password" question="Confirm Password" option="confirm_password" />
           <Button />
         </form>
         <Link to="/logincb">

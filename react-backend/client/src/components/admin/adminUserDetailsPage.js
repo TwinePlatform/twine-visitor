@@ -25,7 +25,7 @@ export class AdminUserDetailsPage extends Component {
   }
 
   componentDidMount() {
-    adminPost(this, '/user/details', {
+    adminPost(this, 'api/user/details', {
       userId: this.state.userId,
     })
       .then(res => {
@@ -82,7 +82,7 @@ export class AdminUserDetailsPage extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    adminPost(this, '/user/details/update', {
+    adminPost(this, 'api/user/details/update', {
       userId: this.state.userId,
       userFullName: this.state.userFullName,
       sex: this.state.sex,
@@ -96,7 +96,7 @@ export class AdminUserDetailsPage extends Component {
   };
 
   displayQR = () => {
-    adminPost(this, '/user/qr', {
+    adminPost(this, 'api/user/qr', {
       hash: this.state.hash,
     })
       .then(res => {
@@ -114,7 +114,7 @@ export class AdminUserDetailsPage extends Component {
   };
 
   resendQR = () => {
-    adminPost(this, '/user/qr/email', {
+    adminPost(this, 'api/user/qr/email', {
       email: this.state.email,
       name: this.state.userFullName,
       hash: this.state.hash,
@@ -132,10 +132,7 @@ export class AdminUserDetailsPage extends Component {
 
   render() {
     const submitHandler =
-      this.state.userFullName &&
-      this.state.sex &&
-      this.state.yearOfBirth &&
-      this.state.email
+      this.state.userFullName && this.state.sex && this.state.yearOfBirth && this.state.email
         ? this.handleSubmit
         : this.handleEmptySubmit;
 
@@ -173,17 +170,12 @@ export class AdminUserDetailsPage extends Component {
               </tbody>
             </table>
             <div>
-              <img
-                className="QR__image"
-                src={this.state.url}
-                alt="This is your QRcode"
-              />
+              <img className="QR__image" src={this.state.url} alt="This is your QRcode" />
               <button className="Button" onClick={window.print}>
                 Print QR Code
               </button>
               <br />
-              {this.state.successMessage ===
-                'The email has been successfully resent' && (
+              {this.state.successMessage === 'The email has been successfully resent' && (
                 <span className="SuccessText">{this.state.successMessage}</span>
               )}
               <button className="Button" onClick={this.resendQR}>
@@ -192,9 +184,7 @@ export class AdminUserDetailsPage extends Component {
             </div>
           </div>
           <h2>Edit {this.state.userFullName}s Details</h2>
-          {this.state.errorMessage && (
-            <span className="ErrorText">{this.state.errorMessage}</span>
-          )}
+          {this.state.errorMessage && <span className="ErrorText">{this.state.errorMessage}</span>}
 
           <form>
             <label className="Form__Label">
@@ -239,8 +229,7 @@ export class AdminUserDetailsPage extends Component {
                 value={this.state.email}
               />
             </label>
-            {this.state.successMessage ===
-              'The user details have been successfully updated' && (
+            {this.state.successMessage === 'The user details have been successfully updated' && (
               <span className="SuccessText">{this.state.successMessage}</span>
             )}
             <button className="Button" onClick={submitHandler}>
@@ -261,22 +250,13 @@ export class AdminUserDetailsPage extends Component {
         <div className="visible-printer qr-code-to-print">
           <div className="dashed">
             {this.state.cb_logo ? (
-              <img
-                height="182"
-                src={this.state.cb_logo}
-                alt="Community business logo"
-              />
+              <img height="182" src={this.state.cb_logo} alt="Community business logo" />
             ) : (
               <img height="182" src={qrcodelogo} alt="Power to change Logo" />
             )}
-            <img
-              className="QR__image"
-              src={this.state.url}
-              alt="This is your QRcode"
-            />
+            <img className="QR__image" src={this.state.url} alt="This is your QRcode" />
             <h5>
-              Please print this QR code and <br /> bring it with you to access
-              next time
+              Please print this QR code and <br /> bring it with you to access next time
             </h5>
           </div>
         </div>

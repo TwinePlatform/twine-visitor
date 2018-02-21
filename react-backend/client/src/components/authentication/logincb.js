@@ -29,7 +29,7 @@ class CBlogin extends Component {
       formPswd: this.state.password,
     };
 
-    fetch('/cb/login', {
+    fetch('api/cb/login', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(checkData),
