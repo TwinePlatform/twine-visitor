@@ -50,5 +50,4 @@ test('test checkCbExists checks', async (t) => {
   }
 
   t.end();
-  process.exit(0);
 });
