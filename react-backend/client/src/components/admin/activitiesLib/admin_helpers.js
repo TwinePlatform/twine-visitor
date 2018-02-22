@@ -22,9 +22,7 @@ const authenticatedFetch = method => async (url, body) => {
       Authorization: token,
       'Content-Type': 'application/json',
     };
-    const opts = body
-      ? { method, headers, body: JSON.stringify(body) }
-      : { method, headers };
+    const opts = body ? { method, headers, body: JSON.stringify(body) } : { method, headers };
 
     const response = await fetch(url, opts);
     handleFetchError(response);
@@ -54,9 +52,7 @@ const adminFetch = method => async (that, url, body) => {
       Authorization: adminToken,
       'Content-Type': 'application/json',
     };
-    const opts = body
-      ? { headers, method, body: JSON.stringify(body) }
-      : { headers, method };
+    const opts = body ? { headers, method, body: JSON.stringify(body) } : { headers, method };
 
     const response = await fetch(url, opts);
     const { res, token } = handleAuthenticatedFetch(response);
@@ -82,4 +78,4 @@ const adminFetch = method => async (that, url, body) => {
 export const adminPost = adminFetch('POST');
 export const adminGet = adminFetch('GET');
 
-export const checkAdmin = that => adminFetch('POST')(that, '/admin/check');
+export const checkAdmin = that => adminFetch('POST')(that, '/api/admin/check');
