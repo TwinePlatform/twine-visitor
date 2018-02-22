@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 export class Thanks extends Component {
   componentDidMount() {
@@ -18,5 +19,9 @@ export class Thanks extends Component {
     );
   }
 }
+
+Thanks.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};
 
 withRouter(Thanks);

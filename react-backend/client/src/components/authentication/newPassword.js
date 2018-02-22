@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '../visitors/input';
 import { Button } from '../visitors/button';
+import PropTypes from 'prop-types';
 import errorMessages from '../errors';
 
 class NewPassword extends Component {
@@ -99,3 +100,6 @@ class NewPassword extends Component {
 }
 
 export { NewPassword };
+NewPassword.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

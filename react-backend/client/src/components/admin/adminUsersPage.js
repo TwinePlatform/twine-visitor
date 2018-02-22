@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Logoutbutton } from '../visitors/logoutbutton';
 import { adminGet, adminPost } from './activitiesLib/admin_helpers';
@@ -303,3 +304,8 @@ export class AdminUsersPage extends Component {
     );
   }
 }
+
+AdminUsersPage.propTypes = {
+  updateLoggedIn: PropTypes.func.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

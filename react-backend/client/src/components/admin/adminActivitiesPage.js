@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { ActivityForm, ActivityList } from './activitiesComponents/activity';
 import {
@@ -135,3 +136,7 @@ export class AdminActivitiesPage extends Component {
     );
   }
 }
+
+AdminActivitiesPage.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export class Input extends Component {
   constructor(props) {
@@ -27,3 +28,20 @@ export class Input extends Component {
     );
   }
 }
+
+Input.propTypes = {
+  htmlFor: PropTypes.string.isRequired,
+  label: PropTypes.node,
+  question: PropTypes.node,
+  type: PropTypes.string,
+  name: PropTypes.string,
+  option: PropTypes.option,
+};
+
+Input.defaultProps = {
+  label: null,
+  question: null,
+  type: 'text',
+  name: '',
+  option: '',
+};

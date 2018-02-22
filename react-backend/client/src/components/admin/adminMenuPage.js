@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Logoutbutton } from '../visitors/logoutbutton';
 import { checkAdmin } from './activitiesLib/admin_helpers';
@@ -69,3 +70,8 @@ export class AdminMenuPage extends Component {
     );
   }
 }
+
+AdminMenuPage.propTypes = {
+  updateLoggedIn: PropTypes.func.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

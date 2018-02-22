@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Input } from '../visitors/input';
 import { Select } from '../visitors/select';
 import { Button } from '../visitors/button';
+import PropTypes from 'prop-types';
 import errorMessages from '../errors';
 
 class CBsignup extends Component {
@@ -149,3 +150,6 @@ class CBsignup extends Component {
 }
 
 export { CBsignup };
+CBsignup.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

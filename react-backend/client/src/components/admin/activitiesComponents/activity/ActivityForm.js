@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const ActivityForm = props => (
   <form onSubmit={props.handleSubmit}>
@@ -14,3 +15,13 @@ export const ActivityForm = props => (
     </label>
   </form>
 );
+
+ActivityForm.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
+  currentActivity: PropTypes.string,
+};
+
+ActivityForm.defaultProps = {
+  currentActivity: '',
+};

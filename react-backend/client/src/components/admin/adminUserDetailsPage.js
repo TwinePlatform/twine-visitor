@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Logoutbutton } from '../visitors/logoutbutton';
 import qrcodelogo from '../../qrcodelogo.png';
@@ -266,3 +267,9 @@ export class AdminUserDetailsPage extends Component {
     );
   }
 }
+
+AdminUserDetailsPage.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+  updateLoggedIn: PropTypes.func.isRequired,
+  match: PropTypes.shape({ params: PropTypes.object }).isRequired,
+};

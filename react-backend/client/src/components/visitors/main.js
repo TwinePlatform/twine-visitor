@@ -3,6 +3,7 @@ import { Input } from './input';
 import { Select } from './select';
 import { Button } from './button';
 import { Route, Link, Switch } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import qrcodelogo from '../../qrcodelogo.png';
 import { FormPrivacy } from '../visitors/form_privacy';
 import { FormPrivacy2 } from '../visitors/form_privacy2';
@@ -209,3 +210,6 @@ class Main extends Component {
 }
 
 export { Main };
+Main.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

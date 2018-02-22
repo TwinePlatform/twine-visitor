@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Input } from '../visitors/input';
 import { Button } from '../visitors/button';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import errorMessages from '../errors';
 
@@ -88,3 +89,6 @@ class CBPswdReset extends Component {
 }
 
 export { CBPswdReset };
+CBPswdReset.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

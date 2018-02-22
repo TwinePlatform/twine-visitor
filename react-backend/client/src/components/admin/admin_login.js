@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../visitors/button';
+import PropTypes from 'prop-types';
 import { authenticatedPost } from './activitiesLib/admin_helpers';
 
 export class AdminLogin extends Component {
@@ -64,3 +65,8 @@ export class AdminLogin extends Component {
     );
   }
 }
+
+AdminLogin.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+  updateAdminToken: PropTypes.func.isRequired,
+};

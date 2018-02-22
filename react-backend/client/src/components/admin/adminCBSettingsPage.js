@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { Logoutbutton } from '../visitors/logoutbutton';
@@ -280,3 +281,8 @@ export class AdminCBSettingsPage extends Component {
     );
   }
 }
+
+AdminCBSettingsPage.propTypes = {
+  updateLoggedIn: PropTypes.func.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

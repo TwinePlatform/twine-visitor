@@ -1,6 +1,7 @@
 /*global Instascan*/
 import React, { Component } from 'react';
 import { PurposeButton } from './purposeButton';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { QRPrivacy } from '../visitors/qrprivacy';
 
@@ -199,3 +200,8 @@ export class QRCode extends Component {
 }
 
 withRouter(QRCode); //to get history and use history.push
+QRCode.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};

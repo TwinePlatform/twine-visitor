@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { partial } from '../../activitiesLib/utils';
 
 export const ActivityItem = (props) => {
@@ -37,4 +38,15 @@ export const ActivityItem = (props) => {
       </li>
     </div>
   );
+};
+
+ActivityItem.propTypes = {
+  name: PropTypes.node,
+  id: PropTypes.string,
+  handleRemove: PropTypes.func.isRequired,
+};
+
+ActivityItem.defaultProps = {
+  name: null,
+  id: '0',
 };

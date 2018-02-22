@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Input } from '../visitors/input';
 import { Button } from '../visitors/button';
@@ -87,3 +88,7 @@ class CBlogin extends Component {
 }
 
 export { CBlogin };
+CBlogin.propTypes = {
+  setLoggedIn: PropTypes.func.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export class Select extends Component {
   constructor(props) {
@@ -32,3 +33,16 @@ export class Select extends Component {
     );
   }
 }
+
+Select.propTypes = {
+  htmlFor: PropTypes.string.isRequired,
+  question: PropTypes.node,
+  option: PropTypes.string,
+  choices: PropTypes.arrayOf(PropTypes.node),
+};
+
+Select.defaultProps = {
+  question: null,
+  option: '',
+  choices: [],
+};
