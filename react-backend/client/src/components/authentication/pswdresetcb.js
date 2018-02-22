@@ -31,7 +31,7 @@ class CBPswdReset extends Component {
       formEmail: this.state.email,
     };
 
-    fetch('/cb/pwd/reset', {
+    fetch('/api/cb/pwd/reset', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(checkData),
@@ -71,19 +71,11 @@ class CBPswdReset extends Component {
 
     return (
       <section>
-        <h1>
-          Please enter your registered email to receive reset instructions
-        </h1>
+        <h1>Please enter your registered email to receive reset instructions</h1>
         {error && (
-          <div className="ErrorText">
-            {error.map((el, i) => <span key={i}>{el}</span>)}
-          </div>
+          <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
         )}
-        <form
-          className="Signup"
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-        >
+        <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
           <Input question="Business Email" option="email" />
           <Button />
         </form>

@@ -18,12 +18,9 @@ export class AdminLogin extends Component {
     e.preventDefault();
 
     try {
-      const { success, token, error } = await authenticatedPost(
-        '/admin/login',
-        {
-          password: this.state.password,
-        }
-      );
+      const { success, token, error } = await authenticatedPost('/api/admin/login', {
+        password: this.state.password,
+      });
 
       if (!success || !token || error) {
         throw new Error(error || 'Incorrect password');

@@ -22,21 +22,16 @@ export class AdminVisitsPage extends Component {
   };
 
   componentDidMount() {
-    Promise.all([
-      adminGet(this, '/activities/all'),
-      adminPost(this, '/visitors/all'),
-    ])
+    Promise.all([adminGet(this, '/api/activities/all'), adminPost(this, '/api/visitors/all')])
       .then(([{ activities }, { users }]) => {
         const activityNames = activities.map(activity => activity.name);
         this.setState({ auth: 'SUCCESS', activities: activityNames, users });
       })
-      .catch(error =>
-        this.setErrorMessage(error, 'Error fetching activities and users')
-      );
+      .catch(error => this.setErrorMessage(error, 'Error fetching activities and users'));
   }
 
   updateResults = () => {
-    adminPost(this, '/visitors/filtered', {
+    adminPost(this, '/api/visitors/filtered', {
       filterBy: this.state.filters,
       orderBy: this.state.orderBy,
     })
@@ -51,7 +46,7 @@ export class AdminVisitsPage extends Component {
       {
         orderBy: e.target.value,
       },
-      this.updateResults
+      this.updateResults,
     );
   };
 
@@ -67,7 +62,7 @@ export class AdminVisitsPage extends Component {
       {
         filters: newFilters,
       },
-      this.updateResults
+      this.updateResults,
     );
   };
 
@@ -133,9 +128,7 @@ export class AdminVisitsPage extends Component {
           </tbody>
         </table>
         <Link to="/admin">
-          <button className="Button ButtonBack">
-            Back to the admin menu page
-          </button>
+          <button className="Button ButtonBack">Back to the admin menu page</button>
         </Link>
         <br />
         <Logoutbutton
