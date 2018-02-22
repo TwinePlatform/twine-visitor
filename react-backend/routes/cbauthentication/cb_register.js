@@ -7,7 +7,10 @@ router.post('/', (req, res, next) => {
   const { formPswd, formName, formEmail, formGenre } = req.body;
 
   const hashedPassword = hashCB(formPswd);
+  console.log('pw', hashedPassword);
+
   const name = formName.toLowerCase();
+  console.log('name', name);
 
   cbAdd(name, formEmail, formGenre, hashedPassword)
     .then(() => sendCBemail(formEmail, formName))
