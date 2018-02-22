@@ -10,8 +10,9 @@
     "postinstall": "cd react-backend/client && npm install",
     "heroku-postbuild": "cd react-backend/client && npm install --only=dev && npm install && npm run build",
     "db_build": "node ./react-backend/database/dbBuild",
-    "test": "NODE_ENV=test nyc tape tests/*.test.js | tap-spec",
-    "coverage": "NODE_ENV=test istanbul cover tape tests/*.test.js"
+    "test": "NODE_ENV=test tape tests/*.test.js | tap-spec",
+    "cover": "nyc npm test",
+    "cover.report": "nyc report --reporter=html",
   },
   "repository": {
     "type": "git",
@@ -39,7 +40,6 @@
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.7.0",
-    "istanbul": "^0.4.5",
     "nodemon": "^1.15.1",
     "nyc": "^11.5.0",
     "supertest": "^3.0.0",
