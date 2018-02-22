@@ -22,7 +22,7 @@ export class AdminCBSettingsPage extends Component {
   }
 
   componentDidMount() {
-    adminPost(this, '/cb/details')
+    adminPost(this, '/api/cb/details')
       .then(res => res.details[0])
       .then(this.setCB)
       .catch(error => {
@@ -59,8 +59,7 @@ export class AdminCBSettingsPage extends Component {
 
   handleImageUpload(file) {
     const CLOUDINARY_UPLOAD_PRESET = 'cklrrn9k';
-    const CLOUDINARY_UPLOAD_URL =
-      'https://api.cloudinary.com/v1_1/dqzxe8mav/upload';
+    const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dqzxe8mav/upload';
     const cloudinaryForm = new FormData();
     cloudinaryForm.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
     cloudinaryForm.append('file', file);
@@ -129,7 +128,7 @@ export class AdminCBSettingsPage extends Component {
 
     const { org_name, genre, email, uploadedFileCloudinaryUrl } = this.state;
 
-    adminPost(this, '/cb/details/update', {
+    adminPost(this, '/api/cb/details/update', {
       org_name,
       genre,
       email,
@@ -190,9 +189,7 @@ export class AdminCBSettingsPage extends Component {
           </table>
         </div>
         <h2>Edit {this.state.org_name}s Details</h2>
-        {this.state.errorMessage && (
-          <span className="ErrorText">{this.state.errorMessage}</span>
-        )}
+        {this.state.errorMessage && <span className="ErrorText">{this.state.errorMessage}</span>}
         {this.state.successMessage && (
           <span className="SuccessText">{this.state.successMessage}</span>
         )}
@@ -213,37 +210,25 @@ export class AdminCBSettingsPage extends Component {
               <option defaultValue value={this.state.genre}>
                 Change genre: {this.state.genre}
               </option>
-              <option value="Art centre or facility">
-                Art centre or facility
-              </option>
+              <option value="Art centre or facility">Art centre or facility</option>
               <option value="Community hub, facility or space">
                 Community hub, facility or space
               </option>
-              <option value="Community pub, shop or café">
-                Community pub, shop or café
-              </option>
+              <option value="Community pub, shop or café">Community pub, shop or café</option>
               <option value="Employment, training, business support or education">
                 Employment, training, business support or education
               </option>
               <option value="Energy">Energy</option>
-              <option value="Environment or nature">
-                Environment or nature
-              </option>
+              <option value="Environment or nature">Environment or nature</option>
               <option value="Food catering or production (incl. farming)">
                 Food catering or production (incl. farming)
               </option>
-              <option value="Health, care or wellbeing">
-                Health, care or wellbeing
-              </option>
+              <option value="Health, care or wellbeing">Health, care or wellbeing</option>
               <option value="Housing">Housing</option>
-              <option value="Income or financial inclusion">
-                Income or financial inclusion
-              </option>
+              <option value="Income or financial inclusion">Income or financial inclusion</option>
               <option value="Sport & leisure">Sport & leisure</option>
               <option value="Transport">Transport</option>
-              <option value="Visitor facilities or tourism">
-                Visitor facilities or tourism
-              </option>
+              <option value="Visitor facilities or tourism">Visitor facilities or tourism</option>
               <option value="Waste reduction, reuse or recycling">
                 Waste reduction, reuse or recycling
               </option>
@@ -273,10 +258,7 @@ export class AdminCBSettingsPage extends Component {
           {this.state.uploadedFileCloudinaryUrl && (
             <React.Fragment>
               <button onClick={this.clearUploadUrl}>X</button>
-              <img
-                src={this.state.uploadedFileCloudinaryUrl}
-                alt="This is the uploaded logo"
-              />
+              <img src={this.state.uploadedFileCloudinaryUrl} alt="This is the uploaded logo" />
             </React.Fragment>
           )}
         </div>
@@ -284,9 +266,7 @@ export class AdminCBSettingsPage extends Component {
           Submit
         </button>
         <Link to="/admin">
-          <button className="Button ButtonBack">
-            Back to the admin menu page
-          </button>
+          <button className="Button ButtonBack">Back to the admin menu page</button>
         </Link>
         <br />
         <Logoutbutton

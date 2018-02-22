@@ -2,10 +2,8 @@
   "name": "datapower",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
   "scripts": {
     "start": "node ./react-backend/app.js",
     "devstart": "nodemon ./react-backend/bin/www",
@@ -19,7 +17,16 @@
     "type": "git",
     "url": "git+https://github.com/FAC-11/DataPower.git"
   },
-  "author": "Rachael, James, Alina",
+  "engines": { "node": ">=8.4" },
+  "contributors": [
+    "James Inglis <jinglis12@gmail.com>",
+    "Alina Solinas",
+    "Rachael Rourke",
+    "Zooey Miller",
+    "Finn Hodgkin",
+    "Aisha Nasir <aisha@foundersandcoders.com>",
+    "Elias Malik <elias@foundersandcoders.com>"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/FAC-11/DataPower/issues"

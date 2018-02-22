@@ -32,7 +32,7 @@ export class AdminActivitiesPage extends Component {
   };
 
   componentDidMount() {
-    adminGet(this, '/activities/all')
+    adminGet(this, '/api/activities/all')
       .then(({ activities }) => this.setState({ activities, auth: 'SUCCESS' }))
       .catch(error => {
         if (error.message === 500) {
@@ -48,14 +48,11 @@ export class AdminActivitiesPage extends Component {
   toggleDay = (day, id) => {
     const activity = findById(id, this.state.activities);
     const updatedActivity = { ...activity, [day]: !activity[day] };
-    const updatedActivities = updateActivity(
-      this.state.activities,
-      updatedActivity
-    );
+    const updatedActivities = updateActivity(this.state.activities, updatedActivity);
 
     this.setState({ activities: updatedActivities });
 
-    adminPost(this, '/activity/update', updatedActivity)
+    adminPost(this, '/api/activity/update', updatedActivity)
       .then(res => res)
       .catch(error => this.setErrorMessage(error, 'Error setting day'));
   };
@@ -65,7 +62,7 @@ export class AdminActivitiesPage extends Component {
     const updatedActivities = removeActivity(this.state.activities, id);
     this.setState({ activities: updatedActivities });
 
-    adminPost(this, '/activity/delete', { id })
+    adminPost(this, '/api/activity/delete', { id })
       .then(res => res)
       .catch(error => this.setErrorMessage(error, 'Error removing activity'));
   };
@@ -91,11 +88,10 @@ export class AdminActivitiesPage extends Component {
       errorMessage: '',
     });
 
-    adminPost(this, '/activity/add', { name: newActivity.name })
+    adminPost(this, '/api/activity/add', { name: newActivity.name })
       .then(this.handleActivityFromDb(newActivity))
       .catch(error => {
-        if (error.message === 'No admin token')
-          return this.props.history.push('/admin/login');
+        if (error.message === 'No admin token') return this.props.history.push('/admin/login');
 
         this.setErrorMessage(error, 'Error removing activity');
       });
@@ -115,16 +111,12 @@ export class AdminActivitiesPage extends Component {
   };
 
   render() {
-    const submitHandler = this.state.currentActivity
-      ? this.handleSubmit
-      : this.handleEmptySubmit;
+    const submitHandler = this.state.currentActivity ? this.handleSubmit : this.handleEmptySubmit;
     return (
       <div>
         <h2>Update Activities</h2>
         <div className="Activities">
-          {this.state.errorMessage && (
-            <span className="ErrorText">{this.state.errorMessage}</span>
-          )}
+          {this.state.errorMessage && <span className="ErrorText">{this.state.errorMessage}</span>}
           <ActivityForm
             handleInputChange={this.handleInputChange}
             currentActivity={this.state.currentActivity}
