@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Logoutbutton } from '../visitors/logoutbutton';
+import Logoutbutton from '../visitors/logoutbutton';
 import { adminPost, adminGet } from './activitiesLib/admin_helpers';
 import { DropdownSelect, CheckboxGroup } from './filter_components/UserInputs';
 
-export class AdminVisitsPage extends Component {
+export default class AdminVisitsPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,11 +17,6 @@ export class AdminVisitsPage extends Component {
     };
   }
 
-  setErrorMessage = (error, errorString) => {
-    // console.log(error); // Uncomment to display full errors in the console.
-    this.setState({ errorMessage: errorString });
-  };
-
   componentDidMount() {
     Promise.all([adminGet(this, '/api/activities/all'), adminPost(this, '/api/visitors/all')])
       .then(([{ activities }, { users }]) => {
@@ -31,6 +26,11 @@ export class AdminVisitsPage extends Component {
       .catch(error => this.setErrorMessage(error, 'Error fetching activities and users'));
   }
 
+  setErrorMessage = (error, errorString) => {
+    // console.log(error); // Uncomment to display full errors in the console.
+    this.setState({ errorMessage: errorString });
+  };
+
   updateResults = () => {
     adminPost(this, '/api/visitors/filtered', {
       filterBy: this.state.filters,
@@ -39,20 +39,18 @@ export class AdminVisitsPage extends Component {
       .then(({ users }) => {
         this.setState({ users });
       })
-      .catch(error => false);
+      .catch(() => false); // TODO: What is this supposed to do?
   };
 
-  sort = e => {
+  sort = (e) => {
     this.setState(
-      {
-        orderBy: e.target.value,
-      },
+      { orderBy: e.target.value },
       this.updateResults,
     );
   };
 
-  filter = group => e => {
-    const filterBy = group + '@' + e.target.value;
+  filter = group => (e) => {
+    const filterBy = `${group}@${e.target.value}`;
     const isAdding = e.target.checked;
 
     const newFilters = isAdding

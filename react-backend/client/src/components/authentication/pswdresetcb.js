@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Input } from '../visitors/input';
-import { Button } from '../visitors/button';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import Input from '../visitors/input';
+import Button from '../visitors/button';
 import errorMessages from '../errors';
 
-class CBPswdReset extends Component {
+export default class CBPswdReset extends Component {
   constructor(props) {
     super(props);
 
@@ -15,17 +15,17 @@ class CBPswdReset extends Component {
     };
   }
 
-  handleChange = e => {
-    let newState = {};
-    newState[e.target.name] = e.target.value;
-    this.setState(newState);
-  };
-
   setError(messagesArray) {
     this.setState({ error: messagesArray });
   }
 
-  handleSubmit = e => {
+  handleChange = (e) => {
+    const newState = {};
+    newState[e.target.name] = e.target.value;
+    this.setState(newState);
+  };
+
+  handleSubmit = (e) => {
     e.preventDefault();
 
     const checkData = {
@@ -37,14 +37,14 @@ class CBPswdReset extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(checkData),
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 500) {
           throw new Error();
         } else {
           return res.text();
         }
       })
-      .then(data => {
+      .then((data) => {
         switch (data) {
           case 'email':
             this.setError([errorMessages.EMAIL_ERROR]);
@@ -62,7 +62,7 @@ class CBPswdReset extends Component {
             break;
         }
       })
-      .catch(error => {
+      .catch(() => {
         this.props.history.push('/internalServerError');
       });
   };
@@ -74,7 +74,7 @@ class CBPswdReset extends Component {
       <section>
         <h1>Please enter your registered email to receive reset instructions</h1>
         {error && (
-          <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
+          <div className="ErrorText">{error.map(el => <span key={el}>{el}</span>)}</div>
         )}
         <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
           <Input question="Business Email" option="email" />
@@ -88,7 +88,6 @@ class CBPswdReset extends Component {
   }
 }
 
-export { CBPswdReset };
 CBPswdReset.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

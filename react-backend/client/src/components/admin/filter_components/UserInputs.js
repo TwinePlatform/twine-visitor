@@ -6,15 +6,15 @@ export const DropdownSelect = (props) => {
   const valuesText = Object.entries(props.values);
 
   return (
-    <label className="Form__Label">
+    <label className="Form__Label" htmlFor={props.label}>
       {props.label}
       <br />
-      <select onChange={props.sort}>
+      <select id={props.label} onChange={props.sort}>
         <option defaultValue value={defaultValue}>
           {defaultText}
         </option>
-        {valuesText.map(([value, text], id) => (
-          <option key={id} value={value}>
+        {valuesText.map(([value, text]) => (
+          <option key={value} value={value}>
             {text}
           </option>
         ))}
@@ -30,9 +30,9 @@ export const CheckboxGroup = (props) => {
     <section className="Form__Label">
       {props.title}
       <br />
-      {valuesText.map(([value, text], id) => (
-        <label key={id}>
-          <input type="checkbox" value={value} onChange={props.change} />
+      {valuesText.map(([value, text]) => (
+        <label key={value} htmlFor={value}>
+          <input id={value} type="checkbox" value={value} onChange={props.change} />
           {text}
         </label>
       ))}
@@ -43,7 +43,6 @@ export const CheckboxGroup = (props) => {
 DropdownSelect.propTypes = {
   default: PropTypes.objectOf(PropTypes.node),
   values: PropTypes.objectOf(PropTypes.node),
-  htmlFor: PropTypes.string.isRequired,
   label: PropTypes.node,
   sort: PropTypes.func,
 };
@@ -57,7 +56,6 @@ DropdownSelect.defaultProps = {
 
 CheckboxGroup.propTypes = {
   values: PropTypes.objectOf(PropTypes.node),
-  htmlFor: PropTypes.string.isRequired,
   title: PropTypes.node,
   change: PropTypes.func,
 };

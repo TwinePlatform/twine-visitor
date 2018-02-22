@@ -1,9 +1,9 @@
-/*global Instascan*/
+/* global Instascan */
 import React, { Component } from 'react';
-import { PurposeButton } from './purposeButton';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { QRPrivacy } from '../visitors/qrprivacy';
+import PurposeButton from './purposeButton';
+import QRPrivacy from '../visitors/qrprivacy';
 
 function getUserFromQRScan(content) {
   const headers = new Headers({
@@ -16,7 +16,7 @@ function getUserFromQRScan(content) {
     body: JSON.stringify({ user: content }),
   })
     .then(res => res.json())
-    .catch(error => {
+    .catch((error) => {
       console.log('error from getUserFromQRScan:  ', error);
       throw error;
     });
@@ -24,18 +24,18 @@ function getUserFromQRScan(content) {
 
 function instascan() {
   return new Promise((resolve, reject) => {
-    let scanner = new Instascan.Scanner({
+    const scanner = new Instascan.Scanner({
       video: document.getElementById('preview'),
       scanPeriod: 5,
     });
-    scanner.addListener('scan', function(content) {
+    scanner.addListener('scan', (content) => {
       if (document.getElementById('preview')) {
         scanner
           .stop()
-          .then(res => {
+          .then(() => {
             resolve(content);
           })
-          .catch(error => {
+          .catch(() => {
             reject('failure stopping scanner');
           });
       } else {
@@ -44,20 +44,20 @@ function instascan() {
       }
     });
     Instascan.Camera.getCameras()
-      .then(cameras => {
+      .then((cameras) => {
         if (cameras.length > 0) {
           scanner.start(cameras[0]);
         } else {
           reject('ERROR HAPPENING AT getCameras');
         }
       })
-      .catch(err => {
+      .catch((err) => {
         reject(err);
       });
   });
 }
 
-export class QRCode extends Component {
+export default class QRCode extends Component {
   constructor() {
     super();
 
@@ -74,9 +74,55 @@ export class QRCode extends Component {
     this.changeActivity = this.changeActivity.bind(this);
   }
 
-  handleVideo = e => {
-    let newState = {};
-    newState['login'] = this.state.login + 1;
+  componentDidMount() {
+    if (this.state.login === 1) {
+      instascan()
+        .then((content) => {
+          this.handleVideo();
+          return getUserFromQRScan(content);
+        })
+        .then((user) => {
+          this.setState({
+            username: user.fullname,
+            hash: user.hash,
+          });
+        })
+        .catch((error) => {
+          console.log('ERROR HAPPENING AT INSTASCAN', error);
+          this.props.history.push('/visitor/qrerror');
+        });
+    }
+
+    fetch('/api/activities/today', {
+      method: 'GET',
+      headers: this.headers,
+    })
+      .then((res) => {
+        if (res.status === 500) {
+          throw new Error();
+        } else {
+          return res.json();
+        }
+      })
+      .then(res => res.activities)
+      .then((activities) => {
+        this.setState({ activities });
+      })
+      .catch((error) => {
+        console.log('ERROR HAPPENING AT FETCH', error);
+        this.props.history.push('/visitor/qrerror');
+      });
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.username === 'there is no registered user') {
+      this.props.history.push('/visitor/qrerror');
+    }
+  }
+
+  handleVideo = () => {
+    const newState = {};
+    newState.login = this.state.login + 1;
     this.setState(newState);
   };
 
@@ -89,7 +135,7 @@ export class QRCode extends Component {
     'Content-Type': 'application/json',
   });
 
-  changeActivity = newActivity => {
+  changeActivity = (newActivity) => {
     this.setState({
       activity: newActivity,
     });
@@ -104,63 +150,17 @@ export class QRCode extends Component {
       headers: this.headersPost,
       body: JSON.stringify(visitInfo),
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 500) {
           throw new Error();
         }
       })
       .then(() => this.props.history.push('/visitor/end'))
-      .catch(error => {
-        console.log('ERROR HAPPENING AT FETCH /postActivity', error);
+      .catch((error) => {
+        console.log('ERROR HAPPENING AT FETCH /api/visit/add', error);
         this.props.history.push('/visitor/login');
       });
   };
-
-  componentDidMount() {
-    if (this.state.login === 1) {
-      instascan()
-        .then(content => {
-          this.handleVideo();
-          return getUserFromQRScan(content);
-        })
-        .then(user => {
-          this.setState({
-            username: user.fullname,
-            hash: user.hash,
-          });
-        })
-        .catch(error => {
-          console.log('ERROR HAPPENING AT INSTASCAN', error);
-          this.props.history.push('/visitor/qrerror');
-        });
-    }
-
-    fetch('/api/activities/today', {
-      method: 'GET',
-      headers: this.headers,
-    })
-      .then(res => {
-        if (res.status === 500) {
-          throw new Error();
-        } else {
-          return res.json();
-        }
-      })
-      .then(res => res.activities)
-      .then(activities => {
-        this.setState({ activities });
-      })
-      .catch(error => {
-        console.log('ERROR HAPPENING AT FETCH', error);
-        this.props.history.push('/visitor/qrerror');
-      });
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    if (nextState.username === 'there is no registered user') {
-      this.props.history.push('/visitor/qrerror');
-    }
-  }
 
   render() {
     if (this.state.login === 1) {
@@ -175,31 +175,31 @@ export class QRCode extends Component {
           <QRPrivacy className="col-3" />
         </div>
       );
-    } else {
-      return (
-        <div className="row">
-          <section className="Main col-9">
-            <h1 className="capitalise" id="username">
-              Welcome Back, {this.state.username}
-            </h1>
-
-            {this.state.activities.map(activity => (
-              <PurposeButton
-                key={activity.name}
-                session={activity.name}
-                activity={this.state.activity}
-                onClick={this.changeActivity}
-              />
-            ))}
-          </section>
-          <QRPrivacy className="col-3" />
-        </div>
-      );
     }
+    return (
+      <div className="row">
+        <section className="Main col-9">
+          <h1 className="capitalise" id="username">
+              Welcome Back, {this.state.username}
+          </h1>
+
+          {this.state.activities.map(activity => (
+            <PurposeButton
+              key={activity.name}
+              session={activity.name}
+              activity={this.state.activity}
+              onClick={this.changeActivity}
+            />
+          ))}
+        </section>
+        <QRPrivacy className="col-3" />
+      </div>
+    );
   }
 }
 
-withRouter(QRCode); //to get history and use history.push
+withRouter(QRCode); // to get history and use history.push
+
 QRCode.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export class Select extends Component {
+export default class Select extends Component {
   constructor(props) {
     super(props);
     this.state = { userInput: '' };
@@ -14,10 +14,11 @@ export class Select extends Component {
 
   render() {
     return (
-      <label className="Form__Label">
+      <label className="Form__Label" htmlFor={this.props.question}>
         {this.props.question}
         <br />
         <select
+          id={this.props.question}
           name={this.props.option}
           onChange={this.handleUserInput}
           value={this.state.userInput}
@@ -35,7 +36,6 @@ export class Select extends Component {
 }
 
 Select.propTypes = {
-  htmlFor: PropTypes.string.isRequired,
   question: PropTypes.node,
   option: PropTypes.string,
   choices: PropTypes.arrayOf(PropTypes.node),

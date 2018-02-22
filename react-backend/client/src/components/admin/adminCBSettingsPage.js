@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
-import { Logoutbutton } from '../visitors/logoutbutton';
+import Logoutbutton from '../visitors/logoutbutton';
 import { adminPost } from './activitiesLib/admin_helpers';
 
-export class AdminCBSettingsPage extends Component {
+export default class AdminCBSettingsPage extends Component {
   constructor(props) {
     super(props);
 
@@ -26,7 +26,7 @@ export class AdminCBSettingsPage extends Component {
     adminPost(this, '/api/cb/details')
       .then(res => res.details[0])
       .then(this.setCB)
-      .catch(error => {
+      .catch((error) => {
         if (error.message === 500) {
           this.props.history.push('/internalServerError');
         } else if (error.message === 'No admin token') {
@@ -37,18 +37,7 @@ export class AdminCBSettingsPage extends Component {
       });
   }
 
-  clearUploadUrl = () => {
-    this.setState({
-      uploadedFileCloudinaryUrl: '',
-    });
-  };
-
-  setErrorMessage = (error, errorString) => {
-    // console.log(error) // Uncomment to display full errors in the console.
-    this.setState({ errorMessage: errorString });
-  };
-
-  onImageDrop(files) {
+  onImageDrop = (files) => {
     this.setState({
       uploadedFile: files[0],
       errorMessage: '',
@@ -56,6 +45,30 @@ export class AdminCBSettingsPage extends Component {
     });
 
     this.handleImageUpload(files[0]);
+  }
+
+  setErrorMessage = (error, errorString) => {
+    // console.log(error) // Uncomment to display full errors in the console.
+    this.setState({ errorMessage: errorString });
+  }
+
+  setCB = (cb) => {
+    this.setState({
+      id: cb.id,
+      org_name: cb.org_name,
+      genre: cb.genre,
+      email: cb.email,
+      signupDate: cb.date.replace(/T/g, ' ').slice(0, 19),
+      errorMessage: '',
+      cbLogo: cb.uploadedfilecloudinaryurl,
+      auth: 'SUCCESS',
+    });
+  }
+
+  clearUploadUrl = () => {
+    this.setState({
+      uploadedFileCloudinaryUrl: '',
+    });
   }
 
   handleImageUpload(file) {
@@ -73,31 +86,18 @@ export class AdminCBSettingsPage extends Component {
       },
     })
       .then(res => res.json())
-      .then(res => {
+      .then((res) => {
         if (res.secure_url) {
           this.setState({
             uploadedFileCloudinaryUrl: res.secure_url,
           });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         this.setErrorMessage(err, 'Failed to upload the logo');
       });
   }
-
-  setCB = cb => {
-    this.setState({
-      id: cb.id,
-      org_name: cb.org_name,
-      genre: cb.genre,
-      email: cb.email,
-      signupDate: cb.date.replace(/T/g, ' ').slice(0, 19),
-      errorMessage: '',
-      cbLogo: cb.uploadedfilecloudinaryurl,
-      auth: 'SUCCESS',
-    });
-  };
 
   submitConfirmation = () => {
     this.setState({
@@ -105,7 +105,7 @@ export class AdminCBSettingsPage extends Component {
     });
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
       errorMessage: '',
@@ -113,21 +113,21 @@ export class AdminCBSettingsPage extends Component {
     });
   };
 
-  handleChangeGenre = e => {
+  handleChangeGenre = (e) => {
     this.setState({ genre: e.target.value, successMessage: '' });
   };
 
-  handleEmptySubmit = event => {
+  handleEmptySubmit = (event) => {
     event.preventDefault();
     this.setState({
       errorMessage: 'Please do not leave empty input fields',
     });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
 
-    const { org_name, genre, email, uploadedFileCloudinaryUrl } = this.state;
+    const { org_name, genre, email, uploadedFileCloudinaryUrl } = this.state; // eslint-disable-line
 
     adminPost(this, '/api/cb/details/update', {
       org_name,
@@ -139,7 +139,7 @@ export class AdminCBSettingsPage extends Component {
       .then(this.setCB)
       .then(this.submitConfirmation)
       .then(this.clearUploadUrl)
-      .catch(error => this.props.history.push('/internalServerError'));
+      .catch(() => this.props.history.push('/internalServerError'));
   };
 
   render() {
@@ -195,9 +195,10 @@ export class AdminCBSettingsPage extends Component {
           <span className="SuccessText">{this.state.successMessage}</span>
         )}
         <form>
-          <label className="Form__Label">
+          <label className="Form__Label" htmlFor="cb-business-name">
             Edit Business Name
             <input
+              id="cb-business-name"
               className="Form__Input"
               type="text"
               name="org_name"
@@ -205,9 +206,9 @@ export class AdminCBSettingsPage extends Component {
               value={this.state.org_name}
             />
           </label>
-          <label className="Form__Label">
+          <label className="Form__Label" htmlFor="cb-type-of-business">
             Edit Type of Business
-            <select className="Form__Input" onChange={this.handleChangeGenre}>
+            <select id="cb-type-of-business" className="Form__Input" onChange={this.handleChangeGenre}>
               <option defaultValue value={this.state.genre}>
                 Change genre: {this.state.genre}
               </option>
@@ -227,7 +228,7 @@ export class AdminCBSettingsPage extends Component {
               <option value="Health, care or wellbeing">Health, care or wellbeing</option>
               <option value="Housing">Housing</option>
               <option value="Income or financial inclusion">Income or financial inclusion</option>
-              <option value="Sport & leisure">Sport & leisure</option>
+              <option value="Sport &amp; leisure">Sport &amp; leisure</option>
               <option value="Transport">Transport</option>
               <option value="Visitor facilities or tourism">Visitor facilities or tourism</option>
               <option value="Waste reduction, reuse or recycling">
@@ -236,9 +237,10 @@ export class AdminCBSettingsPage extends Component {
             </select>
           </label>
 
-          <label className="Form__Label">
+          <label className="Form__Label" htmlFor="cb-email">
             Edit Email
             <input
+              id="cb-email"
               className="Form__Input"
               type="text"
               name="email"
@@ -252,7 +254,7 @@ export class AdminCBSettingsPage extends Component {
             className={this.state.uploadedFileCloudinaryUrl ? 'hidden' : ''}
             multiple={false}
             accept="image/*"
-            onDrop={this.onImageDrop.bind(this)}
+            onDrop={this.onImageDrop}
           >
             <p>Drop a logo or click to select a file to upload.</p>
           </Dropzone>
