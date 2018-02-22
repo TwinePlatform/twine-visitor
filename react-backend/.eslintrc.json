@@ -2,6 +2,7 @@
   "extends": ["airbnb", "prettier"],
   "rules": {
     "consistent-return": 0,
-    "no-shadow": 0
+    "no-shadow": 0,
+    "camelcase": 0
   }
 }
