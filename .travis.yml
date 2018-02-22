@@ -1,6 +1,14 @@
 language: node_js
 node_js:
-  - 'node'
+  - '8'
+
+env:
+  - NODE_ENV=test
+
+cache:
+  directories:
+    - "node_modules"
+    - "react-backend/client/node_modules"
 
 addons:
   postgresql: "9.4"
@@ -10,6 +18,7 @@ services:
 
 install:
   - npm install -g codecov
+  - npm install
 
 before_script:
   - psql -c 'create database datapower_test;' -U postgres
