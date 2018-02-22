@@ -25,9 +25,9 @@ before_script:
 
 script:
   - npm run lint
-  - cd react-backend/client && npm run build
-  - nyc npm test
-  - nyc report --reporter=text-lcov > coverage.lcov
+  - npm run build.client
+  - npm run cover
+  - npm run cover.report.ci
   - codecov
 
 notifications:
