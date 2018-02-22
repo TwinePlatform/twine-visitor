@@ -8,8 +8,17 @@ addons:
 services:
   - postgresql
 
+install:
+  - npm install -g codecov
+
 before_script:
   - psql -c 'create database datapower_test;' -U postgres
+
+script:
+  - npm run lint
+  - nyc npm test
+  - nyc report --reporter=text-lcov > coverage.lcov
+  - codecov
 
 notifications:
   email:
