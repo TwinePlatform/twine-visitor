@@ -50,6 +50,7 @@
     "travis": "^0.1.1"
   },
   "dependencies": {
+    "babel-eslint": "^8.2.2",
     "body-parser": "^1.17.2",
     "cookie-parser": "~1.4.3",
     "crypto": "^1.0.1",
