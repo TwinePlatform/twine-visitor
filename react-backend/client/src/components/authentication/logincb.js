@@ -20,7 +20,7 @@ class CBlogin extends Component {
     this.setState({ error: messagesArray });
   }
 
-  handleChange = e => this.setState({ [e.target.name]: e.target.value });
+  handleChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -67,9 +67,15 @@ class CBlogin extends Component {
       <section>
         <h1>Please login</h1>
         {error && (
-          <div className="ErrorText">{error.map(el => <span key={el}>{el}</span>)}</div>
+          <div className="ErrorText">
+            {error.map((el) => <span key={el}>{el}</span>)}
+          </div>
         )}
-        <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
+        <form
+          className="Signup"
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+        >
           <Input label="Business Email" name="email" />
           <Input label="Password" name="password" type="password" />
           <Button label="Login" />
@@ -79,7 +85,9 @@ class CBlogin extends Component {
           <button className="Button ButtonBack">Reset Password</button>
         </Link>
         <Link to="/signupcb">
-          <button className="Button ButtonBack">Sign up your community business</button>
+          <button className="Button ButtonBack">
+            Sign up your community business
+          </button>
         </Link>
         <br />
       </section>
