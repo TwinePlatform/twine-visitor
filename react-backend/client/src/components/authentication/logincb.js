@@ -20,7 +20,7 @@ class CBlogin extends Component {
     this.setState({ error: messagesArray });
   }
 
-  handleChange = (e) => this.setState({ [e.target.name]: e.target.value });
+  handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -68,7 +68,7 @@ class CBlogin extends Component {
         <h1>Please login</h1>
         {error && (
           <div className="ErrorText">
-            {error.map((el) => <span key={el}>{el}</span>)}
+            {error.map(el => <span key={el}>{el}</span>)}
           </div>
         )}
         <form
