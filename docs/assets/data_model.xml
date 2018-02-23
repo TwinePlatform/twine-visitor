@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
+<!-- Active URL: https://ondras.zarovi.cz/sql/demo/ -->
+<sql>
+<datatypes db="mysql">
+	<group label="Numeric" color="rgb(238,238,170)">
+		<type label="Integer" length="0" sql="INTEGER" quote=""/>
+	 	<type label="TINYINT" length="0" sql="TINYINT" quote=""/>
+	 	<type label="SMALLINT" length="0" sql="SMALLINT" quote=""/>
+	 	<type label="MEDIUMINT" length="0" sql="MEDIUMINT" quote=""/>
+	 	<type label="INT" length="0" sql="INT" quote=""/>
+		<type label="BIGINT" length="0" sql="BIGINT" quote=""/>
+		<type label="Decimal" length="1" sql="DECIMAL" re="DEC" quote=""/>
+		<type label="Single precision" length="0" sql="FLOAT" quote=""/>
+		<type label="Double precision" length="0" sql="DOUBLE" re="DOUBLE" quote=""/>
+	</group>
+
+	<group label="Character" color="rgb(255,200,200)">
+		<type label="Char" length="1" sql="CHAR" quote="'"/>
+		<type label="Varchar" length="1" sql="VARCHAR" quote="'"/>
+		<type label="Text" length="0" sql="MEDIUMTEXT" re="TEXT" quote="'"/>
+		<type label="Binary" length="1" sql="BINARY" quote="'"/>
+		<type label="Varbinary" length="1" sql="VARBINARY" quote="'"/>
+		<type label="BLOB" length="0" sql="BLOB" re="BLOB" quote="'"/>
+	</group>
+
+	<group label="Date &amp; Time" color="rgb(200,255,200)">
+		<type label="Date" length="0" sql="DATE" quote="'"/>
+		<type label="Time" length="0" sql="TIME" quote="'"/>
+		<type label="Datetime" length="0" sql="DATETIME" quote="'"/>
+		<type label="Year" length="0" sql="YEAR" quote=""/>
+		<type label="Timestamp" length="0" sql="TIMESTAMP" quote="'"/>
+	</group>
+
+	<group label="Miscellaneous" color="rgb(200,200,255)">
+		<type label="ENUM" length="1" sql="ENUM" quote=""/>
+		<type label="SET" length="1" sql="SET" quote=""/>
+		<type label="Bit" length="0" sql="bit" quote=""/>
+	</group>
+</datatypes><table x="198" y="50" name="cbusiness">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="org_name" null="0" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+</row>
+<row name="email" null="0" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+</row>
+<row name="genre" null="0" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+</row>
+<row name="uploadedFileCloudinaryUrl" null="1" autoincrement="0">
+<datatype>VARCHAR(200)</datatype>
+<default>NULL</default></row>
+<row name="hash_pwd" null="1" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
+</row>
+<row name="token" null="1" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+</row>
+<row name="tokenExpire" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+</row>
+<row name="date" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>CURRENT_TIMESTAMP</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="719" y="23" name="users">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="cb_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="cbusiness" row="id" />
+</row>
+<row name="fullName" null="0" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+</row>
+<row name="sex" null="0" autoincrement="0">
+<datatype>VARCHAR(30)</datatype>
+</row>
+<row name="yearOfBirth" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="email" null="0" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+</row>
+<row name="date" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>CURRENT_TIMESTAMP</default></row>
+<row name="hash" null="1" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="465" y="390" name="activities">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="name" null="1" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+</row>
+<row name="cb_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="cbusiness" row="id" />
+</row>
+<row name="deleted" null="0" autoincrement="0">
+<datatype>bit</datatype>
+<default>0</default></row>
+<row name="monday" null="1" autoincrement="0">
+<datatype>bit</datatype>
+<default>0</default></row>
+<row name="tuesday" null="1" autoincrement="0">
+<datatype>bit</datatype>
+<default>0</default></row>
+<row name="wednesday" null="1" autoincrement="0">
+<datatype>bit</datatype>
+<default>0</default></row>
+<row name="thursday" null="1" autoincrement="0">
+<datatype>bit</datatype>
+<default>0</default></row>
+<row name="friday" null="1" autoincrement="0">
+<datatype>bit</datatype>
+<default>0</default></row>
+<row name="saturday" null="1" autoincrement="0">
+<datatype>bit</datatype>
+<default>0</default></row>
+<row name="date" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>CURRENT_TIMESTAMP</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="886" y="286" name="visits">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="usersId" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="cb_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="cbusiness" row="id" />
+</row>
+<row name="activitiesId" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="activities" row="id" />
+</row>
+<row name="date" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>CURRENT_TIMESTAMP</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+</sql>
