@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Logoutbutton } from '../visitors/logoutbutton';
+import Logoutbutton from '../visitors/logoutbutton';
 import qrcodelogo from '../../qrcodelogo.png';
 import { adminPost } from './activitiesLib/admin_helpers';
 
-export class AdminUserDetailsPage extends Component {
+export default class AdminUserDetailsPage extends Component {
   constructor(props) {
     super(props);
     const userId = this.props.match.params.userId;
@@ -28,13 +29,13 @@ export class AdminUserDetailsPage extends Component {
     adminPost(this, '/api/user/details', {
       userId: this.state.userId,
     })
-      .then(res => {
+      .then((res) => {
         this.setState({ auth: 'SUCCESS' });
         return res.details[0];
       })
       .then(this.setUser)
       .then(this.displayQR)
-      .catch(error => {
+      .catch((error) => {
         if (error.message === 500) {
           this.props.history.push('/internalServerError');
         } else if (error.message === 'No admin token') {
@@ -50,7 +51,7 @@ export class AdminUserDetailsPage extends Component {
       userFullName: fullname,
       sex,
       yearOfBirth: yearofbirth,
-      email: email,
+      email,
       signupDate: date.replace(/T/g, ' ').slice(0, 19),
       hash,
       errorMessage: '',
@@ -72,14 +73,14 @@ export class AdminUserDetailsPage extends Component {
 
   handleChangeSex = e => this.setState({ sex: e.target.value });
 
-  handleEmptySubmit = event => {
+  handleEmptySubmit = (event) => {
     event.preventDefault();
     this.setState({
       errorMessage: 'Please do not leave empty input fields',
     });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
 
     adminPost(this, '/api/user/details/update', {
@@ -92,22 +93,23 @@ export class AdminUserDetailsPage extends Component {
       .then(res => res.details)
       .then(this.setUser)
       .then(this.submitConfirmation)
-      .catch(error => this.props.history.push('/internalServerError'));
+      .catch(() => this.props.history.push('/internalServerError'));
   };
 
   displayQR = () => {
     adminPost(this, '/api/user/qr', {
       hash: this.state.hash,
     })
-      .then(res => {
-        if (res.qr)
+      .then((res) => {
+        if (res.qr) {
           return this.setState({
             url: res.qr,
             cb_logo: res.cb_logo,
           });
+        }
         throw new Error('Unknown error generating QR');
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Error', error);
         this.props.history.push('/internalServerError');
       });
@@ -119,7 +121,7 @@ export class AdminUserDetailsPage extends Component {
       name: this.state.userFullName,
       hash: this.state.hash,
     })
-      .then(res => {
+      .then((res) => {
         if (res.success) {
           return this.setState({
             successMessage: 'The email has been successfully resent',
@@ -127,7 +129,7 @@ export class AdminUserDetailsPage extends Component {
         }
         throw new Error('Error sending email');
       })
-      .catch(error => this.props.history.push('/internalServerError'));
+      .catch(() => this.props.history.push('/internalServerError'));
   };
 
   render() {
@@ -187,9 +189,10 @@ export class AdminUserDetailsPage extends Component {
           {this.state.errorMessage && <span className="ErrorText">{this.state.errorMessage}</span>}
 
           <form>
-            <label className="Form__Label">
+            <label className="Form__Label" htmlFor="admin-details-userFullName">
               Edit Full Name
               <input
+                id="admin-details-userFullName"
                 className="Form__Input"
                 type="text"
                 name="userFullName"
@@ -197,9 +200,9 @@ export class AdminUserDetailsPage extends Component {
                 value={this.state.userFullName}
               />
             </label>
-            <label className="Form__Label">
+            <label className="Form__Label" htmlFor="admin-details-sex">
               Edit Sex
-              <select className="Form__Input" onChange={this.handleChangeSex}>
+              <select id="admin-details-sex" className="Form__Input" onChange={this.handleChangeSex}>
                 <option defaultValue value={this.state.sex}>
                   Change sex: {this.state.sex}
                 </option>
@@ -208,9 +211,10 @@ export class AdminUserDetailsPage extends Component {
                 <option value="female">female</option>
               </select>
             </label>
-            <label className="Form__Label">
+            <label className="Form__Label" htmlFor="admin-details-yob">
               Edit Year of Birth
               <input
+                id="admin-details-yob"
                 type="text"
                 className="Form__Input"
                 name="yearOfBirth"
@@ -219,9 +223,10 @@ export class AdminUserDetailsPage extends Component {
               />
             </label>
 
-            <label className="Form__Label">
+            <label className="Form__Label" htmlFor="admin-details-email">
               Edit Email
               <input
+                id="admin-details-email"
                 className="Form__Input"
                 type="text"
                 name="email"
@@ -266,3 +271,9 @@ export class AdminUserDetailsPage extends Component {
     );
   }
 }
+
+AdminUserDetailsPage.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+  updateLoggedIn: PropTypes.func.isRequired,
+  match: PropTypes.shape({ params: PropTypes.object }).isRequired,
+};

@@ -1,7 +1,8 @@
 import React from 'react';
-import { ActivityItem } from './ActivityItem';
+import PropTypes from 'prop-types';
+import ActivityItem from './ActivityItem';
 
-export const ActivityList = props => (
+const ActivityList = props => (
   <div className="Activity-List">
     <ul>
       {props.activities.map(activity => (
@@ -15,3 +16,17 @@ export const ActivityList = props => (
     </ul>
   </div>
 );
+
+ActivityList.propTypes = {
+  activities: PropTypes.arrayOf(PropTypes.object),
+  toggleDay: PropTypes.func,
+  handleRemove: PropTypes.func,
+};
+
+ActivityList.defaultProps = {
+  activities: [],
+  toggleDay: PropTypes.func,
+  handleRemove: PropTypes.func,
+};
+
+export default ActivityList;

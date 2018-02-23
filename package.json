@@ -2,46 +2,59 @@
   "name": "datapower",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
   "scripts": {
     "start": "node ./react-backend/app.js",
     "devstart": "nodemon ./react-backend/bin/www",
     "postinstall": "cd react-backend/client && npm install",
-    "heroku-postbuild":
-      "cd react-backend/client && npm install --only=dev && npm install && npm run build",
+    "heroku-postbuild": "cd react-backend/client && npm install --only=dev && npm install && npm run build",
+    "build.client": "cd react-backend/client && npm run build",
     "db_build": "node ./react-backend/database/dbBuild",
     "test": "NODE_ENV=test nyc tape tests/**/*.test.js | tap-spec",
-    "coverage": "NODE_ENV=test istanbul cover tape tests/*.test.js"
+    "cover": "nyc npm test",
+    "cover.report": "nyc report --reporter=html",
+    "cover.report.ci": "nyc report --reporter=text-lcov > coverage.lcov",
+    "lint": "eslint .",
+    "lint.fix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FAC-11/DataPower.git"
   },
-  "author": "Rachael, James, Alina",
+  "engines": {
+    "node": ">=8.4"
+  },
+  "contributors": [
+    "James Inglis <jinglis12@gmail.com>",
+    "Alina Solinas",
+    "Rachael Rourke",
+    "Zooey Miller",
+    "Finn Hodgkin",
+    "Aisha Nasir <aisha@foundersandcoders.com>",
+    "Elias Malik <elias@foundersandcoders.com>"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/FAC-11/DataPower/issues"
   },
   "homepage": "https://github.com/FAC-11/DataPower#readme",
   "devDependencies": {
-    "eslint": "^4.15.0",
+    "eslint": "^4.18.1",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.5.1",
-    "istanbul": "^0.4.5",
-    "nodemon": "^1.14.11",
-    "nyc": "^11.4.1",
+    "eslint-plugin-react": "^7.7.0",
+    "nodemon": "^1.15.1",
+    "nyc": "^11.5.0",
     "supertest": "^3.0.0",
     "tap-spec": "^4.1.1",
-    "tape": "^4.8.0",
+    "tape": "^4.9.0",
     "travis": "^0.1.1"
   },
   "dependencies": {
+    "babel-eslint": "^8.2.2",
     "body-parser": "^1.17.2",
     "cookie-parser": "~1.4.3",
     "crypto": "^1.0.1",
@@ -49,7 +62,7 @@
     "env2": "^2.2.0",
     "express": "~4.15.2",
     "jade": "~1.11.0",
-    "jsonwebtoken": "^8.1.0",
+    "jsonwebtoken": "^8.1.1",
     "morgan": "~1.8.1",
     "node-base64-image": "^1.0.4",
     "pdfmake": "^0.1.35",
@@ -59,6 +72,6 @@
     "querystring": "^0.2.0",
     "serve-favicon": "~2.4.2",
     "url": "^0.11.0",
-    "validator": "^9.2.0"
+    "validator": "^9.4.1"
   }
 }

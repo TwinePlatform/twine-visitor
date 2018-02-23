@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Logoutbutton } from '../visitors/logoutbutton';
+import Logoutbutton from '../visitors/logoutbutton';
 import { adminGet, adminPost } from './activitiesLib/admin_helpers';
 import { DropdownSelect, CheckboxGroup } from './filter_components/UserInputs';
 
 const PieChart = require('react-chartjs').Pie;
 const BarChart = require('react-chartjs').Bar;
 
-export class AdminUsersPage extends Component {
+export default class AdminUsersPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,7 +25,26 @@ export class AdminUsersPage extends Component {
     };
   }
 
-  getColorPair = index => {
+  componentDidMount() {
+    adminGet(this, '/api/users/chart-all')
+      .then(res => res.numbers)
+      .then(([visitsNumbers, genderNumbers, activitiesNumbers, ageGroups, activities]) => {
+        this.setState({
+          visits: visitsNumbers,
+          visitNumbers: this.getVisitsWeek(visitsNumbers),
+          genderNumbers: this.getGendersForChart(genderNumbers),
+          activitiesGroups: this.getActivitiesForChart(activitiesNumbers),
+          ageGroups: this.getAgeGroupsForChart(ageGroups),
+          activities: activities.map(activity => activity.name),
+        });
+
+        return adminGet(this, '/api/users/all');
+      })
+      .then(({ users }) => this.setState({ auth: 'SUCCESS', users }))
+      .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
+  }
+
+  getColorPair = (index) => {
     const colors = [
       {
         color: '#F7464A',
@@ -55,7 +75,7 @@ export class AdminUsersPage extends Component {
     this.setState({ errorMessage: errorString });
   };
 
-  getActivitiesForChart = activities => {
+  getActivitiesForChart = (activities) => {
     if (!activities) return [];
 
     return activities.map(({ name, count }, index) => ({
@@ -66,7 +86,7 @@ export class AdminUsersPage extends Component {
     }));
   };
 
-  getGendersForChart = genders => {
+  getGendersForChart = (genders) => {
     if (!genders) return [];
 
     return genders.map(({ sex, count }, index) => ({
@@ -77,9 +97,9 @@ export class AdminUsersPage extends Component {
     }));
   };
 
-  getVisitsWeek = visits => {
+  getVisitsWeek = (visits) => {
     if (!visits) return [];
-    let visitCount = {
+    const visitCount = {
       0: 0,
       1: 0,
       2: 0,
@@ -89,18 +109,17 @@ export class AdminUsersPage extends Component {
       6: 0,
     };
 
-    Object.values(visits).forEach(function(key) {
+    Object.values(visits).forEach((key) => {
       if (key.date > Date.now() - 691200000) {
-        let num = new Date(key.date);
-        visitCount[num.getDay()]++;
+        const num = new Date(key.date);
+        visitCount[num.getDay()]++; // eslint-disable-line no-plusplus
       }
     });
 
-    let dayName = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const dayName = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-    const buildDaysWithOffset = (num, array) => {
-      return Array.from({ length: 7 }, (_, index) => array[(index + num) % 7]);
-    };
+    const buildDaysWithOffset = (num, array) =>
+      Array.from({ length: 7 }, (_, index) => array[(index + num) % 7]);
 
     const dayWeek = new Date();
     return {
@@ -118,7 +137,7 @@ export class AdminUsersPage extends Component {
     };
   };
 
-  getAgeGroupsForChart = ageGroups => {
+  getAgeGroupsForChart = (ageGroups) => {
     if (!ageGroups) return [];
     return ageGroups.map(({ agegroups, agecount }, index) => ({
       value: agecount,
@@ -128,25 +147,6 @@ export class AdminUsersPage extends Component {
     }));
   };
 
-  componentDidMount() {
-    adminGet(this, '/api/users/chart-all')
-      .then(res => res.numbers)
-      .then(([visitsNumbers, genderNumbers, activitiesNumbers, ageGroups, activities]) => {
-        this.setState({
-          visits: visitsNumbers,
-          visitNumbers: this.getVisitsWeek(visitsNumbers),
-          genderNumbers: this.getGendersForChart(genderNumbers),
-          activitiesGroups: this.getActivitiesForChart(activitiesNumbers),
-          ageGroups: this.getAgeGroupsForChart(ageGroups),
-          activities: activities.map(activity => activity.name),
-        });
-
-        return adminGet(this, '/api/users/all');
-      })
-      .then(({ users }) => this.setState({ auth: 'SUCCESS', users }))
-      .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
-  }
-
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   updateResults = () =>
@@ -154,7 +154,7 @@ export class AdminUsersPage extends Component {
       filterBy: this.state.filters,
       orderBy: this.state.orderBy,
     })
-      .then(res => {
+      .then((res) => {
         this.setState(
           {
             users: res.users[0],
@@ -165,14 +165,14 @@ export class AdminUsersPage extends Component {
           () => console.log(this.state.users),
         );
       })
-      .catch(error => {
+      .catch(() => {
         this.props.history.push('/internalServerError');
       });
 
   sort = e => this.setState({ orderBy: e.target.value }, this.updateResults);
 
-  filter = group => e => {
-    const filterBy = group + '@' + e.target.value;
+  filter = group => (e) => {
+    const filterBy = `${group}@${e.target.value}`;
     const isAdding = e.target.checked;
 
     const newFilters = isAdding
@@ -207,12 +207,12 @@ export class AdminUsersPage extends Component {
             }}
             change={this.filter('age')}
           />
-          <label className="Form__Label">
+          <label className="Form__Label" htmlFor="TODO-remove">
             Filter by Activity
             <br />
             {this.state.activities.map(activity => (
-              <label key={activity}>
-                <input type="checkbox" value={activity} onChange={this.filter('activity')} />
+              <label key={activity} htmlFor={`user-data-${activity}-input`}>
+                <input id={`user-data-${activity}-input`} type="checkbox" value={activity} onChange={this.filter('activity')} />
                 {activity}
               </label>
             ))}
@@ -303,3 +303,8 @@ export class AdminUsersPage extends Component {
     );
   }
 }
+
+AdminUsersPage.propTypes = {
+  updateLoggedIn: PropTypes.func.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

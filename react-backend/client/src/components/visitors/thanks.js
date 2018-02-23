@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-export class Thanks extends Component {
+
+export default class Thanks extends Component {
   componentDidMount() {
     // Start counting when the page is loaded
     this.timeoutHandle = setTimeout(() => {
@@ -18,5 +20,9 @@ export class Thanks extends Component {
     );
   }
 }
+
+Thanks.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};
 
 withRouter(Thanks);

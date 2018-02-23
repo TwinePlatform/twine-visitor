@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-export class PurposeButton extends Component {
+export default class PurposeButton extends Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
@@ -18,3 +19,13 @@ export class PurposeButton extends Component {
     );
   }
 }
+
+PurposeButton.propTypes = {
+  onClick: PropTypes.func,
+  session: PropTypes.string,
+};
+
+PurposeButton.defaultProps = {
+  onClick: () => {},
+  session: '',
+};

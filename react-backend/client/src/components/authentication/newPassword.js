@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Input } from '../visitors/input';
-import { Button } from '../visitors/button';
+import PropTypes from 'prop-types';
+import Input from '../visitors/input';
+import Button from '../visitors/button';
 import errorMessages from '../errors';
 
-class NewPassword extends Component {
+export default class NewPassword extends Component {
   constructor(props) {
     super(props);
 
@@ -16,17 +17,13 @@ class NewPassword extends Component {
     };
   }
 
-  handleChange = e => {
-    let newState = {};
-    newState[e.target.name] = e.target.value;
-    this.setState(newState);
-  };
-
   setError(messagesArray) {
     this.setState({ error: messagesArray });
   }
 
-  handleSubmit = e => {
+  handleChange = e => this.setState({ [e.target.name]: e.target.value })
+
+  handleSubmit = (e) => {
     e.preventDefault();
 
     const checkData = {
@@ -40,14 +37,14 @@ class NewPassword extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(checkData),
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 500) {
           throw new Error();
         } else {
           return res.text();
         }
       })
-      .then(data => {
+      .then((data) => {
         switch (data) {
           case 'noinput':
             this.setError([errorMessages.NO_INPUT_ERROR]);
@@ -70,7 +67,7 @@ class NewPassword extends Component {
             break;
         }
       })
-      .catch(error => {
+      .catch(() => {
         this.props.history.push('/internalServerError');
       });
   };
@@ -82,7 +79,7 @@ class NewPassword extends Component {
       <section>
         <h1>Please enter a new password</h1>
         {error && (
-          <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
+          <div className="ErrorText">{error.map(el => <span key={el}>{el}</span>)}</div>
         )}
         <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
           <Input type="text" question="Enter Security Token" option="token" />
@@ -98,4 +95,6 @@ class NewPassword extends Component {
   }
 }
 
-export { NewPassword };
+NewPassword.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

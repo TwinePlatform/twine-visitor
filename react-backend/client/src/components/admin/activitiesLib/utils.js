@@ -1,1 +1,1 @@
-export const partial = (fn, ...args) => fn.bind(null, ...args);
+export const partial = (fn, ...args) => fn.bind(null, ...args); // eslint-disable-line

@@ -8,27 +8,27 @@ import AdminRoute from './AdminRoute';
 
 import Home from './components/home';
 
-import { CBsignup } from './components/authentication/signupcb';
-import { CBlogin } from './components/authentication/logincb';
-import { NewPassword } from './components/authentication/newPassword';
-import { CBPswdReset } from './components/authentication/pswdresetcb';
+import CBsignup from './components/authentication/signupcb';
+import CBlogin from './components/authentication/logincb';
+import NewPassword from './components/authentication/newPassword';
+import CBPswdReset from './components/authentication/pswdresetcb';
 
-import { Main } from './components/visitors/main';
-import { QRCode } from './components/visitors/qrcode';
-import { QrError } from './components/visitors/qrerror';
-import { Thanks } from './components/visitors/thanks';
-import { HomeVisitor } from './components/visitors/homeVisitor';
+import Main from './components/visitors/main';
+import QRCode from './components/visitors/qrcode';
+import QrError from './components/visitors/qrerror';
+import Thanks from './components/visitors/thanks';
+import HomeVisitor from './components/visitors/homeVisitor';
 
-import { AdminLogin } from './components/admin/admin_login';
-import { AdminMenuPage } from './components/admin/adminMenuPage';
-import { AdminActivitiesPage } from './components/admin/adminActivitiesPage';
-import { AdminVisitsPage } from './components/admin/adminVisitsPage';
-import { AdminUsersPage } from './components/admin/adminUsersPage';
-import { AdminUserDetailsPage } from './components/admin/adminUserDetailsPage';
-import { AdminCBSettingsPage } from './components/admin/adminCBSettingsPage';
+import AdminLogin from './components/admin/admin_login';
+import AdminMenuPage from './components/admin/adminMenuPage';
+import AdminActivitiesPage from './components/admin/adminActivitiesPage';
+import AdminVisitsPage from './components/admin/adminVisitsPage';
+import AdminUsersPage from './components/admin/adminUsersPage';
+import AdminUserDetailsPage from './components/admin/adminUserDetailsPage';
+import AdminCBSettingsPage from './components/admin/adminCBSettingsPage';
 
-import { NotFound } from './components/NotFound';
-import { InternalServerError } from './components/InternalServerError';
+import NotFound from './components/NotFound';
+import InternalServerError from './components/InternalServerError';
 
 class App extends Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class App extends Component {
   };
 
   updateAdminToken = adminToken =>
-    new Promise(resolve => {
+    new Promise((resolve) => {
       this.setState({ adminToken }, resolve);
     });
 
@@ -69,11 +69,11 @@ class App extends Component {
               exact
               path="/logincb"
               render={props =>
-                this.state.loggedIn ? (
+                (this.state.loggedIn ? (
                   <Redirect to="/" />
                 ) : (
                   <CBlogin setLoggedIn={this.updateLoggedIn} {...props} />
-                )
+                ))
               }
             />
 
