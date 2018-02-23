@@ -21,11 +21,7 @@ export default class NewPassword extends Component {
     this.setState({ error: messagesArray });
   }
 
-  handleChange = (e) => {
-    const newState = {};
-    newState[e.target.name] = e.target.value;
-    this.setState(newState);
-  };
+  handleChange = e => this.setState({ [e.target.name]: e.target.value })
 
   handleSubmit = (e) => {
     e.preventDefault();

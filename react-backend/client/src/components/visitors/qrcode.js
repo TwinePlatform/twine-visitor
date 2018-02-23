@@ -120,11 +120,7 @@ export default class QRCode extends Component {
     }
   }
 
-  handleVideo = () => {
-    const newState = {};
-    newState.login = this.state.login + 1;
-    this.setState(newState);
-  };
+  handleVideo = () => this.setState({ login: this.state.login + 1 })
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
