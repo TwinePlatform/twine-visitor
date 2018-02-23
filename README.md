@@ -25,14 +25,10 @@ The local business owners will then be able to retrieve information about the po
 
 The website is built in [React](https://reactjs.org/) with [Create React App](https://github.com/facebookincubator/create-react-app), using an [Express](https://expressjs.com/) server and a [PostgreSQL](https://www.postgresql.org/) database.
 
-![](https://user-images.githubusercontent.com/25391768/31129530-bf1fbcb8-a84c-11e7-8d64-b2cef089d25c.png)
-
 The QR code is generated using the [qrcode](https://github.com/soldair/node-qrcode) node module, and the scanning is then run with the [Instascan](https://github.com/schmich/instascan) HTML5 QR webcam scanner.
 
-## Install it yourself
-To run this in your own machine, `git clone` this repo and in your command line interface, `cd` to the project directory.
-
-Type `npm install` to download any node dependencies the site uses. Then run `npm run devstart` to get your server up and running. Visit `http://localhost:5000/` in your browser to see the site in action.
+## Documentation
+Please see the [docs](./docs) directory for project documentation.
 
 ## Useful links
 
