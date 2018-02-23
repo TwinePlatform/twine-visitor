@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { ActivityForm, ActivityList } from './activitiesComponents/activity';
 import {
@@ -11,7 +12,7 @@ import {
 } from './activitiesLib/activityHelpers';
 import { adminPost, adminGet } from './activitiesLib/admin_helpers';
 
-export class AdminActivitiesPage extends Component {
+export default class AdminActivitiesPage extends Component {
   constructor() {
     super();
     this.state = {
@@ -21,20 +22,10 @@ export class AdminActivitiesPage extends Component {
     };
   }
 
-  handleActivityFromDb = activity => res => {
-    const newActivities = updateId(this.state.activities, activity.id, res.id);
-    this.setState({ activities: newActivities });
-  };
-
-  setErrorMessage = (error, errorString) => {
-    // console.log(error) // Uncomment to display full errors in the console.
-    this.setState({ errorMessage: errorString });
-  };
-
   componentDidMount() {
     adminGet(this, '/api/activities/all')
       .then(({ activities }) => this.setState({ activities, auth: 'SUCCESS' }))
-      .catch(error => {
+      .catch((error) => {
         if (error.message === 500) {
           this.props.history.push('/internalServerError');
         } else if (error.message === 'No admin token') {
@@ -44,6 +35,16 @@ export class AdminActivitiesPage extends Component {
         }
       });
   }
+
+  setErrorMessage = (error, errorString) => {
+    // console.log(error) // Uncomment to display full errors in the console.
+    this.setState({ errorMessage: errorString });
+  };
+
+  handleActivityFromDb = activity => (res) => {
+    const newActivities = updateId(this.state.activities, activity.id, res.id);
+    this.setState({ activities: newActivities });
+  };
 
   toggleDay = (day, id) => {
     const activity = findById(id, this.state.activities);
@@ -67,7 +68,7 @@ export class AdminActivitiesPage extends Component {
       .catch(error => this.setErrorMessage(error, 'Error removing activity'));
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
     const newId = generateId();
     const newActivity = {
@@ -90,21 +91,21 @@ export class AdminActivitiesPage extends Component {
 
     adminPost(this, '/api/activity/add', { name: newActivity.name })
       .then(this.handleActivityFromDb(newActivity))
-      .catch(error => {
-        if (error.message === 'No admin token') return this.props.history.push('/admin/login');
-
-        this.setErrorMessage(error, 'Error removing activity');
-      });
+      .catch(error => (
+        error.message === 'No admin token'
+          ? this.props.history.push('/admin/login')
+          : this.setErrorMessage(error, 'Error removing activity')
+      ));
   };
 
-  handleEmptySubmit = event => {
+  handleEmptySubmit = (event) => {
     event.preventDefault();
     this.setState({
       errorMessage: 'Please supply an activity name',
     });
   };
 
-  handleInputChange = event => {
+  handleInputChange = (event) => {
     this.setState({
       currentActivity: event.target.value,
     });
@@ -135,3 +136,7 @@ export class AdminActivitiesPage extends Component {
     );
   }
 }
+
+AdminActivitiesPage.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

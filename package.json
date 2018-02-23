@@ -9,15 +9,22 @@
     "devstart": "nodemon ./react-backend/bin/www",
     "postinstall": "cd react-backend/client && npm install",
     "heroku-postbuild": "cd react-backend/client && npm install --only=dev && npm install && npm run build",
+    "build.client": "cd react-backend/client && npm run build",
     "db_build": "node ./react-backend/database/dbBuild",
-    "test": "NODE_ENV=test nyc tape tests/*.test.js | tap-spec",
-    "coverage": "NODE_ENV=test istanbul cover tape tests/*.test.js"
+    "test": "NODE_ENV=test tape tests/*.test.js | tap-spec",
+    "cover": "nyc npm test",
+    "cover.report": "nyc report --reporter=html",
+    "cover.report.ci": "nyc report --reporter=text-lcov > coverage.lcov",
+    "lint": "eslint .",
+    "lint.fix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FAC-11/DataPower.git"
   },
-  "engines": { "node": ">=8.4" },
+  "engines": {
+    "node": ">=8.4"
+  },
   "contributors": [
     "James Inglis <jinglis12@gmail.com>",
     "Alina Solinas",
@@ -39,7 +46,6 @@
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.7.0",
-    "istanbul": "^0.4.5",
     "nodemon": "^1.15.1",
     "nyc": "^11.5.0",
     "supertest": "^3.0.0",
@@ -48,6 +54,7 @@
     "travis": "^0.1.1"
   },
   "dependencies": {
+    "babel-eslint": "^8.2.2",
     "body-parser": "^1.17.2",
     "cookie-parser": "~1.4.3",
     "crypto": "^1.0.1",

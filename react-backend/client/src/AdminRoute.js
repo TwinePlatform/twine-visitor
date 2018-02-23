@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 
 const AdminRoute = ({ auth, component: Component, ...rest }) => (
@@ -18,5 +19,11 @@ const AdminRoute = ({ auth, component: Component, ...rest }) => (
     }
   />
 );
+
+AdminRoute.propTypes = {
+  auth: PropTypes.bool.isRequired,
+  component: PropTypes.element.isRequired,
+  location: PropTypes.string.isRequired,
+};
 
 export default AdminRoute;

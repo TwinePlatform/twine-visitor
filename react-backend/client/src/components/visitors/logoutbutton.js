@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-export class Logoutbutton extends Component {
+export default class Logoutbutton extends Component {
   logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('adminToken');
@@ -16,3 +17,8 @@ export class Logoutbutton extends Component {
     );
   }
 }
+
+Logoutbutton.propTypes = {
+  updateLoggedIn: PropTypes.func.isRequired,
+  redirectUser: PropTypes.func.isRequired,
+};
