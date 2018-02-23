@@ -7,7 +7,6 @@ const { checkHasLength } = require('../../functions/helpers');
 
 router.post('/', (req, res, next) => {
   const { formEmail, formPswd } = req.body;
-  console.log(req.body);
 
   const notEmail = (!validator.isEmail(formEmail) && 'noinput') || '';
   const noInput = (!checkHasLength([formEmail, formPswd]) && 'email') || '';
@@ -20,10 +19,14 @@ router.post('/', (req, res, next) => {
 
   cbLogin(formEmail, passwordHash)
     .then(exists => {
-      const token = jwt.sign({ email: formEmail }, process.env.SECRET);
-      const loggedIn = exists ? { success: true, token } : { success: false };
-
-      res.send(loggedIn);
+      if (exists) {
+        const token = jwt.sign({ email: formEmail }, process.env.SECRET);
+        const loggedInResponse = { success: true, token };
+        res.send(loggedInResponse);
+      } else {
+        const errorResponse = { success: false };
+        res.status(401).send(errorResponse);
+      }
     })
     .catch(next);
 });
