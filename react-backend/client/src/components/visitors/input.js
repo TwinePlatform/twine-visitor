@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-export class Input extends Component {
+export default class Input extends Component {
   constructor(props) {
     super(props);
     this.state = { userInput: '' };
@@ -12,12 +13,14 @@ export class Input extends Component {
   }
 
   render() {
+    const label = this.props.label || this.props.question;
     return (
-      <label className="Form__Label">
-        {this.props.label || this.props.question}
+      <label className="Form__Label" htmlFor={label}>
+        {label}
         <br />
         <input
-          type={this.props.type || 'text'}
+          id={label}
+          type={this.props.type}
           name={this.props.name || this.props.option}
           onChange={this.handleUserInput}
           value={this.state.userInput}
@@ -27,3 +30,19 @@ export class Input extends Component {
     );
   }
 }
+
+Input.propTypes = {
+  label: PropTypes.node,
+  question: PropTypes.node,
+  type: PropTypes.string,
+  name: PropTypes.string,
+  option: PropTypes.option,
+};
+
+Input.defaultProps = {
+  label: null,
+  question: null,
+  type: 'text',
+  name: '',
+  option: '',
+};

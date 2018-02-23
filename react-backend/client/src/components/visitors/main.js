@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import { Input } from './input';
-import { Select } from './select';
-import { Button } from './button';
 import { Route, Link, Switch } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import Input from './input';
+import Select from './select';
+import Button from './button';
 import qrcodelogo from '../../qrcodelogo.png';
-import { FormPrivacy } from '../visitors/form_privacy';
-import { FormPrivacy2 } from '../visitors/form_privacy2';
-import { NotFound } from '../NotFound';
+import FormPrivacy from '../visitors/form_privacy';
+import FormPrivacy2 from '../visitors/form_privacy2';
+import NotFound from '../NotFound';
 import errorMessages from '../errors';
 
 const generateYearsArray = (startYear, currentYear) =>
-  Array.from({ length: currentYear + 1 - startYear }, (v, i) => startYear + i);
+  Array.from({ length: (currentYear + 1) - startYear }, (v, i) => startYear + i);
 
 const years = generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear());
 
-class Main extends Component {
+export default class Main extends Component {
   constructor(props) {
     super(props);
 
@@ -31,18 +32,18 @@ class Main extends Component {
     };
   }
 
-  handleChange = e => this.setState({ [e.target.name]: e.target.value });
-
   setError(messagesArray) {
     this.setState({ error: messagesArray });
   }
+
+  handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
     'Content-Type': 'application/json',
   });
 
-  handleSwitch = e => {
+  handleSwitch = (e) => {
     e.preventDefault();
 
     const checkData = {
@@ -55,14 +56,14 @@ class Main extends Component {
       headers: this.headers,
       body: JSON.stringify(checkData),
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 500) {
           throw new Error();
         } else {
           return res.text();
         }
       })
-      .then(data => {
+      .then((data) => {
         switch (data) {
           case 'false':
             this.props.history.push('/visitor/signup/step2');
@@ -87,12 +88,12 @@ class Main extends Component {
             break;
         }
       })
-      .catch(error => {
+      .catch(() => {
         this.props.history.push('/internalServerError');
       });
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
 
     const formData = {
@@ -107,18 +108,18 @@ class Main extends Component {
       headers: this.headers,
       body: JSON.stringify(formData),
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 500) {
           throw new Error();
         } else {
           return res.json();
         }
       })
-      .then(res => {
+      .then((res) => {
         this.setState({ url: res.qr, cb_logo: res.cb_logo });
       })
       .then(() => this.props.history.push('/visitor/signup/thankyou'))
-      .catch(error => {
+      .catch((error) => {
         console.log('ERROR HAPPENING AT FETCH /qrgenerator', error);
         this.props.history.push('/visitor/login');
       });
@@ -134,7 +135,7 @@ class Main extends Component {
             <section className="Main col-9">
               <h1>Please tell us about yourself</h1>
               {error && (
-                <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
+                <div className="ErrorText">{error.map(el => <span key={el}>{el}</span>)}</div>
               )}
               <form className="Signup" onChange={this.handleChange}>
                 <Input question="Your Full Name" option="fullname" />
@@ -179,7 +180,7 @@ class Main extends Component {
                 </button>
               </div>
 
-              {/*This is the print layout of the QRcode*/}
+              {/* This is the print layout of the QRcode */}
               <div className="visible-printer qr-code-to-print">
                 <div className="dashed">
                   {this.state.cb_logo ? (
@@ -208,4 +209,6 @@ class Main extends Component {
   }
 }
 
-export { Main };
+Main.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

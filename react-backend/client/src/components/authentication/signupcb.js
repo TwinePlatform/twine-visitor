@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Input } from '../visitors/input';
-import { Select } from '../visitors/select';
-import { Button } from '../visitors/button';
+import PropTypes from 'prop-types';
+import Input from '../visitors/input';
+import Select from '../visitors/select';
+import Button from '../visitors/button';
 import errorMessages from '../errors';
 
-class CBsignup extends Component {
+export default class CBsignup extends Component {
   constructor(props) {
     super(props);
 
@@ -18,13 +19,13 @@ class CBsignup extends Component {
     };
   }
 
-  handleChange = e => this.setState({ [e.target.name]: e.target.value });
-
   setError(messagesArray) {
     this.setState({ error: messagesArray });
   }
 
-  handleSubmit = e => {
+  handleChange = e => this.setState({ [e.target.name]: e.target.value });
+
+  handleSubmit = (e) => {
     e.preventDefault();
 
     const checkData = {
@@ -40,14 +41,14 @@ class CBsignup extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(checkData),
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 500) {
           throw new Error();
         } else {
           return res.text();
         }
       })
-      .then(data => {
+      .then((data) => {
         console.log(data);
 
         switch (data) {
@@ -74,31 +75,30 @@ class CBsignup extends Component {
             this.setError([errorMessages.PASSWORD_WEAK]);
             break;
           default:
-            const CBData = {
-              formName: this.state.org_name,
-              formEmail: this.state.email,
-              formGenre: this.state.genre,
-              formPswd: this.state.password,
-            };
             fetch('/api/cb/register', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(CBData),
+              body: JSON.stringify({
+                formName: this.state.org_name,
+                formEmail: this.state.email,
+                formGenre: this.state.genre,
+                formPswd: this.state.password,
+              }),
             })
-              .then(res => {
+              .then((res) => {
                 if (res.status === 500) {
                   throw new Error();
                 }
               })
-              .catch(error => {
-                console.log('ERROR HAPPENING AT FETCH /registercb', error);
+              .catch((error) => {
+                console.log('ERROR HAPPENING AT FETCH /api/cb/register', error);
                 this.props.history.push('/internalServerError');
               });
             this.props.history.push('/logincb');
             break;
         }
       })
-      .catch(error => {
+      .catch(() => {
         this.props.history.push('/internalServerError');
       });
   };
@@ -110,7 +110,7 @@ class CBsignup extends Component {
       <section>
         <h1>Please provide us with required information on your business</h1>
         {error && (
-          <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
+          <div className="ErrorText">{error.map(el => <span key={el}>{el}</span>)}</div>
         )}
         <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
           <Input question="Business Name" option="org_name" />
@@ -148,4 +148,6 @@ class CBsignup extends Component {
   }
 }
 
-export { CBsignup };
+CBsignup.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

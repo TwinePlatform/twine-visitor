@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Input } from '../visitors/input';
-import { Button } from '../visitors/button';
+import Input from '../visitors/input';
+import Button from '../visitors/button';
 import errorMessages from '../errors';
 
 class CBlogin extends Component {
@@ -15,13 +16,13 @@ class CBlogin extends Component {
     };
   }
 
-  handleChange = e => this.setState({ [e.target.name]: e.target.value });
-
   setError(messagesArray) {
     this.setState({ error: messagesArray });
   }
 
-  handleSubmit = e => {
+  handleChange = e => this.setState({ [e.target.name]: e.target.value });
+
+  handleSubmit = (e) => {
     e.preventDefault();
 
     const checkData = {
@@ -34,14 +35,14 @@ class CBlogin extends Component {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(checkData),
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 500) {
           throw new Error();
         } else {
           return res.json();
         }
       })
-      .then(data => {
+      .then((data) => {
         if (data.success === true) {
           localStorage.setItem('token', data.token);
           this.props.setLoggedIn();
@@ -54,7 +55,7 @@ class CBlogin extends Component {
           this.setError([errorMessages.DETAILS_ERROR]);
         }
       })
-      .catch(error => {
+      .catch(() => {
         this.props.history.push('/internalServerError');
       });
   };
@@ -66,7 +67,7 @@ class CBlogin extends Component {
       <section>
         <h1>Please login</h1>
         {error && (
-          <div className="ErrorText">{error.map((el, i) => <span key={i}>{el}</span>)}</div>
+          <div className="ErrorText">{error.map(el => <span key={el}>{el}</span>)}</div>
         )}
         <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
           <Input label="Business Email" name="email" />
@@ -86,4 +87,9 @@ class CBlogin extends Component {
   }
 }
 
-export { CBlogin };
+CBlogin.propTypes = {
+  setLoggedIn: PropTypes.func.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};
+
+export default CBlogin;

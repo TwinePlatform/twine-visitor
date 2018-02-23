@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "babel-eslint": "^8.2.2",
     "chart.js": "^1.1.1",
+    "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-chartjs": "^1.2.0",
     "react-dom": "^16.2.0",

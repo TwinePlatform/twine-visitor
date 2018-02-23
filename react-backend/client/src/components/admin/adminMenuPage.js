@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Logoutbutton } from '../visitors/logoutbutton';
+import Logoutbutton from '../visitors/logoutbutton';
 import { checkAdmin } from './activitiesLib/admin_helpers';
 
-export class AdminMenuPage extends Component {
+export default class AdminMenuPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,7 +16,7 @@ export class AdminMenuPage extends Component {
   componentDidMount() {
     checkAdmin(this)
       .then(() => this.setState({ auth: 'SUCCESS' }))
-      .catch(error => {
+      .catch((error) => {
         if (error.message === 500) {
           this.props.history.push('/internalServerError');
         } else if (error.message === 'No admin token') {
@@ -69,3 +70,8 @@ export class AdminMenuPage extends Component {
     );
   }
 }
+
+AdminMenuPage.propTypes = {
+  updateLoggedIn: PropTypes.func.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

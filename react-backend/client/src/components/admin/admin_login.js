@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../visitors/button';
+import PropTypes from 'prop-types';
+import Button from '../visitors/button';
 import { authenticatedPost } from './activitiesLib/admin_helpers';
 
-export class AdminLogin extends Component {
+export default class AdminLogin extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,7 +15,7 @@ export class AdminLogin extends Component {
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
-  authenticate = async e => {
+  authenticate = async (e) => {
     e.preventDefault();
 
     try {
@@ -28,7 +29,7 @@ export class AdminLogin extends Component {
 
       await this.props.updateAdminToken(token);
 
-      this.props.history.push('/admin');
+      return this.props.history.push('/admin');
     } catch (error) {
       if (error.message === 'Incorrect password') {
         return this.setState({
@@ -36,7 +37,7 @@ export class AdminLogin extends Component {
         });
       }
 
-      console.log(error);
+      return console.log(error);
     }
   };
 
@@ -45,9 +46,10 @@ export class AdminLogin extends Component {
       <div>
         <div className="ErrorText">{this.state.errorMessage}</div>
         <form className="Signup" onSubmit={this.authenticate}>
-          <label className="Form__Label">
+          <label className="Form__Label" htmlFor="admin-login-password">
             Please, type your password
             <input
+              id="admin-login-password"
               className="Form__Input"
               type="password"
               name="password"
@@ -64,3 +66,8 @@ export class AdminLogin extends Component {
     );
   }
 }
+
+AdminLogin.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+  updateAdminToken: PropTypes.func.isRequired,
+};
