@@ -15,7 +15,7 @@ test('POST /api/cb/login | authentication successful', (t) => {
     });
 });
 test('POST /api/cb/login | authentication unsuccessful', (t) => {
-  t.plan(2);
+  t.plan(4);
   const failPayload = { formEmail: 'findmyfroggy@frogfinders.com', formPswd: 'password123' };
   const emptyPayload = { formEmail: '', formPswd: '' };
   request(app)
@@ -24,14 +24,16 @@ test('POST /api/cb/login | authentication unsuccessful', (t) => {
     .expect(401)
     .expect('Content-Type', /json/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.notOk(res.body.success, 'cb failed to log in with incorrect password');
     });
   request(app)
     .post('/api/cb/login')
     .send(emptyPayload)
-    .expect(401)
-    .expect('Content-Type', /json/)
+    .expect(400)
+    .expect('Content-Type', /text/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.notOk(res.body.success, 'cb failed to log in with no submitted data');
     });
 });

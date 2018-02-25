@@ -12,12 +12,13 @@ router.post('/', (req, res, next) => {
   const noInput = (!checkHasLength([formEmail, formPswd]) && 'noinput') || '';
 
   const validationError = noInput || notEmail;
-  if (validationError) return res.send({ reason: validationError });
+
+  if (validationError) return res.status(400).send({ reason: validationError });
 
   const passwordHash = hashCB(formPswd);
 
   cbLogin(formEmail, passwordHash)
-    .then((exists) => {
+    .then(exists => {
       if (exists) {
         const token = jwt.sign({ email: formEmail }, process.env.SECRET);
         const loggedInResponse = { success: true, token };

@@ -12,12 +12,13 @@ test('POST api/cb/pwd/reset | token creation successful', async (t) => {
     .post('/api/cb/pwd/reset')
     .send(successPayload)
     .expect(200)
-    .end(async () => {
+    .end(async (err) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       try {
         const getTokenFromDb = await dbConnection.query(
           "SELECT * FROM cbusiness WHERE (token IS NOT NULL) AND email = 'findmyfroggy@frogfinders.com'",
         );
-        t.ok(getTokenFromDb.rows, 'route successfully created a token in db');
+        t.ok(getTokenFromDb.rows.length, 'route successfully created a token in db');
         t.end();
       } catch (error) {
         t.fail('Test query broke');
@@ -35,6 +36,7 @@ test('POST api/cb/pwd/reset | token creation unsuccessful', async (t) => {
     .send(unsuccessPayload)
     .expect(400)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.notOk(res.body, 'Non existing email returns false');
       t.end();
     });
