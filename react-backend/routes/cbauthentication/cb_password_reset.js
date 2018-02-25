@@ -24,16 +24,16 @@ router.post('/', (req, res, next) => {
           .then(token =>
             Promise.all([
               pwdTokenAdd(token, tokenExpire, formEmail),
-              sendResetEmail(formEmail, token),
+              sendResetEmail(formEmail, token)
             ])
           )
           .then(() => res.send(exists))
           .catch(err => {
             console.log('Error sending email:', err);
-            res.send('failed');
+            res.status(501).send('failed');
           });
       } else {
-        res.send(exists);
+        res.status(400).send(exists);
       }
     })
     .catch(next);
