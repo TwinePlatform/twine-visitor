@@ -26,7 +26,7 @@ test('POST /api/user/name-from-scan | non-viable hash ', (t) => {
   request(app)
     .post('/api/user/name-from-scan')
     .send(failPayload)
-    .expect(415)
+    .expect(400)
     .expect('Content-Type', /json/)
     .expect(res => res.json().fullname)
     .end((err, res) => {
