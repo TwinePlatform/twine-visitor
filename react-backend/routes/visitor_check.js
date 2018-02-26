@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const validator = require('validator');
-const checkUserExists = require('../database/queries/user_check_exists');
+const userCheckExists = require('../database/queries/user_check_exists');
 const { checkHasLength } = require('../functions/helpers');
 
 router.post('/', (req, res, next) => {
@@ -13,12 +13,10 @@ router.post('/', (req, res, next) => {
 
   const validationError = noInput || notEmail + notEnglishName;
 
-  if (validationError) return res.send(validationError);
+  if (validationError) return res.status(400).send(validationError);
 
-  checkUserExists(formSender.toLowerCase(), formEmail)
-    .then(exists => {
-      res.send(exists);
-    })
+  userCheckExists(formSender.toLowerCase(), formEmail)
+    .then(exists => (exists ? res.send(exists) : res.status(400).send(exists)))
     .catch(next);
 });
 
