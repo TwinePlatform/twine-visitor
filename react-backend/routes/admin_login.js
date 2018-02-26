@@ -7,7 +7,8 @@ const router = express.Router();
 
 router.post('/', (req, res, next) => {
   const { password } = req.body;
-  const hashedPassword = hashCB(password);
+  const secret = req.app.get('cfg').session.hmac_secret;
+  const hashedPassword = hashCB(secret, password);
 
   cbLogin(req.auth.cb_email, hashedPassword)
     .then(exists => {

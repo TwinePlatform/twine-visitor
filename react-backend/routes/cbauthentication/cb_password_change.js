@@ -11,6 +11,7 @@ const strongPassword = new RegExp(
 
 router.post('/', (req, res, next) => {
   const { formPswd, formPswdConfirm, token } = req.body;
+  const secret = req.app.get('cfg').session.hmac_secret;
 
   Promise.all([checkExists(token), checkExpire(token)])
     .then(([exists, notExpired]) => {
@@ -28,7 +29,7 @@ router.post('/', (req, res, next) => {
 
       if (validationError) return res.status(400).send(validationError);
 
-      const password = hash(formPswd);
+      const password = hash(secret, formPswd);
       pwdChange(password, token)
         .then(() => {
           res.send(true);

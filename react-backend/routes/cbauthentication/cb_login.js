@@ -7,6 +7,7 @@ const { checkHasLength } = require('../../functions/helpers');
 
 router.post('/', (req, res, next) => {
   const { formEmail, formPswd } = req.body;
+  const secret = req.app.get('cfg').session.hmac_secret;
 
   const notEmail = (!validator.isEmail(formEmail) && 'email') || '';
   const noInput = (!checkHasLength([formEmail, formPswd]) && 'noinput') || '';
@@ -15,7 +16,7 @@ router.post('/', (req, res, next) => {
 
   if (validationError) return res.status(400).send({ reason: validationError });
 
-  const passwordHash = hashCB(formPswd);
+  const passwordHash = hashCB(secret, formPswd);
 
   cbLogin(formEmail, passwordHash)
     .then(exists => {
