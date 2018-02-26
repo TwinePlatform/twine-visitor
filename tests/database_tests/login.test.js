@@ -1,7 +1,7 @@
 const test = require('tape');
-const rebuild = require('./../react-backend/database/database_rebuild');
-const cbLogin = require('./../react-backend/database/queries/cb/cb_login');
-const checkCbExists = require('./../react-backend/database/queries/cb/cb_check_exists');
+const rebuild = require('../../react-backend/database/database_rebuild');
+const cbLogin = require('../../react-backend/database/queries/cb/cb_login');
+const checkCbExists = require('../../react-backend/database/queries/cb/cb_check_exists');
 
 // Community business login/register
 

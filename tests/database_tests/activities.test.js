@@ -1,12 +1,12 @@
 const test = require('tape');
-const activities = require('./../react-backend/database/queries/activities');
-const activitiesForToday = require('./../react-backend/database/queries/activities_today');
-const deleteActivity = require('./../react-backend/database/queries/activity_delete');
-const insertActivity = require('./../react-backend/database/queries/activity_add');
-const updateActivity = require('./../react-backend/database/queries/activity_update');
+const activities = require('../../react-backend/database/queries/activities');
+const activitiesForToday = require('../../react-backend/database/queries/activities_today');
+const deleteActivity = require('../../react-backend/database/queries/activity_delete');
+const insertActivity = require('../../react-backend/database/queries/activity_add');
+const updateActivity = require('../../react-backend/database/queries/activity_update');
 
-const rebuild = require('./../react-backend/database/database_rebuild');
-const clean = require('./../react-backend/database/database_clean');
+const rebuild = require('../../react-backend/database/database_rebuild');
+const clean = require('../../react-backend/database/database_clean');
 
 test('Tests activities responds with the correct data', async (t) => {
   await rebuild();
