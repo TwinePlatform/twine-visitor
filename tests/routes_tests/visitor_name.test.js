@@ -4,17 +4,15 @@ const app = require('../../react-backend/app');
 const jwt = require('jsonwebtoken');
 
 test('POST /api/user/name-from-scan | viable & registered hash', (t) => {
-  const token = jwt.sign(
-    { email: 'hello@yahoo.com', admin: true },
-    process.env.ADMIN_SECRET,
-    { expiresIn: '5m' },
-  );
+  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, process.env.SECRET);
+
   const successPayload = {
     hashToCheck:
       '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955',
   };
   request(app)
     .post('/api/user/name-from-scan')
+    .set('authorization', token)
     .send(successPayload)
     .expect(200)
     .expect('Content-Type', /json/)
@@ -26,11 +24,14 @@ test('POST /api/user/name-from-scan | viable & registered hash', (t) => {
 });
 
 test('POST /api/user/name-from-scan | non-viable hash ', (t) => {
+  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, process.env.SECRET);
+
   const failPayload = {
-    hashToCheck: 'Im faily sure, though not positive, that this is not a hash',
+    hashToCheck: 'Im fairly sure, though not positive, that this is not a hash',
   };
   request(app)
     .post('/api/user/name-from-scan')
+    .set('authorization', token)
     .send(failPayload)
     .expect(400)
     .expect('Content-Type', /json/)
@@ -42,12 +43,15 @@ test('POST /api/user/name-from-scan | non-viable hash ', (t) => {
 });
 
 test('POST /api/user/name-from-scan | user/hash not registered ', (t) => {
+  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, process.env.SECRET);
+
   const failPayload = {
     hashToCheck:
       '5e6188b3f09e0d58acfbe4171284dd10b69ea8a78189f7bb8c7d6fa983557492',
   };
   request(app)
     .post('/api/user/name-from-scan')
+    .set('authorization', token)
     .send(failPayload)
     .expect(401)
     .expect('Content-Type', /json/)
