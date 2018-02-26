@@ -1,8 +1,14 @@
 const test = require('tape');
 const request = require('supertest');
 const app = require('../../react-backend/app');
+const jwt = require('jsonwebtoken');
 
 test('POST /api/user/name-from-scan | viable & registered hash', (t) => {
+  const token = jwt.sign(
+    { email: 'hello@yahoo.com', admin: true },
+    process.env.ADMIN_SECRET,
+    { expiresIn: '5m' },
+  );
   const successPayload = {
     hashToCheck:
       '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955',
