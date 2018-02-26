@@ -30,7 +30,7 @@ router.post('/', (req, res, next) => {
           .then(() => res.send(exists))
           .catch(err => {
             console.log('Error sending email:', err);
-            res.status(418).send('failed');
+            res.status(502).send('failed');
           });
       } else {
         res.status(400).send(exists);
