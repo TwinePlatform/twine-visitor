@@ -1,3 +1,27 @@
 {
-  "extends": "airbnb"
+  "extends": [
+    "airbnb",
+    "prettier"
+  ],
+  "rules": {
+    "consistent-return": 0,
+    "no-shadow": 0,
+    "no-prototype-builtins": 0,
+    "valid-jsdoc": [
+      "error",
+      {
+        "prefer": {
+          "arg": "param",
+          "argument": "param",
+          "return": "returns"
+        },
+        "preferType": {
+          "boolean": "Boolean",
+          "number": "Number",
+          "object": "Object",
+          "string": "String"
+        }
+      }
+    ]
+  }
 }
