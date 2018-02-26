@@ -14,8 +14,7 @@ test('POST /api/cb/pwd/change | token check/pw update successful', async (t) => 
     const queryText = 'UPDATE cbusiness SET token = $1, tokenexpire = $2 WHERE id = 3';
     await dbConnection.query(queryText, [token, tokenExpire]);
   } catch (error) {
-    t.fail('Update test query broke');
-    t.end();
+    t.end(error);
   }
 
   const successPayload = {
@@ -39,8 +38,7 @@ test('POST /api/cb/pwd/change | token check/pw update successful', async (t) => 
         t.notEqual(newPassword, oldPassword, 'Password has been changed in db');
         t.end();
       } catch (error) {
-        t.fail('Select test query broke');
-        t.end();
+        t.end(error);
       }
     });
 });

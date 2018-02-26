@@ -21,8 +21,7 @@ test('POST api/cb/pwd/reset | token creation successful', async (t) => {
         t.ok(getTokenFromDb.rows.length, 'route successfully created a token in db');
         t.end();
       } catch (error) {
-        t.fail('Test query broke');
-        t.end();
+        t.end(error);
       }
     });
 });

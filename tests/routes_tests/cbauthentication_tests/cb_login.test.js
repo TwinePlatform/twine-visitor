@@ -31,7 +31,7 @@ test('POST /api/cb/login | authentication unsuccessful', (t) => {
     .post('/api/cb/login')
     .send(emptyPayload)
     .expect(400)
-    .expect('Content-Type', /text/)
+    .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
       t.notOk(res.body.success, 'cb failed to log in with no submitted data');
