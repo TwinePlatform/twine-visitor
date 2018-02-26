@@ -26,7 +26,7 @@ router.post('/', (req, res, next) => {
         (!strongPwd && 'pswdweak') ||
         null;
 
-      if (validationError) return res.send(validationError);
+      if (validationError) return res.status(400).send(validationError);
 
       const password = hash(formPswd);
       pwdChange(password, token)
