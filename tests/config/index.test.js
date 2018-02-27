@@ -62,6 +62,8 @@ test('Config | readConfig | dev | without SSL', (t) => {
   const config = readConfig('dev');
 
   t.deepEqual(config.psql.ssl, false, 'SSL connection should be disabled');
+
+  process.env.DATABASE_URL_DEV = temp;
   t.end();
 });
 
@@ -72,6 +74,8 @@ test('Config | readConfig | dev | with SSL', (t) => {
   const config = readConfig('dev');
 
   t.deepEqual(config.psql.ssl, true, 'SSL connection should be enabled');
+
+  process.env.DATABASE_URL_DEV = temp;
   t.end();
 });
 

@@ -1,14 +1,18 @@
 const test = require('tape');
 const request = require('supertest');
-const app = require('../../../react-backend/app');
+const createApp = require('../../../react-backend/app');
 const tokenGen = require('../../../react-backend/functions/tokengen');
 const dbConnection = require('../../../react-backend/database/dbConnection');
 const rebuild = require('../../../react-backend/database/database_rebuild');
+const { getConfig } = require('../../../config');
+
+const config = getConfig(process.env.NODE_ENV);
 
 test('POST /api/cb/pwd/change | token check/pw update successful', async (t) => {
   await rebuild();
   const token = await tokenGen();
   const tokenExpire = Date.now() + 36000;
+  const app = createApp(config);
 
   try {
     const queryText = 'UPDATE cbusiness SET token = $1, tokenexpire = $2 WHERE id = 3';
@@ -44,6 +48,7 @@ test('POST /api/cb/pwd/change | token check/pw update successful', async (t) => 
 });
 
 test('POST /api/cb/pwd/change | token check/pw update unsuccessful', (t) => {
+  const app = createApp(config);
   const failPayload = {
     formPswd: 'lol',
     formPswdConfirm: 'lol',

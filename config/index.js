@@ -101,8 +101,17 @@ const validateConfig = (cfg) => {
   return value;
 };
 
+/**
+ * Utility shortcut for reading and validating configuration
+ * @param   {String} env    Deployment environment
+ * @param   {String} [path] Optional path for configuration override file
+ * @returns {Object}        Validated configuration object
+ */
+const getConfig = (env, path) => validateConfig(readConfig(env, path));
+
 
 module.exports = {
   readConfig,
   validateConfig,
+  getConfig,
 };

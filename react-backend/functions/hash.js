@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 module.exports = (secret, userObject) => {
   let userString =
     userObject.formSender + userObject.formEmail + userObject.formSex + userObject.formYear;
