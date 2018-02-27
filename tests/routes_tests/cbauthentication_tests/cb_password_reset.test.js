@@ -7,7 +7,7 @@ const rebuild = require('../../../react-backend/database/database_rebuild');
 test('POST api/cb/pwd/reset | token creation successful', async (t) => {
   await rebuild();
 
-  const successPayload = { formEmail: 'findmyfroggy@frogfinders.com' };
+  const successPayload = { formEmail: 'jinglis12@googlemail.com' };
   request(app)
     .post('/api/cb/pwd/reset')
     .send(successPayload)
@@ -16,7 +16,7 @@ test('POST api/cb/pwd/reset | token creation successful', async (t) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
       try {
         const getTokenFromDb = await dbConnection.query(
-          "SELECT * FROM cbusiness WHERE (token IS NOT NULL) AND email = 'findmyfroggy@frogfinders.com'",
+          "SELECT * FROM cbusiness WHERE (token IS NOT NULL) AND email = 'jinglis12@googlemail.com'",
         );
         t.ok(getTokenFromDb.rows.length, 'route successfully created a token in db');
         t.end();
