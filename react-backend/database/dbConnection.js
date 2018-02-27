@@ -1,10 +1,10 @@
 const { Pool } = require('pg');
-require('env2')('./config.env');
+require('env2')('./config/config.env');
 
 /* istanbul ignore next */
 const DB_URL =
   process.env.NODE_ENV === 'test'
-    ? process.env.DATABASE_TEST
+    ? process.env.DATABASE_URL_TEST
     : process.env.DATABASE_URL;
 
 /* istanbul ignore next */
