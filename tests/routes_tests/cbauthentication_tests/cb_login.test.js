@@ -3,7 +3,7 @@ const request = require('supertest');
 const app = require('../../../react-backend/app');
 
 test('POST /api/cb/login | authentication successful', (t) => {
-  const successPayload = { formEmail: 'findmyfroggy@frogfinders.com', formPswd: 'Funnyfingers11!' };
+  const successPayload = { formEmail: 'jinglis12@googlemail.com', formPswd: 'Sallydog7&' };
   request(app)
     .post('/api/cb/login')
     .send(successPayload)
