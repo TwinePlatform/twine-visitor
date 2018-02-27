@@ -3,7 +3,10 @@ const request = require('supertest');
 const app = require('../../react-backend/app');
 const jwt = require('jsonwebtoken');
 
-test('POST /api/user/name-from-scan | viable & registered hash', (t) => {
+const rebuild = require('./../../react-backend/database/database_rebuild');
+
+test('POST /api/user/name-from-scan | viable & registered hash', async (t) => {
+  await rebuild();
   const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, process.env.SECRET);
 
   const successPayload = {
@@ -22,7 +25,8 @@ test('POST /api/user/name-from-scan | viable & registered hash', (t) => {
     });
 });
 
-test('POST /api/user/name-from-scan | non-viable hash ', (t) => {
+test('POST /api/user/name-from-scan | non-viable hash ', async (t) => {
+  await rebuild();
   const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, process.env.SECRET);
 
   const failPayload = {
@@ -40,7 +44,8 @@ test('POST /api/user/name-from-scan | non-viable hash ', (t) => {
     });
 });
 
-test('POST /api/user/name-from-scan | user/hash not registered ', (t) => {
+test('POST /api/user/name-from-scan | user/hash not registered ', async (t) => {
+  await rebuild();
   const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, process.env.SECRET);
 
   const failPayload = {
