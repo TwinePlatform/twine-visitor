@@ -11,15 +11,15 @@ test('POST /api/cb/pwd/change | token check/pw update successful', async (t) => 
   const tokenExpire = Date.now() + 36000;
 
   try {
-    const queryText = 'UPDATE cbusiness SET token = $1, tokenexpire = $2 WHERE id = 3';
+    const queryText = 'UPDATE cbusiness SET token = $1, tokenexpire = $2 WHERE id = 1';
     await dbConnection.query(queryText, [token, tokenExpire]);
   } catch (error) {
     t.end(error);
   }
 
   const successPayload = {
-    formPswd: 'Funnyfingers22!',
-    formPswdConfirm: 'Funnyfingers22!',
+    formPswd: 'Sallydog7&',
+    formPswdConfirm: 'Sallydog7&',
     token,
   };
 
