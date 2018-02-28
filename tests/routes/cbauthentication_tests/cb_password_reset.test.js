@@ -1,5 +1,6 @@
 const test = require('tape');
 const request = require('supertest');
+const nock = require('nock');
 const createApp = require('../../../react-backend/app');
 const refreshDB = require('../../../db/scripts/refresh');
 const { getConfig } = require('../../../config');
@@ -11,8 +12,14 @@ test('POST api/cb/pwd/reset | token creation successful', async (t) => {
   await refreshDB();
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
-
   const successPayload = { formEmail: 'findmyfroggy@frogfinders.com' };
+
+  nock('https://api.postmarkapp.com')
+    .post('/email/withTemplate')
+    .reply(200, {})
+    .post('/email/batch')
+    .reply(200, {})
+
   request(app)
     .post('/api/cb/pwd/reset')
     .send(successPayload)
