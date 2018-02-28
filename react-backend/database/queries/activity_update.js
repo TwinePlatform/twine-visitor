@@ -15,23 +15,19 @@ const updateActivity = (
   saturday,
   sunday,
   cbId
-) =>
-  new Promise((resolve, reject) => {
-    if (!id || !cbId) reject(new Error('Bad query arguments'));
-    dbConnection
-      .query(updateActivityQuery, [
-        id,
-        monday,
-        tuesday,
-        wednesday,
-        thursday,
-        friday,
-        saturday,
-        sunday,
-        cbId,
-      ])
-      .then(resolve)
-      .catch(reject);
-  });
+) => {
+  if (!id || !cbId) return Promise.reject(new Error('Bad query arguments'));
+  return dbConnection.query(updateActivityQuery, [
+    id,
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday,
+    sunday,
+    cbId
+  ]);
+};
 
 module.exports = updateActivity;

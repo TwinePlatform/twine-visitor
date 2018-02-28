@@ -11,17 +11,16 @@ const activitiesForToday = (cbId, day) => {
     thursday: query('thursday'),
     friday: query('friday'),
     saturday: query('saturday'),
-    sunday: query('sunday'),
+    sunday: query('sunday')
   }[day];
 
-  return new Promise((resolve, reject) => {
-    if (!dayQuery || !cbId) return reject(new Error('Incorrect arguments'));
+  if (!dayQuery || !cbId)
+    return Promise.reject(new Error('Incorrect arguments'));
 
-    dbConnection
-      .query(dayQuery, [cbId])
-      .then(res => resolve(res.rows))
-      .catch(reject);
-  });
+  return dbConnection
+    .query(dayQuery, [cbId])
+    .then(res => res.rows)
+    .catch();
 };
 
 module.exports = activitiesForToday;

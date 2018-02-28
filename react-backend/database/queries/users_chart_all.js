@@ -30,34 +30,31 @@ const getVisitorsByAge = `WITH groupage AS (SELECT CASE
   FROM groupage
   GROUP BY ageGroups`;
 
-const genderNumbers = cbId =>
-  new Promise((resolve, reject) => {
-    if (!cbId) return reject(new Error('No Community Business ID supplied'));
+const genderNumbers = cbId => {
+  if (!cbId)
+    return Promise.reject(new Error('No Community Business ID supplied'));
 
-    Promise.all([
-      dbConnection.query(getVisitsNumbersQuery, [cbId]),
-      dbConnection.query(getGenderNumbersQuery, [cbId]),
-      dbConnection.query(getActivitiesNumbersQuery, [cbId]),
-      dbConnection.query(getVisitorsByAge, [cbId]),
-      dbConnection.query(getActivitiesQuery, [cbId]),
-    ])
-      .then(
-        ([
-          resultVisitsCount,
-          resultGenderCount,
-          resultActivitiesCount,
-          resultVisitorsByAge,
-          resultActivities,
-        ]) => [
-          resultVisitsCount.rows,
-          resultGenderCount.rows,
-          resultActivitiesCount.rows,
-          resultVisitorsByAge.rows,
-          resultActivities.rows,
-        ]
-      )
-      .then(res => resolve(res))
-      .catch(reject);
-  });
+  return Promise.all([
+    dbConnection.query(getVisitsNumbersQuery, [cbId]),
+    dbConnection.query(getGenderNumbersQuery, [cbId]),
+    dbConnection.query(getActivitiesNumbersQuery, [cbId]),
+    dbConnection.query(getVisitorsByAge, [cbId]),
+    dbConnection.query(getActivitiesQuery, [cbId])
+  ]).then(
+    ([
+      resultVisitsCount,
+      resultGenderCount,
+      resultActivitiesCount,
+      resultVisitorsByAge,
+      resultActivities
+    ]) => [
+      resultVisitsCount.rows,
+      resultGenderCount.rows,
+      resultActivitiesCount.rows,
+      resultVisitorsByAge.rows,
+      resultActivities.rows
+    ]
+  );
+};
 
 module.exports = genderNumbers;

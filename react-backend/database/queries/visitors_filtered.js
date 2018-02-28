@@ -9,7 +9,7 @@ const query = (filterBy, orderBy) =>
 const getValidatedFilters = filterArray => {
   const validFilterTypes = {
     gender: ['male', 'female', 'prefer_not_to_say'],
-    age: ['0-17', '18-34', '35-50', '51-69', '70-more'],
+    age: ['0-17', '18-34', '35-50', '51-69', '70-more']
   };
 
   return filterArray.reduce((acc, el) => {
@@ -19,7 +19,7 @@ const getValidatedFilters = filterArray => {
 
       return type === 'activity' ||
         (validFilterTypes[type] && validFilterTypes[type].includes(filter))
-        ? Object.assign(acc, { [type]: toInsert })
+        ? { ...acc, [type]: toInsert }
         : acc;
     } catch (error) {
       return acc;
@@ -31,7 +31,7 @@ const buildGenderQuery = genderQueries => {
   const validQueries = {
     male: "users.sex = 'male'",
     female: "users.sex = 'female'",
-    prefer_not_to_say: "users.sex = 'prefer not to say'",
+    prefer_not_to_say: "users.sex = 'prefer not to say'"
   };
 
   return genderQueries
@@ -51,7 +51,7 @@ const buildAgeQuery = ageQuery =>
           const [low, high] = ageRange.split('-').map(num => Number(num));
           const edgeCaseQuery = {
             '0-17': `(users.yearofbirth > ${getDate(high)})`,
-            '70-more': `(users.yearofbirth <= ${getDate(low)})`,
+            '70-more': `(users.yearofbirth <= ${getDate(low)})`
           }[ageRange];
 
           return (
@@ -104,7 +104,7 @@ const getSortQuery = orderBy => {
     yearofbirth: 'users.yearofbirth',
     sex: 'users.sex',
     activity: 'activities.name',
-    date: 'visits.date',
+    date: 'visits.date'
   }[orderBy];
 
   return field ? ` ORDER BY ${field}` : '';
@@ -117,12 +117,7 @@ const getVisitsFilteredBy = (cbId, { filterBy = [], orderBy = '' } = {}) => {
 
   const myQuery = query(filterQueries, getSortQuery(orderBy));
 
-  return new Promise((resolve, reject) => {
-    dbConnection
-      .query(myQuery, combinedValues)
-      .then(res => resolve(res.rows))
-      .catch(reject);
-  });
+  dbConnection.query(myQuery, combinedValues).then(res => res.rows);
 };
 
 module.exports = getVisitsFilteredBy;

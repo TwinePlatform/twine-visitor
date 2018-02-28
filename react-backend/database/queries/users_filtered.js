@@ -13,7 +13,7 @@ WHERE users.cb_id = $1 ${filterBy} ) users ${orderBy}`;
 const getValidatedFilters = filterArray => {
   const validFilterTypes = {
     gender: ['male', 'female', 'prefer_not_to_say'],
-    age: ['0-17', '18-34', '35-50', '51-69', '70-more'],
+    age: ['0-17', '18-34', '35-50', '51-69', '70-more']
   };
 
   return filterArray.reduce((acc, el) => {
@@ -35,7 +35,7 @@ const buildGenderQuery = genderQueries => {
   const validQueries = {
     male: "users.sex = 'male'",
     female: "users.sex = 'female'",
-    prefer_not_to_say: "users.sex = 'prefer not to say'",
+    prefer_not_to_say: "users.sex = 'prefer not to say'"
   };
 
   return genderQueries
@@ -55,7 +55,7 @@ const buildAgeQuery = ageQuery =>
           const [low, high] = ageRange.split('-').map(num => Number(num));
           const edgeCaseQuery = {
             '0-17': `(users.yearofbirth > ${getDate(high)})`,
-            '70-more': `(users.yearofbirth <= ${getDate(low)})`,
+            '70-more': `(users.yearofbirth <= ${getDate(low)})`
           }[ageRange];
 
           return (
@@ -109,7 +109,7 @@ const getSortQuery = orderBy => {
     yearofbirth: 'users.yearofbirth',
     sex: 'users.sex',
     email: 'users.email',
-    date: 'users.date',
+    date: 'users.date'
   }[orderBy];
 
   if (field) return ` ORDER BY ${field}`;
@@ -164,40 +164,35 @@ const genderNumbersQuery = filterBy => `WITH filteredUsers AS
 
   GROUP BY filteredUsers.sex`;
 
-const getUsersFilteredBy = (cb_id, { filterBy = [], orderBy = '' } = {}) =>
-  new Promise((resolve, reject) => {
-    if (!cb_id) return reject(new Error('No Community Business ID supplied'));
-    const [filterQueries, values] = combineQueries(filterBy);
-    const combinedValues = [cb_id, ...values];
+const getUsersFilteredBy = (cb_id, { filterBy = [], orderBy = '' } = {}) => {
+  if (!cb_id)
+    return Promise.reject(new Error('No Community Business ID supplied'));
+  const [filterQueries, values] = combineQueries(filterBy);
+  const combinedValues = [cb_id, ...values];
 
-    const myQuery = query(filterQueries, getSortQuery(orderBy));
-    const getVisitorsByAge = visitorsByAge(filterQueries);
-    const getActivitiesNumbers = activitiesNumbersQuery(filterQueries);
-    const getGenderNumbers = genderNumbersQuery(filterQueries);
+  const myQuery = query(filterQueries, getSortQuery(orderBy));
+  const getVisitorsByAge = visitorsByAge(filterQueries);
+  const getActivitiesNumbers = activitiesNumbersQuery(filterQueries);
+  const getGenderNumbers = genderNumbersQuery(filterQueries);
 
-    Promise.all([
-      dbConnection.query(myQuery, combinedValues),
-      dbConnection.query(getVisitorsByAge, combinedValues),
-      dbConnection.query(getActivitiesNumbers, combinedValues),
-      dbConnection.query(getGenderNumbers, combinedValues),
-    ])
-      .then(
-        (
-          [
-            resultGeneral,
-            resultVisitorsByAge,
-            resultActivitiesNumbers,
-            resultGenderNumbers,
-          ]
-        ) => [
-          resultGeneral.rows,
-          resultVisitorsByAge.rows,
-          resultActivitiesNumbers.rows,
-          resultGenderNumbers.rows,
-        ]
-      )
-      .then(res => resolve(res))
-      .catch(reject);
-  });
+  return Promise.all([
+    dbConnection.query(myQuery, combinedValues),
+    dbConnection.query(getVisitorsByAge, combinedValues),
+    dbConnection.query(getActivitiesNumbers, combinedValues),
+    dbConnection.query(getGenderNumbers, combinedValues)
+  ]).then(
+    ([
+      resultGeneral,
+      resultVisitorsByAge,
+      resultActivitiesNumbers,
+      resultGenderNumbers
+    ]) => [
+      resultGeneral.rows,
+      resultVisitorsByAge.rows,
+      resultActivitiesNumbers.rows,
+      resultGenderNumbers.rows
+    ]
+  );
+};
 
 module.exports = getUsersFilteredBy;
