@@ -78,4 +78,4 @@ const adminFetch = method => async (that, url, body) => {
 export const adminPost = adminFetch('POST');
 export const adminGet = adminFetch('GET');
 
-export const checkAdmin = that => adminFetch('POST')(that, '/api/admin/check');
+export const checkAdmin = that => adminPost(that, '/api/admin/check');

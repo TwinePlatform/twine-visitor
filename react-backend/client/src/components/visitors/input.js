@@ -36,7 +36,7 @@ Input.propTypes = {
   question: PropTypes.node,
   type: PropTypes.string,
   name: PropTypes.string,
-  option: PropTypes.option,
+  option: PropTypes.string,
 };
 
 Input.defaultProps = {
