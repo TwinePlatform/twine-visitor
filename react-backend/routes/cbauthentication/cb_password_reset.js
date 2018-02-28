@@ -6,6 +6,7 @@ const pwdTokenAdd = require('../../database/queries/cb/pwd_token_add');
 const sendResetEmail = require('../../functions/sendResetEmail');
 
 router.post('/', (req, res, next) => {
+  const pmClient = req.app.get('client:postmark');
   const { formEmail } = req.body;
   const tokenExpire = Date.now() + 3600000;
 
@@ -24,7 +25,7 @@ router.post('/', (req, res, next) => {
           .then(token =>
             Promise.all([
               pwdTokenAdd(token, tokenExpire, formEmail),
-              sendResetEmail(formEmail, token)
+              sendResetEmail(pmClient, formEmail, token)
             ])
           )
           .then(() => res.send(exists))

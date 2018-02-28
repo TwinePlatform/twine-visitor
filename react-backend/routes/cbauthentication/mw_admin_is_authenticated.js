@@ -2,9 +2,11 @@ const jwt = require('jsonwebtoken');
 const getCBFromEmail = require('../../database/queries/cb/cb_from_email');
 
 const adminIsAuthenticated = (req, res, next) => {
+  const secret = req.app.get('cfg').session.jwt_secret;
+
   jwt.verify(
     req.headers.authorization,
-    process.env.ADMIN_SECRET,
+    secret,
     (err, payload) => {
       if (err) {
         return res.status(401).send({ error: 'Token expired' });
@@ -13,7 +15,7 @@ const adminIsAuthenticated = (req, res, next) => {
         .then(cb => {
           const token = jwt.sign(
             { email: payload.email, admin: true },
-            process.env.ADMIN_SECRET,
+            secret,
             { expiresIn: '5m' }
           );
 

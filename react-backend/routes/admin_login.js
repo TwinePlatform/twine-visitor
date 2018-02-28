@@ -7,14 +7,16 @@ const router = express.Router();
 
 router.post('/', (req, res, next) => {
   const { password } = req.body;
-  const hashedPassword = hashCB(password);
+  const secret = req.app.get('cfg').session.hmac_secret;
+  const jwtSecret = req.app.get('cfg').session.jwt_secret;
+  const hashedPassword = hashCB(secret, password);
 
   cbLogin(req.auth.cb_email, hashedPassword)
     .then(exists => {
       if (exists) {
         const token = jwt.sign(
           { email: req.auth.cb_email, admin: true },
-          process.env.ADMIN_SECRET,
+          jwtSecret,
           { expiresIn: '5m' }
         );
 

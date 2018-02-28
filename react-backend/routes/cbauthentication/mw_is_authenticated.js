@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 const cbFromEmail = require('../../database/queries/cb/cb_from_email');
 
 const isAuthenticated = (req, res, next) => {
-  jwt.verify(req.headers.authorization, process.env.SECRET, (err, payload) => {
+  const secret = req.app.get('cfg').session.jwt_secret;
+  jwt.verify(req.headers.authorization, secret, (err, payload) => {
     if (err) {
       console.log(err);
       return next('notauthorized');

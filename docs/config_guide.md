@@ -1,24 +1,31 @@
 # Configuration Guide
-Currently all configuration is done via a single git-ignored configuration file in the project root.
+All configuration is stored in the `config` directory located in the project root.
 
-To create a project configuration, create a file named `config.env` in the project root. Populate it with `=`-separated key-value pairs. Ensure at least the following parameters are provided:
+Secrets and configuration variables that are likely to change between deployment environments are stored in a file called `config.env`. This file should *NOT* be checked into source control.
+
+Default configuration variables are stored in `config.defaults.js`.
+
+To create a project configuration, create the `config.env` in the `config` directory. Populate it with `=`-separated key-value pairs. Ensure at least the following parameters are provided:
 
 ```sh
-# Used to sign JWT for community business (CB) users
-SECRET=...
+# Used as a HMAC key to hash passwords (must change, see https://github.com/TwinePlatform/DataPower/issues/213)
+HMAC_SECRET=...
 
-# Used to sign JWT for admin users
-ADMIN SECRET=...
+# Used to sign JWTs for session authentication
+JWT SECRET=...
 
-# what?
-POSTMARK_SERVER=...
+# Postgres connection strings for postgres server in various environments
+# DATABASE_URL is used in production, the others are suffixed with their environments
+DATABASE_URL=...
+DATABASE_URL_DEV=...
+DATABASE_URL_TEST=...
 
-# what?
-CB_EMAIL=foo@bar.com
+# Postmark API key for various environments
+# Postmark is the service used to send e-mails
+POSTMARK_KEY_DEV=...
+POSTMARK_KEY_TEST=...
+POSTMARK_KEY_PROD=...
 
-# Full postgres URL to the development postgres server
-DATABASE_URL=postgres://<username>:<password>@<host>:<port>/<database_name>?ssl=1
-
-# Full postgres URL to the testing postgres sever
-DATABASE_TEST=postgres://<username>:<password>@<host>:<port>/<database_name>?ssl=0
+# Used in development only. MUST BE REPLACED before launch
+CB_EMAIL=...
 ```

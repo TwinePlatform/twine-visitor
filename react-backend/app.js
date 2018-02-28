@@ -4,43 +4,37 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const apiRoutes = require('./router');
+const postmark = require('postmark');
+const createPgPool = require('./database/dbConnectionLazy');
+const { notFound, errorHandler } = require('./shared/middleware');
 
-const app = express();
 
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'client/build')));
+module.exports = (cfg) => {
+  // Non-global import required because of client-connections
+  // that are created in module scope of routes
+  const apiRoutes = require('./router'); // eslint-disable-line global-require
 
-app.use('/api', apiRoutes);
-app.get('/*', express.static(path.join(__dirname, 'client/build/index.html')));
+  const postmarkClient = new postmark.Client(cfg.email.postmark_key);
+  const psqlClient = createPgPool(cfg);
 
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+  const app = express();
 
-// error handler
-app.use((err, req, res) => {
-  if (err === 'notauthorized') {
-    return res.status(401).send({ error: 'Not logged in' });
-  }
-  // set locals, only providing error in development
-  const message = err.message;
-  const error = req.app.get('env') === 'development' ? err : {};
+  app.set('cfg', cfg);
+  app.set('client:postmark', postmarkClient);
+  app.set('client:psql', psqlClient);
 
-  // render the error page
-  res.status(err.status || 500);
-  res.send({ error, message });
-});
+  app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+  app.use(logger(cfg.env));
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(cookieParser());
+  app.use(express.static(path.join(__dirname, 'client', 'build')));
 
-const port = process.env.NODE_ENV === 'test' ? 5010 : process.env.PORT || 5000;
+  app.use('/api', apiRoutes);
+  app.get('/*', express.static(path.join(__dirname, 'client', 'build', 'index.html')));
 
-app.listen(port);
+  app.use(notFound);
+  app.use(errorHandler);
 
-module.exports = app;
+  return app;
+};

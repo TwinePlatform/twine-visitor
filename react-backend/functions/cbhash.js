@@ -1,12 +1,6 @@
 const crypto = require('crypto');
-require('env2')('./config.env');
 
-if (!process.env.SECRET) {
-  throw new Error('Environment variable SECRET must be set');
-}
-const secret = process.env.SECRET;
-
-module.exports = pswd => {
+module.exports = (secret, pswd) => {
   const hash = crypto
     .createHmac('sha256', secret)
     .update(pswd)

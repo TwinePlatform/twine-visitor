@@ -5,12 +5,14 @@ const sendCBemail = require('../../functions/sendCBemail');
 
 router.post('/', (req, res, next) => {
   const { formPswd, formName, formEmail, formGenre } = req.body;
+  const pmClient = req.app.get('client:postmark');
+  const secret = req.app.get('cfg').session.hmac_secret;
 
-  const hashedPassword = hashCB(formPswd);
+  const hashedPassword = hashCB(secret, formPswd);
   const name = formName.toLowerCase();
 
   cbAdd(name, formEmail, formGenre, hashedPassword)
-    .then(() => sendCBemail(formEmail, formName))
+    .then(() => sendCBemail(pmClient, formEmail, formName))
     .then(() => res.send({ success: true }))
     .catch(next);
 });
