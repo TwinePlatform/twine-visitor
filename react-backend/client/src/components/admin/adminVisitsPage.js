@@ -114,7 +114,7 @@ export default class AdminVisitsPage extends Component {
           </thead>
           <tbody>
             {this.state.users.map(user => (
-              <tr key={user.date}>
+              <tr key={`${user.id}-${user.date}`}>
                 <td>{user.id}</td>
                 <td>{user.sex}</td>
                 <td>{user.yearofbirth}</td>

@@ -21,9 +21,13 @@ const AdminRoute = ({ auth, component: Component, ...rest }) => (
 );
 
 AdminRoute.propTypes = {
-  auth: PropTypes.bool.isRequired,
-  component: PropTypes.element.isRequired,
-  location: PropTypes.string.isRequired,
+  auth: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  component: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
+  location: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+};
+
+AdminRoute.defaultProps = {
+  location: '',
 };
 
 export default AdminRoute;

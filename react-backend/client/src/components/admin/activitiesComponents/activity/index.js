@@ -1,3 +1,4 @@
-export { ActivityForm } from './ActivityForm';
-export { ActivityList } from './ActivityList';
+import ActivityForm from './ActivityForm';
+import ActivityList from './ActivityList';
 
+export { ActivityForm, ActivityList };
