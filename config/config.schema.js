@@ -21,7 +21,7 @@ module.exports = {
   psql: Joi.object({
     host: Joi.string().min(1).required(),
     port: Joi.number().min(0).max(65535).required(),
-    database: Joi.string().min(1).required(),
+    database: Joi.string().min(1).replace(/^\//, '').required(),
     user: Joi.string().min(1).required(),
     password: Joi.string(),
     ssl: Joi.bool().default(false),
