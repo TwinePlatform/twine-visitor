@@ -1,7 +1,7 @@
 const test = require('tape');
-const userCheckExists = require('../../react-backend/database/queries/user_check_exists');
+const userCheckExists = require('../../../react-backend/database/queries/user_check_exists');
 
-const rebuild = require('../../react-backend/database/database_rebuild');
+const rebuild = require('../../../react-backend/database/database_rebuild');
 
 test('Database SELECT query | checkFullname | success case', async (t) => {
   try {

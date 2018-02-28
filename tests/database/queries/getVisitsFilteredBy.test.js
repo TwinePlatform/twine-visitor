@@ -1,6 +1,6 @@
 const test = require('tape');
-const visitorsFiltered = require('../../react-backend/database/queries/visitors_filtered');
-const rebuild = require('../../react-backend/database/database_rebuild');
+const visitorsFiltered = require('../../../react-backend/database/queries/visitors_filtered');
+const rebuild = require('../../../react-backend/database/database_rebuild');
 
 test('visitorsFiltered filters by gender', async (t) => {
   try {
