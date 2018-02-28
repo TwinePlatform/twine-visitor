@@ -43,7 +43,7 @@ export default class Main extends Component {
     'Content-Type': 'application/json',
   });
 
-  handleSwitch = (e) => {
+  checkUserExists = (e) => {
     e.preventDefault();
 
     const checkData = {
@@ -141,7 +141,7 @@ export default class Main extends Component {
                 <Input question="Your Full Name" option="fullname" />
                 <Input question="Your Email" option="email" />
               </form>
-              <button onClick={this.handleSwitch} className="Button">
+              <button onClick={this.checkUserExists} className="Button">
                 {' '}
                 Next{' '}
               </button>
