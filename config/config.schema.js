@@ -32,6 +32,7 @@ module.exports = {
   }),
   session: Joi.object({
     jwt_secret: Joi.string().min(20).required(),
+    admin_jwt_secret: Joi.string().min(20).required(),
     hmac_secret: Joi.string().min(20).required(),
     ttl: Joi.number().integer().min(0).max(3e10), // milliseconds
   }),

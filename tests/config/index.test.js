@@ -85,23 +85,24 @@ test('Config | validateConfig | valid config', (t) => {
     web: {
       host: 'localhost',
       port: 1000,
-      tls: null
+      tls: null,
     },
     psql: {
       host: 'localhost',
       port: 5432,
       database: 'postgres',
-      user: 'foo'
+      user: 'foo',
     },
     email: {
       postmark_key: 'hello',
-      twine_email: 'visitor@twineplatform.org'
+      twine_email: 'visitor@twineplatform.org',
     },
     session: {
       jwt_secret: 'secretstring20202020',
+      admin_jwt_secret: 'secretstring20202020',
       hmac_secret: 'secretstringagain202020',
-      ttl: 108000000
-    }
+      ttl: 108000000,
+    },
   };
 
   t.doesNotThrow(() => validateConfig(cfg));
@@ -114,23 +115,24 @@ test('Config | validateConfig | invalid config', (t) => {
     web: {
       host: 'localhost',
       port: 1000,
-      tls: null
+      tls: null,
     },
     psql: {
       host: 'localhost',
       port: 5432,
       database: 'postgres',
-      user: 'foo'
+      user: 'foo',
     },
     email: {
       postmark_key: null,
-      twine_email: null
+      twine_email: null,
     },
     session: {
       jwt_secret: null,
+      admin_jwt_secret: null,
       hmac_secret: null,
-      ttl: 108000000
-    }
+      ttl: 108000000,
+    },
   };
 
   t.throws(() => validateConfig(cfg));

@@ -1,7 +1,8 @@
 # Configuration Guide
+
 All configuration is stored in the `config` directory located in the project root.
 
-Secrets and configuration variables that are likely to change between deployment environments are stored in a file called `config.env`. This file should *NOT* be checked into source control.
+Secrets and configuration variables that are likely to change between deployment environments are stored in a file called `config.env`. This file should _NOT_ be checked into source control.
 
 Default configuration variables are stored in `config.defaults.js`.
 
@@ -12,7 +13,8 @@ To create a project configuration, create the `config.env` in the `config` direc
 HMAC_SECRET=...
 
 # Used to sign JWTs for session authentication
-JWT SECRET=...
+JWT_SECRET=...
+ADMIN_JWT_SECRET=...
 
 # Postgres connection strings for postgres server in various environments
 # DATABASE_URL is used in production, the others are suffixed with their environments

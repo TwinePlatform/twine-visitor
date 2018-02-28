@@ -25,6 +25,7 @@ module.exports = {
   },
   session: {
     jwt_secret: process.env.JWT_SECRET,
+    admin_jwt_secret: process.env.ADMIN_JWT_SECRET,
     hmac_secret: process.env.HMAC_SECRET,
     ttl: 30 * 60 * 1000, // 30 minutes in ms
   },
