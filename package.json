@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
-  "main": "index.js",
+  "main": "./react-backend/index.js",
   "scripts": {
     "start": "node ./react-backend/index.js",
+    "startmon": "nodemon ./react-backend/index.js",
     "devstart": "nodemon ./react-backend/bin/www",
     "postinstall": "cd react-backend/client && npm install",
     "heroku-postbuild": "cd react-backend/client && npm install --only=dev && npm install && npm run build",
