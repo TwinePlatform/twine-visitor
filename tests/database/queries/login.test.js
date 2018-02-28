@@ -13,6 +13,7 @@ test('test CB login detail validation query', async (t) => {
   await refreshDB();
 
   const client = new pg.Client(config.psql);
+  await client.connect();
 
   try {
     await cbLogin(client);
@@ -26,30 +27,30 @@ test('test CB login detail validation query', async (t) => {
 
   const correct = await cbLogin(
     client,
-    'dev@milfordcapitalpartners.com',
-    '9345a35a6fdf174dff7219282a3ae4879790dbb785c70f6fff91e32fafd66eab',
+    'findmyfroggy@frogfinders.com',
+    '0a0429fa911712f7aca189bb12995963e3fc8f361e2845f747994be499250762',
   );
-  const incorrectPwd = await cbLogin(client, 'dev@milfordcapitalpartners.com', '1234');
+  const incorrectPwd = await cbLogin(client, 'findmyfroggy@frogfinders.com', '1234');
   const incorrectEmail = await cbLogin(
     client,
     'a@a.com',
-    '9345a35a6fdf174dff7219282a3ae4879790dbb785c70f6fff91e32fafd66eab',
+    '0a0429fa911712f7aca189bb12995963e3fc8f361e2845f747994be499250762',
   );
   t.equal(correct, true, 'Correct details return true');
   t.equal(incorrectEmail, false, 'Incorrect email returns false');
   t.equal(incorrectPwd, false, 'Incorrect PWD returns false');
 
-  client.end()
-    .then(t.end)
-    .catch(t.end);
+  await client.end()
+  t.end();
 });
 
 test('test checkCbExists checks', async (t) => {
   await refreshDB();
 
   const client = new pg.Client(config.psql);
+  await client.connect();
 
-  const correct = await checkCbExists(client, 'dev@milfordcapitalpartners.com');
+  const correct = await checkCbExists(client, 'findmyfroggy@frogfinders.com');
   const incorrect = await checkCbExists(client, 'incorrect@nosuchemail.com');
   t.equal(correct, true, 'Correct email returns true');
   t.equal(incorrect, false, 'Incorrect email returns false');
@@ -61,7 +62,6 @@ test('test checkCbExists checks', async (t) => {
     t.pass('Rejects with no arguments');
   }
 
-  client.end()
-    .then(t.end)
-    .catch(t.end);
+  await client.end()
+  t.end();
 });

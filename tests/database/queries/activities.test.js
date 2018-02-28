@@ -17,7 +17,7 @@ test('Tests activities responds with the correct data', async (t) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  const activityArray = await activities(client, 2);
+  const activityArray = await activities(client, 1);
 
   t.equal(activityArray.length, 5, 'Activities gets all activities');
   t.equal(Object.keys(activityArray[0]).length, 9, 'Activity has 9 fields');
@@ -31,7 +31,7 @@ test('Tests activities responds with the correct data', async (t) => {
 
   await emptyDB();
 
-  const activityArrayEmpty = await activities(client, 2);
+  const activityArrayEmpty = await activities(client, 1);
 
   t.deepEqual(activityArrayEmpty, [], 'No error if activities is called on empty table');
 
@@ -45,8 +45,8 @@ test('Tests activitiesForToday responds with activities by day', async (t) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  const activitiesMonday = await activitiesForToday(client, 2, 'monday');
-  const activitiesTuesday = await activitiesForToday(client, 2, 'tuesday');
+  const activitiesMonday = await activitiesForToday(client, 1, 'monday');
+  const activitiesTuesday = await activitiesForToday(client, 1, 'tuesday');
   const badCbId = await activitiesForToday(client, 500, 'monday');
 
   try {
@@ -62,8 +62,8 @@ test('Tests activitiesForToday responds with activities by day', async (t) => {
     t.pass('Bad values rejected');
   }
 
-  t.equal(activitiesMonday.length, 4, 'Gets activities filtered by day');
-  t.equal(activitiesTuesday.length, 1, 'Different activities for another day');
+  t.equal(activitiesMonday.length, 5, 'Gets activities filtered by day');
+  t.equal(activitiesTuesday.length, 5, 'Different activities for another day');
   t.equal(badCbId.length, 0, 'Bad cbId returns no activities');
 
   await client.end()
@@ -76,9 +76,9 @@ test('Tests deleteActivity deletes an activity', async (t) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  const activitiesPreDelete = await activities(client, 2);
-  await deleteActivity(client, 1, 2);
-  const activitiesPostDelete = await activities(client, 2);
+  const activitiesPreDelete = await activities(client, 1);
+  await deleteActivity(client, 1, 1);
+  const activitiesPostDelete = await activities(client, 1);
 
   t.notDeepEqual(activitiesPreDelete, activitiesPostDelete);
 
@@ -144,9 +144,9 @@ test('Tests updateAcivity updates an activity', async (t) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  const activitiesPreUpdate = await activities(client, 2);
-  await updateActivity(client, 1, true, true, true, true, true, true, true, 2);
-  const activitiesPostUpdate = await activities(client, 2);
+  const activitiesPreUpdate = await activities(client, 1);
+  await updateActivity(client, 1, true, true, true, true, true, true, true, 1);
+  const activitiesPostUpdate = await activities(client, 1);
 
   t.notDeepEqual(activitiesPreUpdate, activitiesPostUpdate, 'Updated activity');
 
@@ -158,7 +158,7 @@ test('Tests updateAcivity updates an activity', async (t) => {
   }
 
   try {
-    await updateActivity(client, 1, 'blah', true, true, true, true, true, true, 2);
+    await updateActivity(client, 1, 'blah', true, true, true, true, true, true, 1);
     t.fail('Worked with bad inputs');
   } catch (e) {
     t.pass('Bad values rejected');

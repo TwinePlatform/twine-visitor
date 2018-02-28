@@ -24,8 +24,10 @@ test('POST api/cb/pwd/reset | token creation successful', async (t) => {
           "SELECT * FROM cbusiness WHERE (token IS NOT NULL) AND email = 'findmyfroggy@frogfinders.com'",
         );
         t.ok(getTokenFromDb.rows.length, 'route successfully created a token in db');
+        await dbConnection.end();
         t.end();
       } catch (error) {
+        await dbConnection.end();
         t.end(error);
       }
     });
@@ -35,6 +37,7 @@ test('POST api/cb/pwd/reset | token creation unsuccessful', async (t) => {
   await refreshDB();
 
   const app = createApp(config);
+  const dbConnection = app.get('client:psql');
 
   const unsuccessPayload = { formEmail: 'idont@exist.com' };
 
@@ -45,6 +48,6 @@ test('POST api/cb/pwd/reset | token creation unsuccessful', async (t) => {
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
       t.notOk(res.body, 'Non existing email returns false');
-      t.end();
+      dbConnection.end(t.end);
     });
 });
