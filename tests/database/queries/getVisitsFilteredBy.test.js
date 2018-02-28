@@ -1,6 +1,6 @@
 const test = require('tape');
-const visitorsFiltered = require('./../react-backend/database/queries/visitors_filtered');
-const rebuild = require('./../react-backend/database/database_rebuild');
+const visitorsFiltered = require('../../../react-backend/database/queries/visitors_filtered');
+const rebuild = require('../../../react-backend/database/database_rebuild');
 
 test('visitorsFiltered filters by gender', async (t) => {
   try {
@@ -59,13 +59,7 @@ test('visitorsFiltered filters by age', async (t) => {
       filterBy: ['age@bad-value'],
     });
     const filterAll = await visitorsFiltered(2, {
-      filterBy: [
-        'age@0-17',
-        'age@18-34',
-        'age@35-50',
-        'age@51-69',
-        'age@70-more',
-      ],
+      filterBy: ['age@0-17', 'age@18-34', 'age@35-50', 'age@51-69', 'age@70-more'],
     });
 
     t.equals(filter017.length, 0, 'Filters by bottom case');
@@ -150,9 +144,7 @@ test('Sorts by field', async (t) => {
     await rebuild();
 
     const allResults = await visitorsFiltered(2);
-    const sortedByYear = [...allResults].sort(
-      (a, b) => a.yearofbirth > b.yearofbirth,
-    );
+    const sortedByYear = [...allResults].sort((a, b) => a.yearofbirth > b.yearofbirth);
 
     const sortByYear = await visitorsFiltered(2, {
       orderBy: 'yearofbirth',
