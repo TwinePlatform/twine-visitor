@@ -1,8 +1,7 @@
 const test = require('tape');
 const pg = require('pg');
 const { getConfig } = require('../../../config');
-const refreshDB = require('../../../db/scripts/refresh');
-const emptyDB = require('../../../db/scripts/empty');
+const { refresh: refreshDB, empty: emptyDB } = require('../../../db/scripts');
 const activities = require('../../../react-backend/database/queries/activities');
 const activitiesForToday = require('../../../react-backend/database/queries/activities_today');
 const deleteActivity = require('../../../react-backend/database/queries/activity_delete');

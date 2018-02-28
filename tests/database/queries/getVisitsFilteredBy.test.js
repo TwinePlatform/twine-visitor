@@ -1,7 +1,7 @@
 const test = require('tape');
 const pg = require('pg');
 const { getConfig } = require('../../../config');
-const refreshDB = require('../../../db/scripts/refresh');
+const { refresh: refreshDB } = require('../../../db/scripts');
 const visitorsFiltered = require('../../../react-backend/database/queries/visitors_filtered');
 
 

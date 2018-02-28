@@ -17,11 +17,12 @@
     "cover.report.ci": "nyc report --reporter=text-lcov > coverage.lcov",
     "lint": "eslint .",
     "lint.fix": "eslint . --fix",
-    "psql.build": "node ./db/scripts/build.js",
-    "psql.destroy": "node ./db/scripts/destroy.js",
-    "psql.empty": "node ./db/scripts/empty.js",
-    "psql.migrate": "node ./db/scripts/migrate.js",
-    "psql.refresh": "node ./db/scripts/refresh.js"
+    "psql.build": "node ./db/scripts/index.js build",
+    "psql.destroy": "node ./db/scripts/index.js destroy",
+    "psql.empty": "node ./db/scripts/index.js empty",
+    "psql.populate": "node ./db/scripts/index.js populate",
+    "psql.migrate": "node ./db/scripts/index.js migrate",
+    "psql.refresh": "node ./db/scripts/index.js refresh"
   },
   "repository": {
     "type": "git",
