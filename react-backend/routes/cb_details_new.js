@@ -3,6 +3,7 @@ const cbDetailsNew = require('../database/queries/cb/cb_details_new');
 
 router.post('/', (req, res, next) => {
   cbDetailsNew(
+    req.app.get('client:psql'),
     req.auth.cb_id,
     req.body.org_name,
     req.body.genre,

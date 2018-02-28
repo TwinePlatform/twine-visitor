@@ -1,9 +1,7 @@
-const dbConnection = require('../../dbConnection');
-
 const getCBQuery =
   'SELECT id, org_name, uploadedFileCloudinaryUrl FROM cbusiness WHERE email=$1';
 
-const getCBFromEmail = email =>
+const getCBFromEmail = (dbConnection, email) =>
   new Promise((resolve, reject) => {
     dbConnection
       .query(getCBQuery, [email])

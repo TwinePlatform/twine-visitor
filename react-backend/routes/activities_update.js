@@ -6,6 +6,7 @@ const router = express.Router();
 router.post('/', (req, res, next) => {
   const activity = req.body;
   activityUpdate(
+    req.app.get('client:psql'),
     activity.id,
     activity.monday,
     activity.tuesday,

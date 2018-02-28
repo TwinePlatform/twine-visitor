@@ -11,13 +11,17 @@
     "postinstall": "cd react-backend/client && npm install",
     "heroku-postbuild": "cd react-backend/client && npm install --only=dev && npm install && npm run build",
     "build.client": "cd react-backend/client && npm run build",
-    "db_build": "node ./react-backend/database/dbBuild",
     "test": "NODE_ENV=test tape 'tests/**/*.test.js' | tap-spec",
     "cover": "nyc npm test",
     "cover.report": "nyc report --reporter=html",
     "cover.report.ci": "nyc report --reporter=text-lcov > coverage.lcov",
     "lint": "eslint .",
-    "lint.fix": "eslint . --fix"
+    "lint.fix": "eslint . --fix",
+    "psql.build": "node ./db/scripts/build.js",
+    "psql.destroy": "node ./db/scripts/destroy.js",
+    "psql.empty": "node ./db/scripts/empty.js",
+    "psql.migrate": "node ./db/scripts/migrate.js",
+    "psql.refresh": "node ./db/scripts/refresh.js"
   },
   "repository": {
     "type": "git",

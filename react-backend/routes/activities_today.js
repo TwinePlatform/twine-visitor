@@ -15,8 +15,9 @@ const days = [
 router.get('/', (req, res, next) => {
   const currentDate = new Date();
   const today = days[currentDate.getDay()];
+  const pgClient = req.app.get('client:psql');
 
-  activitiesForToday(req.auth.cb_id, today)
+  activitiesForToday(pgClient, req.auth.cb_id, today)
     .then(activities => res.send({ activities }))
     .catch(next);
 });

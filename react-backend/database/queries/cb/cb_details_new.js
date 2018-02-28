@@ -1,5 +1,3 @@
-const dbConnection = require('../../dbConnection');
-
 const putNewCBDetailsQuery = image =>
   `UPDATE cbusiness
   SET org_name = $2, genre = $3, email = $4
@@ -8,6 +6,7 @@ const putNewCBDetailsQuery = image =>
   RETURNING *`;
 
 const putNewCBDetails = (
+  dbConnection,
   id,
   orgName,
   genre,

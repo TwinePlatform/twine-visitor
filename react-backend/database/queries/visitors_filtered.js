@@ -1,5 +1,3 @@
-const dbConnection = require('../dbConnection');
-
 const query = (filterBy, orderBy) =>
   `SELECT users.id, users.sex, users.yearofbirth, activities.name, visits.date
   FROM users INNER JOIN visits ON users.id=visits.usersid
@@ -111,7 +109,7 @@ const getSortQuery = orderBy => {
 };
 
 // Destructure and supply default arguments
-const getVisitsFilteredBy = (cbId, { filterBy = [], orderBy = '' } = {}) => {
+const getVisitsFilteredBy = (dbConnection, cbId, { filterBy = [], orderBy = '' } = {}) => {
   const [filterQueries, values] = combineQueries(filterBy);
   const combinedValues = [cbId, ...values];
 

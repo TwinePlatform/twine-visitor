@@ -1,9 +1,7 @@
-const dbConnection = require('../dbConnection');
-
 const query = day => `SELECT id, name FROM activities
                       WHERE ${day}=true AND deleted=false AND cb_id=$1`;
 
-const activitiesForToday = (cbId, day) => {
+const activitiesForToday = (dbConnection, cbId, day) => {
   const dayQuery = {
     monday: query('monday'),
     tuesday: query('tuesday'),

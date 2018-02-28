@@ -1,5 +1,3 @@
-const dbConnection = require('../dbConnection');
-
 const query = (filterBy, orderBy) => `
 SELECT * FROM (
 SELECT DISTINCT ON (users.id) users.id, users.fullName, users.sex, users.yearofbirth, users.email, users.date
@@ -164,7 +162,7 @@ const genderNumbersQuery = filterBy => `WITH filteredUsers AS
 
   GROUP BY filteredUsers.sex`;
 
-const getUsersFilteredBy = (cb_id, { filterBy = [], orderBy = '' } = {}) => {
+const getUsersFilteredBy = (dbConnection, cb_id, { filterBy = [], orderBy = '' } = {}) => {
   if (!cb_id)
     return Promise.reject(new Error('No Community Business ID supplied'));
   const [filterQueries, values] = combineQueries(filterBy);

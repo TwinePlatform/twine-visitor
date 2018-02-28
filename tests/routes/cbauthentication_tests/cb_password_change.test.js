@@ -2,17 +2,17 @@ const test = require('tape');
 const request = require('supertest');
 const createApp = require('../../../react-backend/app');
 const tokenGen = require('../../../react-backend/functions/tokengen');
-const dbConnection = require('../../../react-backend/database/dbConnection');
-const rebuild = require('../../../react-backend/database/database_rebuild');
+const refreshDB = require('../../../db/scripts/refresh');
 const { getConfig } = require('../../../config');
 
 const config = getConfig(process.env.NODE_ENV);
 
 test('POST /api/cb/pwd/change | token check/pw update successful', async (t) => {
-  await rebuild();
+  await refreshDB();
   const token = await tokenGen();
   const tokenExpire = Date.now() + 36000;
   const app = createApp(config);
+  const dbConnection = app.get('client:psql');
 
   try {
     const queryText = 'UPDATE cbusiness SET token = $1, tokenexpire = $2 WHERE id = 3';

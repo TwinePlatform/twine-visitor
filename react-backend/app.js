@@ -5,7 +5,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const postmark = require('postmark');
-const createPgPool = require('./database/dbConnectionLazy');
+const pg = require('pg');
 const { notFound, errorHandler } = require('./shared/middleware');
 
 
@@ -15,7 +15,7 @@ module.exports = (cfg) => {
   const apiRoutes = require('./router'); // eslint-disable-line global-require
 
   const postmarkClient = new postmark.Client(cfg.email.postmark_key);
-  const psqlClient = createPgPool(cfg);
+  const psqlClient = new pg.Pool(cfg.psql);
 
   const app = express();
 

@@ -3,12 +3,13 @@ const getCBFromEmail = require('../../database/queries/cb/cb_from_email');
 
 const adminIsAuthenticated = (req, res, next) => {
   const cbAdminJwtSecret = req.app.get('cfg').session.cb_admin_jwt_secret;
+  const pgClient = req.app.get('client:psql');
 
   jwt.verify(req.headers.authorization, cbAdminJwtSecret, (err, payload) => {
     if (err) {
       return res.status(401).send({ error: 'Token expired' });
     }
-    getCBFromEmail(payload.email)
+    getCBFromEmail(pgClient, payload.email)
       .then(cb => {
         const token = jwt.sign(
           { email: payload.email, admin: true },

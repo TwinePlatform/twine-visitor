@@ -7,11 +7,12 @@ const router = express.Router();
 
 router.post('/', (req, res, next) => {
   const { password } = req.body;
+  const pgClient = req.app.get('client:psql');
   const secret = req.app.get('cfg').session.hmac_secret;
   const cbAdminJwtSecret = req.app.get('cfg').session.cb_admin_jwt_secret;
   const hashedPassword = hashCB(secret, password);
 
-  cbLogin(req.auth.cb_email, hashedPassword)
+  cbLogin(pgClient, req.auth.cb_email, hashedPassword)
     .then(exists => {
       if (exists) {
         const token = jwt.sign(

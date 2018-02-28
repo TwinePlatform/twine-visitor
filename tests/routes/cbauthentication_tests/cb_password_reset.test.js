@@ -1,16 +1,16 @@
 const test = require('tape');
 const request = require('supertest');
 const createApp = require('../../../react-backend/app');
-const dbConnection = require('../../../react-backend/database/dbConnection');
-const rebuild = require('../../../react-backend/database/database_rebuild');
+const refreshDB = require('../../../db/scripts/refresh');
 const { getConfig } = require('../../../config');
 
 const config = getConfig(process.env.NODE_ENV);
 
 
 test('POST api/cb/pwd/reset | token creation successful', async (t) => {
-  await rebuild();
+  await refreshDB();
   const app = createApp(config);
+  const dbConnection = app.get('client:psql');
 
   const successPayload = { formEmail: 'findmyfroggy@frogfinders.com' };
   request(app)
@@ -32,9 +32,10 @@ test('POST api/cb/pwd/reset | token creation successful', async (t) => {
 });
 
 test('POST api/cb/pwd/reset | token creation unsuccessful', async (t) => {
-  await rebuild();
+  await refreshDB();
 
   const app = createApp(config);
+
   const unsuccessPayload = { formEmail: 'idont@exist.com' };
 
   request(app)
