@@ -21,7 +21,7 @@ module.exports = {
   psql: Joi.object({
     host: Joi.string().min(1).required(),
     port: Joi.number().min(0).max(65535).required(),
-    database: Joi.string().min(1).required(),
+    database: Joi.string().min(1).replace(/^\//, '').required(),
     user: Joi.string().min(1).required(),
     password: Joi.string(),
     ssl: Joi.bool().default(false),
@@ -31,7 +31,8 @@ module.exports = {
     twine_email: Joi.string().email().required(),
   }),
   session: Joi.object({
-    jwt_secret: Joi.string().min(20).required(),
+    standard_jwt_secret: Joi.string().min(20).required(),
+    cb_admin_jwt_secret: Joi.string().min(20).required(),
     hmac_secret: Joi.string().min(20).required(),
     ttl: Joi.number().integer().min(0).max(3e10), // milliseconds
   }),

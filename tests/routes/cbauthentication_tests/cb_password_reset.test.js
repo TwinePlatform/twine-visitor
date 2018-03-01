@@ -1,18 +1,25 @@
 const test = require('tape');
 const request = require('supertest');
+const nock = require('nock');
 const createApp = require('../../../react-backend/app');
-const dbConnection = require('../../../react-backend/database/dbConnection');
-const rebuild = require('../../../react-backend/database/database_rebuild');
+const { refresh: refreshDB } = require('../../../db/scripts');
 const { getConfig } = require('../../../config');
 
 const config = getConfig(process.env.NODE_ENV);
 
 
 test('POST api/cb/pwd/reset | token creation successful', async (t) => {
-  await rebuild();
+  await refreshDB();
   const app = createApp(config);
-
+  const dbConnection = app.get('client:psql');
   const successPayload = { formEmail: 'findmyfroggy@frogfinders.com' };
+
+  nock('https://api.postmarkapp.com')
+    .post('/email/withTemplate')
+    .reply(200, {})
+    .post('/email/batch')
+    .reply(200, {})
+
   request(app)
     .post('/api/cb/pwd/reset')
     .send(successPayload)
@@ -24,17 +31,21 @@ test('POST api/cb/pwd/reset | token creation successful', async (t) => {
           "SELECT * FROM cbusiness WHERE (token IS NOT NULL) AND email = 'findmyfroggy@frogfinders.com'",
         );
         t.ok(getTokenFromDb.rows.length, 'route successfully created a token in db');
+        await dbConnection.end();
         t.end();
       } catch (error) {
+        await dbConnection.end();
         t.end(error);
       }
     });
 });
 
 test('POST api/cb/pwd/reset | token creation unsuccessful', async (t) => {
-  await rebuild();
+  await refreshDB();
 
   const app = createApp(config);
+  const dbConnection = app.get('client:psql');
+
   const unsuccessPayload = { formEmail: 'idont@exist.com' };
 
   request(app)
@@ -44,6 +55,6 @@ test('POST api/cb/pwd/reset | token creation unsuccessful', async (t) => {
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
       t.notOk(res.body, 'Non existing email returns false');
-      t.end();
+      dbConnection.end(t.end);
     });
 });

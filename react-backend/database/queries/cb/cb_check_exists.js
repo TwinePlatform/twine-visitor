@@ -1,8 +1,6 @@
-const dbConnection = require('../../dbConnection');
-
 const checkCB = 'SELECT EXISTS(SELECT 1 FROM cbusiness WHERE email = $1)';
 
-const getCBAlreadyExists = email =>
+const getCBAlreadyExists = (dbConnection, email) =>
   new Promise((resolve, reject) => {
     if (!email) return reject(new Error('No email supplied to query'));
     dbConnection

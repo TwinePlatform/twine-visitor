@@ -31,7 +31,7 @@ const parseDbUrl = (str) => {
 
   const [user, password] = auth.split(':')
 
-  return { database, host, port, user, password, ssl: Boolean(ssl) };
+  return { database: database.slice(1), host, port, user, password, ssl: Boolean(ssl) };
 }
 
 

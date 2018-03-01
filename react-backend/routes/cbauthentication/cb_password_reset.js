@@ -6,6 +6,7 @@ const pwdTokenAdd = require('../../database/queries/cb/pwd_token_add');
 const sendResetEmail = require('../../functions/sendResetEmail');
 
 router.post('/', (req, res, next) => {
+  const pgClient = req.app.get('client:psql')
   const pmClient = req.app.get('client:postmark');
   const { formEmail } = req.body;
   const tokenExpire = Date.now() + 3600000;
@@ -18,14 +19,14 @@ router.post('/', (req, res, next) => {
 
   if (validationError) return res.send(validationError);
 
-  cbCheckExists(formEmail)
+  cbCheckExists(pgClient, formEmail)
     .then(exists => {
       if (exists) {
         resetTokenGen()
           .then(token =>
             Promise.all([
-              pwdTokenAdd(token, tokenExpire, formEmail),
-              sendResetEmail(pmClient, formEmail, token)
+              pwdTokenAdd(pgClient, token, tokenExpire, formEmail),
+              sendResetEmail(pmClient, formEmail, token),
             ])
           )
           .then(() => res.send(exists))
