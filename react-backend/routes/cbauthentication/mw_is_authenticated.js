@@ -3,12 +3,14 @@ const cbFromEmail = require('../../database/queries/cb/cb_from_email');
 
 const isAuthenticated = (req, res, next) => {
   const standardJwtSecret = req.app.get('cfg').session.standard_jwt_secret;
+  const pgClient = req.app.get('client:psql');
+
   jwt.verify(req.headers.authorization, standardJwtSecret, (err, payload) => {
     if (err) {
       console.log(err);
       return next('notauthorized');
     }
-    cbFromEmail(payload.email)
+    cbFromEmail(pgClient, payload.email)
       .then(cb => {
         req.auth = req.auth || {};
         req.auth.cb_email = payload.email;

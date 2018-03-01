@@ -1,70 +1,11 @@
 BEGIN;
-  DROP TABLE IF EXISTS users
-  CASCADE;
-DROP TABLE IF EXISTS visits
-CASCADE;
-DROP TABLE IF EXISTS activities
-CASCADE;
-DROP TABLE IF EXISTS cbusiness
-CASCADE;
-
-CREATE TABLE cbusiness
-(
-  id SERIAL PRIMARY KEY,
-  org_name VARCHAR(100) NOT NULL,
-  genre VARCHAR(100) NOT NULL,
-  email VARCHAR(100) NOT NULL UNIQUE,
-  uploadedFileCloudinaryUrl VARCHAR(200),
-  hash_pwd VARCHAR(64) NOT NULL,
-  token VARCHAR(100),
-  tokenExpire BIGINT,
-  date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE users
-(
-  id SERIAL PRIMARY KEY,
-  cb_id INTEGER REFERENCES cbusiness(id),
-  fullName VARCHAR(100) NOT NULL,
-  sex VARCHAR(30) NOT NULL,
-  yearOfBirth INTEGER NOT NULL,
-  email VARCHAR(100),
-  date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  hash VARCHAR(64) NOT NULL
-);
-
-CREATE TABLE activities
-(
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  cb_id INTEGER REFERENCES cbusiness(id),
-  deleted BOOLEAN DEFAULT false,
-  monday BOOLEAN DEFAULT false,
-  tuesday BOOLEAN DEFAULT false,
-  wednesday BOOLEAN DEFAULT false,
-  thursday BOOLEAN DEFAULT false,
-  friday BOOLEAN DEFAULT false,
-  saturday BOOLEAN DEFAULT false,
-  sunday BOOLEAN DEFAULT false,
-  date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE visits
-(
-  id SERIAL PRIMARY KEY,
-  usersId INTEGER REFERENCES users,
-  activitiesId INTEGER REFERENCES activities(id),
-  cb_id INTEGER REFERENCES cbusiness(id),
-  date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-
 
 INSERT INTO cbusiness
   (org_name, genre, email, hash_pwd, date)
 VALUES
   ('Dog & Fish', 'pub', 'jinglis12@googlemail.com', '06dbc7f5b12c6984b3ae140221bdb54c69a81fa97dab00770a0f5a29d17a022b', '2018-01-11 21:50:10'),
-  ('alina industries', 'pub', 'a@gmail.com', '9B8813FE04843F4B42735C199192CA745C3639581F72AF340F833556B965012F', '2017-05-15 12:24:56');
+  ('alina industries', 'pub', 'a@gmail.com', '9B8813FE04843F4B42735C199192CA745C3639581F72AF340F833556B965012F', '2017-05-15 12:24:56'),
+  ('Frog Finders', 'Environment or nature', 'findmyfroggy@frogfinders.com', '0a0429fa911712f7aca189bb12995963e3fc8f361e2845f747994be499250762', '2017-05-15 12:24:56');
 
 INSERT INTO users
   (cb_id, fullName, sex, yearOfBirth, email, date, hash)
@@ -148,4 +89,5 @@ VALUES
   (2, 4, 1, '2017-04-29 21:03:17'),
   (2, 4, 1, '2017-04-29 22:03:17'),
   (3, 5, 1, '2017-06-22 17:45:00');
+
 COMMIT;

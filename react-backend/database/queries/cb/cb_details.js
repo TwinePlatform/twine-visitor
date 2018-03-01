@@ -1,11 +1,9 @@
-const dbConnection = require('../../dbConnection');
-
 const getCBDetailsQuery = `
   SELECT *
   FROM cbusiness
   WHERE id = $1`;
 
-const getCBDetails = cbId =>
+const getCBDetails = (dbConnection, cbId) =>
   new Promise((resolve, reject) => {
     dbConnection
       .query(getCBDetailsQuery, [cbId])

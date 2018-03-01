@@ -2,17 +2,17 @@ const test = require('tape');
 const request = require('supertest');
 const createApp = require('../../../react-backend/app');
 const tokenGen = require('../../../react-backend/functions/tokengen');
-const dbConnection = require('../../../react-backend/database/dbConnection');
-const rebuild = require('../../../react-backend/database/database_rebuild');
+const { refresh: refreshDB } = require('../../../db/scripts');
 const { getConfig } = require('../../../config');
 
 const config = getConfig(process.env.NODE_ENV);
 
 test('POST /api/cb/pwd/change | token check/pw update successful', async (t) => {
-  await rebuild();
+  await refreshDB();
   const token = await tokenGen();
   const tokenExpire = Date.now() + 36000;
   const app = createApp(config);
+  const dbConnection = app.get('client:psql');
 
   try {
     const queryText = 'UPDATE cbusiness SET token = $1, tokenexpire = $2 WHERE id = 3';
@@ -40,8 +40,10 @@ test('POST /api/cb/pwd/change | token check/pw update successful', async (t) => 
       try {
         const newPassword = await dbConnection.query('SELECT hash_pwd FROM cbusiness WHERE id = 3');
         t.notEqual(newPassword, oldPassword, 'Password has been changed in db');
+        await dbConnection.end();
         t.end();
       } catch (error) {
+        await dbConnection.end();
         t.end(error);
       }
     });
@@ -49,6 +51,7 @@ test('POST /api/cb/pwd/change | token check/pw update successful', async (t) => 
 
 test('POST /api/cb/pwd/change | token check/pw update unsuccessful', (t) => {
   const app = createApp(config);
+  const dbConnection = app.get('client:psql');
   const failPayload = {
     formPswd: 'lol',
     formPswdConfirm: 'lol',
@@ -62,6 +65,6 @@ test('POST /api/cb/pwd/change | token check/pw update unsuccessful', (t) => {
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
       t.equal(res.text, 'tokenmatch', 'cb failed to log in with incorrect password');
-      t.end();
+      dbConnection.end(t.end);
     });
 });

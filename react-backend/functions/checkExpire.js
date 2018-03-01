@@ -1,8 +1,8 @@
 const checkExpire = require('../database/queries/cb/pwd_token_expire');
 
-module.exports = token =>
+module.exports = (dbConnection, token) =>
   new Promise((resolve, reject) => {
-    checkExpire(token, (error, result) => {
+    checkExpire(dbConnection, token, (error, result) => {
       if (error) {
         console.log('error from checkExpire ', error);
         reject(error);

@@ -7,8 +7,11 @@ const { checkHasLength } = require('../../functions/helpers');
 
 router.post('/', (req, res, next) => {
   const { formEmail, formPswd } = req.body;
+
+  const pgClient = req.app.get('client:psql');
   const secret = req.app.get('cfg').session.hmac_secret;
   const standardJwtSecret = req.app.get('cfg').session.standard_jwt_secret;
+
   const notEmail = (!validator.isEmail(formEmail) && 'email') || '';
   const noInput = (!checkHasLength([formEmail, formPswd]) && 'noinput') || '';
 
@@ -18,7 +21,7 @@ router.post('/', (req, res, next) => {
 
   const passwordHash = hashCB(secret, formPswd);
 
-  cbLogin(formEmail, passwordHash)
+  cbLogin(pgClient, formEmail, passwordHash)
     .then(exists => {
       if (exists) {
         const token = jwt.sign({ email: formEmail }, standardJwtSecret);

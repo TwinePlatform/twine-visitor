@@ -12,8 +12,9 @@ const strongPassword = new RegExp(
 router.post('/', (req, res, next) => {
   const { formPswd, formPswdConfirm, token } = req.body;
   const secret = req.app.get('cfg').session.hmac_secret;
+  const pgClient = req.app.get('client:psql');
 
-  Promise.all([checkExists(token), checkExpire(token)])
+  Promise.all([checkExists(pgClient, token), checkExpire(pgClient, token)])
     .then(([exists, notExpired]) => {
       const hasInput = checkHasLength([formPswd, formPswdConfirm, token]);
       const pwdsMatch = formPswd === formPswdConfirm;
@@ -30,7 +31,7 @@ router.post('/', (req, res, next) => {
       if (validationError) return res.status(400).send(validationError);
 
       const password = hash(secret, formPswd);
-      pwdChange(password, token)
+      pwdChange(pgClient, password, token)
         .then(() => {
           res.send(true);
         })

@@ -8,6 +8,7 @@ const strongPassword = new RegExp(
 );
 
 router.post('/', (req, res, next) => {
+  const pgClient = req.app.get('client:psql');
   const {
     formName,
     formEmail,
@@ -41,7 +42,7 @@ router.post('/', (req, res, next) => {
 
   if (validationError) return res.send(validationError);
 
-  cbCheckExists(formEmail)
+  cbCheckExists(pgClient, formEmail)
     .then(exists => res.send(exists))
     .catch(next);
 });

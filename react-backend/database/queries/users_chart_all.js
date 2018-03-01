@@ -1,5 +1,3 @@
-const dbConnection = require('../dbConnection');
-
 const getActivitiesQuery = 'SELECT name FROM activities WHERE cb_id=$1';
 
 const getGenderNumbersQuery =
@@ -30,7 +28,7 @@ const getVisitorsByAge = `WITH groupage AS (SELECT CASE
   FROM groupage
   GROUP BY ageGroups`;
 
-const genderNumbers = cbId => {
+const genderNumbers = (dbConnection, cbId) => {
   if (!cbId)
     return Promise.reject(new Error('No Community Business ID supplied'));
 

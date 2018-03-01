@@ -1,5 +1,3 @@
-const dbConnection = require('../dbConnection');
-
 const insertVisit = `
    INSERT INTO visits (usersId, activitiesId, cb_id, date)
    VALUES (
@@ -8,7 +6,7 @@ const insertVisit = `
      $3,
      DEFAULT)`;
 
-const putVisitsData = (hashString, activitiesName, cb_id) =>
+const putVisitsData = (dbConnection, hashString, activitiesName, cb_id) =>
   dbConnection.query(insertVisit, [hashString, activitiesName, cb_id]);
 
 module.exports = putVisitsData;
