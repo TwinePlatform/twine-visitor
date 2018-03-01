@@ -98,8 +98,8 @@ test('Config | validateConfig | valid config', (t) => {
       twine_email: 'visitor@twineplatform.org',
     },
     session: {
-      jwt_secret: 'secretstring20202020',
-      admin_jwt_secret: 'secretstring20202020',
+      standard_jwt_secret: 'secretstring20202020',
+      cb_admin_jwt_secret: 'secretstring20202020',
       hmac_secret: 'secretstringagain202020',
       ttl: 108000000,
     },
@@ -128,8 +128,8 @@ test('Config | validateConfig | invalid config', (t) => {
       twine_email: null,
     },
     session: {
-      jwt_secret: null,
-      admin_jwt_secret: null,
+      standard_jwt_secret: null,
+      cb_admin_jwt_secret: null,
       hmac_secret: null,
       ttl: 108000000,
     },
