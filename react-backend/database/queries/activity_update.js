@@ -26,7 +26,7 @@ const updateActivity = (
     friday,
     saturday,
     sunday,
-    cbId
+    cbId,
   ]);
 };
 

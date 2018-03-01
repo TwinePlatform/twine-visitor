@@ -11,7 +11,7 @@ const activitiesForToday = (cbId, day) => {
     thursday: query('thursday'),
     friday: query('friday'),
     saturday: query('saturday'),
-    sunday: query('sunday')
+    sunday: query('sunday'),
   }[day];
 
   if (!dayQuery || !cbId)

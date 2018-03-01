@@ -14,7 +14,7 @@ const putNewUserDetails = (cbId, userId, fullName, sex, yearOfBirth, email) =>
       fullName,
       sex,
       yearOfBirth,
-      email
+      email,
     ])
     .then(
       res =>

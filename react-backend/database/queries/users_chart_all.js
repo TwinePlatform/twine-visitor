@@ -39,20 +39,20 @@ const genderNumbers = cbId => {
     dbConnection.query(getGenderNumbersQuery, [cbId]),
     dbConnection.query(getActivitiesNumbersQuery, [cbId]),
     dbConnection.query(getVisitorsByAge, [cbId]),
-    dbConnection.query(getActivitiesQuery, [cbId])
+    dbConnection.query(getActivitiesQuery, [cbId]),
   ]).then(
     ([
       resultVisitsCount,
       resultGenderCount,
       resultActivitiesCount,
       resultVisitorsByAge,
-      resultActivities
+      resultActivities,
     ]) => [
       resultVisitsCount.rows,
       resultGenderCount.rows,
       resultActivitiesCount.rows,
       resultVisitorsByAge.rows,
-      resultActivities.rows
+      resultActivities.rows,
     ]
   );
 };
