@@ -1,9 +1,7 @@
 {
-  "extends": [
-    "airbnb",
-    "prettier"
-  ],
+  "extends": ["airbnb", "prettier"],
   "rules": {
+    "comma-dangle": ["error", "always-multiline"],
     "consistent-return": 0,
     "no-shadow": 0,
     "no-prototype-builtins": 0,

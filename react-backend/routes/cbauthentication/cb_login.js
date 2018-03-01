@@ -8,7 +8,7 @@ const { checkHasLength } = require('../../functions/helpers');
 router.post('/', (req, res, next) => {
   const { formEmail, formPswd } = req.body;
   const secret = req.app.get('cfg').session.hmac_secret;
-  const jwtSecret = req.app.get('cfg').session.jwt_secret;
+  const standardJwtSecret = req.app.get('cfg').session.standard_jwt_secret;
   const notEmail = (!validator.isEmail(formEmail) && 'email') || '';
   const noInput = (!checkHasLength([formEmail, formPswd]) && 'noinput') || '';
 
@@ -21,7 +21,7 @@ router.post('/', (req, res, next) => {
   cbLogin(formEmail, passwordHash)
     .then(exists => {
       if (exists) {
-        const token = jwt.sign({ email: formEmail }, jwtSecret);
+        const token = jwt.sign({ email: formEmail }, standardJwtSecret);
         const loggedInResponse = { success: true, token };
         res.send(loggedInResponse);
       } else {

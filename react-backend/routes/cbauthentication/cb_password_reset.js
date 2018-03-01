@@ -25,7 +25,7 @@ router.post('/', (req, res, next) => {
           .then(token =>
             Promise.all([
               pwdTokenAdd(token, tokenExpire, formEmail),
-              sendResetEmail(pmClient, formEmail, token)
+              sendResetEmail(pmClient, formEmail, token),
             ])
           )
           .then(() => res.send(exists))
