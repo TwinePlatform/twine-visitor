@@ -8,13 +8,6 @@ const getAllUsersQuery = `
   WHERE activities.cb_id = $1`;
 
 const getAllUsers = cbId =>
-  new Promise((resolve, reject) => {
-    dbConnection
-      .query(getAllUsersQuery, [cbId])
-      .then(res => {
-        resolve(res.rows);
-      })
-      .catch(reject);
-  });
+  dbConnection.query(getAllUsersQuery, [cbId]).then(res => res.rows);
 
 module.exports = getAllUsers;

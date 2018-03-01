@@ -164,40 +164,35 @@ const genderNumbersQuery = filterBy => `WITH filteredUsers AS
 
   GROUP BY filteredUsers.sex`;
 
-const getUsersFilteredBy = (cb_id, { filterBy = [], orderBy = '' } = {}) =>
-  new Promise((resolve, reject) => {
-    if (!cb_id) return reject(new Error('No Community Business ID supplied'));
-    const [filterQueries, values] = combineQueries(filterBy);
-    const combinedValues = [cb_id, ...values];
+const getUsersFilteredBy = (cb_id, { filterBy = [], orderBy = '' } = {}) => {
+  if (!cb_id)
+    return Promise.reject(new Error('No Community Business ID supplied'));
+  const [filterQueries, values] = combineQueries(filterBy);
+  const combinedValues = [cb_id, ...values];
 
-    const myQuery = query(filterQueries, getSortQuery(orderBy));
-    const getVisitorsByAge = visitorsByAge(filterQueries);
-    const getActivitiesNumbers = activitiesNumbersQuery(filterQueries);
-    const getGenderNumbers = genderNumbersQuery(filterQueries);
+  const myQuery = query(filterQueries, getSortQuery(orderBy));
+  const getVisitorsByAge = visitorsByAge(filterQueries);
+  const getActivitiesNumbers = activitiesNumbersQuery(filterQueries);
+  const getGenderNumbers = genderNumbersQuery(filterQueries);
 
-    Promise.all([
-      dbConnection.query(myQuery, combinedValues),
-      dbConnection.query(getVisitorsByAge, combinedValues),
-      dbConnection.query(getActivitiesNumbers, combinedValues),
-      dbConnection.query(getGenderNumbers, combinedValues),
-    ])
-      .then(
-        (
-          [
-            resultGeneral,
-            resultVisitorsByAge,
-            resultActivitiesNumbers,
-            resultGenderNumbers,
-          ]
-        ) => [
-          resultGeneral.rows,
-          resultVisitorsByAge.rows,
-          resultActivitiesNumbers.rows,
-          resultGenderNumbers.rows,
-        ]
-      )
-      .then(res => resolve(res))
-      .catch(reject);
-  });
+  return Promise.all([
+    dbConnection.query(myQuery, combinedValues),
+    dbConnection.query(getVisitorsByAge, combinedValues),
+    dbConnection.query(getActivitiesNumbers, combinedValues),
+    dbConnection.query(getGenderNumbers, combinedValues),
+  ]).then(
+    ([
+      resultGeneral,
+      resultVisitorsByAge,
+      resultActivitiesNumbers,
+      resultGenderNumbers,
+    ]) => [
+      resultGeneral.rows,
+      resultVisitorsByAge.rows,
+      resultActivitiesNumbers.rows,
+      resultGenderNumbers.rows,
+    ]
+  );
+};
 
 module.exports = getUsersFilteredBy;

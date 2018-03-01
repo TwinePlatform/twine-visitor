@@ -19,7 +19,7 @@ const getValidatedFilters = filterArray => {
 
       return type === 'activity' ||
         (validFilterTypes[type] && validFilterTypes[type].includes(filter))
-        ? Object.assign(acc, { [type]: toInsert })
+        ? { ...acc, [type]: toInsert }
         : acc;
     } catch (error) {
       return acc;
@@ -117,12 +117,7 @@ const getVisitsFilteredBy = (cbId, { filterBy = [], orderBy = '' } = {}) => {
 
   const myQuery = query(filterQueries, getSortQuery(orderBy));
 
-  return new Promise((resolve, reject) => {
-    dbConnection
-      .query(myQuery, combinedValues)
-      .then(res => resolve(res.rows))
-      .catch(reject);
-  });
+  return dbConnection.query(myQuery, combinedValues).then(res => res.rows);
 };
 
 module.exports = getVisitsFilteredBy;
