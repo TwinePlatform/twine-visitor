@@ -149,6 +149,7 @@ class App extends Component {
               updateAdminToken={this.updateAdminToken}
               exact
               path="/admin/visits"
+              updateLoggedIn={this.updateLoggedIn}
               component={AdminVisitsPage}
             />
 
@@ -157,6 +158,7 @@ class App extends Component {
               updateAdminToken={this.updateAdminToken}
               exact
               path="/admin/users"
+              updateLoggedIn={this.updateLoggedIn}
               component={AdminUsersPage}
             />
 
@@ -165,6 +167,7 @@ class App extends Component {
               updateAdminToken={this.updateAdminToken}
               exact
               path="/admin/user/:userId"
+              updateLoggedIn={this.updateLoggedIn}
               component={AdminUserDetailsPage}
             />
 
@@ -173,6 +176,7 @@ class App extends Component {
               updateAdminToken={this.updateAdminToken}
               exact
               path="/admin/accountSettings"
+              updateLoggedIn={this.updateLoggedIn}
               component={AdminCBSettingsPage}
             />
 

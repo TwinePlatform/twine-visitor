@@ -21,8 +21,12 @@ const ProtectedRoute = ({ auth, component: Component, ...rest }) => (
 );
 
 ProtectedRoute.propTypes = {
-  auth: PropTypes.bool.isRequired,
-  component: PropTypes.element.isRequired,
+  auth: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  component: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
+};
+
+ProtectedRoute.defaultProps = {
+  auth: false,
 };
 
 export default ProtectedRoute;

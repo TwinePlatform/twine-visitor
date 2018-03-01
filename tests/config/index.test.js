@@ -9,7 +9,7 @@ test('Config | readConfig | dev | undefined path', (t) => {
 
   t.deepEqual(
     config.web,
-    { port: 3000, host: 'localhost', tls: null },
+    { port: 4000, host: 'localhost', tls: null },
     'Web config should be configured for the dev environment'
   );
   t.end();
@@ -20,7 +20,7 @@ test('Config | readConfig | test | undefined path', (t) => {
 
   t.deepEqual(
     config.web,
-    { port: 3001, host: 'localhost', tls: null },
+    { port: 4001, host: 'localhost', tls: null },
     'Web config should be configured for the test environment'
   );
   t.end();
@@ -31,7 +31,7 @@ test('Config | readConfig | prod | undefined path', (t) => {
 
   t.deepEqual(
     config.web,
-    { port: 3002, host: 'localhost', tls: null },
+    { port: 4002, host: 'localhost', tls: null },
     'Web config should be configured for the prod environment'
   );
   t.end();

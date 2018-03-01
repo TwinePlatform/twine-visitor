@@ -43,7 +43,7 @@ const ActivityItem = (props) => {
 
 ActivityItem.propTypes = {
   name: PropTypes.node,
-  id: PropTypes.string,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   handleRemove: PropTypes.func.isRequired,
 };
 

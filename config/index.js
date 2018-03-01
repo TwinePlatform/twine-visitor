@@ -43,7 +43,7 @@ const nodeEnvs = {
   dev: (cfg) =>
     mergeDeepRight(cfg, {
       env: 'dev',
-      web: { port: 3000 },
+      web: { port: 4000 },
       psql: parseDbUrl(process.env.DATABASE_URL_DEV),
       email: { postmark_key: process.env.POSTMARK_KEY_DEV },
     }),
@@ -51,7 +51,7 @@ const nodeEnvs = {
   test: (cfg) =>
     mergeDeepRight(cfg, {
       env: 'test',
-      web: { port: 3001 },
+      web: { port: 4001 },
       psql: parseDbUrl(process.env.DATABASE_URL_TEST),
       email: { postmark_key: process.env.POSTMARK_KEY_TEST },
     }),
@@ -59,7 +59,7 @@ const nodeEnvs = {
   prod: (cfg) =>
     mergeDeepRight(cfg, {
       env: 'prod',
-      web: { port: 3002 },
+      web: { port: 4002 },
       psql: parseDbUrl(process.env.DATABASE_URL || process.env.DATABASE_URL_PROD),
       email: { postmark_key: process.env.POSTMARK_KEY_PROD },
     }),
