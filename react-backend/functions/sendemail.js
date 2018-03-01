@@ -5,15 +5,15 @@ module.exports = (client, email, name, pdf) => {
       TemplateId: 3843402,
       To: email,
       TemplateModel: {
-        name
+        name,
       },
       Attachments: [
         {
           Name: `${name}-QrCode.pdf`,
           Content: pdf,
-          ContentType: 'application/octet-stream'
-        }
-      ]
+          ContentType: 'application/octet-stream',
+        },
+      ],
     },
     {
       From: 'visitorapp@powertochange.org.uk',
@@ -21,16 +21,16 @@ module.exports = (client, email, name, pdf) => {
       To: process.env.CB_EMAIL,
       TemplateModel: {
         email,
-        name
+        name,
       },
       Attachments: [
         {
           Name: 'qrcode.pdf',
           Content: pdf,
-          ContentType: 'application/octet-stream'
-        }
-      ]
-    }
+          ContentType: 'application/octet-stream',
+        },
+      ],
+    },
   ];
   client.sendEmailBatch(messages, (error, result) => {
     if (error) {
