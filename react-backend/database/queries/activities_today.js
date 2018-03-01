@@ -20,7 +20,6 @@ const activitiesForToday = (cbId, day) => {
   return dbConnection
     .query(dayQuery, [cbId])
     .then(res => res.rows)
-    .catch();
 };
 
 module.exports = activitiesForToday;
