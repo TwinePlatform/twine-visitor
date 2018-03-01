@@ -47,7 +47,7 @@ module.exports = {
 
 // This detects whether the file has been invoked directly from
 // the command line (e.g. node ./db/scripts/index.js)
-// It doesn't run if the file has only been executed
+// It doesn't run if the file has only been required
 if (require.main === module) {
   const env = process.env.NODE_ENV;
   const arg = process.argv[2];

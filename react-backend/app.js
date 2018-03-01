@@ -15,13 +15,13 @@ module.exports = (cfg) => {
   const apiRoutes = require('./router'); // eslint-disable-line global-require
 
   const postmarkClient = new postmark.Client(cfg.email.postmark_key);
-  const psqlClient = new pg.Pool(cfg.psql);
+  const psqlPool = new pg.Pool(cfg.psql);
 
   const app = express();
 
   app.set('cfg', cfg);
   app.set('client:postmark', postmarkClient);
-  app.set('client:psql', psqlClient);
+  app.set('client:psql', psqlPool);
 
   app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
   app.use(logger(cfg.env));
