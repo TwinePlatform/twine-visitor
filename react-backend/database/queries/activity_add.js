@@ -7,7 +7,7 @@ RETURNING id`;
 const insertActivity = (name, cbId) => {
   if (!name || !cbId) return Promise.reject(new Error('Bad query arguments'));
 
-  dbConnection.query(insertInfo, [name, cbId]).then(res => res.rows[0].id);
+  return dbConnection.query(insertInfo, [name, cbId]).then(res => res.rows[0].id);
 };
 
 module.exports = insertActivity;

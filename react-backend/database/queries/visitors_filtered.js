@@ -117,7 +117,7 @@ const getVisitsFilteredBy = (cbId, { filterBy = [], orderBy = '' } = {}) => {
 
   const myQuery = query(filterQueries, getSortQuery(orderBy));
 
-  dbConnection.query(myQuery, combinedValues).then(res => res.rows);
+  return dbConnection.query(myQuery, combinedValues).then(res => res.rows);
 };
 
 module.exports = getVisitsFilteredBy;

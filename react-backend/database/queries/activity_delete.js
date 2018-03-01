@@ -7,7 +7,7 @@ const deleteActivity = (id, cbId) => {
   if (!id || !cbId)
     return Promise.reject(new Error('Incorrect query arguments'));
 
-  dbConnection.query(deleteId, [id, cbId]);
+  return dbConnection.query(deleteId, [id, cbId]);
 };
 
 module.exports = deleteActivity;
