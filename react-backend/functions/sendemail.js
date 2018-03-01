@@ -32,7 +32,7 @@ module.exports = (client, email, name, pdf) => {
       ],
     },
   ];
-  client.sendEmailBatch(messages, (error, result) => {
+  return client.sendEmailBatch(messages, (error, result) => {
     if (error) {
       console.error('Unable to send via postmark: ', error);
       return;
