@@ -9,11 +9,9 @@ const config = getConfig(process.env.NODE_ENV);
 test('POST /api/admin/login | password match database hash', t => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
+  const secret = app.get('cfg').session.standard_jwt_secret;
 
-  const token = jwt.sign(
-    { email: 'jinglis12@googlemail.com' },
-    process.env.JWT_SECRET
-  );
+  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
 
   const successPayload = {
     password: 'Sallydog7&',
@@ -33,11 +31,9 @@ test('POST /api/admin/login | password match database hash', t => {
 test('POST /api/admin/login | no password match for database hash', t => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
+  const secret = app.get('cfg').session.standard_jwt_secret;
 
-  const token = jwt.sign(
-    { email: 'jinglis12@googlemail.com' },
-    process.env.JWT_SECRET
-  );
+  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
 
   const failurePayload = {
     password: 'Zenith',

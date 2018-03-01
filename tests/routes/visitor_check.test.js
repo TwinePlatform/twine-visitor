@@ -9,11 +9,9 @@ const config = getConfig(process.env.NODE_ENV);
 test('POST /api/visit/check | viable name & email & exists in database', t => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
+  const secret = app.get('cfg').session.standard_jwt_secret;
 
-  const token = jwt.sign(
-    { email: 'jinglis12@googlemail.com' },
-    process.env.JWT_SECRET
-  );
+  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
 
   const successPayload = {
     formSender: 'James Bond',
@@ -34,11 +32,9 @@ test('POST /api/visit/check | viable name & email & exists in database', t => {
 test('POST /api/visit/check | viable name & email & not found in database', t => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
+  const secret = app.get('cfg').session.standard_jwt_secret;
 
-  const token = jwt.sign(
-    { email: 'jinglis12@googlemail.com' },
-    process.env.JWT_SECRET
-  );
+  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
 
   const successPayload = {
     formSender: 'John The Ripper',
@@ -59,11 +55,9 @@ test('POST /api/visit/check | viable name & email & not found in database', t =>
 test('POST /api/visit/check | bad name & viable email', t => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
+  const secret = app.get('cfg').session.standard_jwt_secret;
 
-  const token = jwt.sign(
-    { email: 'jinglis12@googlemail.com' },
-    process.env.JWT_SECRET
-  );
+  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
 
   const failPayload = {
     formSender: 'addi7837***&&$$%$%',
@@ -84,11 +78,9 @@ test('POST /api/visit/check | bad name & viable email', t => {
 test('POST /api/visit/check | viable name & bad email', t => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
+  const secret = app.get('cfg').session.standard_jwt_secret;
 
-  const token = jwt.sign(
-    { email: 'jinglis12@googlemail.com' },
-    process.env.JWT_SECRET
-  );
+  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
 
   const failPayload = {
     formSender: 'James Bond',
@@ -109,11 +101,9 @@ test('POST /api/visit/check | viable name & bad email', t => {
 test('POST /api/visit/check | bad name & email', t => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
+  const secret = app.get('cfg').session.standard_jwt_secret;
 
-  const token = jwt.sign(
-    { email: 'jinglis12@googlemail.com' },
-    process.env.JWT_SECRET
-  );
+  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
 
   const failPayload = {
     formSender: 'Jame77***"%s Bond',
@@ -134,11 +124,9 @@ test('POST /api/visit/check | bad name & email', t => {
 test('POST /api/visit/check | no input test', t => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
+  const secret = app.get('cfg').session.standard_jwt_secret;
 
-  const token = jwt.sign(
-    { email: 'jinglis12@googlemail.com' },
-    process.env.JWT_SECRET
-  );
+  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
 
   const failPayload = {
     formSender: '',
