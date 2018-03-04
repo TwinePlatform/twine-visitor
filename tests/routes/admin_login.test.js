@@ -23,6 +23,7 @@ test('POST /api/admin/login | password match database hash', t => {
     .expect(200)
     .expect('Content-Type', /json/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.equal(res.body.success, true);
       dbConnection.end(t.end);
     });
@@ -45,6 +46,7 @@ test('POST /api/admin/login | no password match for database hash', t => {
     .expect(200)
     .expect('Content-Type', /json/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.notEqual(res.body.success, true);
       dbConnection.end(t.end);
     });

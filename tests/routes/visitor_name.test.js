@@ -25,6 +25,7 @@ test('POST /api/user/name-from-scan | viable & registered hash', async t => {
     .expect(200)
     .expect('Content-Type', /json/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.equal(res.body.fullname, 'james bond');
       dbConnection.end(t.end);
     });
@@ -45,9 +46,10 @@ test('POST /api/user/name-from-scan | non-viable hash ', async t => {
     .post('/api/user/name-from-scan')
     .set('authorization', token)
     .send(failPayload)
-    .expect(400)
+    .expect(200)
     .expect('Content-Type', /json/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.equal(res.body.fullname, 'Bad hash');
       dbConnection.end(t.end);
     });
@@ -68,9 +70,10 @@ test('POST /api/user/name-from-scan | user/hash not registered ', async t => {
     .post('/api/user/name-from-scan')
     .set('authorization', token)
     .send(failPayload)
-    .expect(401)
+    .expect(200)
     .expect('Content-Type', /json/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.equal(res.body.fullname, 'there is no registered user');
       dbConnection.end(t.end);
     });

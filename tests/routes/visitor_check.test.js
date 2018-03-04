@@ -22,8 +22,9 @@ test('POST /api/visit/check | viable name & email & exists in database', t => {
     .set('authorization', token)
     .send(successPayload)
     .expect(200)
-    .expect('Content-Type', /text/)
+    .expect('Content-Type', /json/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.equal(res.text, 'true');
       dbConnection.end(t.end);
     });
@@ -44,9 +45,10 @@ test('POST /api/visit/check | viable name & email & not found in database', t =>
     .post('/api/visit/check')
     .set('authorization', token)
     .send(successPayload)
-    .expect(200)
-    .expect('Content-Type', /text/)
+    .expect(400)
+    .expect('Content-Type', /json/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.equal(res.text, 'false');
       dbConnection.end(t.end);
     });
@@ -67,9 +69,10 @@ test('POST /api/visit/check | bad name & viable email', t => {
     .post('/api/visit/check')
     .set('authorization', token)
     .send(failPayload)
-    .expect(415)
+    .expect(400)
     .expect('Content-Type', /text/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.equal(res.text, 'name');
       dbConnection.end(t.end);
     });
@@ -90,9 +93,10 @@ test('POST /api/visit/check | viable name & bad email', t => {
     .post('/api/visit/check')
     .set('authorization', token)
     .send(failPayload)
-    .expect(415)
+    .expect(400)
     .expect('Content-Type', /text/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.equal(res.text, 'email');
       dbConnection.end(t.end);
     });
@@ -113,9 +117,10 @@ test('POST /api/visit/check | bad name & email', t => {
     .post('/api/visit/check')
     .set('authorization', token)
     .send(failPayload)
-    .expect(415)
+    .expect(400)
     .expect('Content-Type', /text/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.equal(res.text, 'emailname');
       dbConnection.end(t.end);
     });
@@ -136,9 +141,10 @@ test('POST /api/visit/check | no input test', t => {
     .post('/api/visit/check')
     .set('authorization', token)
     .send(failPayload)
-    .expect(415)
+    .expect(400)
     .expect('Content-Type', /text/)
     .end((err, res) => {
+      t.notOk(err, err || 'Passes supertest expect criteria');
       t.equal(res.text, 'noinput');
       dbConnection.end(t.end);
     });
