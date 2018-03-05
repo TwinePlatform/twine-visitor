@@ -6,7 +6,7 @@ const putUserData = require('../../../react-backend/database/queries/user_regist
 
 const config = getConfig(process.env.NODE_ENV);
 
-test.only('DB Query | user_register', async tape => {
+test('DB Query | user_register', async tape => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
@@ -37,8 +37,6 @@ test.only('DB Query | user_register', async tape => {
 
   tape.test('user_register | fails on incomplete data', async t => {
     try {
-      await refreshDB();
-
       await refreshDB();
 
       await putUserData(
