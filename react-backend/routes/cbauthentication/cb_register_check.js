@@ -19,7 +19,7 @@ router.post('/', (req, res, next) => {
   const orgName = formName.split(' ').join('');
 
   const notEmail = !validator.isEmail(formEmail);
-  const notLatinName = !validator.isAlpha(orgName, ['en-GB']);
+  const notLatinName = !validator.isAlphanumeric(orgName, ['en-GB']);
   const emptyInput = !checkHasLength([
     formName,
     formEmail,
