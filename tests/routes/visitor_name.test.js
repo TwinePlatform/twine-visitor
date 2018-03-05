@@ -46,7 +46,7 @@ test('POST /api/user/name-from-scan | non-viable hash ', async t => {
     .post('/api/user/name-from-scan')
     .set('authorization', token)
     .send(failPayload)
-    .expect(200)
+    .expect(415)
     .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
@@ -70,7 +70,7 @@ test('POST /api/user/name-from-scan | user/hash not registered ', async t => {
     .post('/api/user/name-from-scan')
     .set('authorization', token)
     .send(failPayload)
-    .expect(200)
+    .expect(400)
     .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
