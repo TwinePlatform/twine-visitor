@@ -8,11 +8,12 @@ import errorMessages from '../errors';
 export default class NewPassword extends Component {
   constructor(props) {
     super(props);
+    const token = this.props.match.params.token;
 
     this.state = {
       password: '',
       confirm_password: '',
-      token: '',
+      token,
       error: [],
     };
   }
@@ -55,9 +56,6 @@ export default class NewPassword extends Component {
           case 'pswdweak':
             this.setError([errorMessages.PASSWORD_WEAK]);
             break;
-          case 'tokenmatch':
-            this.setError([errorMessages.NO_TOKEN_MATCH]);
-            break;
           case 'tokenexpired':
             this.setError([errorMessages.TOKEN_EXPIRED]);
             break;
@@ -82,7 +80,6 @@ export default class NewPassword extends Component {
           <div className="ErrorText">{error.map(el => <span key={el}>{el}</span>)}</div>
         )}
         <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
-          <Input type="text" question="Enter Security Token" option="token" />
           <Input type="password" question="Enter Password" option="password" />
           <Input type="password" question="Confirm Password" option="confirm_password" />
           <Button />
@@ -97,4 +94,5 @@ export default class NewPassword extends Component {
 
 NewPassword.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+  match: PropTypes.shape({ params: PropTypes.object }).isRequired,
 };
