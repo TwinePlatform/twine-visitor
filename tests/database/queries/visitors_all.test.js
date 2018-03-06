@@ -21,14 +21,14 @@ test('DB Query | visitors_all', async tape => {
           sex: 'female',
           yearofbirth: 1998,
           name: 'Swimming',
-          date: new Date('2017-04-29T19:03:17.000Z'),
+          date: new Date('Sat Apr 29 2017 22:03:17 GMT+0000 (UTC)'),
         },
         {
           id: 4,
           sex: 'female',
           yearofbirth: 1998,
           name: 'Swimming',
-          date: new Date('2017-06-22T14:45:00.000Z'),
+          date: new Date('Thu Jun 22 2017 17:45:00 GMT+0000 (UTC)'),
         },
       ];
       t.deepEquals(actual, expected, 'getAllUsers returns inner join magic');

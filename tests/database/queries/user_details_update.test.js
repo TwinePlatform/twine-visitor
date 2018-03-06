@@ -30,7 +30,7 @@ test('DB Query | user_details_update', async tape => {
         sex: 'female',
         yearofbirth: 2001,
         email: 'not@makingsense.com',
-        date: new Date('2017-05-15T12:24:57.000Z'),
+        date: new Date('Mon May 15 2017 12:24:57 GMT+0000 (UTC)'),
         hash:
           '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955',
       };

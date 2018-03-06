@@ -22,7 +22,7 @@ test('DB Query | users_all', async tape => {
           sex: 'male',
           yearofbirth: 1984,
           email: 'hello@yahoo.com',
-          date: new Date('2017-05-15T09:24:57.000Z'),
+          date: new Date('Mon May 15 2017 12:24:57 GMT+0000 (UTC)'),
         },
         {
           id: 2,
@@ -30,7 +30,7 @@ test('DB Query | users_all', async tape => {
           sex: 'female',
           yearofbirth: 1982,
           email: 'goodbye@gmail.com',
-          date: new Date('2017-05-15T09:24:56.000Z'),
+          date: new Date('Mon May 15 2017 12:24:56 GMT+0000 (UTC)'),
         },
         {
           id: 3,
@@ -38,14 +38,14 @@ test('DB Query | users_all', async tape => {
           sex: 'female',
           yearofbirth: 1993,
           email: 'sometimes@gmail.com',
-          date: new Date('2017-05-15T09:24:52.000Z'),
+          date: new Date('Mon May 15 2017 12:24:52 GMT+0000 (UTC)'),
         },
       ];
 
       t.deepEquals(
         actual,
         expected,
-        'getUserList successfully returns all users associated to a community business'
+        'getUserList successfully returns all users associated with a community business'
       );
       t.end();
     } catch (error) {
