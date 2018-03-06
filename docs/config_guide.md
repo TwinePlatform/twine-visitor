@@ -24,8 +24,9 @@ DATABASE_URL_TEST=...
 
 # Postmark API key for various environments
 # Postmark is the service used to send e-mails
-# NOTE: Use "POSTMARK_API_TEST" as the API key in "test" and "dev" environments, this will prevent sending
-#       emails when not in production.
+# NOTE: Use "POSTMARK_API_TEST" as the API key in the "test" environment, this will prevent sending
+#       emails when not in production. You may want a real API key in the "dev" environment to allow
+#       manual testing
 #       See https://github.com/TwinePlatform/DataPower/issues/240
 POSTMARK_KEY_DEV=...
 POSTMARK_KEY_TEST=...
