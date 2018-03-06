@@ -7,7 +7,7 @@ router.post('/', (req, res, next) => {
   const pgClient = req.app.get('client:psql');
 
   if (!validator.isHash(hashToCheck, ['sha256'])) {
-    return res.send({ fullname: 'Bad hash', hash: '0' });
+    return res.status(400).send({ fullname: 'Bad hash', hash: '0' });
   }
 
   getHash(pgClient, hashToCheck)
@@ -15,7 +15,7 @@ router.post('/', (req, res, next) => {
     .catch(err => {
       if (err.message !== 'No user found') return next(err);
 
-      res.send({ fullname: 'there is no registered user', hash: '0' });
+      res.status(400).send({ fullname: 'there is no registered user', hash: '0' });
     });
 });
 
