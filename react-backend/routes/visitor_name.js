@@ -7,7 +7,7 @@ router.post('/', (req, res, next) => {
   const pgClient = req.app.get('client:psql');
 
   if (!validator.isHash(hashToCheck, ['sha256'])) {
-    return res.status(415).send({ fullname: 'Bad hash', hash: '0' });
+    return res.status(400).send({ fullname: 'Bad hash', hash: '0' });
   }
 
   getHash(pgClient, hashToCheck)
