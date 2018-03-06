@@ -6,11 +6,11 @@ const putNewUserDetails = require('../../../react-backend/database/queries/user_
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('DB Query | user_details_update', async (tape) => {
+test('DB Query | user_details_update', async tape => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  tape.test('user_details_update | update existing user', async (t) => {
+  tape.test('user_details_update | update existing user', async t => {
     try {
       await refreshDB();
 
@@ -30,7 +30,7 @@ test('DB Query | user_details_update', async (tape) => {
         sex: 'female',
         yearofbirth: 2001,
         email: 'not@makingsense.com',
-        date: new Date('2017-05-15T09:24:57.000Z'),
+        date: new Date('2017-05-15T12:24:57.000Z'),
         hash:
           '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955',
       };
@@ -45,7 +45,7 @@ test('DB Query | user_details_update', async (tape) => {
     }
   });
 
-  tape.test('user_details_update | update non-existing user', async (t) => {
+  tape.test('user_details_update | update non-existing user', async t => {
     try {
       await refreshDB();
 
@@ -64,5 +64,5 @@ test('DB Query | user_details_update', async (tape) => {
     }
   });
 
-  tape.test('user_details_update | Teardown', (t) => client.end(t.end));
+  tape.test('user_details_update | Teardown', t => client.end(t.end));
 });
