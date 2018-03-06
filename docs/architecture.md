@@ -24,11 +24,16 @@ This documents the desired architecture for this project. This was initially dis
 |- dist               Built assets will be stored and served from here
 |- css                Styling source files
 |- src
-|  |- admin           All code specific to the admin UI
+|  |- cb-admin        All code specific to the cb-admin UI
 |  |  |- components
 |  |  |- actions
 |  |  |- ...
-|  |  |- index.js     Exports a single component that contains the entire admin UI
+|  |  |- index.js     Exports a single component that contains the entire cb-admin UI
+|  |- twine-admin     All code specific to the twine-admin UI
+|  |  |- components
+|  |  |- actions
+|  |  |- ...
+|  |  |- index.js     Exports a single component that contains the entire twine-admin UI
 |  |- shared          All code shared between the admin and visitor UIs
 |  |  |- components
 |  |  |- actions
@@ -45,12 +50,12 @@ This documents the desired architecture for this project. This was initially dis
 ### Server
 ```
 ./server
-|- admin               All code related to admin features
+|- cb-admin            All code related to cb-admin features
 |  |- controllers      Route definitions
 |  |  |- api           Route definitions for API routes
-|  |- models           Database models (objects representing admin-related entities in the DB)
+|  |- models           Database models (objects representing cb-admin-related entities in the DB)
 |  |- index.js         Exports single function/app that can be mounted onto the main express app
-|- community_business  All code related to CB features
+|- twine-admin         All code related to twine-admin features
 |  |- controllers
 |  |- ...
 |- visitor             All code related to visitor features
