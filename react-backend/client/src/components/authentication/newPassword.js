@@ -8,14 +8,17 @@ import errorMessages from '../errors';
 export default class NewPassword extends Component {
   constructor(props) {
     super(props);
-    const token = this.props.match.params.token;
 
     this.state = {
       password: '',
       confirm_password: '',
-      token,
+      token: '',
       error: [],
     };
+  }
+
+  componentWillMount() {
+    this.setState({ token: this.props.match.params.token });
   }
 
   setError(messagesArray) {

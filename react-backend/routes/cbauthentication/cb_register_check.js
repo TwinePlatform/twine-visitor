@@ -40,10 +40,10 @@ router.post('/', (req, res, next) => {
     (pwdMatch && 'pswdmatch') ||
     null;
 
-  if (validationError) return res.send(validationError);
+  if (validationError) return res.status(400).send(validationError);
 
   cbCheckExists(pgClient, formEmail)
-    .then(exists => res.send(exists))
+    .then(exists => res.status(200).send(exists))
     .catch(next);
 });
 
