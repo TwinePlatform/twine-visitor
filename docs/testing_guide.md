@@ -38,3 +38,5 @@ test('<MODULE>', (tape) => {
   });
 });
 ```
+
+Remember that `tape` supports `async`/`await`, so this pattern can be used to perform asynchronous setup/teardown operations as well.
