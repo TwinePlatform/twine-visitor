@@ -67,13 +67,13 @@ All non-successful responses should return appropriate status codes in the range
 | `DELETE /activities/:id` | `Authorization: cb_admin_token` | `{ query: { id } }` | `{ result: null }` | `POST /activity/delete` |
 | `GET    /visitors` | `Authorization: cb_admin_token` | | `{ result: [{ visitor: { id, gender, yob }, visits: { activity, visit_date } }] }` | `POST /visitors/all` |
 | `GET    /visitors?name=X&email=Y&gender=Z&age_min=A&age_max=B` | `Authorization: cb_admin_token` | | `{ result: [{ visitor: { id, gender, yob }, visits: [{ activity, visit_date }] }] }` | `POST /visitors/filtered` <br/> `POST /visit/check` |
-| `GET    /visitors` | `Authorization: std_token` <br/> `X-DataPower-QrId: hash` | | `{ result: { id, gender, yob, visits: [{ activity, visit_date }] } }` | `POST /user/name-from-scan` |
 | `GET    /visitors` | `Authorization: cb_admin_token` | | `{ result: [{ id, name, gender, yob, email, signup_date }] }` | `POST /users/all` |
 | `GET    /visitors/:id` | `Authorization: cb_admin_token` | | `{ result: { visitor: { id, name, gender, yob, email, signup_date, qr_code_url, cb_logo_url } } }` | `POST /user/details` <br/> `POST /user/qr` |
 | `POST   /visitors` | `Authorization: cb_admin_token` | `{ name, gender, yob, email }` | `{ result: { id, name, gender, yob, email, qr_code_url, cb_logo_url } }` | `POST /qr/generator` |
 | `POST   /visitors/:id/emails` | `Authorization: cb_admin_token` | | `{ result: null }` | `POST /user/qr/email` |
 | `POST   /visitors/:id/visits` | `Authorization: std_token` | `{ query: { activity } }` | `{ result: null }` | `POST /visit/add` |
 | `POST   /visitors/login` | | `{ query: { email, password } }` | `{ result: { std_admin_token } }` | `POST /cb/login` |
+| `POST   /visitors/search` | `Authorization: std_token` | `{ query: { hash } }` | `{ result: { id, gender, yob, visits: [{ activity, visit_date }] } }` | `POST /user/name-from-scan` |
 | `PUT    /visitors/:id` | `Authorization: cb_admin_token` | `{ query: { name, gender, yob, email } }` | `{ result: { id, name, gender, yob, email, signup_date, qr_code_url } }` | `POST /user/details/update` |
 | `GET    /cbs/:id` | `Authorization: cb_admin_token` | | `{ result: { id, org_name, category, email, logo_url, signup_date } }` | `POST /cb/details` |
 | `PUT    /cbs/:id` | `Authorization: cb_admin_token` | `{ query: { org_name?, category?, email?, logo_url? } }` | `{ result: { id, org_name, category, email, logo_url, signup_date } }` | `POST /cb/details/update` |
