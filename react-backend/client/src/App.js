@@ -63,7 +63,7 @@ class App extends Component {
             />
 
             <Route exact path="/signupcb" component={CBsignup} />
-            <Route exact path="/newPassword" component={NewPassword} />
+            <Route exact path="/newPassword/:token" component={NewPassword} />
             <Route exact path="/pswdresetcb" component={CBPswdReset} />
             <Route
               exact
