@@ -9,3 +9,4 @@
 * [Developer Checklist](./dev_checklist.md)
 * [Users Outline](./users_outline.md)
 * [Architecture](./architecture.md)
+* [API Guide & Migration Plan](./api_migration_plan.md)
