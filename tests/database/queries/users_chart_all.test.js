@@ -87,12 +87,12 @@ test('DB Query | users_chart_all', async tape => {
         { date: 1498153500000 },
       ];
       const expectedGenderNumbers = [
-        { sex: 'female', count: '2' },
         { sex: 'male', count: '1' },
+        { sex: 'female', count: '2' },
       ];
       const expectedActivitiesNumbers = [
-        { name: 'Baking Lessons', count: '13' },
         { name: 'Flamenco Dancing', count: '6' },
+        { name: 'Baking Lessons', count: '13' },
         { name: 'French Lessons', count: '13' },
         { name: 'Self-Defence Class', count: '15' },
         { name: 'Yoga', count: '16' },
@@ -116,14 +116,14 @@ test('DB Query | users_chart_all', async tape => {
       );
 
       t.deepEquals(
-        actualGenderNumbers,
-        expectedGenderNumbers,
+        actualGenderNumbers.sort((a, b) => a.count - b.count),
+        expectedGenderNumbers.sort((a, b) => a.count - b.count),
         'genderNumbers returns gender count as second element of array'
       );
 
       t.deepEquals(
-        actualActivitiesNumbers,
-        expectedActivitiesNumbers,
+        actualActivitiesNumbers.sort((a, b) => a.count - b.count),
+        expectedActivitiesNumbers.sort((a, b) => a.count - b.count),
         'genderNumbers returns activies count as third element of array'
       );
 
