@@ -8,11 +8,20 @@ router.post('/', (req, res, next) => {
   const pmClient = req.app.get('client:postmark');
   const pgClient = req.app.get('client:psql');
   const secret = req.app.get('cfg').session.hmac_secret;
-  const { formSender, formSex, formYear, formEmail } = req.body;
+  const { formSender, formPhone, formGender, formYear, formEmail } = req.body;
   const hashString = hash(secret, req.body);
   const name = formSender.toLowerCase();
 
-  userRegister(pgClient, req.auth.cb_id, name, formSex, formYear, formEmail, hashString)
+  userRegister(
+    pgClient,
+    req.auth.cb_id,
+    name,
+    formGender,
+    formPhone,
+    formYear,
+    formEmail,
+    hashString
+  )
     .then(() => {
       sendQrCode(pmClient, formEmail, formSender, hashString, req.auth.cb_logo);
       return hashString;
