@@ -7,7 +7,7 @@ Throughout, a question mark (`?`) indicates fields in objects that are optional 
 | `POST /admin/login` | `Authorization: std_token` | `{ password }` | `{ success: Bool, reason?: String, token?: String }` |
 | `POST /admin/check` | `Authorization: cb_admin_token` | | `{ success: Bool }` |
 | `POST /cb/register` | | `{ formPswd, formName, formEmail, formGenre }` | `{ success: Bool }` |
-| `POST /cb/register/check` | | `{ formPswd, formName, formEmail, formGenre }` | `{ success: Bool }` |
+| `POST /cb/register/check` | | `{ formPswd, formPswdConfirm, formName, formEmail, formGenre }` | `{ success: Bool }` |
 | `POST /cb/login` | | `{ formEmail, formPswd }` | `{ success?: Bool, reason?: String, token?: String }` |
 | `POST /cb/pwd/change` | | `{ formPswd, formPswdConfirm, token }` | `String?` or `Bool` |
 | `POST /cb/pwd/reset` | | `{ formEmail }` | `String?` or `Bool` |
@@ -40,7 +40,7 @@ This design is based on moving towards an API that is more RESTful, and attempti
 ```
 {
   "query": {},
-  "sort"?: {},
+  "sort"?: { field: "asc" | "desc", ... },
   "filter"?: {}
 }
 ```
@@ -65,15 +65,13 @@ All non-successful responses should return appropriate status codes in the range
 | `POST   /activities` | `Authorization: cb_admin_token` | `{ query: { name, monday?, tuesday?, wednesday?, thursday?, friday?, saturday?, sunday? } }` | `{ result: { id } }` | `POST /activity/add` |
 | `PUT    /activities/:id` | `Authorization: cb_admin_token` | `{ query: { name?, monday?, tuesday?, wednesday?, thursday?, friday?, saturday?, sunday? } }` | `{ result: { id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday } }` | `POST /activity/update` |
 | `DELETE /activities/:id` | `Authorization: cb_admin_token` | `{ query: { id } }` | `{ result: null }` | `POST /activity/delete` |
-| `GET    /visitors` | `Authorization: cb_admin_token` | | `{ result: [{ visitor: { id, gender, yob }, visits: { activity, visit_date } }] }` | `POST /visitors/all` |
-| `GET    /visitors?name=X&email=Y&gender=Z&age_brackets=18,35,51,70` | `Authorization: cb_admin_token` | | `{ result: [{ visitor: { id, gender, yob }, visits: [{ activity, visit_date }] }] }` | `POST /visitors/filtered` <br/> `POST /visit/check` |
-| `GET    /visitors` | `Authorization: cb_admin_token` | | `{ result: [{ id, name, gender, yob, email, signup_date }] }` | `POST /users/all` |
-| `GET    /visitors/:id` | `Authorization: cb_admin_token` | | `{ result: { visitor: { id, name, gender, yob, email, signup_date, qr_code_url, cb_logo_url } } }` | `POST /user/details` <br/> `POST /user/qr` |
+| `GET    /visitors?withVisits=true&name=X&email=Y&gender=Z&age_brackets=18,35,51,70` | `Authorization: cb_admin_token` | | `{ result: [{ id, name, gender, yob, email, signup_date, qr_code_url, cb_logo_url, visits?: [{ activity, visit_date }] }] }` | `POST /visitors/all` <br/> `POST /visitors/filtered` <br/> `POST /visit/check` <br/> `POST /users/all` |
+| `GET    /visitors/:id?withVisits=true` | `Authorization: cb_admin_token` | | `{ result: { id, name, gender, yob, email, signup_date, qr_code_url, cb_logo_url, visits?: [] } }` | `POST /user/details` |
 | `POST   /visitors` | `Authorization: cb_admin_token` | `{ name, gender, yob, email }` | `{ result: { id, name, gender, yob, email, qr_code_url, cb_logo_url } }` | `POST /qr/generator` |
 | `POST   /visitors/:id/emails` | `Authorization: cb_admin_token` | `{ query: { qr: true } }` | `{ result: null }` | `POST /user/qr/email` |
 | `POST   /visitors/:id/visits` | `Authorization: std_token` | `{ query: { activity } }` | `{ result: null }` | `POST /visit/add` |
 | `POST   /visitors/login` | | `{ query: { email, password } }` | `{ result: { std_admin_token } }` | `POST /cb/login` |
-| `POST   /visitors/search` | `Authorization: std_token` | `{ query: { hash } }` | `{ result: { id, gender, yob, visits: [{ activity, visit_date }] } }` | `POST /user/name-from-scan` |
+| `POST   /visitors/search` | `Authorization: std_token` | `{ query: { hash, withVisits } }` | `{ result: { id, gender, yob, email, signup_date, qr_code_url, cb_logo_url, visits?: [{ activity, visit_date }] } }` | `POST /user/name-from-scan` <br/> `POST /user/qr` |
 | `PUT    /visitors/:id` | `Authorization: cb_admin_token` | `{ query: { name?, gender?, yob?, email? } }` | `{ result: { id, name, gender, yob, email, signup_date, qr_code_url } }` | `POST /user/details/update` |
 | `GET    /cbs/:id` | `Authorization: cb_admin_token` | | `{ result: { id, org_name, category, email, logo_url, signup_date } }` | `POST /cb/details` |
 | `PUT    /cbs/:id` | `Authorization: cb_admin_token` | `{ query: { org_name?, category?, email?, logo_url? } }` | `{ result: { id, org_name, category, email, logo_url, signup_date } }` | `POST /cb/details/update` |
