@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { Route, Link, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Input from './input';
-import Select from './select';
 import qrcodelogo from '../../qrcodelogo.png';
-import FormPrivacy from '../visitors/form_privacy';
-import FormPrivacy2 from '../visitors/form_privacy2';
+import SignupForm from '../visitors/signup_form';
 import NotFound from '../NotFound';
 import errorMessages from '../errors';
 
@@ -27,6 +24,8 @@ export default class Main extends Component {
       phone: '',
       gender: '',
       year: '',
+      emailContact: true,
+      smsContact: true,
       users: [],
       url: '',
       error: [],
@@ -52,6 +51,8 @@ export default class Main extends Component {
       formPhone: this.state.phone,
       formGender: this.state.gender,
       formYear: this.state.year,
+      formEmailContact: this.state.emailContact,
+      formSMSContact: this.state.smsContact,
     };
     fetch('/api/qr/generator', {
       method: 'POST',
@@ -140,35 +141,7 @@ export default class Main extends Component {
     return (
       <div className="row">
         <Switch>
-          <Route exact path="/visitor/signup">
-            <section className="Main col-9">
-              <h1>Please tell us about yourself</h1>
-              {error && (
-                <div className="ErrorText">
-                  {error.map(el => <span key={el}>{el}</span>)}
-                </div>
-              )}
-              <form className="Signup" onChange={this.handleChange}>
-                <Input question="Name" option="fullname" />
-                <Input question="Email" option="email" />
-                <Input question="Phone Number (optional)" option="phone" />
-                <Select
-                  question="Gender"
-                  option="gender"
-                  choices={['male', 'female', 'prefer not to say']}
-                />
-                <Select
-                  question="Year of Birth"
-                  option="year"
-                  choices={years}
-                />
-              </form>
-              <button onClick={this.checkUserExists} className="Button">
-                {' '}
-                Next{' '}
-              </button>
-            </section>
-          </Route>
+          <Route exact path="/visitor/signup" component={SignupForm} />
 
           <Route path="/visitor/signup/thankyou">
             <section className="col-12">
@@ -224,10 +197,6 @@ export default class Main extends Component {
             <Route exact path="/*" component={NotFound} />
           </div>
         </Switch>
-
-        <Route exact path="/visitor/signup" component={FormPrivacy} />
-
-        <Route exact path="/visitor/signup/step2" component={FormPrivacy2} />
       </div>
     );
   }

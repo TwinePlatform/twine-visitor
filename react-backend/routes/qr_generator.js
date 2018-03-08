@@ -8,7 +8,7 @@ router.post('/', (req, res, next) => {
   const pmClient = req.app.get('client:postmark');
   const pgClient = req.app.get('client:psql');
   const secret = req.app.get('cfg').session.hmac_secret;
-  const { formSender, formPhone, formGender, formYear, formEmail } = req.body;
+  const { formSender, formPhone, formGender, formYear, formEmail, formEmailContact, formSMSContact } = req.body;
   const hashString = hash(secret, req.body);
   const name = formSender.toLowerCase();
 
@@ -20,7 +20,9 @@ router.post('/', (req, res, next) => {
     formPhone,
     formYear,
     formEmail,
-    hashString
+    hashString,
+    formEmailContact,
+    formSMSContact,
   )
     .then(() => {
       sendQrCode(pmClient, formEmail, formSender, hashString, req.auth.cb_logo);

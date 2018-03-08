@@ -1,5 +1,5 @@
 const insertUser = `
-  INSERT INTO users (cb_id, fullName, sex, phone, yearOfBirth, email, hash)
+  INSERT INTO users (cb_id, fullName, sex, phone, yearOfBirth, email, hash, emailContact, smsContact)
   VALUES ($1, $2, $3, $4, $5, $6, $7)`;
 
 const putUserData = (
@@ -10,7 +10,9 @@ const putUserData = (
   phone,
   yob,
   email,
-  hashString
+  hashString,
+  emailContact,
+  smsContact,
 ) =>
   dbConnection.query(insertUser, [
     cb_id,
@@ -20,6 +22,8 @@ const putUserData = (
     yob,
     email,
     hashString,
+    emailContact,
+    smsContact,
   ]);
 
 module.exports = putUserData;
