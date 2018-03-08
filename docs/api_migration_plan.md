@@ -4,28 +4,28 @@ Throughout, a question mark (`?`) indicates fields in objects that are optional 
 ## Current API
 | Path | Headers | Request Body | Response Body |
 |:----|:----:|:----:|:----:|
-| `POST /admin/login` | `Authorization: std_token` | `{ password }` | `{ success: Bool, reason?: String, token?: String }` | -->
+| `POST /admin/login` | `Authorization: std_token` | `{ password }` | `{ success: Bool, reason?: String, token?: String }` |
 | `POST /admin/check` | `Authorization: cb_admin_token` | | `{ success: Bool }` |
 | `POST /cb/register` | | `{ formPswd, formName, formEmail, formGenre }` | `{ success: Bool }` |
 | `POST /cb/register/check` | | `{ formPswd, formName, formEmail, formGenre }` | `{ success: Bool }` |
 | `POST /cb/login` | | `{ formEmail, formPswd }` | `{ success?: Bool, reason?: String, token?: String }` |
-| `POST /cb/pwd/change` | | `{ formPswd, formPswdConfirm, token }` | `String? | Bool` |
-| `POST /cb/pwd/reset` | | `{ formEmail }` | `String? | Bool` |
+| `POST /cb/pwd/change` | | `{ formPswd, formPswdConfirm, token }` | `String?` or `Bool` |
+| `POST /cb/pwd/reset` | | `{ formEmail }` | `String?` or `Bool` |
 | `POST /cb/details` | `Authorization: cb_admin_token` | | `[{ id, org_name, genre, email, uploadedFileCloudinaryUrl, token, tokenExpire, date }]` |
 | `POST /cb/details/update` | `Authorization: cb_admin_token` | `{ org_name, genre, email, uploadedFileCloudinaryUrl }` | `{ details: { `☝️` } }` |
 | `POST /qr/generator` | `Authorization: std_token` | `{ formSender, formSex, formYear, formEmail }` | `{ qr: String, cb_logo: String }` |
 | `POST /user/details` | `Authorization: cb_admin_token` | `{ userId }` | `{ details: [{ id, cb_id, fullName, sex, yearOfBirth, email, date, hash }] }` |
 | `POST /user/details/update` | `Authorization: cb_admin_token` | `{ userId, userFullName, sex, yearOfBirth, email }` | `{ details: { `☝️` } }` |
-| `POST /user/name-from-scan` | `Authorization: std_token` | `{ user: SHA256 }` | `String | { fullname, hash }` |
+| `POST /user/name-from-scan` | `Authorization: std_token` | `{ user: SHA256 }` | `String` or `{ fullname, hash }` |
 | `POST /user/qr/email` | `Authorization: cb_admin_token` | `{ hash, email, name }` | `{ success: Bool }` |
 | `POST /user/qr` | `Authorization: cb_admin_token` | `{ hash }` | `{ qr, cb_logo }` |
 | `GET  /users/all` | `Authorization: cb_admin_token` | | `{ users: [{id, fullName, sex, yearofbirth, email, date}] }` |
 | `GET  /users/chart-all` | `Authorization: cb_admin_token` | | `{ numbers: [[{ date }], [{ sex, count }], [{ name, count }], [{ ageCount }], [{ name }]] }` |
 | `POST /users/filtered` | `Authorization: cb_admin_token` | `{ filterBy, orderBy }` | `{ users: [[{id, fullName, sex, yearofbirth, email, date}], [{ ageCount, ageGroups }], [{ name, count }], [{ sex, count }]] }` |
-| `POST /visit/check` | `Authorization: std_token` | `{ formSender, formEmail }` | `String | Bool` |
+| `POST /visit/check` | `Authorization: std_token` | `{ formSender, formEmail }` | `String` or `Bool` |
 | `POST /visit/add` | `Authorization: std_token` | `{ hash, activity }` | `String` |
 | `POST /visitors/all` | `Authorization: cb_admin_token` | | `{ users: [{ id, sex, yearofbirth, name, date }] }` |
-| `POST /visitors/filtered` | `Authorization: cb_admin_token` | | `{ users: [{ id, sex, yearofbirth, name, date }] }` |
+| `POST /visitors/filtered` | `Authorization: cb_admin_token` | `{ filterBy: [], orderBy: String }` | `{ users: [{ id, sex, yearofbirth, name, date }] }` |
 | `GET  /activities/all` | `Authorization: cb_admin_token` | | `{ activities: [{ id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday }] }` |
 | `GET  /activities/today` | `Authorization: cb_admin_token` | | `{ activities: [{ id, name }] }` |
 | `POST /activity/add` | `Authorization: cb_admin_token` | `{ name }` | `{ id }` |
@@ -61,20 +61,20 @@ All non-successful responses should return appropriate status codes in the range
 | Path | Headers | Request Body | Response Body | Replaces |
 |:----|:----:|:----:|:----:|:----|
 | `GET    /activities` | `Authorization: cb_admin_token` | | `{ result: [{ id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday }] }` | `GET  /activities/all` |
-| `GET    /activities?weekday=today` | `Authorization: cb_admin_token` | | `{ activities: [{ id, name }] }` | `GET  /activities/today` |
+| `GET    /activities?weekday=today` | `Authorization: cb_admin_token` | | `{ result: [{ id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday }] }` | `GET  /activities/today` |
 | `POST   /activities` | `Authorization: cb_admin_token` | `{ query: { name, monday?, tuesday?, wednesday?, thursday?, friday?, saturday?, sunday? } }` | `{ result: { id } }` | `POST /activity/add` |
 | `PUT    /activities/:id` | `Authorization: cb_admin_token` | `{ query: { name?, monday?, tuesday?, wednesday?, thursday?, friday?, saturday?, sunday? } }` | `{ result: { id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday } }` | `POST /activity/update` |
 | `DELETE /activities/:id` | `Authorization: cb_admin_token` | `{ query: { id } }` | `{ result: null }` | `POST /activity/delete` |
 | `GET    /visitors` | `Authorization: cb_admin_token` | | `{ result: [{ visitor: { id, gender, yob }, visits: { activity, visit_date } }] }` | `POST /visitors/all` |
-| `GET    /visitors?name=X&email=Y&gender=Z&age_min=A&age_max=B` | `Authorization: cb_admin_token` | | `{ result: [{ visitor: { id, gender, yob }, visits: [{ activity, visit_date }] }] }` | `POST /visitors/filtered` <br/> `POST /visit/check` |
+| `GET    /visitors?name=X&email=Y&gender=Z&age_brackets=18,35,51,70` | `Authorization: cb_admin_token` | | `{ result: [{ visitor: { id, gender, yob }, visits: [{ activity, visit_date }] }] }` | `POST /visitors/filtered` <br/> `POST /visit/check` |
 | `GET    /visitors` | `Authorization: cb_admin_token` | | `{ result: [{ id, name, gender, yob, email, signup_date }] }` | `POST /users/all` |
 | `GET    /visitors/:id` | `Authorization: cb_admin_token` | | `{ result: { visitor: { id, name, gender, yob, email, signup_date, qr_code_url, cb_logo_url } } }` | `POST /user/details` <br/> `POST /user/qr` |
 | `POST   /visitors` | `Authorization: cb_admin_token` | `{ name, gender, yob, email }` | `{ result: { id, name, gender, yob, email, qr_code_url, cb_logo_url } }` | `POST /qr/generator` |
-| `POST   /visitors/:id/emails` | `Authorization: cb_admin_token` | | `{ result: null }` | `POST /user/qr/email` |
+| `POST   /visitors/:id/emails` | `Authorization: cb_admin_token` | `{ query: { qr: true } }` | `{ result: null }` | `POST /user/qr/email` |
 | `POST   /visitors/:id/visits` | `Authorization: std_token` | `{ query: { activity } }` | `{ result: null }` | `POST /visit/add` |
 | `POST   /visitors/login` | | `{ query: { email, password } }` | `{ result: { std_admin_token } }` | `POST /cb/login` |
 | `POST   /visitors/search` | `Authorization: std_token` | `{ query: { hash } }` | `{ result: { id, gender, yob, visits: [{ activity, visit_date }] } }` | `POST /user/name-from-scan` |
-| `PUT    /visitors/:id` | `Authorization: cb_admin_token` | `{ query: { name, gender, yob, email } }` | `{ result: { id, name, gender, yob, email, signup_date, qr_code_url } }` | `POST /user/details/update` |
+| `PUT    /visitors/:id` | `Authorization: cb_admin_token` | `{ query: { name?, gender?, yob?, email? } }` | `{ result: { id, name, gender, yob, email, signup_date, qr_code_url } }` | `POST /user/details/update` |
 | `GET    /cbs/:id` | `Authorization: cb_admin_token` | | `{ result: { id, org_name, category, email, logo_url, signup_date } }` | `POST /cb/details` |
 | `PUT    /cbs/:id` | `Authorization: cb_admin_token` | `{ query: { org_name?, category?, email?, logo_url? } }` | `{ result: { id, org_name, category, email, logo_url, signup_date } }` | `POST /cb/details/update` |
 | `PUT    /cbs/:id` | `Authorization: reset_token` | `{ query: { password, password_confirm } }` | `{ result: { id, org_name, category, email, logo_url, signup_date } }` | `POST /cb/pwd/change` |
