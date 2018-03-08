@@ -24,7 +24,6 @@ export default class Main extends Component {
       email: '',
       sex: 'male',
       year: 1980,
-      hash: '',
       users: [],
       url: '',
       error: [],
@@ -101,7 +100,6 @@ export default class Main extends Component {
       formEmail: this.state.email,
       formSex: this.state.sex,
       formYear: this.state.year,
-      formHash: this.state.hash,
     };
     fetch('/api/qr/generator', {
       method: 'POST',
@@ -141,10 +139,7 @@ export default class Main extends Component {
                 <Input question="Your Full Name" option="fullname" />
                 <Input question="Your Email" option="email" />
               </form>
-              <button onClick={this.checkUserExists} className="Button">
-                {' '}
-                Next{' '}
-              </button>
+              <button onClick={this.checkUserExists} className="Button"> Next </button>
             </section>
           </Route>
 
