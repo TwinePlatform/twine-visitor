@@ -57,7 +57,7 @@ CREATE TABLE feedback
 (
   id SERIAL PRIMARY KEY,
   cb_id INTEGER REFERENCES cbusiness(id),
-  user_feedback INTEGER NOT NULL,
+  feedback_score INTEGER NOT NULL,
   feedback_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

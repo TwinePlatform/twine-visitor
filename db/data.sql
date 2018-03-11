@@ -98,7 +98,7 @@ VALUES
 
 
 INSERT INTO feedback
-  (cb_id, user_feedback, feedback_date)
+  (cb_id, feedback_score, feedback_date)
 VALUES
   (3, -1, '2017-09-09 17:45:00+00'),
   (3, 0, '2017-10-09 17:45:00+00'),
