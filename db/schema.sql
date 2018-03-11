@@ -24,8 +24,8 @@ CREATE TABLE users
   phone VARCHAR(15),
   date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   hash VARCHAR(64) NOT NULL,
-  emailContact BOOLEAN NOT NULL,
-  smsContact BOOLEAN NOT NULL
+  is_email_contact_consent_granted BOOLEAN NOT NULL,
+  is_sms_contact_consent_granted BOOLEAN NOT NULL
 );
 
 CREATE TABLE activities
