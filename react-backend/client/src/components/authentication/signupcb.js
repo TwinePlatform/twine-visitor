@@ -5,6 +5,7 @@ import Input from '../visitors/input';
 import Select from '../visitors/select';
 import Button from '../visitors/button';
 import errorMessages from '../errors';
+import { CbAdmin } from '../../api';
 
 export default class CBsignup extends Component {
   constructor(props) {
@@ -28,32 +29,17 @@ export default class CBsignup extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const checkData = {
-      formName: this.state.org_name,
-      formEmail: this.state.email,
-      formGenre: this.state.genre,
-      formPswd: this.state.password,
-      formPswdConfirm: this.state.confirm_password,
-    };
-
-    fetch('/api/cb/register/check', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(checkData),
+    CbAdmin.create({
+      orgName: this.state.org_name,
+      email: this.state.email,
+      category: this.state.genre,
+      password: this.state.password,
+      passwordConfirm: this.state.confirm_password,
     })
-      .then((res) => {
-        if (res.status === 500) {
-          throw new Error();
-        } else {
-          return res.text();
-        }
-      })
-      .then((data) => {
-        console.log(data);
-
-        switch (data) {
+      .then(() => this.props.history.push('/logincb'))
+      .catch((error) => {
+        switch (error.response.data.validation) {
           case 'email':
-            console.log(data);
             this.setError([errorMessages.EMAIL_ERROR]);
             break;
           case 'name':
@@ -75,31 +61,9 @@ export default class CBsignup extends Component {
             this.setError([errorMessages.PASSWORD_WEAK]);
             break;
           default:
-            fetch('/api/cb/register', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                formName: this.state.org_name,
-                formEmail: this.state.email,
-                formGenre: this.state.genre,
-                formPswd: this.state.password,
-              }),
-            })
-              .then((res) => {
-                if (res.status === 500) {
-                  throw new Error();
-                }
-              })
-              .catch((error) => {
-                console.log('ERROR HAPPENING AT FETCH /api/cb/register', error);
-                this.props.history.push('/internalServerError');
-              });
-            this.props.history.push('/logincb');
+            this.props.history.push('/internalServerError');
             break;
         }
-      })
-      .catch(() => {
-        this.props.history.push('/internalServerError');
       });
   };
 

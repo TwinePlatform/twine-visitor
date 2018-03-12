@@ -6,7 +6,7 @@ const { refresh: refreshDB } = require('../../../db/scripts');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('POST /api/cb/register/check | viable & registered CB', async t => {
+test('POST /api/cb/register | viable & registered CB', async t => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
 
@@ -20,7 +20,7 @@ test('POST /api/cb/register/check | viable & registered CB', async t => {
     formPswdConfirm: 'Chickens5*',
   };
   request(app)
-    .post('/api/cb/register/check')
+    .post('/api/cb/register')
     .send(successPayload)
     .expect(200)
     .expect('Content-Type', /json/)
@@ -31,12 +31,12 @@ test('POST /api/cb/register/check | viable & registered CB', async t => {
     });
 });
 
-test('POST /api/cb/register/check | viable & non-registered CB', async t => {
+test('POST /api/cb/register | viable & non-registered CB', async t => {
     const app = createApp(config);
     const dbConnection = app.get('client:psql');
-  
+
     await refreshDB();
-  
+
     const successPayload = {
         formName: 'Slack Jawed and Dopamine',
         formEmail: 'email@emails.com',
@@ -45,23 +45,23 @@ test('POST /api/cb/register/check | viable & non-registered CB', async t => {
         formPswdConfirm: 'Chickens5*',
       };
     request(app)
-      .post('/api/cb/register/check')
+      .post('/api/cb/register')
       .send(successPayload)
       .expect(200)
       .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.text, 'false');
+        t.deepEqual(res.body, { success: true });
         dbConnection.end(t.end);
       });
   });
 
-  test('POST /api/cb/register/check | no input', async t => {
+  test('POST /api/cb/register | no input', async t => {
     const app = createApp(config);
     const dbConnection = app.get('client:psql');
-  
+
     await refreshDB();
-  
+
     const failurePayload = {
         formName: 'Slack Jawed and Dopamine',
         formEmail: 'email@emails.com',
@@ -70,23 +70,23 @@ test('POST /api/cb/register/check | viable & non-registered CB', async t => {
         formPswdConfirm: '',
       };
     request(app)
-      .post('/api/cb/register/check')
+      .post('/api/cb/register')
       .send(failurePayload)
       .expect(400)
-      .expect('Content-Type', /text/)
+      .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.text, 'noinput');
+        t.equal(res.body.validation, 'noinput');
         dbConnection.end(t.end);
       });
   });
 
-  test('POST /api/cb/register/check | invalid email', async t => {
+  test('POST /api/cb/register | invalid email', async t => {
     const app = createApp(config);
     const dbConnection = app.get('client:psql');
-  
+
     await refreshDB();
-  
+
     const failurePayload = {
         formName: 'Slack Jawed and Dopamine',
         formEmail: 'jinglis12dshauidhiua.com',
@@ -95,23 +95,23 @@ test('POST /api/cb/register/check | viable & non-registered CB', async t => {
         formPswdConfirm: 'Chickens5*',
       };
     request(app)
-      .post('/api/cb/register/check')
+      .post('/api/cb/register')
       .send(failurePayload)
       .expect(400)
-      .expect('Content-Type', /text/)
+      .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.text, 'email');
+        t.equal(res.body.validation, 'email');
         dbConnection.end(t.end);
       });
   });
 
-  test('POST /api/cb/register/check | invalid name', async t => {
+  test('POST /api/cb/register | invalid name', async t => {
     const app = createApp(config);
     const dbConnection = app.get('client:psql');
-  
+
     await refreshDB();
-  
+
     const failurePayload = {
         formName: '1337 H4xx0R**^&&^$$(*',
         formEmail: 'jinglis12@googlemail.com',
@@ -120,23 +120,23 @@ test('POST /api/cb/register/check | viable & non-registered CB', async t => {
         formPswdConfirm: 'Chickens5*',
       };
     request(app)
-      .post('/api/cb/register/check')
+      .post('/api/cb/register')
       .send(failurePayload)
       .expect(400)
-      .expect('Content-Type', /text/)
+      .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.text, 'name');
+        t.equal(res.body.validation, 'name');
         dbConnection.end(t.end);
       });
   });
 
-  test('POST /api/cb/register/check | invalid email and name', async t => {
+  test('POST /api/cb/register | invalid email and name', async t => {
     const app = createApp(config);
     const dbConnection = app.get('client:psql');
-  
+
     await refreshDB();
-  
+
     const failurePayload = {
         formName: '!"£$%^&*(',
         formEmail: 'jinglglemail.com',
@@ -145,23 +145,23 @@ test('POST /api/cb/register/check | viable & non-registered CB', async t => {
         formPswdConfirm: 'Chickens5*',
       };
     request(app)
-      .post('/api/cb/register/check')
+      .post('/api/cb/register')
       .send(failurePayload)
       .expect(400)
-      .expect('Content-Type', /text/)
+      .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.text, 'emailname');
+        t.equal(res.body.validation, 'emailname');
         dbConnection.end(t.end);
       });
   });
 
-  test('POST /api/cb/register/check | weak password', async t => {
+  test('POST /api/cb/register | weak password', async t => {
     const app = createApp(config);
     const dbConnection = app.get('client:psql');
-  
+
     await refreshDB();
-  
+
     const failurePayload = {
         formName: 'Slack Jawed and Dopamine',
         formEmail: 'jinglis12@googlemail.com',
@@ -170,23 +170,23 @@ test('POST /api/cb/register/check | viable & non-registered CB', async t => {
         formPswdConfirm: 'password',
       };
     request(app)
-      .post('/api/cb/register/check')
+      .post('/api/cb/register')
       .send(failurePayload)
       .expect(400)
-      .expect('Content-Type', /text/)
+      .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.text, 'pswdweak');
+        t.equal(res.body.validation, 'pswdweak');
         dbConnection.end(t.end);
       });
   });
 
-  test('POST /api/cb/register/check | password dont match', async t => {
+  test('POST /api/cb/register | password dont match', async t => {
     const app = createApp(config);
     const dbConnection = app.get('client:psql');
-  
+
     await refreshDB();
-  
+
     const failurePayload = {
         formName: 'Slack Jawed and Dopamine',
         formEmail: 'jinglis12@googlemail.com',
@@ -195,13 +195,13 @@ test('POST /api/cb/register/check | viable & non-registered CB', async t => {
         formPswdConfirm: 'Turkeys5*',
       };
     request(app)
-      .post('/api/cb/register/check')
+      .post('/api/cb/register')
       .send(failurePayload)
       .expect(400)
-      .expect('Content-Type', /text/)
+      .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.text, 'pswdmatch');
+        t.equal(res.body.validation, 'pswdmatch');
         dbConnection.end(t.end);
       });
   });

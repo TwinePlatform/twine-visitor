@@ -22,7 +22,6 @@ const activitiesToday = require('./routes/activities_today');
 const activitiesAdd = require('./routes/activities_add');
 const activitiesUpdate = require('./routes/activities_update');
 const activitiesDelete = require('./routes/activities_delete');
-const cbRegisterCheck = require('./routes/cbauthentication/cb_register_check');
 const cbRegister = require('./routes/cbauthentication/cb_register');
 const cbLogin = require('./routes/cbauthentication/cb_login');
 const cbPasswordChange = require('./routes/cbauthentication/cb_password_change');
@@ -34,7 +33,6 @@ const mwAdminIsAuthenticated = require('./routes/cbauthentication/mw_admin_is_au
 
 // Open routes
 router.use('/cb/register', cbRegister);
-router.use('/cb/register/check', cbRegisterCheck);
 router.use('/cb/login', cbLogin);
 router.use('/cb/pwd/change', cbPasswordChange);
 router.use('/cb/pwd/reset', cbPasswordReset);
