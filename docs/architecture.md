@@ -11,7 +11,6 @@ This documents the desired architecture for this project. This was initially dis
 |- client       Client app
 |- scripts      Developer and deployment scripts
 |- server       Server app
-|- tests        ...Tests
 |- ...dotfiles
 |- package.json Single top-level package.json instead of two different ones
 |- README.md
@@ -64,5 +63,16 @@ This documents the desired architecture for this project. This was initially dis
 |  |- db
 |  |- models
 |  |- ...
+|- index.js
+```
+
+### Tests
+Adhere to the `jest` convention of having a `__tests__` directory colocated with all files under-test. For example:
+```
+./foo
+|- __tests__
+|  |- foobar.test.js
+|  |- index.test.js
+|- foobar.js
 |- index.js
 ```

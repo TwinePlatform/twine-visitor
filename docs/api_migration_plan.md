@@ -6,8 +6,7 @@ Throughout, a question mark (`?`) indicates fields in objects that are optional 
 |:----|:----:|:----:|:----:|
 | `POST /admin/login` | `Authorization: std_token` | `{ password }` | `{ success: Bool, reason?: String, token?: String }` |
 | `POST /admin/check` | `Authorization: cb_admin_token` | | `{ success: Bool }` |
-| `POST /cb/register` | | `{ formPswd, formName, formEmail, formGenre }` | `{ success: Bool }` |
-| `POST /cb/register/check` | | `{ formPswd, formPswdConfirm, formName, formEmail, formGenre }` | `{ success: Bool }` |
+| `POST /cb/register` | | `{ formPswd, formName, formEmail, formGenre, formPswdConfirm }` | `Bool` or `{ result, error?, validation? }` or `{ success: Bool }` |
 | `POST /cb/login` | | `{ formEmail, formPswd }` | `{ success?: Bool, reason?: String, token?: String }` |
 | `POST /cb/pwd/change` | | `{ formPswd, formPswdConfirm, token }` | `String?` or `Bool` |
 | `POST /cb/pwd/reset` | | `{ formEmail }` | `String?` or `Bool` |
@@ -16,7 +15,7 @@ Throughout, a question mark (`?`) indicates fields in objects that are optional 
 | `POST /qr/generator` | `Authorization: std_token` | `{ formSender, formPhone, formGender, formYear, formEmail, formEmailContact, formSMSContact}` | `{ qr: String, cb_logo: String }` |
 | `POST /user/details` | `Authorization: cb_admin_token` | `{ userId }` | `{ details: [{ id, cb_id, fullName, sex, yearOfBirth, email, phone, date, hash, emailcontact, smscontact}] }` |
 | `POST /user/details/update` | `Authorization: cb_admin_token` | `{ userId, userFullName, sex, yearOfBirth, email, phoneNumber, emailConsent, smsConsent }` | `{ details: { `☝️` } }` |
-| `POST /user/name-from-scan` | `Authorization: std_token` | `{ user: SHA256 }` | `String` or `{ fullname, hash }` |
+| `POST /user/name-from-scan` | `Authorization: std_token` | `{ hash }` | `String` or `{ fullname, hash }` |
 | `POST /user/qr/email` | `Authorization: cb_admin_token` | `{ hash, email, name }` | `{ success: Bool }` |
 | `POST /user/qr` | `Authorization: cb_admin_token` | `{ hash }` | `{ qr, cb_logo }` |
 | `GET  /users/all` | `Authorization: cb_admin_token` | | `{ users: [{id, fullName, sex, yearofbirth, email, date}] }` |
@@ -27,9 +26,9 @@ Throughout, a question mark (`?`) indicates fields in objects that are optional 
 | `POST /visitors/all` | `Authorization: cb_admin_token` | | `{ users: [{ id, sex, yearofbirth, name, date }] }` |
 | `POST /visitors/filtered` | `Authorization: cb_admin_token` | `{ filterBy: [], orderBy: String }` | `{ users: [{ id, sex, yearofbirth, name, date }] }` |
 | `GET  /activities/all` | `Authorization: cb_admin_token` | | `{ activities: [{ id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday }] }` |
-| `GET  /activities/today` | `Authorization: cb_admin_token` | | `{ activities: [{ id, name }] }` |
+| `GET  /activities/today` | `Authorization: std_token` | | `{ activities: [{ id, name }] }` |
 | `POST /activity/add` | `Authorization: cb_admin_token` | `{ name }` | `{ id }` |
-| `POST /activity/update` | `Authorization: cb_admin_token` | `{ activity: { id, monday, tuesday, wednesday, thursday, friday, saturday, sunday } }` | `{ success: String }` |
+| `POST /activity/update` | `Authorization: cb_admin_token` | `{ id, monday, tuesday, wednesday, thursday, friday, saturday, sunday }` | `{ success: String }` |
 | `POST /activity/delete` | `Authorization: cb_admin_token` | `{ id }` | `{ success: String }` |
 
 
