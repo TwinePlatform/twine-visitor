@@ -4,23 +4,8 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import PurposeButton from './purposeButton';
 import QRPrivacy from '../visitors/qrprivacy';
+import { Activities, Visitors } from '../../api';
 
-function getUserFromQRScan(content) {
-  const headers = new Headers({
-    Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
-  });
-  return fetch('/api/user/name-from-scan', {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ user: content }),
-  })
-    .then(res => res.json())
-    .catch((error) => {
-      console.log('error from getUserFromQRScan:  ', error);
-      throw error;
-    });
-}
 
 function instascan() {
   return new Promise((resolve, reject) => {
@@ -79,12 +64,12 @@ export default class QRCode extends Component {
       instascan()
         .then((content) => {
           this.handleVideo();
-          return getUserFromQRScan(content);
+          return Visitors.get(localStorage.getItem('token'), { hash: content });
         })
-        .then((user) => {
+        .then((res) => {
           this.setState({
-            username: user.fullname,
-            hash: user.hash,
+            username: res.data.fullname,
+            hash: res.data.hash,
           });
         })
         .catch((error) => {
@@ -93,20 +78,9 @@ export default class QRCode extends Component {
         });
     }
 
-    fetch('/api/activities/today', {
-      method: 'GET',
-      headers: this.headers,
-    })
+    Activities.get(localStorage.getItem('token'), { weekday: 'today' })
       .then((res) => {
-        if (res.status === 500) {
-          throw new Error();
-        } else {
-          return res.json();
-        }
-      })
-      .then(res => res.activities)
-      .then((activities) => {
-        this.setState({ activities });
+        this.setState({ activities: res.data.activities });
       })
       .catch((error) => {
         console.log('ERROR HAPPENING AT FETCH', error);
@@ -132,25 +106,9 @@ export default class QRCode extends Component {
   });
 
   changeActivity = (newActivity) => {
-    this.setState({
-      activity: newActivity,
-    });
+    this.setState({ activity: newActivity });
 
-    const visitInfo = {
-      hash: this.state.hash,
-      activity: newActivity,
-    };
-
-    return fetch('/api/visit/add', {
-      method: 'POST',
-      headers: this.headersPost,
-      body: JSON.stringify(visitInfo),
-    })
-      .then((res) => {
-        if (res.status === 500) {
-          throw new Error();
-        }
-      })
+    Visitors.createVisit(localStorage.getItem('token'), { hash: this.state.hash, activity: newActivity })
       .then(() => this.props.history.push('/visitor/end'))
       .catch((error) => {
         console.log('ERROR HAPPENING AT FETCH /api/visit/add', error);

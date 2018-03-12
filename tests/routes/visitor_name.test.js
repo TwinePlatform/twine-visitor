@@ -16,7 +16,7 @@ test('POST /api/user/name-from-scan | viable & registered hash', async t => {
   const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
 
   const successPayload = {
-    user: '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955',
+    hash: '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955',
   };
   request(app)
     .post('/api/user/name-from-scan')
@@ -40,7 +40,7 @@ test('POST /api/user/name-from-scan | non-viable hash ', async t => {
   const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
 
   const failPayload = {
-    user: 'Im fairly sure, though not positive, that this is not a hash',
+    hash: 'Im fairly sure, though not positive, that this is not a hash',
   };
   request(app)
     .post('/api/user/name-from-scan')
@@ -64,7 +64,7 @@ test('POST /api/user/name-from-scan | user/hash not registered ', async t => {
   const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
 
   const failPayload = {
-    user: '5e6188b3f09e0d58acfbe4171284dd10b69ea8a78189f7bb8c7d6fa983557492',
+    hash: '5e6188b3f09e0d58acfbe4171284dd10b69ea8a78189f7bb8c7d6fa983557492',
   };
   request(app)
     .post('/api/user/name-from-scan')
