@@ -39,6 +39,9 @@ export default class Main extends Component {
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
+  handleChangeCheckbox = e =>
+    this.setState({ [e.target.name]: e.target.checked });
+
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
     'Content-Type': 'application/json',
@@ -141,13 +144,15 @@ export default class Main extends Component {
     return (
       <div className="row">
         <Switch>
-          <SignupForm
-            handleChange={this.handleChange}
-            error={error}
-            years={years}
-            checkUserExists={this.checkUserExists}
-          />
-          {/* <Route exact path="/visitor/signup" render={props => <SignupForm handleChange={() => this.handleChange} {...props} />} /> */}
+          <Route exact path="/visitor/signup">
+            <SignupForm
+              handleChange={this.handleChange}
+              handleChangeCheckbox={this.handleChangeCheckbox}
+              error={error}
+              years={years}
+              checkUserExists={this.checkUserExists}
+            />
+          </Route>
 
           <Route path="/visitor/signup/thankyou">
             <section className="col-12">

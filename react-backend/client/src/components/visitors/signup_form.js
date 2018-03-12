@@ -4,7 +4,7 @@ import Select from './select';
 
 export default props => (
   <div>
-    <form className="EmailCheckbox" onChange={props.handleChange}>
+    <form className="SignupForm" onChange={props.handleChange}>
       <section className="Main col-9">
         <h1>Please tell us about yourself</h1>
         {props.error && (
@@ -18,14 +18,15 @@ export default props => (
         <Select
           question="Gender"
           option="gender"
-          choices={['','male', 'female', 'prefer not to say']}
+          choices={['', 'male', 'female', 'prefer not to say']}
         />
         <Select question="Year of Birth" option="year" choices={props.years} />
         <button onClick={props.checkUserExists} className="Button">
           Submit
         </button>
       </section>
-
+    </form>
+    <form className="EmailSMSCheckbox" onChange={props.handleChangeCheckbox}>
       <aside className="Privacy col-3">
         <h3 className="Privacy__title">
           Why are we collecting this information?
@@ -41,7 +42,7 @@ export default props => (
           of other offers we provide. If you consent to us contacting you by
           email, please tick to agree:
         </p>
-        <Input type="checkbox" option="emailContact" value="true" />
+        <Input type="checkbox" name="emailContact" />
         <p className="Privacy__text">
           <br />
           <br />
@@ -49,7 +50,7 @@ export default props => (
           SMS. If you agree to us using your personal data for that purpose,
           please tick to agree:
         </p>
-        <Input type="checkbox" option="smsContact" value="true" />
+        <Input type="checkbox" name="smsContact" />
         <p className="Privacy__text">
           <br />
           <br />
@@ -64,4 +65,3 @@ export default props => (
     </form>
   </div>
 );
-
