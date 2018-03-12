@@ -43,13 +43,12 @@ const ActivityItem = (props) => {
 
 ActivityItem.propTypes = {
   name: PropTypes.node,
-  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   handleRemove: PropTypes.func.isRequired,
 };
 
 ActivityItem.defaultProps = {
   name: null,
-  id: '0',
 };
 
 export default ActivityItem;
