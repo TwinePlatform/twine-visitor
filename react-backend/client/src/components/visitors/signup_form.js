@@ -2,14 +2,14 @@ import React from 'react';
 import Input from './input';
 import Select from './select';
 
-export default () => (
+export default props => (
   <div>
-    <form className="EmailCheckbox" onChange={this.handleChange}>
+    <form className="EmailCheckbox" onChange={props.handleChange}>
       <section className="Main col-9">
         <h1>Please tell us about yourself</h1>
-        {error && (
+        {props.error && (
           <div className="ErrorText">
-            {error.map(el => <span key={el}>{el}</span>)}
+            {props.error.map(el => <span key={el}>{el}</span>)}
           </div>
         )}
         <Input question="Name" option="fullname" />
@@ -18,10 +18,10 @@ export default () => (
         <Select
           question="Gender"
           option="gender"
-          choices={['male', 'female', 'prefer not to say']}
+          choices={['','male', 'female', 'prefer not to say']}
         />
-        <Select question="Year of Birth" option="year" choices={years} />
-        <button onClick={this.checkUserExists} className="Button">
+        <Select question="Year of Birth" option="year" choices={props.years} />
+        <button onClick={props.checkUserExists} className="Button">
           Submit
         </button>
       </section>
@@ -41,7 +41,7 @@ export default () => (
           of other offers we provide. If you consent to us contacting you by
           email, please tick to agree:
         </p>
-        <Input type="checkbox" option="emailContact" checked />
+        <Input type="checkbox" option="emailContact" value="true" />
         <p className="Privacy__text">
           <br />
           <br />
@@ -49,7 +49,7 @@ export default () => (
           SMS. If you agree to us using your personal data for that purpose,
           please tick to agree:
         </p>
-        <Input type="checkbox" option="smsContact" checked />
+        <Input type="checkbox" option="smsContact" value="true" />
         <p className="Privacy__text">
           <br />
           <br />
@@ -64,3 +64,4 @@ export default () => (
     </form>
   </div>
 );
+

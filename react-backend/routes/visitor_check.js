@@ -14,7 +14,7 @@ router.post('/', (req, res, next) => {
     '';
   const notEmail = (!validator.isEmail(formEmail) && 'email') || '';
   const notPhone =
-    (!validator.isMobilePhone(formPhone, 'en-GB') &&
+    (!validator.isMobilePhone(formPhone, 'any') &&
       formPhone !== '' &&
       'phone') ||
     '';

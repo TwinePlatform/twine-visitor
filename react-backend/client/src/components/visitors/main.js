@@ -24,8 +24,8 @@ export default class Main extends Component {
       phone: '',
       gender: '',
       year: '',
-      emailContact: true,
-      smsContact: true,
+      emailContact: false,
+      smsContact: false,
       users: [],
       url: '',
       error: [],
@@ -141,7 +141,13 @@ export default class Main extends Component {
     return (
       <div className="row">
         <Switch>
-          <Route exact path="/visitor/signup" component={SignupForm} />
+          <SignupForm
+            handleChange={this.handleChange}
+            error={error}
+            years={years}
+            checkUserExists={this.checkUserExists}
+          />
+          {/* <Route exact path="/visitor/signup" render={props => <SignupForm handleChange={() => this.handleChange} {...props} />} /> */}
 
           <Route path="/visitor/signup/thankyou">
             <section className="col-12">
