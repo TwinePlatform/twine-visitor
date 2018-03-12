@@ -7,7 +7,6 @@ router.post('/', (req, res, next) => {
   const { formSender, formEmail, formPhone, formGender, formYear } = req.body;
   const name = formSender.split(' ').join('');
   const pgClient = req.app.get('client:psql');
-
   const noInput =
     (!checkHasLength([formSender, formEmail, formGender, formYear]) &&
       'noinput') ||

@@ -16,12 +16,15 @@ test('POST /api/visit/check | viable name & email & exists in database', t => {
   const successPayload = {
     formSender: 'James Bond',
     formEmail: 'hello@yahoo.com',
+    formPhone: '07534532495',
+    formGender: 'male',
+    formYear: '2007',
   };
   request(app)
     .post('/api/visit/check')
     .set('authorization', token)
     .send(successPayload)
-    .expect(200)
+    .expect(400)
     .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
@@ -40,12 +43,15 @@ test('POST /api/visit/check | viable name & email & not found in database', t =>
   const successPayload = {
     formSender: 'John The Ripper',
     formEmail: 'goodbye@yahoo.com',
+    formPhone: '076463746264',
+    formGender: 'male',
+    formYear: '2007',
   };
   request(app)
     .post('/api/visit/check')
     .set('authorization', token)
     .send(successPayload)
-    .expect(400)
+    .expect(200)
     .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
@@ -64,6 +70,9 @@ test('POST /api/visit/check | bad name & viable email', t => {
   const failPayload = {
     formSender: 'addi7837***&&$$%$%',
     formEmail: 'hello@yahoo.com',
+    formPhone: '076463746264',
+    formGender: 'male',
+    formYear: '2007',
   };
   request(app)
     .post('/api/visit/check')
@@ -88,6 +97,9 @@ test('POST /api/visit/check | viable name & bad email', t => {
   const failPayload = {
     formSender: 'James Bond',
     formEmail: 'helloyahoo.com',
+    formPhone: '076463746264',
+    formGender: 'male',
+    formYear: '2007',
   };
   request(app)
     .post('/api/visit/check')
@@ -112,6 +124,9 @@ test('POST /api/visit/check | bad name & email', t => {
   const failPayload = {
     formSender: 'Jame77***"%s Bond',
     formEmail: 'helloyahoo.com',
+    formPhone: '076463746264',
+    formGender: 'male',
+    formYear: '2007',
   };
   request(app)
     .post('/api/visit/check')
@@ -136,6 +151,9 @@ test('POST /api/visit/check | no input test', t => {
   const failPayload = {
     formSender: '',
     formEmail: '',
+    formPhone: '',
+    formGender: '',
+    formYear: '2007',
   };
   request(app)
     .post('/api/visit/check')
