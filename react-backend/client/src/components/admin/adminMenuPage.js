@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Logoutbutton from '../visitors/logoutbutton';
-import { checkAdmin } from './activitiesLib/admin_helpers';
+import { CbAdmin } from '../../api';
 
 export default class AdminMenuPage extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export default class AdminMenuPage extends Component {
   }
 
   componentDidMount() {
-    checkAdmin(this)
+    CbAdmin.get(this.props.auth)
       .then(() => this.setState({ auth: 'SUCCESS' }))
       .catch((error) => {
         if (error.message === 500) {
@@ -72,6 +72,7 @@ export default class AdminMenuPage extends Component {
 }
 
 AdminMenuPage.propTypes = {
+  auth: PropTypes.string.isRequired,
   updateLoggedIn: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

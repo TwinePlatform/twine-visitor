@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Input from '../visitors/input';
 import Button from '../visitors/button';
 import errorMessages from '../errors';
+import { Visitors } from '../../api';
 
 class CBlogin extends Component {
   constructor(props) {
@@ -25,23 +26,8 @@ class CBlogin extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const checkData = {
-      formEmail: this.state.email,
-      formPswd: this.state.password,
-    };
-
-    fetch('/api/cb/login', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(checkData),
-    })
-      .then((res) => {
-        if (res.status === 500) {
-          throw new Error();
-        } else {
-          return res.json();
-        }
-      })
+    Visitors.login({ email: this.state.email, password: this.state.password })
+      .then(res => res.data)
       .then((data) => {
         if (data.success === true) {
           localStorage.setItem('token', data.token);

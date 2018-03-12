@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Button from '../visitors/button';
-import { authenticatedPost } from './activitiesLib/admin_helpers';
+import { CbAdmin } from '../../api';
 
 export default class AdminLogin extends Component {
   constructor(props) {
@@ -19,12 +19,11 @@ export default class AdminLogin extends Component {
     e.preventDefault();
 
     try {
-      const { success, token, error } = await authenticatedPost('/api/admin/login', {
-        password: this.state.password,
-      });
+      const res = await CbAdmin.login({ password: this.state.password });
+      const { success, token, reason } = res.data;
 
-      if (!success || !token || error) {
-        throw new Error(error || 'Incorrect password');
+      if (!success || !token || reason) {
+        throw new Error(reason || 'Incorrect password');
       }
 
       await this.props.updateAdminToken(token);
