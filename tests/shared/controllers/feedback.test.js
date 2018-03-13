@@ -43,9 +43,16 @@ test('POST /api/cb/feedback', tape => {
         .post('/api/cb/feedback')
         .set('authorization', token)
         .send(badPayload)
-        .expect(500)
-        .expect('Content-Type', /text/)
-        .end(async err => {
+        .expect(400)
+        .expect('Content-Type', /json/)
+        .end(async (err, res) => {
+          t.deepEqual(
+            res.body,
+            {
+              error: { message: 'Failed to add feedback to database' },
+            },
+            'Bad payload returns error response object'
+          );
           t.notOk(err, err || 'Passes supertest expect criteria');
           t.end();
         });

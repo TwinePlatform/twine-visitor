@@ -98,25 +98,23 @@ test('Db Query | cbAdmin ', async tape => {
     }
   });
 
-  tape.test('cbAdmin.postFeedback | correct values', async t => {
+  tape.test('cbAdmin.insertFeedback | correct values', async t => {
     try {
       await refreshDB();
-      const actual = await cbAdmin.postFeedback(client, {
+      const actual = await cbAdmin.insertFeedback(client, {
         cbEmail: 'findmyfroggy@frogfinders.com',
         feedbackScore: -1,
       });
-      delete actual[0].feedback_date;
-      const expected = [
-        {
-          id: 7,
-          cb_id: 3,
-          feedback_score: -1,
-        },
-      ];
+      delete actual.feedback_date;
+      const expected = {
+        id: 7,
+        cb_id: 3,
+        feedback_score: -1,
+      };
       t.deepEqual(
         actual,
         expected,
-        'cbAdmin.postFeedback returns array of inputted data'
+        'cbAdmin.insertFeedback returns array of inputted data'
       );
       t.end();
     } catch (error) {
@@ -124,10 +122,10 @@ test('Db Query | cbAdmin ', async tape => {
     }
   });
 
-  tape.test('cbAdmin.postFeedback | incorrect values', async t => {
+  tape.test('cbAdmin.insertFeedback | incorrect values', async t => {
     try {
       await refreshDB();
-      await cbAdmin.postFeedback(client, {
+      await cbAdmin.insertFeedback(client, {
         cbEmail: 'imafake@googlemail.com',
         feedbackScore: -1,
       });
