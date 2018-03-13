@@ -36,4 +36,7 @@ module.exports = {
     hmac_secret: Joi.string().min(20).required(),
     ttl: Joi.number().integer().min(0).max(3e10), // milliseconds
   }),
+  validation: Joi.object({
+    options: Joi.object(),
+  }),
 };
