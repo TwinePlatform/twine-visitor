@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Input from './input';
 import Select from './select';
 
-export default props => (
+const signupForm = props => (
   <div>
     <form className="SignupForm" onChange={props.handleChange}>
       <section className="Main col-9">
@@ -66,9 +66,11 @@ export default props => (
   </div>
 );
 
-this.propTypes = {
+signupForm.propTypes = {
   checkUserExists: PropTypes.func.isRequired,
   years: PropTypes.arrayOf(PropTypes.number).isRequired,
-  error: PropTypes.string.isRequired,
+  error: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleChange: PropTypes.func.isRequired,
 };
+
+export default signupForm;

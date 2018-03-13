@@ -25,6 +25,7 @@ export default class Input extends Component {
           onChange={this.handleUserInput}
           value={this.state.userInput}
           className="Form__Input"
+          {...this.props}
         />
       </label>
     );

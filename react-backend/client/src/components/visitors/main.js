@@ -35,6 +35,7 @@ export default class Main extends Component {
   }
 
   handleChange = (e) => {
+    console.log(e.target.type);
     switch (e.target.type) {
       case 'checkbox':
         this.setState({ [e.target.name]: e.target.checked });
@@ -147,7 +148,6 @@ export default class Main extends Component {
           <Route exact path="/visitor/signup">
             <SignupForm
               handleChange={this.handleChange}
-              handleChangeCheckbox={this.handleChangeCheckbox}
               error={error}
               years={years}
               checkUserExists={this.checkUserExists}
