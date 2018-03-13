@@ -51,8 +51,7 @@ This documents the desired architecture for this project. This was initially dis
 ```
 ./server
 |- cb-admin            All code related to cb-admin features
-|  |- controllers      Route definitions
-|  |  |- api           Route definitions for API routes
+|  |- controllers      Route definitions for API routes
 |  |- models           Database models (objects representing cb-admin-related entities in the DB)
 |  |- index.js         Exports single function/app that can be mounted onto the main express app
 |- twine-admin         All code related to twine-admin features
