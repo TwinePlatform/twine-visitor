@@ -13,16 +13,17 @@ const signupForm = props => (
             {props.error.map(el => <span key={el}>{el}</span>)}
           </div>
         )}
-        <Input question="Name" option="fullname" required />
-        <Input question="Email" option="email" required />
-        <Input question="Phone Number (optional)" option="phone" />
+        <Input name="fullname" question="Name" option="fullname" required />
+        <Input name="email" question="Email" option="email" required />
+        <Input name="phone" question="Phone Number (optional)" option="phone" />
         <Select
+          name="gender"
           question="Gender"
           option="gender"
           choices={['', 'male', 'female', 'prefer not to say']}
           required
         />
-        <Select question="Year of Birth" option="year" choices={props.years} required />
+        <Select name="fullname" question="Year of Birth" option="year" choices={props.years} required />
         <button onClick={props.checkUserExists} className="Button" type="submit">
           Submit
         </button>
