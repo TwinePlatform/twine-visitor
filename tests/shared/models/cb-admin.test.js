@@ -5,7 +5,8 @@ const { refresh: refreshDB } = require('../../../db/scripts');
 const cbAdmin = require('../../../react-backend/shared/models/cb-admin');
 
 const config = getConfig(process.env.NODE_ENV);
-test.only('Db Query | cbAdmin.getFeedback ', async tape => {
+
+test('Db Query | cbAdmin ', async tape => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
@@ -97,5 +98,47 @@ test.only('Db Query | cbAdmin.getFeedback ', async tape => {
     }
   });
 
-  tape.test('cbAdmin.getFeedback | teardown', t => client.end(t.end));
+  tape.test('cbAdmin.postFeedback | correct values', async t => {
+    try {
+      await refreshDB();
+      const actual = await cbAdmin.postFeedback(client, {
+        cbEmail: 'findmyfroggy@frogfinders.com',
+        feedbackScore: -1,
+      });
+      delete actual[0].feedback_date;
+      const expected = [
+        {
+          id: 7,
+          cb_id: 3,
+          feedback_score: -1,
+        },
+      ];
+      t.deepEqual(
+        actual,
+        expected,
+        'cbAdmin.postFeedback returns array of inputted data'
+      );
+      t.end();
+    } catch (error) {
+      t.end(error);
+    }
+  });
+
+  tape.test('cbAdmin.postFeedback | incorrect values', async t => {
+    try {
+      await refreshDB();
+      await cbAdmin.postFeedback(client, {
+        cbEmail: 'imafake@googlemail.com',
+        feedbackScore: -1,
+      });
+    } catch (error) {
+      t.ok(
+        error,
+        'Query throws an error if non-existent cbId value is entered'
+      );
+      t.end();
+    }
+  });
+
+  tape.test('cbAdmin | teardown', t => client.end(t.end));
 });

@@ -56,7 +56,7 @@ CREATE TABLE visits
 CREATE TABLE feedback
 (
   id SERIAL PRIMARY KEY,
-  cb_id INTEGER REFERENCES cbusiness(id),
+  cb_id INTEGER REFERENCES cbusiness(id) NOT NULL,
   feedback_score INTEGER NOT NULL,
   feedback_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
