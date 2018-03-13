@@ -1,12 +1,12 @@
 const test = require('tape');
 const pg = require('pg');
-const { getConfig } = require('../../../config');
-const { refresh: refreshDB, empty: emptyDB } = require('../../../db/scripts');
-const activities = require('../../../react-backend/database/queries/activities');
-const activitiesForToday = require('../../../react-backend/database/queries/activities_today');
-const deleteActivity = require('../../../react-backend/database/queries/activity_delete');
-const insertActivity = require('../../../react-backend/database/queries/activity_add');
-const updateActivity = require('../../../react-backend/database/queries/activity_update');
+const { getConfig } = require('../../../../config');
+const { refresh: refreshDB, empty: emptyDB } = require('../../../../db/scripts');
+const activities = require('../activities');
+const activitiesForToday = require('../activities_today');
+const deleteActivity = require('../activity_delete');
+const insertActivity = require('../activity_add');
+const updateActivity = require('../activity_update');
 
 const config = getConfig(process.env.NODE_ENV);
 

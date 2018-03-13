@@ -1,8 +1,8 @@
 const test = require('tape');
 const request = require('supertest');
-const createApp = require('../../../react-backend/app');
-const { getConfig } = require('../../../config');
-const { refresh: refreshDB } = require('../../../db/scripts');
+const createApp = require('../../../app');
+const { getConfig } = require('../../../../config');
+const { refresh: refreshDB } = require('../../../../db/scripts');
 
 const config = getConfig(process.env.NODE_ENV);
 
