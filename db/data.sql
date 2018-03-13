@@ -10,7 +10,7 @@ VALUES
   ('Frog Finders', 'Environment or nature', 'findmyfroggy@frogfinders.com', '0a0429fa911712f7aca189bb12995963e3fc8f361e2845f747994be499250762', '2017-05-15 12:24:56+00');
 
 INSERT INTO users
-  (cb_id, fullName, sex, yearOfBirth, email, date, hash, phone, is_email_contact_consent_granted, is_sms_contact_consent_granted)
+  (cb_id, fullName, sex, yearOfBirth, email, date, hash, phone_number, is_email_contact_consent_granted, is_sms_contact_consent_granted)
 VALUES
   (1, 'james bond', 'male', 1984, 'hello@yahoo.com', '2017-05-15 12:24:57+00', '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955', 07538654284, true, true),
   (1, 'britney spears', 'female', 1982, 'goodbye@gmail.com', '2017-05-15 12:24:56+00', '9b57815dcc7568e942baed14c61f636034f138e5f43d72f26ec32a9069f9d7df', 07493418465, true, false),

@@ -12,16 +12,17 @@ export default props => (
             {props.error.map(el => <span key={el}>{el}</span>)}
           </div>
         )}
-        <Input question="Name" option="fullname" />
-        <Input question="Email" option="email" />
+        <Input question="Name" option="fullname" required />
+        <Input question="Email" option="email" required />
         <Input question="Phone Number (optional)" option="phone" />
         <Select
           question="Gender"
           option="gender"
           choices={['', 'male', 'female', 'prefer not to say']}
+          required
         />
-        <Select question="Year of Birth" option="year" choices={props.years} />
-        <button onClick={props.checkUserExists} className="Button">
+        <Select question="Year of Birth" option="year" choices={props.years} required />
+        <button onClick={props.checkUserExists} className="Button" type="submit">
           Submit
         </button>
       </section>

@@ -7,12 +7,9 @@ import NotFound from '../NotFound';
 import errorMessages from '../errors';
 
 const generateYearsArray = (startYear, currentYear) =>
-  Array.from({ length: (currentYear + 1) - startYear }, (v, i) => startYear + i);
+  Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
 
-const years = generateYearsArray(
-  new Date().getFullYear() - 113,
-  new Date().getFullYear(),
-);
+const years = generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear());
 
 export default class Main extends Component {
   constructor(props) {
@@ -39,8 +36,7 @@ export default class Main extends Component {
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
-  handleChangeCheckbox = e =>
-    this.setState({ [e.target.name]: e.target.checked });
+  handleChangeCheckbox = e => this.setState({ [e.target.name]: e.target.checked });
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
@@ -114,10 +110,7 @@ export default class Main extends Component {
             this.setError([errorMessages.NAME_ERROR]);
             break;
           case 'emailname':
-            this.setError([
-              errorMessages.NAME_ERROR,
-              errorMessages.EMAIL_ERROR,
-            ]);
+            this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
             break;
           case 'true':
             this.setError([errorMessages.USER_EXISTS_ERROR]);
@@ -158,15 +151,11 @@ export default class Main extends Component {
             <section className="col-12">
               <div className="hidden-printer col-12">
                 <h1>
-                  Here is your QR code. Please print this page and use the code
-                  to sign in when you visit us.
+                  Here is your QR code. Please print this page and use the code to sign in when you
+                  visit us.
                 </h1>
                 <h2>We have also emailed you a copy.</h2>
-                <img
-                  className="QR__image"
-                  src={url}
-                  alt="This is your QRcode"
-                />
+                <img className="QR__image" src={url} alt="This is your QRcode" />
                 <Link to="/visitor">
                   <button className="Button">Next</button>
                 </Link>
@@ -179,26 +168,13 @@ export default class Main extends Component {
               <div className="visible-printer qr-code-to-print">
                 <div className="dashed">
                   {this.state.cb_logo ? (
-                    <img
-                      height="182"
-                      src={this.state.cb_logo}
-                      alt="Community business logo"
-                    />
+                    <img height="182" src={this.state.cb_logo} alt="Community business logo" />
                   ) : (
-                    <img
-                      height="182"
-                      src={qrcodelogo}
-                      alt="Power to change Logo"
-                    />
+                    <img height="182" src={qrcodelogo} alt="Power to change Logo" />
                   )}
-                  <img
-                    className="QR__image"
-                    src={url}
-                    alt="This is your QRcode"
-                  />
+                  <img className="QR__image" src={url} alt="This is your QRcode" />
                   <h5>
-                    Please print this QR code and <br /> bring it with you to
-                    access next time
+                    Please print this QR code and <br /> bring it with you to access next time
                   </h5>
                 </div>
               </div>

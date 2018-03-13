@@ -1,5 +1,5 @@
 const insertUser = `
-  INSERT INTO users (cb_id, fullName, sex, phone, yearOfBirth, email, hash, is_email_contact_consent_granted, is_sms_contact_consent_granted)
+  INSERT INTO users (cb_id, fullName, sex, phone_number, yearOfBirth, email, hash, is_email_contact_consent_granted, is_sms_contact_consent_granted)
   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
 
 const putUserData = (

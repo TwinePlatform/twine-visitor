@@ -1,6 +1,6 @@
 const putNewUserDetailsQuery = `
   UPDATE users
-  SET fullname = $3, sex = $4, yearofbirth = $5, email = $6, phone = $7, is_email_contact_consent_granted = $8, is_sms_contact_consent_granted = $9
+  SET fullname = $3, sex = $4, yearofbirth = $5, email = $6, phone_number = $7, is_email_contact_consent_granted = $8, is_sms_contact_consent_granted = $9
   WHERE id = $2 AND cb_id = $1
   RETURNING *`;
 
