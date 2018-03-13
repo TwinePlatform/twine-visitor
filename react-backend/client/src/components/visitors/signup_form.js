@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Input from './input';
 import Select from './select';
 
@@ -26,8 +27,6 @@ export default props => (
           Submit
         </button>
       </section>
-    </form>
-    <form className="EmailSMSCheckbox" onChange={props.handleChangeCheckbox}>
       <aside className="Privacy col-3">
         <h3 className="Privacy__title">
           Why are we collecting this information?
@@ -66,3 +65,10 @@ export default props => (
     </form>
   </div>
 );
+
+this.propTypes = {
+  checkUserExists: PropTypes.func.isRequired,
+  years: PropTypes.arrayOf(PropTypes.number).isRequired,
+  error: PropTypes.string.isRequired,
+  handleChange: PropTypes.func.isRequired,
+};

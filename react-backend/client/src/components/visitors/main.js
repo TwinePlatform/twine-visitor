@@ -34,9 +34,16 @@ export default class Main extends Component {
     this.setState({ error: messagesArray });
   }
 
-  handleChange = e => this.setState({ [e.target.name]: e.target.value });
-
-  handleChangeCheckbox = e => this.setState({ [e.target.name]: e.target.checked });
+  handleChange = (e) => {
+    switch (e.target.type) {
+      case 'checkbox':
+        this.setState({ [e.target.name]: e.target.checked });
+        break;
+      default:
+        this.setState({ [e.target.name]: e.target.value });
+        break;
+    }
+  };
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
