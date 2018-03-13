@@ -18,7 +18,7 @@ test('POST api/cb/pwd/reset | token creation successful', async (t) => {
     .post('/email/withTemplate')
     .reply(200, {})
     .post('/email/batch')
-    .reply(200, {})
+    .reply(200, {});
 
   request(app)
     .post('/api/cb/pwd/reset')

@@ -40,7 +40,7 @@ test('test CB login detail validation query', async (t) => {
   t.equal(incorrectEmail, false, 'Incorrect email returns false');
   t.equal(incorrectPwd, false, 'Incorrect PWD returns false');
 
-  await client.end()
+  await client.end();
   t.end();
 });
 
@@ -62,6 +62,6 @@ test('test checkCbExists checks', async (t) => {
     t.pass('Rejects with no arguments');
   }
 
-  await client.end()
+  await client.end();
   t.end();
 });

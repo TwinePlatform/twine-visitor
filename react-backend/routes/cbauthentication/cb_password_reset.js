@@ -6,7 +6,7 @@ const pwdTokenAdd = require('../../database/queries/cb/pwd_token_add');
 const sendResetEmail = require('../../functions/sendResetEmail');
 
 router.post('/', (req, res, next) => {
-  const pgClient = req.app.get('client:psql')
+  const pgClient = req.app.get('client:psql');
   const pmClient = req.app.get('client:postmark');
   const { formEmail } = req.body;
   const tokenExpire = Date.now() + 3600000;

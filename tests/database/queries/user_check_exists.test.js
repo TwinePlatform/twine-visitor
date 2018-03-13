@@ -7,7 +7,7 @@ const userCheckExists = require('../../../react-backend/database/queries/user_ch
 const config = getConfig(process.env.NODE_ENV);
 
 test('user_check_exists', async (tape) => {
-  const client = new pg.Client(config.psql)
+  const client = new pg.Client(config.psql);
   await client.connect();
 
   tape.test('user_check_exists | existing user', async (t) => {

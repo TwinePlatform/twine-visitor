@@ -22,7 +22,7 @@ const runSqlFile = (fpath) => async () => {
   await client.connect();
   await client.query(sql);
   await client.end();
-}
+};
 
 
 const build = runSqlFile(path.resolve(__dirname, '..', 'schema.sql'));
@@ -33,7 +33,7 @@ const refresh = async () => {
   await destroy();
   await build();
   await populate();
-}
+};
 
 
 module.exports = {
@@ -57,5 +57,5 @@ if (require.main === module) {
     .catch((e) => {
       console.error(`Failed while attempting "${arg}" operation on "${env}" database`);
       console.error(e);
-    })
+    });
 }
