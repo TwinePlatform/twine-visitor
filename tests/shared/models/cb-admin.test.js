@@ -102,7 +102,7 @@ test('Db Query | cbAdmin ', async tape => {
     try {
       await refreshDB();
       const actual = await cbAdmin.insertFeedback(client, {
-        cbEmail: 'findmyfroggy@frogfinders.com',
+        cbId: 3,
         feedbackScore: -1,
       });
       delete actual.feedback_date;

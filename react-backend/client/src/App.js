@@ -6,6 +6,8 @@ import './App.css';
 import PrivateRoute from './PrivateRoute';
 import AdminRoute from './AdminRoute';
 
+import redirectAfterTimeout from './components/hoc/redirect_after_timeout';
+
 import Home from './components/home';
 
 import CBsignup from './components/authentication/signupcb';
@@ -84,7 +86,7 @@ class App extends Component {
               auth={this.state.loggedIn}
               exact
               path="/thankyou"
-              component={ThankYouFeedback}
+              component={redirectAfterTimeout('/visitor', 5000)(ThankYouFeedback)}
             />
 
             <PrivateRoute
@@ -115,7 +117,12 @@ class App extends Component {
               component={QrError}
             />
 
-            <PrivateRoute auth={this.state.loggedIn} exact path="/visitor/end" component={Thanks} />
+            <PrivateRoute
+              auth={this.state.loggedIn}
+              exact
+              path="/visitor/end"
+              component={redirectAfterTimeout('/visitor', 5000)(Thanks)}
+            />
 
             <PrivateRoute
               auth={this.state.loggedIn}

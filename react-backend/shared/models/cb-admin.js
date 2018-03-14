@@ -14,18 +14,15 @@ module.exports = {
     return query.rows;
   },
 
-  insertFeedback: async (dbConnection, { cbEmail, feedbackScore }) => {
+  insertFeedback: async (dbConnection, { cbId, feedbackScore }) => {
     const insertFeedbackQuery = `
     INSERT INTO feedback 
     (cb_id, feedback_score) 
-    VALUES (
-      (SELECT cbusiness.id FROM cbusiness 
-        WHERE cbusiness.email = $1)
-    , $2) 
+    VALUES ( $1, $2) 
     RETURNING *`;
 
     const query = await dbConnection.query(insertFeedbackQuery, [
-      cbEmail,
+      cbId,
       feedbackScore,
     ]);
 
