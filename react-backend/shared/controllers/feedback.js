@@ -3,7 +3,13 @@ const cbAdmin = require('../models/cb-admin');
 module.exports = (req, res, next) => {
   const pgPool = req.app.get('client:psql');
 
-  const { feedbackScore } = req.body;
+  if (!req.body.query || !req.body.query.feedbackScore) {
+    return res
+      .status(400)
+      .send({ error: { message: 'Failed to add feedback to database' } });
+  }
+
+  const { feedbackScore } = req.body.query;
 
   if (feedbackScore !== -1 && feedbackScore !== 0 && feedbackScore !== 1) {
     return res

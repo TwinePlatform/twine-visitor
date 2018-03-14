@@ -14,7 +14,7 @@ const postFeedback = (feedbackScore, props) => {
     method: 'POST',
     headers,
     body: JSON.stringify({
-      feedbackScore,
+      query: { feedbackScore },
     }),
   }).then(() => props.history.push('/thankyou'));
 };

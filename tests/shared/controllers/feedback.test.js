@@ -14,7 +14,7 @@ test('POST /api/cb/feedback', tape => {
     const secret = app.get('cfg').session.standard_jwt_secret;
     const token = jwt.sign({ email: 'findmyfroggy@frogfinders.com' }, secret);
     const successPayload = {
-      feedbackScore: -1,
+      query: { feedbackScore: -1 },
     };
 
     request(app)
