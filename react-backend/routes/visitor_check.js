@@ -24,10 +24,7 @@ router.post('/', (req, res, next) => {
   if (validationError) return res.status(400).send(validationError);
 
   userCheckExists(pgClient, formSender.toLowerCase(), formEmail)
-    .then(
-      exists =>
-        exists ? res.status(400).send(exists) : res.status(200).send(exists)
-    )
+    .then(exists => exists ? res.status(409).send(exists) : res.send(exists))
     .catch(next);
 });
 

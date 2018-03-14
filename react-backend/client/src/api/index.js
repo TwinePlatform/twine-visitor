@@ -58,6 +58,9 @@ export const Visitors = {
         {
           formSender: query.name,
           formEmail: query.email,
+          formPhone: query.phone_number,
+          formGender: query.gender,
+          formYear: query.yob,
         },
         { headers: { Authorization: tkn } },
       );
@@ -91,14 +94,25 @@ export const Visitors = {
     return Promise.reject(new Error('Invalid query parameters'));
   },
 
-  create: (tkn, { name, gender, yob, email }) =>
+  create: (tkn, {
+    name,
+    gender,
+    yob,
+    email,
+    phoneNumber,
+    emailContactConsent,
+    smsContactConsent,
+  }) =>
     axios.post(
       '/api/qr/generator',
       {
         formSender: name,
-        formSex: gender,
+        formGender: gender,
         formYear: yob,
         formEmail: email,
+        formPhone: phoneNumber,
+        formEmailContact: emailContactConsent,
+        formSmsContact: smsContactConsent,
       },
       { headers: { Authorization: tkn } },
     ),
