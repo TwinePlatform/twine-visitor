@@ -54,11 +54,11 @@ export default class AdminUserDetailsPage extends Component {
     sex,
     yearofbirth,
     email,
-    phone_number,
+    phone,
     date,
     hash,
-    is_email_contact_consent_granted,
-    is_sms_contact_consent_granted,
+    emailcontact,
+    smscontact,
   }) => {
     this.setState({
       userFullName: fullname,
@@ -67,9 +67,9 @@ export default class AdminUserDetailsPage extends Component {
       email,
       signupDate: date.replace(/T/g, ' ').slice(0, 19),
       hash,
-      phoneNumber: phone_number,
-      emailContact: is_email_contact_consent_granted,
-      smsContact: is_sms_contact_consent_granted,
+      phoneNumber: phone,
+      emailContact: emailcontact,
+      smsContact: smscontact,
       errorMessage: '',
     });
   };
