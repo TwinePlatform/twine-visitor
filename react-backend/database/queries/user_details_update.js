@@ -1,10 +1,10 @@
 const putNewUserDetailsQuery = `
   UPDATE users
-  SET fullname = $3, sex = $4, yearofbirth = $5, email = $6
+  SET fullname = $3, sex = $4, yearofbirth = $5, email = $6, phone_number = $7, is_email_contact_consent_granted = $8, is_sms_contact_consent_granted = $9
   WHERE id = $2 AND cb_id = $1
   RETURNING *`;
 
-const putNewUserDetails = (dbConnection, cbId, userId, fullName, sex, yearOfBirth, email) =>
+const putNewUserDetails = (dbConnection, cbId, userId, fullName, sex, yearOfBirth, email, phone, is_email_contact_consent_granted, is_sms_contact_consent_granted) =>
   dbConnection
     .query(putNewUserDetailsQuery, [
       cbId,
@@ -13,6 +13,9 @@ const putNewUserDetails = (dbConnection, cbId, userId, fullName, sex, yearOfBirt
       sex,
       yearOfBirth,
       email,
+      phone,
+      is_email_contact_consent_granted,
+      is_sms_contact_consent_granted,
     ])
     .then(
       res =>

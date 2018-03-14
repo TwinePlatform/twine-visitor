@@ -14,6 +14,8 @@ export default class Input extends Component {
 
   render() {
     const label = this.props.label || this.props.question;
+    const name = this.props.name || this.props.option;
+    const { question, type, option, ...props } = this.props;
     return (
       <label className="Form__Label" htmlFor={label}>
         {label}
@@ -21,10 +23,11 @@ export default class Input extends Component {
         <input
           id={label}
           type={this.props.type}
-          name={this.props.name || this.props.option}
+          name={name}
           onChange={this.handleUserInput}
           value={this.state.userInput}
           className="Form__Input"
+          {...props}
         />
       </label>
     );

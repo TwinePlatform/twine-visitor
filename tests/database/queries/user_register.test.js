@@ -19,9 +19,12 @@ test('DB Query | user_register', async tape => {
         3,
         'Jessica Jones',
         'female',
+        '08534532493',
         1988,
         'super@awesome.com',
-        '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955'
+        '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955',
+        true,
+        true,
       );
       const query = await client.query(
         "SELECT EXISTS (SELECT 1 FROM users WHERE fullname = 'Jessica Jones')"

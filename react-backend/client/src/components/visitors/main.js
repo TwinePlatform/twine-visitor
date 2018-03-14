@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import { Route, Link, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Input from './input';
-import Select from './select';
-import Button from './button';
 import qrcodelogo from '../../qrcodelogo.png';
-import FormPrivacy from '../visitors/form_privacy';
-import FormPrivacy2 from '../visitors/form_privacy2';
+import SignupForm from '../visitors/signup_form';
 import NotFound from '../NotFound';
 import errorMessages from '../errors';
 
 const generateYearsArray = (startYear, currentYear) =>
-  Array.from({ length: (currentYear + 1) - startYear }, (v, i) => startYear + i);
+  Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
 
 const years = generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear());
 
@@ -22,8 +18,11 @@ export default class Main extends Component {
     this.state = {
       fullname: '',
       email: '',
-      sex: 'male',
-      year: 1980,
+      phone: '',
+      gender: '',
+      year: '',
+      emailContact: false,
+      smsContact: false,
       users: [],
       url: '',
       error: [],
@@ -35,71 +34,31 @@ export default class Main extends Component {
     this.setState({ error: messagesArray });
   }
 
-  handleChange = e => this.setState({ [e.target.name]: e.target.value });
+  handleChange = (e) => {
+    switch (e.target.type) {
+      case 'checkbox':
+        this.setState({ [e.target.name]: e.target.checked });
+        break;
+      default:
+        this.setState({ [e.target.name]: e.target.value });
+        break;
+    }
+  };
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
     'Content-Type': 'application/json',
   });
 
-  checkUserExists = (e) => {
-    e.preventDefault();
-
-    const checkData = {
-      formSender: this.state.fullname,
-      formEmail: this.state.email,
-    };
-
-    fetch('/api/visit/check', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify(checkData),
-    })
-      .then((res) => {
-        if (res.status === 500) {
-          throw new Error();
-        } else {
-          return res.text();
-        }
-      })
-      .then((data) => {
-        switch (data) {
-          case 'false':
-            this.props.history.push('/visitor/signup/step2');
-            break;
-          case 'email':
-            this.setError([errorMessages.EMAIL_ERROR]);
-            break;
-          case 'name':
-            this.setError([errorMessages.NAME_ERROR]);
-            break;
-          case 'emailname':
-            this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
-            break;
-          case 'true':
-            this.setError([errorMessages.USER_EXISTS_ERROR]);
-            break;
-          case 'noinput':
-            this.setError([errorMessages.NO_INPUT_ERROR]);
-            break;
-          default:
-            this.setError([errorMessages.UNKNOWN_ERROR]);
-            break;
-        }
-      })
-      .catch(() => {
-        this.props.history.push('/internalServerError');
-      });
-  };
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-
+  generateQRCode = () => {
     const formData = {
       formSender: this.state.fullname,
       formEmail: this.state.email,
-      formSex: this.state.sex,
+      formPhone: this.state.phone,
+      formGender: this.state.gender,
       formYear: this.state.year,
+      formEmailContact: this.state.emailContact,
+      formSMSContact: this.state.smsContact,
     };
     fetch('/api/qr/generator', {
       method: 'POST',
@@ -119,7 +78,63 @@ export default class Main extends Component {
       .then(() => this.props.history.push('/visitor/signup/thankyou'))
       .catch((error) => {
         console.log('ERROR HAPPENING AT FETCH /qrgenerator', error);
-        this.props.history.push('/visitor/login');
+        this.props.history.push('/visitor');
+      });
+  };
+
+  checkUserExists = (e) => {
+    e.preventDefault();
+
+    const checkData = {
+      formSender: this.state.fullname,
+      formEmail: this.state.email,
+      formPhone: this.state.phone,
+      formGender: this.state.gender,
+      formYear: this.state.year,
+    };
+
+    fetch('/api/visit/check', {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify(checkData),
+    })
+      .then((res) => {
+        if (res.status === 500) {
+          throw new Error();
+        } else {
+          return res.text();
+        }
+      })
+      .then((data) => {
+        switch (data) {
+          case 'false':
+            this.generateQRCode();
+            break;
+          case 'email':
+            this.setError([errorMessages.EMAIL_ERROR]);
+            break;
+          case 'name':
+            this.setError([errorMessages.NAME_ERROR]);
+            break;
+          case 'emailname':
+            this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
+            break;
+          case 'true':
+            this.setError([errorMessages.USER_EXISTS_ERROR]);
+            break;
+          case 'noinput':
+            this.setError([errorMessages.NO_INPUT_ERROR]);
+            break;
+          case 'phone':
+            this.setError([errorMessages.PHONE_ERROR]);
+            break;
+          default:
+            this.setError([errorMessages.UNKNOWN_ERROR]);
+            break;
+        }
+      })
+      .catch(() => {
+        this.props.history.push('/internalServerError');
       });
   };
 
@@ -130,32 +145,12 @@ export default class Main extends Component {
       <div className="row">
         <Switch>
           <Route exact path="/visitor/signup">
-            <section className="Main col-9">
-              <h1>Please tell us about yourself</h1>
-              {error && (
-                <div className="ErrorText">{error.map(el => <span key={el}>{el}</span>)}</div>
-              )}
-              <form className="Signup" onChange={this.handleChange}>
-                <Input question="Your Full Name" option="fullname" />
-                <Input question="Your Email" option="email" />
-              </form>
-              <button onClick={this.checkUserExists} className="Button"> Next </button>
-            </section>
-          </Route>
-
-          <Route exact path="/visitor/signup/step2">
-            <section className="Main col-9">
-              <h1>Please tell us about yourself</h1>
-              <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
-                <Select
-                  question="Select Your Sex"
-                  option="sex"
-                  choices={['male', 'female', 'prefer not to say']}
-                />
-                <Select question="Year of Birth" option="year" choices={years} />
-                <Button />
-              </form>
-            </section>
+            <SignupForm
+              handleChange={this.handleChange}
+              error={error}
+              years={years}
+              checkUserExists={this.checkUserExists}
+            />
           </Route>
 
           <Route path="/visitor/signup/thankyou">
@@ -195,10 +190,6 @@ export default class Main extends Component {
             <Route exact path="/*" component={NotFound} />
           </div>
         </Switch>
-
-        <Route exact path="/visitor/signup" component={FormPrivacy} />
-
-        <Route exact path="/visitor/signup/step2" component={FormPrivacy2} />
       </div>
     );
   }
