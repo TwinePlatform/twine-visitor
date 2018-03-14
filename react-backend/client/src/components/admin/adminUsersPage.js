@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Pie, Bar } from 'react-chartjs-2';
 import Logoutbutton from '../visitors/logoutbutton';
 import { DropdownSelect, CheckboxGroup } from './filter_components/UserInputs';
 import { Visitors } from '../../api';
-
-const PieChart = require('react-chartjs').Pie;
-const BarChart = require('react-chartjs').Bar;
 
 export default class AdminUsersPage extends Component {
   constructor(props) {
@@ -228,7 +226,7 @@ export default class AdminUsersPage extends Component {
         </form>
         <h4 id="visitChart">Visitor Numbers</h4>
         <div id="barChartDiv">
-          <BarChart
+          <Bar
             data={this.state.visitNumbers}
             options={{ responsive: true, maintainAspectRatio: false }}
           />
@@ -244,13 +242,13 @@ export default class AdminUsersPage extends Component {
           <tbody>
             <tr>
               <td>
-                <PieChart data={this.state.genderNumbers} />
+                <Pie data={this.state.genderNumbers} />
               </td>
               <td>
-                <PieChart data={this.state.activitiesGroups} />
+                <Pie data={this.state.activitiesGroups} />
               </td>
               <td>
-                <PieChart data={this.state.ageGroups} />
+                <Pie data={this.state.ageGroups} />
               </td>
             </tr>
           </tbody>
