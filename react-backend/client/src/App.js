@@ -18,6 +18,7 @@ import QRCode from './components/visitors/qrcode';
 import QrError from './components/visitors/qrerror';
 import Thanks from './components/visitors/thanks';
 import HomeVisitor from './components/visitors/homeVisitor';
+import ThankYouFeedback from './components/visitors/thank_you_feedback';
 
 import AdminLogin from './components/admin/admin_login';
 import AdminMenuPage from './components/admin/adminMenuPage';
@@ -55,12 +56,7 @@ class App extends Component {
       <div className="Container">
         <div className="Foreground">
           <Switch>
-            <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
-              path="/"
-              component={Home}
-            />
+            <PrivateRoute auth={this.state.loggedIn} exact path="/" component={Home} />
 
             <Route exact path="/signupcb" component={CBsignup} />
             <Route exact path="/newPassword/:token" component={NewPassword} />
@@ -82,6 +78,13 @@ class App extends Component {
               exact
               path="/visitor"
               component={HomeVisitor}
+            />
+
+            <PrivateRoute
+              auth={this.state.loggedIn}
+              exact
+              path="/thankyou"
+              component={ThankYouFeedback}
             />
 
             <PrivateRoute
@@ -112,12 +115,7 @@ class App extends Component {
               component={QrError}
             />
 
-            <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
-              path="/visitor/end"
-              component={Thanks}
-            />
+            <PrivateRoute auth={this.state.loggedIn} exact path="/visitor/end" component={Thanks} />
 
             <PrivateRoute
               auth={this.state.loggedIn}
@@ -180,11 +178,7 @@ class App extends Component {
               component={AdminCBSettingsPage}
             />
 
-            <Route
-              exact
-              path="/internalServerError"
-              component={InternalServerError}
-            />
+            <Route exact path="/internalServerError" component={InternalServerError} />
             <Route component={NotFound} />
           </Switch>
         </div>

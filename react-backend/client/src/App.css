@@ -357,3 +357,11 @@ canvas {
   height: 300px;
   width: 700px;
 }
+
+.feedback-container {
+  width: 60%;
+  margin: 0 auto;
+}
+.feedback-button {
+  width: 33.33%;
+}

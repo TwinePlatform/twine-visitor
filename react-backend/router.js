@@ -38,8 +38,9 @@ router.use('/cb/register/check', cbRegisterCheck);
 router.use('/cb/login', cbLogin);
 router.use('/cb/pwd/change', cbPasswordChange);
 router.use('/cb/pwd/reset', cbPasswordReset);
+
 // Not open but following api plan
-router.post('/cb/feedback', cbFeedback);
+router.post('/cb/feedback', mwIsAuthenticated, cbFeedback);
 
 // Authenticated routes
 router.use('/qr/generator', mwIsAuthenticated, qrGenerator);

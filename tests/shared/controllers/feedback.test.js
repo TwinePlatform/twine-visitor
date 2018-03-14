@@ -30,33 +30,28 @@ test('POST /api/cb/feedback', tape => {
       });
   });
 
-  tape.test(
-    'POST /api/cb/feedback | nonexistent cb email / bad payload throws server error',
-    t => {
-      const secret = app.get('cfg').session.standard_jwt_secret;
-      const token = jwt.sign({ email: 'fakey@mcfake.com' }, secret);
-      const badPayload = {
-        feedbackScore: -1,
-      };
+  tape.test('POST /api/cb/feedback | empty payload', t => {
+    const secret = app.get('cfg').session.standard_jwt_secret;
+    const token = jwt.sign({ email: 'findmyfroggy@frogfinders.com' }, secret);
+    const emptyPayload = {};
 
-      request(app)
-        .post('/api/cb/feedback')
-        .set('authorization', token)
-        .send(badPayload)
-        .expect(400)
-        .expect('Content-Type', /json/)
-        .end(async (err, res) => {
-          t.deepEqual(
-            res.body,
-            {
-              error: { message: 'Failed to add feedback to database' },
-            },
-            'Bad payload returns error response object'
-          );
-          t.notOk(err, err || 'Passes supertest expect criteria');
-          t.end();
-        });
-    }
-  );
+    request(app)
+      .post('/api/cb/feedback')
+      .set('authorization', token)
+      .send(emptyPayload)
+      .expect(400)
+      .expect('Content-Type', /json/)
+      .end(async (err, res) => {
+        t.deepEqual(
+          res.body,
+          {
+            error: { message: 'Failed to add feedback to database' },
+          },
+          'Empty payload returns error response object'
+        );
+        t.notOk(err, err || 'Passes supertest expect criteria');
+        t.end();
+      });
+  });
   tape.test('POST /api/cb/feedback | teardown', t => dbConnection.end(t.end));
 });
