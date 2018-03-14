@@ -1,22 +1,30 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { pick } from 'ramda';
 import Input from '../visitors/input';
 import Select from '../visitors/select';
 import Button from '../visitors/button';
-import errorMessages from '../errors';
 import { CbAdmin } from '../../api';
+import { renameKeys } from '../../util';
+
+
+const payloadToHtmlAttr = renameKeys({ orgName: 'org_name' });
+const htmlAttrToPayload = renameKeys({ org_name: 'orgName' });
+const payloadFromState = pick(['orgName', 'email', 'category', 'password', 'passwordConfirm']);
+
 
 export default class CBsignup extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      org_name: '',
+      orgName: '',
       email: '',
-      genre: '',
+      category: '',
       password: '',
-      error: [],
+      passwordConfirm: '',
+      errors: {},
     };
   }
 
@@ -24,64 +32,40 @@ export default class CBsignup extends Component {
     this.setState({ error: messagesArray });
   }
 
-  handleChange = e => this.setState({ [e.target.name]: e.target.value });
+  handleChange = e => this.setState(htmlAttrToPayload({ [e.target.name]: e.target.value }));
 
   handleSubmit = (e) => {
     e.preventDefault();
 
-    CbAdmin.create({
-      orgName: this.state.org_name,
-      email: this.state.email,
-      category: this.state.genre,
-      password: this.state.password,
-      passwordConfirm: this.state.confirm_password,
-    })
+    CbAdmin.create(payloadFromState(this.state))
       .then(() => this.props.history.push('/logincb'))
       .catch((error) => {
-        switch (error.response.data.validation) {
-          case 'email':
-            this.setError([errorMessages.EMAIL_ERROR]);
-            break;
-          case 'name':
-            this.setError([errorMessages.NAME_ERROR]);
-            break;
-          case 'emailname':
-            this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
-            break;
-          case 'true':
-            this.setError([errorMessages.CB_EXISTS_ERROR]);
-            break;
-          case 'noinput':
-            this.setError([errorMessages.NO_INPUT_ERROR]);
-            break;
-          case 'pswdmatch':
-            this.setError([errorMessages.NO_PASSWORD_MATCH]);
-            break;
-          case 'pswdweak':
-            this.setError([errorMessages.PASSWORD_WEAK]);
-            break;
-          default:
-            this.props.history.push('/internalServerError');
-            break;
+        if (error.response.data && error.response.data.validation) {
+          const validationErrors = error.response.data.validation;
+
+          return this.setState({ errors: payloadToHtmlAttr(validationErrors) });
         }
+
+        return this.props.history.push('/internalServerError');
       });
   };
 
   render() {
-    const { error } = this.state;
+    const { errors } = this.state;
 
     return (
       <section>
         <h1>Please provide us with required information on your business</h1>
-        {error && (
-          <div className="ErrorText">{error.map(el => <span key={el}>{el}</span>)}</div>
-        )}
         <form className="Signup" onChange={this.handleChange} onSubmit={this.handleSubmit}>
           <Input question="Business Name" option="org_name" />
+          {errors.orgName && <div className="ErrorText">Business name: {errors.orgName.map(e => <span>{e}</span>)}</div>}
+
           <Input question="Business Email" option="email" />
+          {errors.email && <div className="ErrorText">E-mail: {errors.email.map(e => <span>{e}</span>)}</div>}
+
           <Select
             question="Select Genre of Business"
-            option="genre"
+            option="category"
             choices={[
               '',
               'Art centre or facility',
@@ -100,8 +84,14 @@ export default class CBsignup extends Component {
               'Waste reduction, reuse or recycling',
             ]}
           />
+          {errors.category && <div className="ErrorText">Category: {errors.category.map(e => <span>{e}</span>)}</div>}
+
           <Input type="password" question="Enter Password" option="password" />
-          <Input type="password" question="Confirm Password" option="confirm_password" />
+          {errors.password && <div className="ErrorText">Password: {errors.password.map(e => <span>{e}</span>)}</div>}
+
+          <Input type="password" question="Confirm Password" option="passwordConfirm" />
+          {errors.passwordConfirm && <div className="ErrorText">Confirm Password: {errors.passwordConfirm.map(e => <span>{e}</span>)}</div>}
+
           <Button />
         </form>
         <Link to="/logincb">

@@ -2,6 +2,7 @@
  * Validation related middlewares
  */
 const Joi = require('joi');
+const { pick } = require('ramda');
 
 
 /**
@@ -69,9 +70,19 @@ exports.validationError = (error, req, res, next) => {
     return next(error);
   }
 
+  const validation = error.details
+    .map(pick(['message', 'context']))
+    .reduce((acc, { context, message }) => {
+      const key = context.label || context.key;
+      const msg = message.replace(/^"([^"]+)" (.*)/, (match, p1, p2) => p2);
+
+      acc[key] = (acc[key] ? acc[key] : []).concat(msg);
+      return acc;
+    }, {});
+
   return res.status(400).send({
     result: null,
     error,
-    validation: error.details.map(d => d.message),
+    validation,
   });
 };

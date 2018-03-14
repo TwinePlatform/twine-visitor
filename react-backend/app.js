@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const postmark = require('postmark');
 const pg = require('pg');
-const { notFound, errorHandler } = require('./shared/middleware');
+const { notFound, errorHandler, validationError } = require('./shared/middleware');
 
 
 module.exports = (cfg) => {
@@ -33,6 +33,7 @@ module.exports = (cfg) => {
   app.use('/api', apiRoutes);
   app.get('/*', express.static(path.join(__dirname, 'client', 'build', 'index.html')));
 
+  app.use(validationError);
   app.use(notFound);
   app.use(errorHandler);
 

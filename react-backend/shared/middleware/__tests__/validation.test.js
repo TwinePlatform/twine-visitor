@@ -142,8 +142,13 @@ test('Validation Middleware', (tape) => {
   });
 
   tape.test('validationError | Joi error', (t) => {
+    const details = [
+      { message: 'foo', context: { key: 'foo' } },
+      { message: 'boo', context: { key: 'foo' } },
+      { message: 'bar', context: { key: 'bar' } },
+    ];
     const req = {};
-    const error = { isJoi: true, details: [{ message: 'foo' }, { message: 'bar' }] };
+    const error = { isJoi: true, details };
     const res = {
       status: (code) => {
         t.equal(code, 400, 'Set Bad Request status code');
@@ -155,7 +160,7 @@ test('Validation Middleware', (tape) => {
           {
             result: null,
             error,
-            validation: error.details.map(d => d.message),
+            validation: { foo: ['foo', 'boo'], bar: ['bar'] },
           },
           'Send validation errors back in payload'
         );
