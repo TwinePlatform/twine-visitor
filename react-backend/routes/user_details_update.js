@@ -10,9 +10,9 @@ router.post('/', (req, res, next) => {
     req.body.sex,
     req.body.yearOfBirth,
     req.body.email,
-    req.body.phone,
-    req.body.is_email_contact_consent_granted,
-    req.body.is_sms_contact_consent_granted
+    req.body.phoneNumber,
+    req.body.emailContact,
+    req.body.smsContact
   )
     .then(details => res.send({ details }))
     .catch(next);

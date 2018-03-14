@@ -22,6 +22,9 @@ export default class AdminUserDetailsPage extends Component {
       url: '',
       errorMessage: '',
       cb_logo: '',
+      phoneNumber: '',
+      emailContact: false,
+      smsContact: false,
     };
   }
 
@@ -46,7 +49,17 @@ export default class AdminUserDetailsPage extends Component {
       });
   }
 
-  setUser = ({ fullname, sex, yearofbirth, email, date, hash }) => {
+  setUser = ({
+    fullname,
+    sex,
+    yearofbirth,
+    email,
+    phone_number,
+    date,
+    hash,
+    is_email_contact_consent_granted,
+    is_sms_contact_consent_granted,
+  }) => {
     this.setState({
       userFullName: fullname,
       sex,
@@ -54,6 +67,9 @@ export default class AdminUserDetailsPage extends Component {
       email,
       signupDate: date.replace(/T/g, ' ').slice(0, 19),
       hash,
+      phoneNumber: phone_number,
+      emailContact: is_email_contact_consent_granted,
+      smsContact: is_sms_contact_consent_granted,
       errorMessage: '',
     });
   };
@@ -64,12 +80,24 @@ export default class AdminUserDetailsPage extends Component {
     });
   };
 
-  handleChange = e =>
-    this.setState({
-      [e.target.name]: e.target.value,
-      errorMessage: '',
-      successMessage: '',
-    });
+  handleChange = (e) => {
+    switch (e.target.type) {
+      case 'checkbox':
+        this.setState({
+          [e.target.name]: e.target.checked,
+          errorMessage: '',
+          successMessage: '',
+        });
+        break;
+      default:
+        this.setState({
+          [e.target.name]: e.target.value,
+          errorMessage: '',
+          successMessage: '',
+        });
+        break;
+    }
+  };
 
   handleChangeSex = e => this.setState({ sex: e.target.value });
 
@@ -89,6 +117,9 @@ export default class AdminUserDetailsPage extends Component {
       sex: this.state.sex,
       yearOfBirth: this.state.yearOfBirth,
       email: this.state.email,
+      phoneNumber: this.state.phoneNumber,
+      emailContact: this.state.emailContact,
+      smsContact: this.state.smsContact,
     })
       .then(res => res.details)
       .then(this.setUser)
@@ -134,7 +165,13 @@ export default class AdminUserDetailsPage extends Component {
 
   render() {
     const submitHandler =
-      this.state.userFullName && this.state.sex && this.state.yearOfBirth && this.state.email
+      this.state.userFullName &&
+      this.state.sex &&
+      this.state.yearOfBirth &&
+      this.state.email &&
+      this.state.phoneNumber &&
+      this.state.emailContact &&
+      this.state.smsContact
         ? this.handleSubmit
         : this.handleEmptySubmit;
 
@@ -164,6 +201,18 @@ export default class AdminUserDetailsPage extends Component {
                 <tr>
                   <td>User email</td>
                   <td>{this.state.email}</td>
+                </tr>
+                <tr>
+                  <td>User Phone Number</td>
+                  <td>{this.state.phoneNumber}</td>
+                </tr>
+                <tr>
+                  <td>User Email Contact</td>
+                  <td>{this.state.emailContact ? 'We will contact you by email' : 'We will not contact you by email'}</td>
+                </tr>
+                <tr>
+                  <td>User SMS Contact</td>
+                  <td>{this.state.smsContact ? 'We will contact you by sms' : 'We will not contact you by sms'}</td>
                 </tr>
                 <tr>
                   <td>User Signup Date</td>
@@ -202,7 +251,11 @@ export default class AdminUserDetailsPage extends Component {
             </label>
             <label className="Form__Label" htmlFor="admin-details-sex">
               Edit Sex
-              <select id="admin-details-sex" className="Form__Input" onChange={this.handleChangeSex}>
+              <select
+                id="admin-details-sex"
+                className="Form__Input"
+                onChange={this.handleChangeSex}
+              >
                 <option defaultValue value={this.state.sex}>
                   Change sex: {this.state.sex}
                 </option>
@@ -232,6 +285,42 @@ export default class AdminUserDetailsPage extends Component {
                 name="email"
                 onChange={this.handleChange}
                 value={this.state.email}
+              />
+            </label>
+
+            <label className="Form__Label" htmlFor="admin-details-phone">
+              Edit Phone Number
+              <input
+                id="admin-details-phone"
+                className="Form__Input"
+                type="text"
+                name="phoneNumber"
+                onChange={this.handleChange}
+                value={this.state.phoneNumber}
+              />
+            </label>
+
+            <label className="Form__Label" htmlFor="admin-details-email-contact">
+              Edit Email Contact
+              <input
+                id="admin-details-email-contact"
+                className="Form__Input"
+                type="checkbox"
+                name="emailContact"
+                onChange={this.handleChange}
+                checked={this.state.emailContact}
+              />
+            </label>
+
+            <label className="Form__Label" htmlFor="admin-details-sms-contact">
+              Edit SMS Contact
+              <input
+                id="admin-details-sms-contact"
+                className="Form__Input"
+                type="checkbox"
+                name="smsContact"
+                onChange={this.handleChange}
+                checked={this.state.smsContact}
               />
             </label>
             {this.state.successMessage === 'The user details have been successfully updated' && (
