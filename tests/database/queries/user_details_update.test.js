@@ -33,12 +33,12 @@ test('DB Query | user_details_update', async tape => {
         sex: 'female',
         yearofbirth: 2001,
         email: 'not@makingsense.com',
-        phone_number: '07534532459',
+        phone: '07534532459',
         date: new Date('Mon May 15 2017 12:24:57 GMT+0000 (UTC)'),
         hash:
           '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955',
-          is_email_contact_consent_granted: true,
-          is_sms_contact_consent_granted: true,
+          emailcontact: true,
+          smscontact: true,
         };
       t.deepEquals(
         actual,

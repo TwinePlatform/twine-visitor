@@ -169,9 +169,7 @@ export default class AdminUserDetailsPage extends Component {
       this.state.sex &&
       this.state.yearOfBirth &&
       this.state.email &&
-      this.state.phoneNumber &&
-      this.state.emailContact &&
-      this.state.smsContact
+      this.state.phoneNumber
         ? this.handleSubmit
         : this.handleEmptySubmit;
 
