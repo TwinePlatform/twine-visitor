@@ -6,6 +6,62 @@ const { getConfig } = require('../../../../config');
 
 const config = getConfig(process.env.NODE_ENV);
 
+test('GET /api/cb/feedback', tape => {
+  const app = createApp(config);
+  const dbConnection = app.get('client:psql');
+
+  tape.test('GET /api/cb/feedback | successful payload', t => {
+    const cbAdminJwtSecret = app.get('cfg').session.cb_admin_jwt_secret;
+    const token = jwt.sign(
+      { email: 'findmyfroggy@frogfinders.com' },
+      cbAdminJwtSecret
+    );
+    const successPayload = {
+      query: {},
+    };
+
+    request(app)
+      .get('/api/cb/feedback')
+      .set('authorization', token)
+      .send(successPayload)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(async (err, res) => {
+        t.notOk(err, err || 'Passes supertest expect criteria');
+        t.ok(res.body.result, 'get to feedback returns a result');
+        t.end();
+      });
+  });
+
+  tape.test('GET /api/cb/feedback | empty payload', t => {
+    const cbAdminJwtSecret = app.get('cfg').session.cb_admin_jwt_secret;
+    const token = jwt.sign(
+      { email: 'findmyfroggy@frogfinders.com' },
+      cbAdminJwtSecret
+    );
+    const emptyPayload = {};
+
+    request(app)
+      .get('/api/cb/feedback')
+      .set('authorization', token)
+      .send(emptyPayload)
+      .expect(400)
+      .expect('Content-Type', /json/)
+      .end(async (err, res) => {
+        t.deepEqual(
+          res.body,
+          {
+            error: { message: 'Failed to get feedback from database' },
+          },
+          'Empty payload returns error response object'
+        );
+        t.notOk(err, err || 'Passes supertest expect criteria');
+        t.end();
+      });
+  });
+  tape.test('GET /api/cb/feedback | teardown', t => dbConnection.end(t.end));
+});
+
 test('POST /api/cb/feedback', tape => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');

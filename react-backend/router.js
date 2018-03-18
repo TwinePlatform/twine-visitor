@@ -38,7 +38,8 @@ router.use('/cb/pwd/change', cbPasswordChange);
 router.use('/cb/pwd/reset', cbPasswordReset);
 
 // Not open but following api plan
-router.post('/cb/feedback', mwIsAuthenticated, cbFeedback);
+router.get('/cb/feedback', mwAdminIsAuthenticated, cbFeedback.get);
+router.post('/cb/feedback', mwIsAuthenticated, cbFeedback.post);
 
 // Authenticated routes
 router.use('/qr/generator', mwIsAuthenticated, qrGenerator);
