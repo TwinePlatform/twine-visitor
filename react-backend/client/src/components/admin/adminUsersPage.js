@@ -226,10 +226,10 @@ export default class AdminUsersPage extends Component {
         </form>
         <h4 id="visitChart">Visitor Numbers</h4>
         <div id="barChartDiv">
-          <Bar
+          {/* <Bar
             data={this.state.visitNumbers}
             options={{ responsive: true, maintainAspectRatio: false }}
-          />
+          /> */}
         </div>
         <table>
           <thead>
@@ -241,15 +241,15 @@ export default class AdminUsersPage extends Component {
           </thead>
           <tbody>
             <tr>
-              <td>
+              {/* <td>
                 <Pie data={this.state.genderNumbers} />
-              </td>
-              <td>
+              </td> */}
+              {/* <td>
                 <Pie data={this.state.activitiesGroups} />
               </td>
               <td>
                 <Pie data={this.state.ageGroups} />
-              </td>
+              </td> */}
             </tr>
           </tbody>
         </table>
