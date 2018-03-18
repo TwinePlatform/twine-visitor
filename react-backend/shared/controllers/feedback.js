@@ -1,24 +1,48 @@
-const cbAdmin = require('../models/cb-admin');
+const cbAdmin = require('../models/cb_admin');
 
-module.exports = (req, res, next) => {
-  const pgPool = req.app.get('client:psql');
+module.exports = {
+  get: (req, res, next) => {
+    const pgPool = req.app.get('client:psql');
+    try {
+      const reqQuery = req.body.query;
+      const dbQuery = { cbId: req.auth.cb_id };
 
-  if (!req.body.query || !req.body.query.feedbackScore) {
-    return res
-      .status(400)
-      .send({ error: { message: 'Failed to add feedback to database' } });
-  }
+      if (reqQuery.since) {
+        dbQuery.since = new Date(reqQuery.since);
+      }
 
-  const { feedbackScore } = req.body.query;
+      if (reqQuery.until) {
+        dbQuery.until = new Date(reqQuery.until);
+      }
 
-  if (feedbackScore !== -1 && feedbackScore !== 0 && feedbackScore !== 1) {
-    return res
-      .status(400)
-      .send({ error: { message: 'Failed to add feedback to database' } });
-  }
+      cbAdmin
+        .getFeedback(pgPool, dbQuery)
+        .then(data => res.send({ result: data }))
+        .catch(next);
+    } catch (error) {
+      return res
+        .status(400)
+        .send({ error: { message: 'Failed to get feedback from database' } });
+    }
+  },
+  post: (req, res, next) => {
+    const pgPool = req.app.get('client:psql');
+    try {
+      const reqQuery = req.body.query;
+      const { feedbackScore } = reqQuery;
 
-  cbAdmin
-    .insertFeedback(pgPool, { cbId: req.auth.cb_id, feedbackScore })
-    .then(data => res.send({ result: data }))
-    .catch(next);
+      if (feedbackScore !== -1 && feedbackScore !== 0 && feedbackScore !== 1) {
+        throw new Error('Invalid feedback score');
+      }
+
+      cbAdmin
+        .insertFeedback(pgPool, { cbId: req.auth.cb_id, feedbackScore })
+        .then(data => res.send({ result: data }))
+        .catch(next);
+    } catch (error) {
+      return res
+        .status(400)
+        .send({ error: { message: 'Failed to add feedback to database' } });
+    }
+  },
 };

@@ -2,7 +2,7 @@ const test = require('tape');
 const pg = require('pg');
 const { getConfig } = require('../../../../config');
 const { refresh: refreshDB } = require('../../../../db/scripts');
-const cbAdmin = require('../../../shared/models/cb-admin');
+const cbAdmin = require('../../../shared/models/cb_admin');
 
 const config = getConfig(process.env.NODE_ENV);
 
