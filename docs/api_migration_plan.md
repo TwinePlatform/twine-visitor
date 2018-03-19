@@ -14,8 +14,8 @@ Throughout, a question mark (`?`) indicates fields in objects that are optional 
 | `POST /cb/details` | `Authorization: cb_admin_token` | | `[{ id, org_name, genre, email, uploadedFileCloudinaryUrl, token, tokenExpire, date }]` |
 | `POST /cb/details/update` | `Authorization: cb_admin_token` | `{ org_name, genre, email, uploadedFileCloudinaryUrl }` | `{ details: { `☝️` } }` |
 | `POST /qr/generator` | `Authorization: std_token` | `{ formSender, formPhone, formGender, formYear, formEmail, formEmailContact, formSMSContact}` | `{ qr: String, cb_logo: String }` |
-| `POST /user/details` | `Authorization: cb_admin_token` | `{ userId }` | `{ details: [{ id, cb_id, fullName, sex, yearOfBirth, email, date, hash }] }` |
-| `POST /user/details/update` | `Authorization: cb_admin_token` | `{ userId, userFullName, sex, yearOfBirth, email, phone, is_email_contact_consent_granted, is_sms_contact_consent_granted }` | `{ details: { `☝️` } }` |
+| `POST /user/details` | `Authorization: cb_admin_token` | `{ userId }` | `{ details: [{ id, cb_id, fullName, sex, yearOfBirth, email, phone, date, hash, emailcontact, smscontact}] }` |
+| `POST /user/details/update` | `Authorization: cb_admin_token` | `{ userId, userFullName, sex, yearOfBirth, email, phoneNumber, emailConsent, smsConsent }` | `{ details: { `☝️` } }` |
 | `POST /user/name-from-scan` | `Authorization: std_token` | `{ user: SHA256 }` | `String` or `{ fullname, hash }` |
 | `POST /user/qr/email` | `Authorization: cb_admin_token` | `{ hash, email, name }` | `{ success: Bool }` |
 | `POST /user/qr` | `Authorization: cb_admin_token` | `{ hash }` | `{ qr, cb_logo }` |
