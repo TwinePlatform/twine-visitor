@@ -51,6 +51,10 @@ export default class AdminMenuPage extends Component {
           <button className="Button">Users</button>
         </Link>
         <br />
+        <Link to="/admin/feedback">
+          <button className="Button">Feedback</button>
+        </Link>
+        <br />
         <Link to="/admin/accountSettings">
           <button className="Button">Account Settings</button>
         </Link>
