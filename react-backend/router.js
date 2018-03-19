@@ -27,6 +27,7 @@ const cbRegister = require('./routes/cbauthentication/cb_register');
 const cbLogin = require('./routes/cbauthentication/cb_login');
 const cbPasswordChange = require('./routes/cbauthentication/cb_password_change');
 const cbPasswordReset = require('./routes/cbauthentication/cb_password_reset');
+const cbFeedback = require('./shared/controllers/feedback');
 
 const mwIsAuthenticated = require('./routes/cbauthentication/mw_is_authenticated');
 const mwAdminIsAuthenticated = require('./routes/cbauthentication/mw_admin_is_authenticated');
@@ -37,6 +38,9 @@ router.use('/cb/register/check', cbRegisterCheck);
 router.use('/cb/login', cbLogin);
 router.use('/cb/pwd/change', cbPasswordChange);
 router.use('/cb/pwd/reset', cbPasswordReset);
+
+// Not open but following api plan
+router.post('/cb/feedback', mwIsAuthenticated, cbFeedback);
 
 // Authenticated routes
 router.use('/qr/generator', mwIsAuthenticated, qrGenerator);

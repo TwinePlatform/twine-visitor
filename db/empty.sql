@@ -1,5 +1,5 @@
 BEGIN;
 
-TRUNCATE TABLE users, visits, activities, cbusiness;
+TRUNCATE TABLE users, visits, activities, cbusiness, feedback;
 
 COMMIT;
