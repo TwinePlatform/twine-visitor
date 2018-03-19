@@ -4,6 +4,7 @@ import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import Logoutbutton from '../visitors/logoutbutton';
 import { adminPost } from './activitiesLib/admin_helpers';
+import errorMessages from '../errors';
 
 export default class AdminCBSettingsPage extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ export default class AdminCBSettingsPage extends Component {
       signupDate: '',
       id: '',
       errorMessage: '',
+      error: [],
       uploadedFileCloudinaryUrl: '',
       cbLogo: '',
     };
@@ -45,12 +47,12 @@ export default class AdminCBSettingsPage extends Component {
     });
 
     this.handleImageUpload(files[0]);
-  }
+  };
 
   setErrorMessage = (error, errorString) => {
     // console.log(error) // Uncomment to display full errors in the console.
     this.setState({ errorMessage: errorString });
-  }
+  };
 
   setCB = (cb) => {
     this.setState({
@@ -63,17 +65,18 @@ export default class AdminCBSettingsPage extends Component {
       cbLogo: cb.uploadedfilecloudinaryurl,
       auth: 'SUCCESS',
     });
-  }
+  };
 
   clearUploadUrl = () => {
     this.setState({
       uploadedFileCloudinaryUrl: '',
     });
-  }
+  };
 
   handleImageUpload(file) {
     const CLOUDINARY_UPLOAD_PRESET = 'cklrrn9k';
-    const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dqzxe8mav/upload';
+    const CLOUDINARY_UPLOAD_URL =
+      'https://api.cloudinary.com/v1_1/dqzxe8mav/upload';
     const cloudinaryForm = new FormData();
     cloudinaryForm.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
     cloudinaryForm.append('file', file);
@@ -135,7 +138,36 @@ export default class AdminCBSettingsPage extends Component {
       email,
       uploadedFileCloudinaryUrl,
     })
-      .then(res => res.details)
+      .then((res) => {
+        if (res.status === 400) {
+          return res.text();
+        }
+        return res;
+      })
+      .then((data) => {
+        console.log(data);
+
+        switch (data) {
+          case 'email':
+            this.setError([errorMessages.EMAIL_ERROR]);
+            break;
+          case 'name':
+            this.setError([errorMessages.NAME_ERROR]);
+            break;
+          case 'emailname':
+            this.setError([
+              errorMessages.NAME_ERROR,
+              errorMessages.EMAIL_ERROR,
+            ]);
+            break;
+          case 'noinput':
+            this.setError([errorMessages.NO_INPUT_ERROR]);
+            break;
+          default:
+            return data.details;
+        }
+        return data.details;
+      })
       .then(this.setCB)
       .then(this.submitConfirmation)
       .then(this.clearUploadUrl)
@@ -147,6 +179,9 @@ export default class AdminCBSettingsPage extends Component {
       this.state.org_name && this.state.genre && this.state.email
         ? this.handleSubmit
         : this.handleEmptySubmit;
+
+        const { error } = this.state;
+
 
     return this.state.auth === 'SUCCESS' ? (
       <div>
@@ -190,7 +225,12 @@ export default class AdminCBSettingsPage extends Component {
           </table>
         </div>
         <h2>Edit {this.state.org_name}s Details</h2>
-        {this.state.errorMessage && <span className="ErrorText">{this.state.errorMessage}</span>}
+        {this.state.error && (
+          <span className="ErrorText">{this.state.error}</span>
+        )}
+        {this.state.errorMessage && (
+          <span className="ErrorText">{this.state.errorMessage}</span>
+        )}
         {this.state.successMessage && (
           <span className="SuccessText">{this.state.successMessage}</span>
         )}
@@ -208,29 +248,45 @@ export default class AdminCBSettingsPage extends Component {
           </label>
           <label className="Form__Label" htmlFor="cb-type-of-business">
             Edit Type of Business
-            <select id="cb-type-of-business" className="Form__Input" onChange={this.handleChangeGenre}>
+            <select
+              id="cb-type-of-business"
+              className="Form__Input"
+              onChange={this.handleChangeGenre}
+            >
               <option defaultValue value={this.state.genre}>
                 Change genre: {this.state.genre}
               </option>
-              <option value="Art centre or facility">Art centre or facility</option>
+              <option value="Art centre or facility">
+                Art centre or facility
+              </option>
               <option value="Community hub, facility or space">
                 Community hub, facility or space
               </option>
-              <option value="Community pub, shop or café">Community pub, shop or café</option>
+              <option value="Community pub, shop or café">
+                Community pub, shop or café
+              </option>
               <option value="Employment, training, business support or education">
                 Employment, training, business support or education
               </option>
               <option value="Energy">Energy</option>
-              <option value="Environment or nature">Environment or nature</option>
+              <option value="Environment or nature">
+                Environment or nature
+              </option>
               <option value="Food catering or production (incl. farming)">
                 Food catering or production (incl. farming)
               </option>
-              <option value="Health, care or wellbeing">Health, care or wellbeing</option>
+              <option value="Health, care or wellbeing">
+                Health, care or wellbeing
+              </option>
               <option value="Housing">Housing</option>
-              <option value="Income or financial inclusion">Income or financial inclusion</option>
+              <option value="Income or financial inclusion">
+                Income or financial inclusion
+              </option>
               <option value="Sport &amp; leisure">Sport &amp; leisure</option>
               <option value="Transport">Transport</option>
-              <option value="Visitor facilities or tourism">Visitor facilities or tourism</option>
+              <option value="Visitor facilities or tourism">
+                Visitor facilities or tourism
+              </option>
               <option value="Waste reduction, reuse or recycling">
                 Waste reduction, reuse or recycling
               </option>
@@ -261,7 +317,10 @@ export default class AdminCBSettingsPage extends Component {
           {this.state.uploadedFileCloudinaryUrl && (
             <React.Fragment>
               <button onClick={this.clearUploadUrl}>X</button>
-              <img src={this.state.uploadedFileCloudinaryUrl} alt="This is the uploaded logo" />
+              <img
+                src={this.state.uploadedFileCloudinaryUrl}
+                alt="This is the uploaded logo"
+              />
             </React.Fragment>
           )}
         </div>
@@ -269,7 +328,9 @@ export default class AdminCBSettingsPage extends Component {
           Submit
         </button>
         <Link to="/admin">
-          <button className="Button ButtonBack">Back to the admin menu page</button>
+          <button className="Button ButtonBack">
+            Back to the admin menu page
+          </button>
         </Link>
         <br />
         <Logoutbutton

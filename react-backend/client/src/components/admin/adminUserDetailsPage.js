@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Logoutbutton from '../visitors/logoutbutton';
 import qrcodelogo from '../../qrcodelogo.png';
 import { adminPost } from './activitiesLib/admin_helpers';
+import errorMessages from '../errors';
 
 export default class AdminUserDetailsPage extends Component {
   constructor(props) {
@@ -90,7 +91,36 @@ export default class AdminUserDetailsPage extends Component {
       yearOfBirth: this.state.yearOfBirth,
       email: this.state.email,
     })
-      .then(res => res.details)
+      .then((res) => {
+        if (res.status === 400) {
+          return res.text();
+        }
+        return res;
+      })
+      .then((data) => {
+        console.log(data);
+
+        switch (data) {
+          case 'email':
+            this.setError([errorMessages.EMAIL_ERROR]);
+            break;
+          case 'name':
+            this.setError([errorMessages.NAME_ERROR]);
+            break;
+          case 'emailname':
+            this.setError([
+              errorMessages.NAME_ERROR,
+              errorMessages.EMAIL_ERROR,
+            ]);
+            break;
+          case 'noinput':
+            this.setError([errorMessages.NO_INPUT_ERROR]);
+            break;
+          default:
+            return data.details;
+        }
+        return data.details;
+      })
       .then(this.setUser)
       .then(this.submitConfirmation)
       .catch(() => this.props.history.push('/internalServerError'));
@@ -134,7 +164,10 @@ export default class AdminUserDetailsPage extends Component {
 
   render() {
     const submitHandler =
-      this.state.userFullName && this.state.sex && this.state.yearOfBirth && this.state.email
+      this.state.userFullName &&
+      this.state.sex &&
+      this.state.yearOfBirth &&
+      this.state.email
         ? this.handleSubmit
         : this.handleEmptySubmit;
 
@@ -172,21 +205,28 @@ export default class AdminUserDetailsPage extends Component {
               </tbody>
             </table>
             <div>
-              <img className="QR__image" src={this.state.url} alt="This is your QRcode" />
+              <img
+                className="QR__image"
+                src={this.state.url}
+                alt="This is your QRcode"
+              />
               <button className="Button" onClick={window.print}>
                 Print QR Code
               </button>
               <br />
-              {this.state.successMessage === 'The email has been successfully resent' && (
-                <span className="SuccessText">{this.state.successMessage}</span>
-              )}
+              {this.state.successMessage ===
+                'The email has been successfully resent' && (
+                  <span className="SuccessText">{this.state.successMessage}</span>
+                )}
               <button className="Button" onClick={this.resendQR}>
                 Re-email QR Code
               </button>
             </div>
           </div>
           <h2>Edit {this.state.userFullName}s Details</h2>
-          {this.state.errorMessage && <span className="ErrorText">{this.state.errorMessage}</span>}
+          {this.state.errorMessage && (
+            <span className="ErrorText">{this.state.errorMessage}</span>
+          )}
 
           <form>
             <label className="Form__Label" htmlFor="admin-details-userFullName">
@@ -202,7 +242,11 @@ export default class AdminUserDetailsPage extends Component {
             </label>
             <label className="Form__Label" htmlFor="admin-details-sex">
               Edit Sex
-              <select id="admin-details-sex" className="Form__Input" onChange={this.handleChangeSex}>
+              <select
+                id="admin-details-sex"
+                className="Form__Input"
+                onChange={this.handleChangeSex}
+              >
                 <option defaultValue value={this.state.sex}>
                   Change sex: {this.state.sex}
                 </option>
@@ -234,9 +278,10 @@ export default class AdminUserDetailsPage extends Component {
                 value={this.state.email}
               />
             </label>
-            {this.state.successMessage === 'The user details have been successfully updated' && (
-              <span className="SuccessText">{this.state.successMessage}</span>
-            )}
+            {this.state.successMessage ===
+              'The user details have been successfully updated' && (
+                <span className="SuccessText">{this.state.successMessage}</span>
+              )}
             <button className="Button" onClick={submitHandler}>
               Submit
             </button>
@@ -255,13 +300,22 @@ export default class AdminUserDetailsPage extends Component {
         <div className="visible-printer qr-code-to-print">
           <div className="dashed">
             {this.state.cb_logo ? (
-              <img height="182" src={this.state.cb_logo} alt="Community business logo" />
+              <img
+                height="182"
+                src={this.state.cb_logo}
+                alt="Community business logo"
+              />
             ) : (
               <img height="182" src={qrcodelogo} alt="Power to change Logo" />
             )}
-            <img className="QR__image" src={this.state.url} alt="This is your QRcode" />
+            <img
+              className="QR__image"
+              src={this.state.url}
+              alt="This is your QRcode"
+            />
             <h5>
-              Please print this QR code and <br /> bring it with you to access next time
+              Please print this QR code and <br /> bring it with you to access
+              next time
             </h5>
           </div>
         </div>
