@@ -25,17 +25,12 @@ test('DB Query | user_details', async tape => {
           email: 'hello@yahoo.com',
           phone: '7538654284',
           date: new Date('Mon May 15 2017 12:24:57 GMT+0000 (UTC)'),
-          hash:
-            '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955',
-            emailcontact: true,
-            smscontact: true,
+          hash: '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955',
+          emailcontact: true,
+          smscontact: true,
         },
       ];
-      t.deepEquals(
-        actual,
-        expected,
-        'getUserDetails returns true with correct values'
-      );
+      t.deepEquals(actual, expected, 'getUserDetails returns true with correct values');
       t.end();
     } catch (error) {
       t.end(error);
@@ -48,11 +43,7 @@ test('DB Query | user_details', async tape => {
 
       const actual = await getUserDetails(client, '18', '1');
 
-      t.deepEquals(
-        actual,
-        [],
-        'getUserDetails returns empty array with incorrect values'
-      );
+      t.deepEquals(actual, [], 'getUserDetails returns empty array with incorrect values');
       t.end();
     } catch (error) {
       t.end(error);
