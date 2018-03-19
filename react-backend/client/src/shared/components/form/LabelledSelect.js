@@ -3,8 +3,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Select, Option, Label } from './base';
+import { Select, SelectWrapper, Option, Label } from './base';
 
 
 const LabelledSelect = (props) => {
@@ -13,15 +12,17 @@ const LabelledSelect = (props) => {
   return (
     <div>
       <Label htmlFor={id}>{label}</Label>
-      <Select id={id} {...rest}>
-        {
-          options.map(opt =>
-            (<Option key={opt.key} value={opt.value}>
-              {opt.content || opt.value}
-            </Option>),
-          )
-        }
-      </Select>
+      <SelectWrapper>
+        <Select id={id} {...rest}>
+          {
+            options.map(opt =>
+              (<Option key={opt.key} value={opt.value}>
+                {opt.content || opt.value}
+              </Option>),
+            )
+          }
+        </Select>
+      </SelectWrapper>
     </div>
   );
 };
@@ -37,7 +38,4 @@ LabelledSelect.propTypes = {
   })).isRequired,
 };
 
-
-export default styled(LabelledSelect)`
-  margin-bottom: 1em;
-`;
+export default LabelledSelect;

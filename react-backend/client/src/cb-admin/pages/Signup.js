@@ -6,8 +6,7 @@ import { Form, FormSection, PrimaryButton } from '../../shared/components/form/b
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
-import StyleGuide from '../../shared/style_guide';
-import Container from '../../shared/components/Container';
+import { FlexContainerCol } from '../../shared/components/layout/base';
 
 const categories = [
   { key: '1', value: 'Art centre or facility' },
@@ -95,7 +94,7 @@ export default class CbAdminSignup extends React.Component {
     const { errors } = this.state;
 
     return (
-      <Container>
+      <FlexContainerCol>
         <Heading>Create an account</Heading>
         <Form onChange={this.changeHandler} onSubmit={this.submitHandler}>
           <FormSection flexOrder={1}>
@@ -162,7 +161,7 @@ export default class CbAdminSignup extends React.Component {
             </Paragraph>
           </FormSection>
         </Form>
-      </Container>
+      </FlexContainerCol>
     );
   }
 }
