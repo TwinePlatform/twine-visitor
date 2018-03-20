@@ -11,8 +11,8 @@ router.post('/', (req, res, next) => {
     req.body.yearOfBirth,
     req.body.email,
     req.body.phoneNumber,
-    (req.body.emailContact = false),
-    (req.body.smsContact = false)
+    req.body.emailContact,
+    req.body.smsContact
   )
     .then(details => res.send({ details }))
     .catch(next);
