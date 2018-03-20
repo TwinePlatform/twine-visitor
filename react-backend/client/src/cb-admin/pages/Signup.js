@@ -1,7 +1,7 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-// import { pick, pathOr, equals } from 'ramda';
-// import { CbAdmin } from '../../api';
+import PropTypes from 'prop-types';
+import { pick, pathOr, equals } from 'ramda';
+import { CbAdmin } from '../../api';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
@@ -35,17 +35,17 @@ const regions = [
   { key: '7', value: 'Greater London' },
 ];
 
-// const payloadFromState = pick([
-//   'org_name',
-//   'category',
-//   'email',
-//   'password',
-//   'password_confirm',
-// ]);
+const payloadFromState = pick([
+  'org_name',
+  'category',
+  'email',
+  'password',
+  'password_confirm',
+]);
 
-// const getErrorStatus = pathOr(null, ['response', 'status']);
-// const getValidationErrors = pathOr('Unknown error', ['response', 'data', 'validation']);
-// const errorStatusEquals = (error, status) => equals(getErrorStatus(error), status);
+const getErrorStatus = pathOr(null, ['response', 'status']);
+const getValidationErrors = pathOr('Unknown error', ['response', 'data', 'validation']);
+const errorStatusEquals = (error, status) => equals(getErrorStatus(error), status);
 
 
 export default class CbAdminSignup extends React.Component {
@@ -68,26 +68,27 @@ export default class CbAdminSignup extends React.Component {
 
   submitHandler = (e) => {
     e.preventDefault();
-    console.log('Submit!');
-    // CbAdmin.create(payloadFromState(this.state))
-    //   .then(() => {
-    //     this.props.history.push('/cb/login?ref=signup');
-    //   })
-    //   .catch((error) => {
-    //     if (errorStatusEquals(401)) {
-    //       this.setState({ errors: getValidationErrors(error) });
 
-    //     } else if (errorStatusEquals(500)) {
-    //       this.history.push('/error/500');
+    CbAdmin.create(payloadFromState(this.state))
+      .then(() => {
+        this.props.history.push('/cb/login?ref=signup');
+      })
+      .catch((error) => {
+        console.log(error.response);
+        if (errorStatusEquals(error, 400)) {
+          this.setState({ errors: getValidationErrors(error) });
 
-    //     } else if (errorStatusEquals(404)) {
-    //       this.history.push('/error/404');
+        } else if (errorStatusEquals(error, 500)) {
+          this.history.push('/error/500');
 
-    //     } else {
-    //       this.history.push('/error/unknown');
+        } else if (errorStatusEquals(error, 404)) {
+          this.history.push('/error/404');
 
-    //     }
-    //   });
+        } else {
+          this.history.push('/error/unknown');
+
+        }
+      });
   }
 
 
@@ -104,7 +105,7 @@ export default class CbAdminSignup extends React.Component {
               label="Business name"
               type="text"
               name="org_name"
-              error={errors.org_name}
+              error={errors.orgName}
               required
             />
             <LabelledInput
@@ -129,7 +130,7 @@ export default class CbAdminSignup extends React.Component {
             <LabelledSelect
               id="cb-admin-region"
               label="Region"
-              region="region"
+              name="region"
               options={regions}
               error={errors.region}
               required
@@ -147,7 +148,7 @@ export default class CbAdminSignup extends React.Component {
               label="Confirm Password"
               type="password"
               name="password_confirm"
-              error={errors.password_confirm}
+              error={errors.passwordConfirm}
               required
             />
           </FormSection>
@@ -168,6 +169,6 @@ export default class CbAdminSignup extends React.Component {
 }
 
 
-// CbAdminSignup.propTypes = {
-//   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
-// };
+CbAdminSignup.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};
