@@ -55,6 +55,7 @@ export default class CbAdminSignup extends React.Component {
       org_name: '',
       category: '',
       email: '',
+      region: '',
       password: '',
       password_confirm: '',
       errors: {},
