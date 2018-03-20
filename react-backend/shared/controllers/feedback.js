@@ -4,7 +4,7 @@ module.exports = {
   get: (req, res, next) => {
     const pgPool = req.app.get('client:psql');
     try {
-      const reqQuery = req.body.query;
+      const reqQuery = req.query;
       const dbQuery = { cbId: req.auth.cb_id };
 
       if (reqQuery.since) {
