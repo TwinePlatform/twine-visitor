@@ -9,7 +9,10 @@ router.post('/', (req, res, next) => {
     req.body.userFullName,
     req.body.sex,
     req.body.yearOfBirth,
-    req.body.email
+    req.body.email,
+    req.body.phoneNumber,
+    req.body.emailContact,
+    req.body.smsContact
   )
     .then(details => res.send({ details }))
     .catch(next);
