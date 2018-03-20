@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import Logoutbutton from '../visitors/logoutbutton';
-import { adminPost } from './activitiesLib/admin_helpers';
+import { CbAdmin } from '../../api';
+
 
 export default class AdminCBSettingsPage extends Component {
   constructor(props) {
@@ -23,11 +24,14 @@ export default class AdminCBSettingsPage extends Component {
   }
 
   componentDidMount() {
-    adminPost(this, '/api/cb/details')
-      .then(res => res.details[0])
+    CbAdmin.get(this.props.auth)
+      .then((res) => {
+        this.props.updateAdminToken(res.headers.authorization);
+        return res.data.details[0];
+      })
       .then(this.setCB)
       .catch((error) => {
-        if (error.message === 500) {
+        if (error.status === 500) {
           this.props.history.push('/internalServerError');
         } else if (error.message === 'No admin token') {
           this.props.history.push('/admin/login');
@@ -129,13 +133,16 @@ export default class AdminCBSettingsPage extends Component {
 
     const { org_name, genre, email, uploadedFileCloudinaryUrl } = this.state; // eslint-disable-line
 
-    adminPost(this, '/api/cb/details/update', {
-      org_name,
-      genre,
+    CbAdmin.update(this.props.auth, {
+      orgName: org_name,
       email,
-      uploadedFileCloudinaryUrl,
+      category: genre,
+      logoUrl: uploadedFileCloudinaryUrl,
     })
-      .then(res => res.details)
+      .then((res) => {
+        this.props.updateAdminToken(res.headers.authorization);
+        return res.data.details;
+      })
       .then(this.setCB)
       .then(this.submitConfirmation)
       .then(this.clearUploadUrl)
@@ -286,5 +293,7 @@ export default class AdminCBSettingsPage extends Component {
 
 AdminCBSettingsPage.propTypes = {
   updateLoggedIn: PropTypes.func.isRequired,
+  updateAdminToken: PropTypes.func.isRequired,
+  auth: PropTypes.string.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

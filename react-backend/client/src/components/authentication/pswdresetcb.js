@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import Input from '../visitors/input';
 import Button from '../visitors/button';
 import errorMessages from '../errors';
+import { CbAdmin } from '../../api';
+
 
 export default class CBPswdReset extends Component {
   constructor(props) {
@@ -24,22 +26,7 @@ export default class CBPswdReset extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const checkData = {
-      formEmail: this.state.email,
-    };
-
-    fetch('/api/cb/pwd/reset', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(checkData),
-    })
-      .then((res) => {
-        if (res.status === 500) {
-          throw new Error();
-        } else {
-          return res.text();
-        }
-      })
+    CbAdmin.email(null, { email: this.state.email })
       .then((data) => {
         switch (data) {
           case 'email':

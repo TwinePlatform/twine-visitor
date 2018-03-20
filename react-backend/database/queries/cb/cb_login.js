@@ -10,7 +10,7 @@ const cbLogin = (dbConnection, email, hashedPwd) => {
 
   return dbConnection
     .query(checkCBlogindetails, [email, hashedPwd])
-    .then(res => res.rows[0].exists)
+    .then(res => res.rows[0].exists);
 };
 
 module.exports = cbLogin;

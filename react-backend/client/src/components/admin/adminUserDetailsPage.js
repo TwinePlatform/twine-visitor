@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Logoutbutton from '../visitors/logoutbutton';
 import qrcodelogo from '../../qrcodelogo.png';
-import { adminPost } from './activitiesLib/admin_helpers';
+import { Visitors } from '../../api';
+
 
 export default class AdminUserDetailsPage extends Component {
   constructor(props) {
@@ -29,17 +30,16 @@ export default class AdminUserDetailsPage extends Component {
   }
 
   componentDidMount() {
-    adminPost(this, '/api/user/details', {
-      userId: this.state.userId,
-    })
+    Visitors.get(this.props.auth, { id: this.state.userId })
       .then((res) => {
+        this.updateAdminToken(res.headers.authorization);
         this.setState({ auth: 'SUCCESS' });
-        return res.details[0];
+        return res.data.details[0];
       })
       .then(this.setUser)
       .then(this.displayQR)
       .catch((error) => {
-        if (error.message === 500) {
+        if (error.status === 500) {
           this.props.history.push('/internalServerError');
         } else if (error.message === 'No admin token') {
           this.props.history.push('/admin/login');
@@ -111,31 +111,34 @@ export default class AdminUserDetailsPage extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
 
-    adminPost(this, '/api/user/details/update', {
-      userId: this.state.userId,
-      userFullName: this.state.userFullName,
-      sex: this.state.sex,
-      yearOfBirth: this.state.yearOfBirth,
+    Visitors.update(this.props.auth, {
+      id: this.state.userId,
+      name: this.state.userFullName,
+      gender: this.state.sex,
+      yob: this.state.yearOfBirth,
       email: this.state.email,
       phoneNumber: this.state.phoneNumber,
       emailContact: this.state.emailContact,
       smsContact: this.state.smsContact,
     })
-      .then(res => res.details)
+      .then((res) => {
+        this.updateAdminToken(res.headers.authorization);
+        return res.data.details;
+      })
       .then(this.setUser)
       .then(this.submitConfirmation)
       .catch(() => this.props.history.push('/internalServerError'));
   };
 
   displayQR = () => {
-    adminPost(this, '/api/user/qr', {
-      hash: this.state.hash,
-    })
+    Visitors.get(this.props.auth, { hash: this.state.hash, asAdmin: true })
       .then((res) => {
-        if (res.qr) {
+        this.updateAdminToken(res.headers.authorization);
+
+        if (res.data.qr) {
           return this.setState({
-            url: res.qr,
-            cb_logo: res.cb_logo,
+            url: res.data.qr,
+            cb_logo: res.data.cb_logo,
           });
         }
         throw new Error('Unknown error generating QR');
@@ -147,16 +150,16 @@ export default class AdminUserDetailsPage extends Component {
   };
 
   resendQR = () => {
-    adminPost(this, '/api/user/qr/email', {
-      email: this.state.email,
+    Visitors.email(this.props.auth, {
       name: this.state.userFullName,
       hash: this.state.hash,
+      email: this.state.email,
     })
       .then((res) => {
-        if (res.success) {
-          return this.setState({
-            successMessage: 'The email has been successfully resent',
-          });
+        this.updateAdminToken(res.headers.authorization);
+
+        if (res.data.success) {
+          return this.setState({ successMessage: 'The email has been successfully resent' });
         }
         throw new Error('Error sending email');
       })
@@ -360,6 +363,7 @@ export default class AdminUserDetailsPage extends Component {
 }
 
 AdminUserDetailsPage.propTypes = {
+  auth: PropTypes.string.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
   updateLoggedIn: PropTypes.func.isRequired,
   match: PropTypes.shape({ params: PropTypes.object }).isRequired,

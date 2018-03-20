@@ -5,6 +5,7 @@ import qrcodelogo from '../../qrcodelogo.png';
 import SignupForm from '../visitors/signup_form';
 import NotFound from '../NotFound';
 import errorMessages from '../errors';
+import { Visitors } from '../../api';
 
 const generateYearsArray = (startYear, currentYear) =>
   Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
@@ -50,66 +51,43 @@ export default class Main extends Component {
     'Content-Type': 'application/json',
   });
 
-  generateQRCode = () => {
-    const formData = {
-      formSender: this.state.fullname,
-      formEmail: this.state.email,
-      formPhone: this.state.phone,
-      formGender: this.state.gender,
-      formYear: this.state.year,
-      formEmailContact: this.state.emailContact,
-      formSMSContact: this.state.smsContact,
-    };
-    fetch('/api/qr/generator', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify(formData),
+  createVisitor = () => {
+    Visitors.create(localStorage.getItem('token'), {
+      name: this.state.fullname,
+      gender: this.state.sex,
+      phoneNumber: this.state.phone,
+      email: this.state.email,
+      yob: this.state.year,
+      emailContactConsent: this.state.emailContact,
+      smsContactConsent: this.state.smsContact,
     })
       .then((res) => {
-        if (res.status === 500) {
-          throw new Error();
-        } else {
-          return res.json();
-        }
+        this.setState({ url: res.data.qr, cb_logo: res.data.cb_logo });
+        this.props.history.push('/visitor/signup/thankyou');
       })
-      .then((res) => {
-        this.setState({ url: res.qr, cb_logo: res.cb_logo });
-      })
-      .then(() => this.props.history.push('/visitor/signup/thankyou'))
       .catch((error) => {
         console.log('ERROR HAPPENING AT FETCH /qrgenerator', error);
-        this.props.history.push('/visitor');
+        this.props.history.push('/internalServerError');
       });
   };
 
   checkUserExists = (e) => {
     e.preventDefault();
 
-    const checkData = {
-      formSender: this.state.fullname,
-      formEmail: this.state.email,
-      formPhone: this.state.phone,
-      formGender: this.state.gender,
-      formYear: this.state.year,
-    };
-
-    fetch('/api/visit/check', {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify(checkData),
+    Visitors.get(localStorage.getItem('token'), {
+      name: this.state.fullname,
+      email: this.state.email,
+      phone_number: this.state.phone,
+      gender: this.this.state.gender,
+      yob: this.state.year,
     })
-      .then((res) => {
-        if (res.status === 500) {
-          throw new Error();
-        } else {
-          return res.text();
+      .then(() => this.createVisitor())
+      .catch((error) => {
+        if (error.response.status === 500) {
+          this.props.history.push('/internalServerError');
         }
-      })
-      .then((data) => {
-        switch (data) {
-          case 'false':
-            this.generateQRCode();
-            break;
+
+        switch (error.response.data) {
           case 'email':
             this.setError([errorMessages.EMAIL_ERROR]);
             break;
@@ -132,9 +110,6 @@ export default class Main extends Component {
             this.setError([errorMessages.UNKNOWN_ERROR]);
             break;
         }
-      })
-      .catch(() => {
-        this.props.history.push('/internalServerError');
       });
   };
 

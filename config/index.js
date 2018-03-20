@@ -29,10 +29,10 @@ const parseDbUrl = (str) => {
     query: { ssl },
   } = url.parse(str, true);
 
-  const [user, password] = auth.split(':')
+  const [user, password] = auth.split(':');
 
   return { database: database.slice(1), host, port, user, password, ssl: Boolean(ssl) };
-}
+};
 
 
 /**

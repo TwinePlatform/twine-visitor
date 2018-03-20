@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Logoutbutton from '../visitors/logoutbutton';
-import { adminGet, adminPost } from './activitiesLib/admin_helpers';
 import { DropdownSelect, CheckboxGroup } from './filter_components/UserInputs';
+import { Visitors } from '../../api';
 
 const PieChart = require('react-chartjs').Pie;
 const BarChart = require('react-chartjs').Bar;
@@ -26,8 +26,11 @@ export default class AdminUsersPage extends Component {
   }
 
   componentDidMount() {
-    adminGet(this, '/api/users/chart-all')
-      .then(res => res.numbers)
+    Visitors.getStatistics(this.props.auth)
+      .then((res) => {
+        this.props.updateAdminToken(res.headers.authorization);
+        return res.data.numbers;
+      })
       .then(([visitsNumbers, genderNumbers, activitiesNumbers, ageGroups, activities]) => {
         this.setState({
           visits: visitsNumbers,
@@ -38,7 +41,11 @@ export default class AdminUsersPage extends Component {
           activities: activities.map(activity => activity.name),
         });
 
-        return adminGet(this, '/api/users/all');
+        return Visitors.get(this.props.auth);
+      })
+      .then((res) => {
+        this.props.updateAdminToken(res.headers.authorization);
+        return res.data;
       })
       .then(({ users }) => this.setState({ auth: 'SUCCESS', users }))
       .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
@@ -150,10 +157,11 @@ export default class AdminUsersPage extends Component {
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   updateResults = () =>
-    adminPost(this, '/api/users/filtered', {
-      filterBy: this.state.filters,
-      orderBy: this.state.orderBy,
-    })
+    Visitors.getStatistics(this.props.auth, { filter: this.state.filters, sort: { [this.state.orderBy]: 'asc' } })
+      .then((res) => {
+        this.props.updateAdminToken(res.headers.authorization);
+        return res.data;
+      })
       .then((res) => {
         this.setState(
           {
@@ -305,6 +313,8 @@ export default class AdminUsersPage extends Component {
 }
 
 AdminUsersPage.propTypes = {
+  auth: PropTypes.string.isRequired,
+  updateAdminToken: PropTypes.func.isRequired,
   updateLoggedIn: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

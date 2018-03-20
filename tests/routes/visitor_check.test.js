@@ -24,7 +24,7 @@ test('POST /api/visit/check | viable name & email & exists in database', t => {
     .post('/api/visit/check')
     .set('authorization', token)
     .send(successPayload)
-    .expect(400)
+    .expect(409)
     .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');

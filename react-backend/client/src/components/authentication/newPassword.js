@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Input from '../visitors/input';
 import Button from '../visitors/button';
 import errorMessages from '../errors';
+import { CbAdmin } from '../../api';
 
 export default class NewPassword extends Component {
   constructor(props) {
@@ -30,24 +31,13 @@ export default class NewPassword extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const checkData = {
-      formPswd: this.state.password,
-      formPswdConfirm: this.state.confirm_password,
-      token: this.state.token,
-    };
-
-    fetch('/api/cb/pwd/change', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(checkData),
-    })
-      .then((res) => {
-        if (res.status === 500) {
-          throw new Error();
-        } else {
-          return res.text();
-        }
-      })
+    CbAdmin.resetPassword(
+      this.state.token,
+      {
+        password: this.state.password,
+        passwordConfirm: this.state.confirm_password,
+      },
+    )
       .then((data) => {
         switch (data) {
           case 'noinput':
