@@ -85,10 +85,11 @@ export default class AdminUsersPage extends Component {
 
     const activitiesData = {
       labels: [],
-      datasets: [{
-        data: [],
-        label: [],
-      },
+      datasets: [
+        {
+          data: [],
+          label: [],
+        },
       ],
     };
 
@@ -96,8 +97,7 @@ export default class AdminUsersPage extends Component {
       activitiesData.datasets[0].data.push(count);
       activitiesData.datasets[0].label.push(name);
       activitiesData.labels.push(name);
-    },
-    );
+    });
     return activitiesData;
   };
 
@@ -106,10 +106,11 @@ export default class AdminUsersPage extends Component {
 
     const genderData = {
       labels: [],
-      datasets: [{
-        data: [],
-        label: [],
-      },
+      datasets: [
+        {
+          data: [],
+          label: [],
+        },
       ],
     };
 
@@ -117,8 +118,7 @@ export default class AdminUsersPage extends Component {
       genderData.datasets[0].data.push(count);
       genderData.datasets[0].label.push(sex);
       genderData.labels.push(sex);
-    },
-    );
+    });
     return genderData;
   };
 
@@ -167,10 +167,11 @@ export default class AdminUsersPage extends Component {
 
     const ageData = {
       labels: [],
-      datasets: [{
-        data: [],
-        label: [],
-      },
+      datasets: [
+        {
+          data: [],
+          label: [],
+        },
       ],
     };
 
@@ -178,15 +179,17 @@ export default class AdminUsersPage extends Component {
       ageData.datasets[0].data.push(agecount);
       ageData.datasets[0].label.push(agegroups);
       ageData.labels.push(agegroups);
-    },
-    );
+    });
     return ageData;
   };
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   updateResults = () =>
-    Visitors.getStatistics(this.props.auth, { filter: this.state.filters, sort: { [this.state.orderBy]: 'asc' } })
+    Visitors.getStatistics(this.props.auth, {
+      filter: this.state.filters,
+      sort: { [this.state.orderBy]: 'asc' },
+    })
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
         return res.data;
@@ -249,7 +252,12 @@ export default class AdminUsersPage extends Component {
             <br />
             {this.state.activities.map(activity => (
               <label key={activity} htmlFor={`user-data-${activity}-input`}>
-                <input id={`user-data-${activity}-input`} type="checkbox" value={activity} onChange={this.filter('activity')} />
+                <input
+                  id={`user-data-${activity}-input`}
+                  type="checkbox"
+                  value={activity}
+                  onChange={this.filter('activity')}
+                />
                 {activity}
               </label>
             ))}
