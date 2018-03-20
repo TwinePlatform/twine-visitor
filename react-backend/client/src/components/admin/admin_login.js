@@ -19,7 +19,8 @@ export default class AdminLogin extends Component {
     e.preventDefault();
 
     try {
-      const res = await CbAdmin.login({ password: this.state.password });
+      const localToken = localStorage.getItem('token');
+      const res = await CbAdmin.login(localToken, { password: this.state.password });
       const { success, token, reason } = res.data;
 
       if (!success || !token || reason) {

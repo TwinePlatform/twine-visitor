@@ -227,12 +227,13 @@ export const CbAdmin = {
       },
     ),
 
-  login: ({ password }) =>
+  login: (tkn, { password }) =>
     axios.post(
       '/api/admin/login',
       {
         password,
       },
+      { headers: { Authorization: tkn } },
     ),
 
   email: (tkn, { email }) =>
