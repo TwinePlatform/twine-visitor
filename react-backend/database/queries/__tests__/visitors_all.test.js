@@ -1,8 +1,8 @@
 const test = require('tape');
 const pg = require('pg');
-const { getConfig } = require('../../../config');
-const { refresh: refreshDB } = require('../../../db/scripts');
-const getAllUsersQuery = require('../../../react-backend/database/queries/visitors_all');
+const { getConfig } = require('../../../../config');
+const { refresh: refreshDB } = require('../../../../db/scripts');
+const getAllUsersQuery = require('../visitors_all');
 
 const config = getConfig(process.env.NODE_ENV);
 

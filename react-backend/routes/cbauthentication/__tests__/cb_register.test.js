@@ -1,8 +1,8 @@
 const test = require('tape');
 const request = require('supertest');
-const createApp = require('../../../react-backend/app');
-const { getConfig } = require('../../../config');
-const { refresh: refreshDB } = require('../../../db/scripts');
+const createApp = require('../../../app');
+const { getConfig } = require('../../../../config');
+const { refresh: refreshDB } = require('../../../../db/scripts');
 
 const config = getConfig(process.env.NODE_ENV);
 
@@ -13,11 +13,11 @@ test('POST /api/cb/register | viable & registered CB', async t => {
   await refreshDB();
 
   const successPayload = {
-    formName: 'Slack Jawed and Dopamine',
-    formEmail: 'jinglis12@googlemail.com',
-    formGenre: 'Housing',
-    formPswd: 'Chickens5*',
-    formPswdConfirm: 'Chickens5*',
+    orgName: 'Slack Jawed and Dopamine',
+    email: 'jinglis12@googlemail.com',
+    category: 'Housing',
+    password: 'Chickens5*',
+    passwordConfirm: 'Chickens5*',
   };
   request(app)
     .post('/api/cb/register')
@@ -38,11 +38,11 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
     await refreshDB();
 
     const successPayload = {
-        formName: 'Slack Jawed and Dopamine',
-        formEmail: 'email@emails.com',
-        formGenre: 'Housing',
-        formPswd: 'Chickens5*',
-        formPswdConfirm: 'Chickens5*',
+        orgName: 'Slack Jawed and Dopamine',
+        email: 'email@emails.com',
+        category: 'Housing',
+        password: 'Chickens5*',
+        passwordConfirm: 'Chickens5*',
       };
     request(app)
       .post('/api/cb/register')
@@ -63,11 +63,11 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
     await refreshDB();
 
     const failurePayload = {
-        formName: 'Slack Jawed and Dopamine',
-        formEmail: 'email@emails.com',
-        formGenre: '',
-        formPswd: '',
-        formPswdConfirm: '',
+        orgName: 'Slack Jawed and Dopamine',
+        email: 'email@emails.com',
+        category: '',
+        password: '',
+        passwordConfirm: '',
       };
     request(app)
       .post('/api/cb/register')
@@ -76,7 +76,13 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.body.validation, 'noinput');
+        t.deepEqual(
+          res.body.validation,
+          {
+            category: ['is not allowed to be empty'],
+            password: ['is not allowed to be empty', 'with value "" fails to match the strong_pwd pattern'],
+          }
+        );
         dbConnection.end(t.end);
       });
   });
@@ -88,11 +94,11 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
     await refreshDB();
 
     const failurePayload = {
-        formName: 'Slack Jawed and Dopamine',
-        formEmail: 'jinglis12dshauidhiua.com',
-        formGenre: 'Housing',
-        formPswd: 'Chickens5*',
-        formPswdConfirm: 'Chickens5*',
+        orgName: 'Slack Jawed and Dopamine',
+        email: 'jinglis12dshauidhiua.com',
+        category: 'Housing',
+        password: 'Chickens5*',
+        passwordConfirm: 'Chickens5*',
       };
     request(app)
       .post('/api/cb/register')
@@ -101,7 +107,12 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.body.validation, 'email');
+        t.deepEqual(
+          res.body.validation,
+          {
+            email: ['must be a valid email'],
+          }
+        );
         dbConnection.end(t.end);
       });
   });
@@ -113,11 +124,11 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
     await refreshDB();
 
     const failurePayload = {
-        formName: '1337 H4xx0R**^&&^$$(*',
-        formEmail: 'jinglis12@googlemail.com',
-        formGenre: 'Housing',
-        formPswd: 'Chickens5*',
-        formPswdConfirm: 'Chickens5*',
+        orgName: '1337 H4xx0R**^&&^$$(*',
+        email: 'jinglis12@googlemail.com',
+        category: 'Housing',
+        password: 'Chickens5*',
+        passwordConfirm: 'Chickens5*',
       };
     request(app)
       .post('/api/cb/register')
@@ -126,7 +137,12 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.body.validation, 'name');
+        t.deepEqual(
+          res.body.validation,
+          {
+            orgName: ['with value "1337 H4xx0R**^&&^$$(*" matches the inverted alphanumeric pattern'],
+          }
+        );
         dbConnection.end(t.end);
       });
   });
@@ -138,11 +154,11 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
     await refreshDB();
 
     const failurePayload = {
-        formName: '!"£$%^&*(',
-        formEmail: 'jinglglemail.com',
-        formGenre: 'Housing',
-        formPswd: 'Chickens5*',
-        formPswdConfirm: 'Chickens5*',
+        orgName: '!"£$%^&*(',
+        email: 'jinglglemail.com',
+        category: 'Housing',
+        password: 'Chickens5*',
+        passwordConfirm: 'Chickens5*',
       };
     request(app)
       .post('/api/cb/register')
@@ -151,7 +167,13 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.body.validation, 'emailname');
+        t.deepEqual(
+          res.body.validation,
+          {
+            orgName: ['with value "!"£$%^&*(" matches the inverted alphanumeric pattern'],
+            email: ['must be a valid email'],
+          }
+        );
         dbConnection.end(t.end);
       });
   });
@@ -163,11 +185,11 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
     await refreshDB();
 
     const failurePayload = {
-        formName: 'Slack Jawed and Dopamine',
-        formEmail: 'jinglis12@googlemail.com',
-        formGenre: 'Housing',
-        formPswd: 'password',
-        formPswdConfirm: 'password',
+        orgName: 'Slack Jawed and Dopamine',
+        email: 'jinglis12@googlemail.com',
+        category: 'Housing',
+        password: 'password',
+        passwordConfirm: 'password',
       };
     request(app)
       .post('/api/cb/register')
@@ -176,7 +198,12 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.body.validation, 'pswdweak');
+        t.deepEqual(
+          res.body.validation,
+          {
+            password: ['with value "password" fails to match the strong_pwd pattern'],
+          }
+        );
         dbConnection.end(t.end);
       });
   });
@@ -188,11 +215,11 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
     await refreshDB();
 
     const failurePayload = {
-        formName: 'Slack Jawed and Dopamine',
-        formEmail: 'jinglis12@googlemail.com',
-        formGenre: 'Housing',
-        formPswd: 'Chickens5*',
-        formPswdConfirm: 'Turkeys5*',
+        orgName: 'Slack Jawed and Dopamine',
+        email: 'jinglis12@googlemail.com',
+        category: 'Housing',
+        password: 'Chickens5*',
+        passwordConfirm: 'Turkeys5*',
       };
     request(app)
       .post('/api/cb/register')
@@ -201,7 +228,12 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.equal(res.body.validation, 'pswdmatch');
+        t.deepEqual(
+          res.body.validation,
+          {
+            passwordConfirm: ['must be one of [ref:password]'],
+          }
+        );
         dbConnection.end(t.end);
       });
   });

@@ -1,9 +1,9 @@
 const test = require('tape');
 const request = require('supertest');
-const createApp = require('../../../react-backend/app');
-const tokenGen = require('../../../react-backend/functions/tokengen');
-const { refresh: refreshDB } = require('../../../db/scripts');
-const { getConfig } = require('../../../config');
+const createApp = require('../../../app');
+const tokenGen = require('../../../functions/tokengen');
+const { refresh: refreshDB } = require('../../../../db/scripts');
+const { getConfig } = require('../../../../config');
 
 const config = getConfig(process.env.NODE_ENV);
 

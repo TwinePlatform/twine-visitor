@@ -29,4 +29,10 @@ module.exports = {
     hmac_secret: process.env.HMAC_SECRET,
     ttl: 30 * 60 * 1000, // 30 minutes in ms
   },
+  validation: {
+    options: {
+      abortEarly: false,
+      stripUnknown: false,
+    },
+  },
 };
