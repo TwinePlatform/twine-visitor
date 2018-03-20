@@ -1,28 +1,49 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Pie } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 import Logoutbutton from '../visitors/logoutbutton';
+import { CbAdmin } from '../../api';
 
-const data = {
-  labels: ['Red', 'Green', 'Yellow'],
+
+const donofig = data => data.reduce((acc, dat) => {
+
+  acc.datasets[0].data[dat.feedback_score + 1] = dat.count;
+
+  return acc;
+}, {
+  labels: ['Unimpressed', 'Neutral', 'Impressed'],
   datasets: [
     {
-      data: [300, 50, 100],
-      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+      data: [],
+      backgroundColor: ['#833FF7', '#DBDBDB', '#FDBD2D'],
+      hoverBackgroundColor: ['#6717F3', '#666666', '#DE9B06'],
     },
   ],
-};
+});
+
 export default class AdminFeedbackPage extends Component {
-  componentDidMount() {}
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: null,
+    };
+  }
+  componentDidMount() {
+    CbAdmin.getFeedback(this.props.auth)
+      .then(({ data }) => this.setState({ data }))
+      .catch(console.log);
+
+
+  }
 
   render() {
     return (
       <div>
         <h1>Feedback</h1>
         <br />
-        <Pie data={data} />
+        {this.state.data && <Doughnut data={donofig(this.state.data.result)} />}
         <br />
         <Link to="/" onClick={this.removeAdmin}>
           <button className="Button ButtonBack">Back to the main page</button>

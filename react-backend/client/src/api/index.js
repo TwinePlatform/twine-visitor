@@ -244,6 +244,12 @@ export const CbAdmin = {
       },
     ),
 
+  getFeedback: tkn =>
+    axios.get(
+      '/api/cb/feedback',
+      { params: { query: 'test' },
+        headers: { Authorization: tkn } },
+    ),
 };
 
 

@@ -5,7 +5,7 @@ module.exports = {
     dbConnection,
     { cbId, since = then, until = new Date(Date.now()) }
   ) => {
-    const getFeedbackQuery = `SELECT feedback_score, feedback_date FROM feedback WHERE cb_id = $1 AND feedback_date BETWEEN $2 AND $3`;
+    const getFeedbackQuery = `SELECT COUNT (*), feedback_score  FROM feedback WHERE cb_id = $1 AND feedback_date BETWEEN $2 AND $3 GROUP BY feedback_score`;
     const query = await dbConnection.query(getFeedbackQuery, [
       cbId,
       since,
