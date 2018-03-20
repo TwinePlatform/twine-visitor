@@ -22,14 +22,14 @@ test('DB Query | users_chart_all', async tape => {
       const actualActivities = query[4];
 
       const expectedVisitsNumbers = [
-        { date: 1494851096000 },
-        { date: 1498055550000 },
-        { date: 1494849680000 },
-        { date: 1498989421000 },
-        { date: 1516737857000 },
-        { date: 1516737917000 },
-        { date: 1516737977000 },
-        { date: 1516738037000 },
+        { date: 1521116696000 },
+        { date: 1521552750000 },
+        { date: 1521201680000 },
+        { date: 1521280621000 },
+        { date: 1521317057000 },
+        { date: 1521489917000 },
+        { date: 1521489977000 },
+        { date: 1521490037000 },
         { date: 1516738097000 },
         { date: 1516824557000 },
         { date: 1516824617000 },

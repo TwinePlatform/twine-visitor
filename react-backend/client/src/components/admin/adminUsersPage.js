@@ -83,30 +83,43 @@ export default class AdminUsersPage extends Component {
   getActivitiesForChart = (activities) => {
     if (!activities) return [];
 
-    return activities.map(({ name, count }, index) => ({
-      value: count,
-      color: this.getColorPair(index).color,
-      highlight: this.getColorPair(index).highlight,
-      label: name,
-    }));
+    const activitiesData = {
+      labels: [],
+      datasets: [{
+        data: [],
+        label: [],
+      },
+      ],
+    };
+
+    activities.forEach(({ name, count }) => {
+      activitiesData.datasets[0].data.push(count);
+      activitiesData.datasets[0].label.push(name);
+      activitiesData.labels.push(name);
+    },
+    );
+    return activitiesData;
   };
 
   getGendersForChart = (genders) => {
     if (!genders) return [];
 
-    const genderData = genders.map(({ sex, count }, index) => ({
-      value: count,
-      color: this.getColorPair(index).color,
-      highlight: this.getColorPair(index).highlight,
-      label: sex,
-    }));
-
-    return {
-      labels: ['Male', 'Female', 'Unknown'],
-      datasets: [
-        genderData,
+    const genderData = {
+      labels: [],
+      datasets: [{
+        data: [],
+        label: [],
+      },
       ],
     };
+
+    genders.forEach(({ sex, count }) => {
+      genderData.datasets[0].data.push(count);
+      genderData.datasets[0].label.push(sex);
+      genderData.labels.push(sex);
+    },
+    );
+    return genderData;
   };
 
   getVisitsWeek = (visits) => {
@@ -151,12 +164,23 @@ export default class AdminUsersPage extends Component {
 
   getAgeGroupsForChart = (ageGroups) => {
     if (!ageGroups) return [];
-    return ageGroups.map(({ agegroups, agecount }, index) => ({
-      data: agecount,
-      color: this.getColorPair(index).color,
-      highlight: this.getColorPair(index).highlight,
-      label: agegroups,
-    }));
+
+    const ageData = {
+      labels: [],
+      datasets: [{
+        data: [],
+        label: [],
+      },
+      ],
+    };
+
+    ageGroups.forEach(({ agecount, agegroups }) => {
+      ageData.datasets[0].data.push(agecount);
+      ageData.datasets[0].label.push(agegroups);
+      ageData.labels.push(agegroups);
+    },
+    );
+    return ageData;
   };
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
