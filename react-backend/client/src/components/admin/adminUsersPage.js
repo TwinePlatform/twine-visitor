@@ -94,12 +94,19 @@ export default class AdminUsersPage extends Component {
   getGendersForChart = (genders) => {
     if (!genders) return [];
 
-    return genders.map(({ sex, count }, index) => ({
+    const genderData = genders.map(({ sex, count }, index) => ({
       value: count,
       color: this.getColorPair(index).color,
       highlight: this.getColorPair(index).highlight,
       label: sex,
     }));
+
+    return {
+      labels: ['Male', 'Female', 'Unknown'],
+      datasets: [
+        genderData,
+      ],
+    };
   };
 
   getVisitsWeek = (visits) => {
@@ -145,7 +152,7 @@ export default class AdminUsersPage extends Component {
   getAgeGroupsForChart = (ageGroups) => {
     if (!ageGroups) return [];
     return ageGroups.map(({ agegroups, agecount }, index) => ({
-      value: agecount,
+      data: agecount,
       color: this.getColorPair(index).color,
       highlight: this.getColorPair(index).highlight,
       label: agegroups,
@@ -226,10 +233,10 @@ export default class AdminUsersPage extends Component {
         </form>
         <h4 id="visitChart">Visitor Numbers</h4>
         <div id="barChartDiv">
-          {/* <Bar
+          <Bar
             data={this.state.visitNumbers}
             options={{ responsive: true, maintainAspectRatio: false }}
-          /> */}
+          />
         </div>
         <table>
           <thead>
@@ -241,15 +248,15 @@ export default class AdminUsersPage extends Component {
           </thead>
           <tbody>
             <tr>
-              {/* <td>
+              <td>
                 <Pie data={this.state.genderNumbers} />
-              </td> */}
-              {/* <td>
+              </td>
+              <td>
                 <Pie data={this.state.activitiesGroups} />
               </td>
               <td>
                 <Pie data={this.state.ageGroups} />
-              </td> */}
+              </td>
             </tr>
           </tbody>
         </table>
