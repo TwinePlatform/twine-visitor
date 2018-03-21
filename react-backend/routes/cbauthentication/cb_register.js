@@ -1,59 +1,55 @@
 const router = require('express').Router();
-const validator = require('validator');
+const Joi = require('joi');
 const hashCB = require('../../functions/cbhash');
 const cbAdd = require('../../database/queries/cb/cb_add');
 const sendCBemail = require('../../functions/sendCBemail');
 const cbCheckExists = require('../../database/queries/cb/cb_check_exists');
-const { checkHasLength } = require('../../functions/helpers');
+const { validate } = require('../../shared/middleware');
 
-const strongPassword = new RegExp(
-  '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
-);
 
-router.post('/', async (req, res, next) => {
+const schemas = {
+  body: {
+    orgName: Joi.string()
+      .regex(/[^\w\s\d]+/, { name: 'alphanumeric', invert: true })
+      .min(1)
+      .required(),
+
+    email: Joi.string()
+      .email()
+      .required(),
+
+    category: Joi.string()
+      .required(),
+
+    password: Joi.string()
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, 'strong_pwd')
+      .required()
+      .options({ language: { string: { regex: { base: 'is too weak' } } } }),
+
+    passwordConfirm: Joi.string()
+      .only(Joi.ref('password'))
+      .required()
+      .options({ language: { string: { allowOnly: 'must match password' } } }),
+  },
+};
+
+
+router.post('/', validate(schemas), async (req, res, next) => {
   // Collect data and router dependencies from request/app
-  const { formPswd, formName, formEmail, formGenre, formPswdConfirm } = req.body;
+  const { password, orgName, email, category } = req.body;
   const db = req.app.get('client:psql');
   const pmClient = req.app.get('client:postmark');
   const secret = req.app.get('cfg').session.hmac_secret;
 
-  // Validate the request
-  const orgName = formName.split(' ').join('');
-  const notEmail = !validator.isEmail(formEmail);
-  const notLatinName = !validator.isAlphanumeric(orgName, ['en-GB']);
-  const emptyInput = !checkHasLength([
-    formName,
-    formEmail,
-    formGenre,
-    formPswd,
-    formPswdConfirm,
-  ]);
-  const pwdWeak = !strongPassword.test(formPswd);
-  const pwdMatch = formPswd !== formPswdConfirm;
-
-  const emailNameValid =
-    ((notEmail && 'email') || '') + ((notLatinName && 'name') || '');
-
-  const validationError =
-    emailNameValid ||
-    (emptyInput && 'noinput') ||
-    (pwdWeak && 'pswdweak') ||
-    (pwdMatch && 'pswdmatch') ||
-    null;
-
-  if (validationError) {
-    return res.status(400).send({ result: null, error: true, validation: validationError });
-  }
-
   // Process registration request
   try {
-    const hashedPassword = hashCB(secret, formPswd);
-    const name = formName.toLowerCase();
-    const exists = await cbCheckExists(db, formEmail);
+    const hashedPassword = hashCB(secret, password);
+    const orgNameLower = orgName.toLowerCase();
+    const exists = await cbCheckExists(db, email);
 
     if (!exists) {
-      await cbAdd(db, name, formEmail, formGenre, hashedPassword);
-      await sendCBemail(pmClient, formEmail, formName);
+      await cbAdd(db, orgNameLower, email, category, hashedPassword);
+      await sendCBemail(pmClient, email, orgNameLower);
       return res.send({ success: true });
     }
 

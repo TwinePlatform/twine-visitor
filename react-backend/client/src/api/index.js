@@ -195,11 +195,11 @@ export const CbAdmin = {
     axios.post(
       '/api/cb/register',
       {
-        formName: orgName,
-        formEmail: email,
-        formGenre: category,
-        formPswd: password,
-        formPswdConfirm: passwordConfirm,
+        orgName,
+        email,
+        category,
+        password,
+        passwordConfirm,
       },
     ),
 

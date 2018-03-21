@@ -1,7 +1,7 @@
 const test = require('tape');
 const fs = require('fs');
 const path = require('path');
-const { readConfig, validateConfig } = require('../../config');
+const { readConfig, validateConfig } = require('..');
 
 
 test('Config | readConfig | dev | undefined path', (t) => {
