@@ -35,8 +35,6 @@ Brought to you by:
 * [@eliascodes](https://github.com/eliascodes)
 
 ## Thanks
-* Our Mothers and Fathers for bringing us into this world, and supporting us through our mad *I'm a developer now!* epoch.
 * Tim Berners Lee for inventing the internet; thanks for our addiction dude.
-* SimplyFresh for sustaining us through the high and the low, the hummus and the chocolate.
-* Delonghi our trusty coffee machine without which we would still be scratching around on the floor like animals.
+* Coffee without which we would still be scratching around on the floor like animals.
 * Lastly we would like to thank our talented, tenacious, turbulent and unusually attractive team for all their hard work and commitment. Guys we are the *BEST!*
