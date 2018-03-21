@@ -49,32 +49,6 @@ export default class AdminUsersPage extends Component {
       .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
   }
 
-  getColorPair = (index) => {
-    const colors = [
-      {
-        color: '#F7464A',
-        highlight: '#FF5A5E',
-      },
-      {
-        color: '#46BFBD',
-        highlight: '#5AD3D1',
-      },
-      {
-        color: '#FDB45C',
-        highlight: '#FFC870',
-      },
-      {
-        color: '#949FB1',
-        highlight: '#A8B3C5',
-      },
-      {
-        color: '#4D5360',
-        highlight: '#616774',
-      },
-    ];
-    return colors[index % colors.length];
-  };
-
   setErrorMessage = (error, errorString) => {
     // console.log(error) // Uncomment to display full errors in the console.
     this.setState({ errorMessage: errorString });
@@ -83,42 +57,58 @@ export default class AdminUsersPage extends Component {
   getActivitiesForChart = (activities) => {
     if (!activities) return [];
 
+    const activitiesColoursMain = [
+      '#FFE7E7',
+      '#800000',
+      '#FF0000',
+      '#FFA500',
+      '#008080',
+      '#800080',
+      '#008000',
+      '#808000',
+      '#000000',
+    ];
+    const activitiesColoursHover = [
+      '#DFC6C6',
+      '#812B2B',
+      '#FF5F5F',
+      '#FFC251',
+      '#4D8181',
+      '#843C84',
+      '#337F33',
+      '#797937',
+      '#262020',
+    ];
+
     const activitiesData = {
-      labels: [],
+      labels: activities.map(el => el.name),
       datasets: [
         {
-          data: [],
-          label: [],
+          data: activities.map(el => el.count),
+          backgroundColor: activitiesColoursMain,
+          hoverBackgroundColor: activitiesColoursHover,
         },
       ],
     };
-
-    activities.forEach(({ name, count }) => {
-      activitiesData.datasets[0].data.push(count);
-      activitiesData.datasets[0].label.push(name);
-      activitiesData.labels.push(name);
-    });
     return activitiesData;
   };
 
   getGendersForChart = (genders) => {
     if (!genders) return [];
 
+    const genderColoursMain = ['#FC0303', '#3100FF', '#0FFF00'];
+    const genderColoursHover = ['#FF4848', '#5C36FF', '#68FF5E'];
+
     const genderData = {
-      labels: [],
+      labels: genders.map(el => el.sex),
       datasets: [
         {
-          data: [],
-          label: [],
+          data: genders.map(el => el.count),
+          backgroundColor: genderColoursMain,
+          hoverBackgroundColor: genderColoursHover,
         },
       ],
     };
-
-    genders.forEach(({ sex, count }) => {
-      genderData.datasets[0].data.push(count);
-      genderData.datasets[0].label.push(sex);
-      genderData.labels.push(sex);
-    });
     return genderData;
   };
 
@@ -165,21 +155,19 @@ export default class AdminUsersPage extends Component {
   getAgeGroupsForChart = (ageGroups) => {
     if (!ageGroups) return [];
 
+    const genderColoursMain = ['#00FFB0', '#FF00B5', '#FDB45C', '#949FB1', '#4D5360'];
+    const genderColoursHover = ['#77FFD5', '#FF62D2', '#FFC870', '#A8B3C5', '#616774'];
+
     const ageData = {
-      labels: [],
+      labels: ageGroups.map(el => el.agegroups),
       datasets: [
         {
-          data: [],
-          label: [],
+          data: ageGroups.map(el => el.agecount),
+          backgroundColor: genderColoursMain,
+          hoverBackgroundColor: genderColoursHover,
         },
       ],
     };
-
-    ageGroups.forEach(({ agecount, agegroups }) => {
-      ageData.datasets[0].data.push(agecount);
-      ageData.datasets[0].label.push(agegroups);
-      ageData.labels.push(agegroups);
-    });
     return ageData;
   };
 
