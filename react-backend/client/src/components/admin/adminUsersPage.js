@@ -57,36 +57,11 @@ export default class AdminUsersPage extends Component {
   getActivitiesForChart = (activities) => {
     if (!activities) return [];
 
-    const activitiesColoursMain = [
-      '#FFE7E7',
-      '#800000',
-      '#FF0000',
-      '#FFA500',
-      '#008080',
-      '#800080',
-      '#008000',
-      '#808000',
-      '#000000',
-    ];
-    const activitiesColoursHover = [
-      '#DFC6C6',
-      '#812B2B',
-      '#FF5F5F',
-      '#FFC251',
-      '#4D8181',
-      '#843C84',
-      '#337F33',
-      '#797937',
-      '#262020',
-    ];
-
     const activitiesData = {
       labels: activities.map(el => el.name),
       datasets: [
         {
           data: activities.map(el => el.count),
-          backgroundColor: activitiesColoursMain,
-          hoverBackgroundColor: activitiesColoursHover,
         },
       ],
     };
@@ -96,16 +71,11 @@ export default class AdminUsersPage extends Component {
   getGendersForChart = (genders) => {
     if (!genders) return [];
 
-    const genderColoursMain = ['#FC0303', '#3100FF', '#0FFF00'];
-    const genderColoursHover = ['#FF4848', '#5C36FF', '#68FF5E'];
-
     const genderData = {
       labels: genders.map(el => el.sex),
       datasets: [
         {
           data: genders.map(el => el.count),
-          backgroundColor: genderColoursMain,
-          hoverBackgroundColor: genderColoursHover,
         },
       ],
     };
@@ -142,10 +112,6 @@ export default class AdminUsersPage extends Component {
       datasets: [
         {
           label: 'Visits over the last week',
-          fillColor: '#F7464A',
-          strokeColor: 'rgba(220,220,220,0.8)',
-          highlightFill: '#FF5A5E',
-          highlightStroke: 'rgba(220,220,220,1)',
           data: buildDaysWithOffset(dayWeek.getDay(), visitCount),
         },
       ],
@@ -155,16 +121,11 @@ export default class AdminUsersPage extends Component {
   getAgeGroupsForChart = (ageGroups) => {
     if (!ageGroups) return [];
 
-    const genderColoursMain = ['#00FFB0', '#FF00B5', '#FDB45C', '#949FB1', '#4D5360'];
-    const genderColoursHover = ['#77FFD5', '#FF62D2', '#FFC870', '#A8B3C5', '#616774'];
-
     const ageData = {
       labels: ageGroups.map(el => el.agegroups),
       datasets: [
         {
           data: ageGroups.map(el => el.agecount),
-          backgroundColor: genderColoursMain,
-          hoverBackgroundColor: genderColoursHover,
         },
       ],
     };
