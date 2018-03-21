@@ -1,8 +1,8 @@
 const test = require('tape');
 const pg = require('pg');
-const { getConfig } = require('../../../config');
-const { refresh: refreshDB } = require('../../../db/scripts');
-const cbAdmin = require('../../../react-backend/shared/models/cb-admin');
+const { getConfig } = require('../../../../config');
+const { refresh: refreshDB } = require('../../../../db/scripts');
+const cbAdmin = require('../../../shared/models/cb-admin');
 
 const config = getConfig(process.env.NODE_ENV);
 

@@ -1,8 +1,8 @@
 const test = require('tape');
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
-const createApp = require('../../../react-backend/app');
-const { getConfig } = require('../../../config');
+const createApp = require('../../../app');
+const { getConfig } = require('../../../../config');
 
 const config = getConfig(process.env.NODE_ENV);
 
