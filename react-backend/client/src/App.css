@@ -365,3 +365,12 @@ canvas {
 .feedback-button {
   width: 33.33%;
 }
+
+.daterange-container {
+  text-align: center;
+}
+.daterange-view-option > h3,
+button {
+  display: inline-block;
+  font: inherit;
+}
