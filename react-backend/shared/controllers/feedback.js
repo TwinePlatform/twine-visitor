@@ -1,18 +1,25 @@
 const cbAdmin = require('../models/cb_admin');
 
+const createDate = str => {
+  const date = new Date(str);
+  if (date instanceof Date && !isNaN(date.valueOf())) return date;
+  throw Error('invalid date');
+};
+
 module.exports = {
   get: (req, res, next) => {
     const pgPool = req.app.get('client:psql');
     try {
       const reqQuery = req.query;
+
       const dbQuery = { cbId: req.auth.cb_id };
 
       if (reqQuery.since) {
-        dbQuery.since = new Date(reqQuery.since);
+        dbQuery.since = createDate(reqQuery.since);
       }
 
       if (reqQuery.until) {
-        dbQuery.until = new Date(reqQuery.until);
+        dbQuery.until = createDate(reqQuery.until);
       }
 
       cbAdmin

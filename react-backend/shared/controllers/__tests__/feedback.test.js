@@ -10,20 +10,18 @@ test('GET /api/cb/feedback', tape => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
 
-  tape.test('GET /api/cb/feedback | successful payload', t => {
+  tape.test('GET /api/cb/feedback | successful query', t => {
     const cbAdminJwtSecret = app.get('cfg').session.cb_admin_jwt_secret;
     const token = jwt.sign(
       { email: 'findmyfroggy@frogfinders.com' },
       cbAdminJwtSecret
     );
-    const successPayload = {
-      query: {},
-    };
+    const successQuery = {};
 
     request(app)
       .get('/api/cb/feedback')
       .set('authorization', token)
-      .send(successPayload)
+      .query(successQuery)
       .expect(200)
       .expect('Content-Type', /json/)
       .end(async (err, res) => {
@@ -33,18 +31,20 @@ test('GET /api/cb/feedback', tape => {
       });
   });
 
-  tape.test('GET /api/cb/feedback | empty payload', t => {
+  tape.test('GET /api/cb/feedback | bad query', t => {
     const cbAdminJwtSecret = app.get('cfg').session.cb_admin_jwt_secret;
     const token = jwt.sign(
       { email: 'findmyfroggy@frogfinders.com' },
       cbAdminJwtSecret
     );
-    const emptyPayload = {};
+    const badQuery = {
+      since: 'not-a-date',
+    };
 
     request(app)
       .get('/api/cb/feedback')
       .set('authorization', token)
-      .send(emptyPayload)
+      .query(badQuery)
       .expect(400)
       .expect('Content-Type', /json/)
       .end(async (err, res) => {
