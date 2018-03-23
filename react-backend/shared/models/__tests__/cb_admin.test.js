@@ -16,44 +16,22 @@ test('Db Query | cbAdmin ', async tape => {
 
       const actualAll = await cbAdmin.getFeedback(client, { cbId: '3' });
       const expectedAll = [
-        {
-          feedback_score: -1,
-          feedback_date: new Date('2017-09-09T17:45:00.000Z'),
-        },
-        {
-          feedback_score: 0,
-          feedback_date: new Date('2017-10-09T17:45:00.000Z'),
-        },
-        {
-          feedback_score: 1,
-          feedback_date: new Date('2017-11-09T17:23:00.000Z'),
-        },
-        {
-          feedback_score: 1,
-          feedback_date: new Date('2017-12-09T17:12:00.000Z'),
-        },
+        { count: '1', feedback_score: -1 },
+        { count: '1', feedback_score: 0 },
+        { count: '2', feedback_score: 1 },
       ];
 
       t.deepEquals(
         actualAll,
         expectedAll,
-        'cbAdmin.getFeedback returns all cbs feedback without dates specified'
+        'cbAdmin.getFeedback returns count of cbs feedback'
       );
       const sinceDate = new Date('2017-11-09 17:23:00+00');
       const actualSubSetWithSince = await cbAdmin.getFeedback(client, {
         cbId: '3',
         since: sinceDate,
       });
-      const expectedSubSetWithSince = [
-        {
-          feedback_score: 1,
-          feedback_date: new Date('2017-11-09T17:23:00.000Z'),
-        },
-        {
-          feedback_score: 1,
-          feedback_date: new Date('2017-12-09T17:12:00.000Z'),
-        },
-      ];
+      const expectedSubSetWithSince = [{ count: '2', feedback_score: 1 }];
       t.deepEquals(
         actualSubSetWithSince,
         expectedSubSetWithSince,
@@ -66,11 +44,9 @@ test('Db Query | cbAdmin ', async tape => {
         until: untilDate,
       });
       const expectedSubSetWithSinceAndUntil = [
-        {
-          feedback_score: 1,
-          feedback_date: new Date('2017-11-09T17:23:00.000Z'),
-        },
+        { count: '1', feedback_score: 1 },
       ];
+
       t.deepEquals(
         actualSubSetWithSinceAndUntil,
         expectedSubSetWithSinceAndUntil,
@@ -107,7 +83,7 @@ test('Db Query | cbAdmin ', async tape => {
       });
       delete actual.feedback_date;
       const expected = {
-        id: 7,
+        id: 10,
         cb_id: 3,
         feedback_score: -1,
       };
