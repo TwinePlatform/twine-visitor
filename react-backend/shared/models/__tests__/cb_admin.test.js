@@ -22,8 +22,8 @@ test('Db Query | cbAdmin ', async tape => {
       ];
 
       t.deepEquals(
-        actualAll,
-        expectedAll,
+        actualAll.sort((a, b) => a.count - b.count),
+        expectedAll.sort((a, b) => a.count - b.count),
         'cbAdmin.getFeedback returns count of cbs feedback'
       );
       const sinceDate = new Date('2017-11-09 17:23:00+00');
