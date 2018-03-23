@@ -31,19 +31,24 @@ const feedbackColors = [
   },
 ];
 
-const donofig = (colorConfig, data) => ({
-  labels: feedbackColors.map(el => el.label),
-  datasets: [
-    {
-      data: feedbackColors.map(
-        el => data.filter(dat => dat.feedback_score === el.feedback_score)[0].count,
-      ),
-      backgroundColor: feedbackColors.map(el => el.backgroundColor),
-      hoverBackgroundColor: feedbackColors.map(el => el.hoverBackgroundColor),
-    },
-  ],
-});
-
+const donofig = (colorConfig, data) =>
+  ({
+    labels: feedbackColors.map(el => el.label),
+    datasets: [
+      {
+        data: feedbackColors.map(
+          el => data.filter(dat => dat.feedback_score === el.feedback_score)[0].count,
+        ),
+        backgroundColor: feedbackColors.map(el => el.backgroundColor),
+        hoverBackgroundColor: feedbackColors.map(el => el.hoverBackgroundColor),
+      },
+    ],
+  })
+;
+const lastCallStates = {
+  ALL: 'ALL',
+  DATERANGEPICKER: 'DATERANGEPICKER',
+};
 export default class AdminFeedbackPage extends Component {
   constructor(props) {
     super(props);
@@ -53,14 +58,51 @@ export default class AdminFeedbackPage extends Component {
       startDate: null,
       endDate: null,
       focusedInput: null,
+      lastCall: null,
     };
   }
   componentDidMount() {
-    CbAdmin.getFeedback(this.props.auth)
-      .then(({ data }) => this.setState({ data }))
-      .catch(err => this.setState(err));
+    this.handleGetFeedback();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+
+    if (
+      prevState.focusedInput !== this.state.focusedInput
+      && !this.state.focusedInput
+      && this.state.startDate
+      && this.state.endDate) {
+      this.handleGetFeedback();
+    }
+
+    if (
+      prevState.lastCall === lastCallStates.DATERANGEPICKER
+      && this.state.lastCall === lastCallStates.ALL
+    ) {
+      this.handleGetFeedback();
+    }
+  }
+
+  handleGetFeedback= () => {
+    CbAdmin.getFeedback(this.props.auth, this.state.startDate, this.state.endDate)
+      .then(({ data }) => {
+        data.result[0] //eslint-disable-line
+          ? this.setState({ data, error: null })
+          : this.setState({ error: 'Sorry, no data was found', data: null });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ error: 'Sorry there has been an error with your request' });
+      });
+  }
+  handleClearDates = () => {
+    this.setState({
+      startDate: null,
+      endDate: null,
+      lastCall: lastCallStates.ALL,
+    });
+
+  }
   render() {
     return (
       <div>
@@ -76,7 +118,7 @@ export default class AdminFeedbackPage extends Component {
         <div className="daterange-container">
           <div className="daterange-view-option">
             <h3>View:</h3>
-            <PrimaryButton>
+            <PrimaryButton onClick={this.handleClearDates}>
               <h3>All</h3>
             </PrimaryButton>
             <PrimaryButton>
@@ -86,21 +128,24 @@ export default class AdminFeedbackPage extends Component {
 
           <div className="daterange-picker">
             <DateRangePicker
-              startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-              startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-              endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-              endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-              onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} 
-              // PropTypes.func.isRequired,
-              focusedInput={this.state.focusedInput} 
-              // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+              startDate={this.state.startDate}
+              startDateId="your_unique_start_date_id"
+              endDate={this.state.endDate}
+              endDateId="your_unique_end_date_id"
+              onDatesChange={({ startDate, endDate }) => this.setState(
+                { startDate,
+                  endDate,
+                  lastCall: lastCallStates.DATERANGEPICKER })
+              }
+              focusedInput={this.state.focusedInput}
               onFocusChange={focusedInput => this.setState({ focusedInput })}
             />
           </div>
         </div>
 
-        {this.state.data && <Doughnut data={donofig(feedbackColors, this.state.data.result)} />}
-        {this.state.error && <h2>Sorry there has been an error with your request.</h2>}
+        {this.state.data ?
+          <Doughnut data={donofig(feedbackColors, this.state.data.result)} />
+          : <h2>{this.state.error}.</h2> }
       </div>
     );
   }

@@ -244,11 +244,14 @@ export const CbAdmin = {
       },
     ),
 
-  getFeedback: tkn =>
+  getFeedback: (tkn, since, until) =>
     axios.get(
       '/api/cb/feedback',
-      { params: { query: 'test' },
-        headers: { Authorization: tkn } },
+      { params: {
+        since: since ? since.format() : null,
+        until: until ? until.format() : null,
+      },
+      headers: { Authorization: tkn } },
     ),
 };
 
