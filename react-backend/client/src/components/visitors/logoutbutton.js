@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { PrimaryButtonNoFill } from '../../shared/components/form/base';
 
 export default class Logoutbutton extends Component {
   logout = () => {
@@ -11,9 +12,9 @@ export default class Logoutbutton extends Component {
 
   render() {
     return (
-      <button className="Logoutbutton" type="submit" onClick={this.logout}>
+      <PrimaryButtonNoFill className="Logoutbutton" type="submit" onClick={this.logout}>
         Log out
-      </button>
+      </PrimaryButtonNoFill>
     );
   }
 }

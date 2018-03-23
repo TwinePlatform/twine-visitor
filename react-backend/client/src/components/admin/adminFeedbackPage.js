@@ -1,32 +1,48 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Doughnut } from 'react-chartjs-2';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
-import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
+import { DateRangePicker } from 'react-dates';
+import { PrimaryButtonNoFill, PrimaryButton } from '../../shared/components/form/base';
+import { Heading, Link } from '../../shared/components/text/base';
 
 import Logoutbutton from '../visitors/logoutbutton';
 import { CbAdmin } from '../../api';
 
-const donofig = data =>
-  data.reduce(
-    (acc, dat) => {
-      acc.datasets[0].data[dat.feedback_score + 1] = dat.count;
+const feedbackColors = [
+  {
+    feedback_score: -1,
+    label: 'Unimpressed',
+    backgroundColor: '#833FF7',
+    hoverBackgroundColor: '#6717F3',
+  },
+  {
+    feedback_score: 0,
+    label: 'Neutral',
+    backgroundColor: '#DBDBDB',
+    hoverBackgroundColor: '#666666',
+  },
+  {
+    feedback_score: 1,
+    label: 'Impressed',
+    backgroundColor: '#FDBD2D',
+    hoverBackgroundColor: '#DE9B06',
+  },
+];
 
-      return acc;
-    },
+const donofig = (colorConfig, data) => ({
+  labels: feedbackColors.map(el => el.label),
+  datasets: [
     {
-      labels: ['Unimpressed', 'Neutral', 'Impressed'],
-      datasets: [
-        {
-          data: [],
-          backgroundColor: ['#833FF7', '#DBDBDB', '#FDBD2D'],
-          hoverBackgroundColor: ['#6717F3', '#666666', '#DE9B06'],
-        },
-      ],
+      data: feedbackColors.map(
+        el => data.filter(dat => dat.feedback_score === el.feedback_score)[0].count,
+      ),
+      backgroundColor: feedbackColors.map(el => el.backgroundColor),
+      hoverBackgroundColor: feedbackColors.map(el => el.hoverBackgroundColor),
     },
-  );
+  ],
+});
 
 export default class AdminFeedbackPage extends Component {
   constructor(props) {
@@ -48,19 +64,26 @@ export default class AdminFeedbackPage extends Component {
   render() {
     return (
       <div>
-        <h1>Visitor Satisfaction</h1>
-        <br />
+        <Link to="/" onClick={this.removeAdmin}>
+          <PrimaryButtonNoFill>Back to the main page</PrimaryButtonNoFill>
+        </Link>
+        <Logoutbutton
+          updateLoggedIn={this.props.updateLoggedIn}
+          redirectUser={this.props.history.push}
+        />
+        <Heading>Visitor Satisfaction</Heading>
+
         <div className="daterange-container">
           <div className="daterange-view-option">
             <h3>View:</h3>
-            <button>
+            <PrimaryButton>
               <h3>All</h3>
-            </button>
-            <button>
+            </PrimaryButton>
+            <PrimaryButton>
               <h3>Dates between...</h3>
-            </button>
+            </PrimaryButton>
           </div>
-          <br />
+
           <div className="daterange-picker">
             <DateRangePicker
               startDate={this.state.startDate} // momentPropTypes.momentObj or null,
@@ -73,19 +96,9 @@ export default class AdminFeedbackPage extends Component {
             />
           </div>
         </div>
-        <br />
-        {this.state.data && <Doughnut data={donofig(this.state.data.result)} />}
+
+        {this.state.data && <Doughnut data={donofig(feedbackColors, this.state.data.result)} />}
         {this.state.error && <h2>Sorry there has been an error with your request.</h2>}
-        <br />
-        <Link to="/" onClick={this.removeAdmin}>
-          <button className="Button ButtonBack">Back to the main page</button>
-        </Link>
-        <br />
-        <Logoutbutton
-          updateLoggedIn={this.props.updateLoggedIn}
-          redirectUser={this.props.history.push}
-        />
-        <br />
       </div>
     );
   }
