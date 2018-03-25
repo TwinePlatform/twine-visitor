@@ -45,6 +45,7 @@ const payloadFromState = pick([
   'orgName',
   'category',
   'email',
+  'region',
   'password',
   'passwordConfirm',
 ]);
