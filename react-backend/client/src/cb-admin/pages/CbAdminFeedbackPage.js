@@ -7,7 +7,7 @@ import { DateRangePicker } from 'react-dates';
 import { PrimaryButtonNoFill, PrimaryButton } from '../../shared/components/form/base';
 import { Heading, Link } from '../../shared/components/text/base';
 
-import Logoutbutton from '../visitors/logoutbutton';
+import Logoutbutton from '../../components/visitors/logoutbutton';
 import { CbAdmin } from '../../api';
 
 const feedbackColors = [
@@ -31,13 +31,13 @@ const feedbackColors = [
   },
 ];
 
-const donofig = (colorConfig, data) =>
+const donutConfig = (colorConfig, feedbackCountArray) =>
   ({
     labels: feedbackColors.map(el => el.label),
     datasets: [
       {
         data: feedbackColors.map(
-          el => data.filter(dat => dat.feedback_score === el.feedback_score)[0].count,
+          el => feedbackCountArray.filter(feedbackCount => feedbackCount.feedback_score === el.feedback_score)[0].count,
         ),
         backgroundColor: feedbackColors.map(el => el.backgroundColor),
         hoverBackgroundColor: feedbackColors.map(el => el.hoverBackgroundColor),
@@ -49,7 +49,7 @@ const lastCallStates = {
   ALL: 'ALL',
   DATERANGEPICKER: 'DATERANGEPICKER',
 };
-export default class AdminFeedbackPage extends Component {
+export default class CbAdminFeedbackPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -119,23 +119,24 @@ export default class AdminFeedbackPage extends Component {
           <div className="daterange-view-option">
             <h3>View:</h3>
             <PrimaryButton onClick={this.handleClearDates}>
-              <h3>All</h3>
+              All
             </PrimaryButton>
             <PrimaryButton>
-              <h3>Dates between...</h3>
+              Dates between...
             </PrimaryButton>
           </div>
 
           <div className="daterange-picker">
             <DateRangePicker
               startDate={this.state.startDate}
-              startDateId="your_unique_start_date_id"
+              startDateId="start_date_id"
               endDate={this.state.endDate}
-              endDateId="your_unique_end_date_id"
-              onDatesChange={({ startDate, endDate }) => this.setState(
-                { startDate,
-                  endDate,
-                  lastCall: lastCallStates.DATERANGEPICKER })
+              endDateId="end_date_id"
+              onDatesChange={({ startDate, endDate }) =>
+                this.setState(
+                  { startDate,
+                    endDate,
+                    lastCall: lastCallStates.DATERANGEPICKER })
               }
               focusedInput={this.state.focusedInput}
               onFocusChange={focusedInput => this.setState({ focusedInput })}
@@ -143,15 +144,15 @@ export default class AdminFeedbackPage extends Component {
           </div>
         </div>
 
-        {this.state.data ?
-          <Doughnut data={donofig(feedbackColors, this.state.data.result)} />
+        {this.state.data
+          ? <Doughnut data={donutConfig(feedbackColors, this.state.data.result)} />
           : <h2>{this.state.error}.</h2> }
       </div>
     );
   }
 }
 
-AdminFeedbackPage.propTypes = {
+CbAdminFeedbackPage.propTypes = {
   auth: PropTypes.string.isRequired,
   updateLoggedIn: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,

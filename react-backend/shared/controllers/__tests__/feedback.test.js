@@ -10,13 +10,38 @@ test('GET /api/cb/feedback', tape => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
 
-  tape.test('GET /api/cb/feedback | successful query', t => {
+  tape.test('GET /api/cb/feedback | successful empty query', t => {
     const cbAdminJwtSecret = app.get('cfg').session.cb_admin_jwt_secret;
     const token = jwt.sign(
       { email: 'findmyfroggy@frogfinders.com' },
       cbAdminJwtSecret
     );
-    const successQuery = {};
+    const successQuery = {
+      filter:JSON.stringify({}),
+    };
+
+    request(app)
+      .get('/api/cb/feedback')
+      .set('authorization', token)
+      .query(successQuery)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(async (err, res) => {
+        t.notOk(err, err || 'Passes supertest expect criteria');
+        t.ok(res.body.result, 'get to feedback returns a result');
+        t.end();
+      });
+  });
+
+  tape.test('GET /api/cb/feedback | successful query with date', t => {
+    const cbAdminJwtSecret = app.get('cfg').session.cb_admin_jwt_secret;
+    const token = jwt.sign(
+      { email: 'findmyfroggy@frogfinders.com' },
+      cbAdminJwtSecret
+    );
+    const successQuery = {
+      filter:JSON.stringify({ since: "2018-03-25T12:00:00.000+03:00" }),
+    };
 
     request(app)
       .get('/api/cb/feedback')
