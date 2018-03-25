@@ -5,18 +5,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Input, Label } from './base';
+import { colors } from '../../style_guide';
+
+
+const ErrorText = styled.span`
+  color: ${colors.error};
+`;
 
 
 const LabelledInput = (props) => {
   const { id, label, error, ...rest } = props;
 
-  const labelContent = error
-    ? `${label}: ${error}`
-    : label;
-
   return (
     <div>
-      <Label htmlFor={id}>{labelContent}</Label>
+      <Label htmlFor={id}>
+        {[
+          label,
+          error ? ': ' : '',
+          <ErrorText show={error}>{error}</ErrorText>,
+        ]}
+      </Label>
       <Input id={id} {...rest} />
     </div>
   );
