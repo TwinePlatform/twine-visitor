@@ -8,7 +8,6 @@ import redirectAfterTimeout from './components/hoc/redirect_after_timeout';
 
 import Home from './components/home';
 
-import CBsignup from './components/authentication/signupcb';
 import CBlogin from './components/authentication/logincb';
 import NewPassword from './components/authentication/newPassword';
 import CBPswdReset from './components/authentication/pswdresetcb';
@@ -30,6 +29,10 @@ import AdminCBSettingsPage from './components/admin/adminCBSettingsPage';
 
 import NotFound from './components/NotFound';
 import InternalServerError from './components/InternalServerError';
+
+import Container from './shared/components/Container';
+import CbSignupPage from './cb-admin/pages/Signup';
+
 
 class App extends Component {
   constructor(props) {
@@ -53,141 +56,139 @@ class App extends Component {
 
   render() {
     return (
-      <div className="Container">
-        <div className="Foreground">
-          <Switch>
-            <PrivateRoute auth={this.state.loggedIn} exact path="/" component={Home} />
+      <Container>
+        <Switch>
+          <PrivateRoute auth={this.state.loggedIn} exact path="/" component={Home} />
 
-            <Route exact path="/signupcb" component={CBsignup} />
-            <Route exact path="/newPassword/:token" component={NewPassword} />
-            <Route exact path="/pswdresetcb" component={CBPswdReset} />
-            <Route
-              exact
-              path="/logincb"
-              render={props =>
-                (this.state.loggedIn ? (
-                  <Redirect to="/" />
-                ) : (
-                  <CBlogin setLoggedIn={this.updateLoggedIn} {...props} />
-                ))
-              }
-            />
+          <Route exact path="/signupcb" component={CbSignupPage} />
+          <Route exact path="/newPassword/:token" component={NewPassword} />
+          <Route exact path="/pswdresetcb" component={CBPswdReset} />
+          <Route
+            exact
+            path="/logincb"
+            render={props =>
+              (this.state.loggedIn ? (
+                <Redirect to="/" />
+              ) : (
+                <CBlogin setLoggedIn={this.updateLoggedIn} {...props} />
+              ))
+            }
+          />
 
-            <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
-              path="/visitor"
-              component={HomeVisitor}
-            />
+          <PrivateRoute
+            auth={this.state.loggedIn}
+            exact
+            path="/visitor"
+            component={HomeVisitor}
+          />
 
-            <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
-              path="/thankyou"
-              component={redirectAfterTimeout('/visitor', 5000)(ThankYouFeedback)}
-            />
+          <PrivateRoute
+            auth={this.state.loggedIn}
+            exact
+            path="/thankyou"
+            component={redirectAfterTimeout('/visitor', 5000)(ThankYouFeedback)}
+          />
 
-            <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
-              path="/visitor/signup"
-              component={Main}
-            />
+          <PrivateRoute
+            auth={this.state.loggedIn}
+            exact
+            path="/visitor/signup"
+            component={Main}
+          />
 
-            <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
-              path="/visitor/signup/*"
-              component={Main}
-            />
+          <PrivateRoute
+            auth={this.state.loggedIn}
+            exact
+            path="/visitor/signup/*"
+            component={Main}
+          />
 
-            <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
-              path="/visitor/login"
-              component={QRCode}
-            />
+          <PrivateRoute
+            auth={this.state.loggedIn}
+            exact
+            path="/visitor/login"
+            component={QRCode}
+          />
 
-            <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
-              path="/visitor/qrerror"
-              component={QrError}
-            />
+          <PrivateRoute
+            auth={this.state.loggedIn}
+            exact
+            path="/visitor/qrerror"
+            component={QrError}
+          />
 
-            <PrivateRoute
-              auth={this.state.loggedIn}
-              exact
-              path="/visitor/end"
-              component={redirectAfterTimeout('/visitor', 5000)(Thanks)}
-            />
+          <PrivateRoute
+            auth={this.state.loggedIn}
+            exact
+            path="/visitor/end"
+            component={redirectAfterTimeout('/visitor', 5000)(Thanks)}
+          />
 
-            <PrivateRoute
-              auth={this.state.loggedIn}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin/login"
-              component={AdminLogin}
-            />
+          <PrivateRoute
+            auth={this.state.loggedIn}
+            updateAdminToken={this.updateAdminToken}
+            exact
+            path="/admin/login"
+            component={AdminLogin}
+          />
 
-            <AdminRoute
-              auth={this.state.adminToken}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin"
-              updateLoggedIn={this.updateLoggedIn}
-              component={AdminMenuPage}
-            />
+          <AdminRoute
+            auth={this.state.adminToken}
+            updateAdminToken={this.updateAdminToken}
+            exact
+            path="/admin"
+            updateLoggedIn={this.updateLoggedIn}
+            component={AdminMenuPage}
+          />
 
-            <AdminRoute
-              auth={this.state.adminToken}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin/activities"
-              component={AdminActivitiesPage}
-            />
+          <AdminRoute
+            auth={this.state.adminToken}
+            updateAdminToken={this.updateAdminToken}
+            exact
+            path="/admin/activities"
+            component={AdminActivitiesPage}
+          />
 
-            <AdminRoute
-              auth={this.state.adminToken}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin/visits"
-              updateLoggedIn={this.updateLoggedIn}
-              component={AdminVisitsPage}
-            />
+          <AdminRoute
+            auth={this.state.adminToken}
+            updateAdminToken={this.updateAdminToken}
+            exact
+            path="/admin/visits"
+            updateLoggedIn={this.updateLoggedIn}
+            component={AdminVisitsPage}
+          />
 
-            <AdminRoute
-              auth={this.state.adminToken}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin/users"
-              updateLoggedIn={this.updateLoggedIn}
-              component={AdminUsersPage}
-            />
+          <AdminRoute
+            auth={this.state.adminToken}
+            updateAdminToken={this.updateAdminToken}
+            exact
+            path="/admin/users"
+            updateLoggedIn={this.updateLoggedIn}
+            component={AdminUsersPage}
+          />
 
-            <AdminRoute
-              auth={this.state.adminToken}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin/user/:userId"
-              updateLoggedIn={this.updateLoggedIn}
-              component={AdminUserDetailsPage}
-            />
+          <AdminRoute
+            auth={this.state.adminToken}
+            updateAdminToken={this.updateAdminToken}
+            exact
+            path="/admin/user/:userId"
+            updateLoggedIn={this.updateLoggedIn}
+            component={AdminUserDetailsPage}
+          />
 
-            <AdminRoute
-              auth={this.state.adminToken}
-              updateAdminToken={this.updateAdminToken}
-              exact
-              path="/admin/accountSettings"
-              updateLoggedIn={this.updateLoggedIn}
-              component={AdminCBSettingsPage}
-            />
+          <AdminRoute
+            auth={this.state.adminToken}
+            updateAdminToken={this.updateAdminToken}
+            exact
+            path="/admin/accountSettings"
+            updateLoggedIn={this.updateLoggedIn}
+            component={AdminCBSettingsPage}
+          />
 
-            <Route exact path="/internalServerError" component={InternalServerError} />
-            <Route component={NotFound} />
-          </Switch>
-        </div>
-      </div>
+          <Route exact path="/internalServerError" component={InternalServerError} />
+          <Route component={NotFound} />
+        </Switch>
+      </Container>
     );
   }
 }
