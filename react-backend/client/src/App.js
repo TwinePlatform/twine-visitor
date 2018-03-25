@@ -5,7 +5,7 @@ import PrivateRoute from './PrivateRoute';
 import AdminRoute from './AdminRoute';
 
 import redirectAfterTimeout from './components/hoc/redirect_after_timeout';
-import adminLoginCheck from './components/hoc/admin_login_check';
+import adminLoginCheck from './shared/components/hoc/admin_login_check';
 
 import Main from './components/visitors/main';
 import QRCode from './components/visitors/qrcode';
@@ -20,7 +20,7 @@ import AdminVisitsPage from './components/admin/adminVisitsPage';
 import AdminUsersPage from './components/admin/adminUsersPage';
 import AdminUserDetailsPage from './components/admin/adminUserDetailsPage';
 import AdminCBSettingsPage from './components/admin/adminCBSettingsPage';
-import AdminFeedbackPage from './components/admin/adminFeedbackPage';
+import CbAdminFeedbackPage from './cb-admin/pages/CbAdminFeedbackPage';
 
 import NotFound from './components/NotFound';
 import InternalServerError from './components/InternalServerError';
@@ -189,6 +189,15 @@ class App extends Component {
             path="/admin/accountSettings"
             updateLoggedIn={this.updateLoggedIn}
             component={AdminCBSettingsPage}
+          />
+
+          <AdminRoute
+            auth={this.state.adminToken}
+            updateAdminToken={this.updateAdminToken}
+            exact
+            path="/admin/feedback"
+            updateLoggedIn={this.updateLoggedIn}
+            component={adminLoginCheck(CbAdminFeedbackPage)}
           />
 
           <Route exact path="/internalServerError" component={InternalServerError} />
