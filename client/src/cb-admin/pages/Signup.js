@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { pick } from 'ramda';
-import { CbAdmin, ErrorUtils } from '../../api';
+import { CbAdmin } from '../../api';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
+import withValidation from '../../shared/components/form/withValidation';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
@@ -55,129 +56,94 @@ const SubmitButton = styled(PrimaryButton)`
   width: 90%;
 `;
 
-export default class CbAdminSignup extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      orgName: '',
-      category: '',
-      email: '',
-      region: '',
-      password: '',
-      passwordConfirm: '',
-      errors: {},
-    };
-  }
 
-  changeHandler = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-  }
+const CbAdminSignup = ({ errors, onChange, onSubmit }) => (
+  <FlexContainerCol>
+    <Heading>Create an account</Heading>
+    <Form onChange={onChange} onSubmit={onSubmit}>
+      <FormSection flexOrder={1}>
+        <LabelledInput
+          id="cb-admin-name"
+          label="Business name"
+          type="text"
+          name="orgName"
+          error={errors.orgName}
+          required
+        />
+        <LabelledInput
+          id="cb-admin-email"
+          label="Contact email"
+          type="email"
+          name="email"
+          error={errors.email}
+          required
+        />
+        <LabelledSelect
+          id="cb-admin-category"
+          label="Category of business"
+          name="category"
+          options={categories}
+          error={errors.category}
+          required
+        />
+      </FormSection>
 
-  submitHandler = (e) => {
-    e.preventDefault();
+      <FormSection flexOrder={2}>
+        <LabelledSelect
+          id="cb-admin-region"
+          label="Region"
+          name="region"
+          options={regions}
+          error={errors.region}
+          required
+        />
+        <LabelledInput
+          id="cb-admin-password"
+          label="Password"
+          type="password"
+          name="password"
+          error={errors.password}
+          required
+        />
+        <LabelledInput
+          id="cb-admin-password-confirmation"
+          label="Confirm Password"
+          type="password"
+          name="passwordConfirm"
+          error={errors.passwordConfirm}
+          required
+        />
+      </FormSection>
 
-    CbAdmin.create(payloadFromState(this.state))
-      .then(() => {
-        this.props.history.push('/cb/login?ref=signup');
-      })
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 400)) {
-          this.setState({ errors: ErrorUtils.getValidationErrors(error) });
+      <FormSection flexOrder={3}>
+        <SubmitButton type="submit">SUBMIT</SubmitButton>
+      </FormSection>
 
-        } else if (ErrorUtils.errorStatusEquals(error, 409)) {
-          this.setState({ errors: { email: 'CB using this email has already been registered' } });
-
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
-
-        } else {
-          this.props.history.push('/error/unknown');
-
-        }
-      });
-  }
-
-
-  render() {
-    const { errors } = this.state;
-
-    return (
-      <FlexContainerCol>
-        <Heading>Create an account</Heading>
-        <Form onChange={this.changeHandler} onSubmit={this.submitHandler}>
-          <FormSection flexOrder={1}>
-            <LabelledInput
-              id="cb-admin-name"
-              label="Business name"
-              type="text"
-              name="orgName"
-              error={errors.orgName && ORG_NAME_INVALID}
-              required
-            />
-            <LabelledInput
-              id="cb-admin-email"
-              label="Contact email"
-              type="email"
-              name="email"
-              error={errors.email}
-              required
-            />
-            <LabelledSelect
-              id="cb-admin-category"
-              label="Category of business"
-              name="category"
-              options={categories}
-              error={errors.category}
-              required
-            />
-          </FormSection>
-
-          <FormSection flexOrder={2}>
-            <LabelledSelect
-              id="cb-admin-region"
-              label="Region"
-              name="region"
-              options={regions}
-              error={errors.region}
-              required
-            />
-            <LabelledInput
-              id="cb-admin-password"
-              label="Password"
-              type="password"
-              name="password"
-              error={errors.password && PASSWORD_NOT_STRONG}
-              required
-            />
-            <LabelledInput
-              id="cb-admin-password-confirmation"
-              label="Confirm Password"
-              type="password"
-              name="passwordConfirm"
-              error={errors.passwordConfirm && PASSWORD_CONFIRMATION_DOESNT_MATCH}
-              required
-            />
-          </FormSection>
-
-          <FormSection flexOrder={3}>
-            <SubmitButton type="submit">SUBMIT</SubmitButton>
-          </FormSection>
-
-          <FormSection flexOrder={4}>
-            <Paragraph>
-              Already a subscriber? <Link to="/cb/login">Login</Link>
-            </Paragraph>
-          </FormSection>
-        </Form>
-      </FlexContainerCol>
-    );
-  }
-}
+      <FormSection flexOrder={4}>
+        <Paragraph>
+          Already a subscriber? <Link to="/cb/login">Login</Link>
+        </Paragraph>
+      </FormSection>
+    </Form>
+  </FlexContainerCol>
+);
 
 
 CbAdminSignup.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+  errors: PropTypes.object.isRequired, // eslint-disable-line
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
+
+
+const submitHandler = state => CbAdmin.create(payloadFromState(state));
+
+const forwarding = {
+  200: '/cb/login?ref=signup',
+  401: '/cb/login?ref=unauth',
+  404: '/error/404',
+  500: '/error/500',
+  other: '/error/unknown',
+};
+
+export default withValidation(submitHandler, forwarding)(CbAdminSignup);
