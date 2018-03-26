@@ -10,7 +10,9 @@ export const colors = {
   light: '#DBDBDB',
   lighter: '#FFFFFF',
   background: '#FFFFFF',
-  error: 'red',
+  error: '#FF4848',
+  white: '#FFF',
+  black: '#000',
 };
 
 

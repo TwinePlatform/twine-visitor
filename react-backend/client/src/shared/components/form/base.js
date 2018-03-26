@@ -75,20 +75,36 @@ export const Button = styled.button`
 `;
 
 export const PrimaryButton = Button.extend`
+  max-width: 25vw;
   width: 90%;
-  height: 100%;
   background-color: ${colors.highlight_primary}; /* Fallback */
   background: linear-gradient(0, ${rgba(colors.highlight_primary, 0.75)} 0%, ${colors.highlight_primary} 100%);
+
+  /* Computed styles */
+  height: ${props => (props.large ? '20vh' : '100%')};
 `;
 
 export const SecondaryButton = Button.extend`
+  max-width: 25vw;
+  width: 90%;
+  color: ${colors.white};
   background-color: ${colors.highlight_secondary}; /* Fallback */
   background: linear-gradient(0, ${rgba(colors.highlight_secondary, 0.75)} 0%, ${colors.highlight_secondary} 100%);
+  border-radius: 0;
+
+  /* Computed styles */
+  height: ${props => (props.large ? '20vh' : '100%')};
 `;
 
 export const PrimaryButtonNoFill = PrimaryButton.extend`
   background: transparent;
-  border-color: ${colors.highlight_primary};
+  border: 0.1em solid ${colors.highlight_primary};
+  border-radius: 0;
+`;
+
+export const SecondaryButtonNoFill = SecondaryButton.extend`
+  background: transparent;
+  border: 0.1em solid ${colors.highlight_secondary};
 `;
 
 export const Form = styled.form`
@@ -101,5 +117,7 @@ export const Form = styled.form`
 export const FormSection = styled.section`
   width: 50%;
   padding: 1em;
+
+  /* Computed styles */
   order: ${props => props.flexOrder};
 `;

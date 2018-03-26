@@ -6,8 +6,6 @@ import AdminRoute from './AdminRoute';
 
 import redirectAfterTimeout from './components/hoc/redirect_after_timeout';
 
-import Home from './components/home';
-
 import CBlogin from './components/authentication/logincb';
 import NewPassword from './components/authentication/newPassword';
 import CBPswdReset from './components/authentication/pswdresetcb';
@@ -31,6 +29,7 @@ import NotFound from './components/NotFound';
 import InternalServerError from './components/InternalServerError';
 
 import Container from './shared/components/Container';
+import HomePage from './shared/pages/Home';
 import CbSignupPage from './cb-admin/pages/Signup';
 
 
@@ -58,7 +57,7 @@ class App extends Component {
     return (
       <Container>
         <Switch>
-          <PrivateRoute auth={this.state.loggedIn} exact path="/" component={Home} />
+          <PrivateRoute auth={this.state.loggedIn} exact path="/" component={HomePage} />
 
           <Route exact path="/signupcb" component={CbSignupPage} />
           <Route exact path="/newPassword/:token" component={NewPassword} />
