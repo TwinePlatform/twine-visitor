@@ -1,55 +1,58 @@
 const cbAdmin = require('../models/cb_admin');
+const router = require('express').Router();
+const Joi = require('joi');
+const { validate } = require('../../shared/middleware');
+const mwIsAuthenticated = require('../../routes/cbauthentication/mw_is_authenticated');
+const mwAdminIsAuthenticated = require('../../routes/cbauthentication/mw_admin_is_authenticated');
 
-const createDate = str => {
-  const date = new Date(str);
-  if (date instanceof Date && !isNaN(date.valueOf())) return date;
-  throw Error('invalid date');
-};
-
-module.exports = {
-  get: (req, res, next) => {
-    const pgPool = req.app.get('client:psql');
-    try {
-      const reqQuery = JSON.parse(req.query.filter);
-
-      const dbQuery = { cbId: req.auth.cb_id };
-
-      if (reqQuery.since) {
-        dbQuery.since = createDate(reqQuery.since);
-      }
-
-      if (reqQuery.until) {
-        dbQuery.until = createDate(reqQuery.until);
-      }
-
-      cbAdmin
-        .getFeedback(pgPool, dbQuery)
-        .then(data => res.send({ result: data }))
-        .catch(next);
-    } catch (error) {
-      return res
-        .status(400)
-        .send({ error: { message: 'Failed to get feedback from database' } });
-    }
-  },
-  post: (req, res, next) => {
-    const pgPool = req.app.get('client:psql');
-    try {
-      const reqQuery = req.body.query;
-      const { feedbackScore } = reqQuery;
-
-      if (feedbackScore !== -1 && feedbackScore !== 0 && feedbackScore !== 1) {
-        throw new Error('Invalid feedback score');
-      }
-
-      cbAdmin
-        .insertFeedback(pgPool, { cbId: req.auth.cb_id, feedbackScore })
-        .then(data => res.send({ result: data }))
-        .catch(next);
-    } catch (error) {
-      return res
-        .status(400)
-        .send({ error: { message: 'Failed to add feedback to database' } });
-    }
+const getSchema = {
+  query: {
+    since: Joi.date()
+      .allow('')
+      .required(),
+    until: Joi.date()
+      .allow('')
+      .required(),
   },
 };
+
+const postSchema = {
+  body: {
+    query: Joi.object({
+      feedbackScore: Joi.number()
+        .integer()
+        .required(),
+    }),
+  },
+};
+
+router.get(
+  '/',
+  mwAdminIsAuthenticated,
+  validate(getSchema),
+  (req, res, next) => {
+    const pgPool = req.app.get('client:psql');
+    const { since, until } = req.query;
+    const dbQuery = { cbId: req.auth.cb_id };
+
+    if (since) dbQuery.since = new Date(since);
+    if (until) dbQuery.until = new Date(until);
+
+    cbAdmin
+      .getFeedback(pgPool, dbQuery)
+      .then(data => res.send({ result: data }))
+      .catch(next);
+  }
+);
+
+router.post('/', mwIsAuthenticated, validate(postSchema), (req, res, next) => {
+  const pgPool = req.app.get('client:psql');
+  const { feedbackScore } = req.body.query;
+
+  cbAdmin
+    .insertFeedback(pgPool, { cbId: req.auth.cb_id, feedbackScore })
+    .then(data => res.send({ result: data }))
+    .catch(next);
+});
+
+module.exports = router;

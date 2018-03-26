@@ -248,10 +248,8 @@ export const CbAdmin = {
     axios.get(
       '/api/cb/feedback',
       { params: {
-        filter: {
-          since: since ? since.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : null,
-          until: until ? until.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : null,
-        },
+        since: since ? since.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : '',
+        until: until ? until.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : '',
       },
       headers: { Authorization: tkn } },
     ),
