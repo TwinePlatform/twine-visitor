@@ -37,7 +37,8 @@ const donutConfig = (colorConfig, feedbackCountArray) =>
     datasets: [
       {
         data: feedbackColors.map(
-          el => feedbackCountArray.filter(feedbackCount => feedbackCount.feedback_score === el.feedback_score)[0].count,
+          el => feedbackCountArray.filter(feedbackCount =>
+            feedbackCount.feedback_score === el.feedback_score)[0].count,
         ),
         backgroundColor: feedbackColors.map(el => el.backgroundColor),
         hoverBackgroundColor: feedbackColors.map(el => el.hoverBackgroundColor),

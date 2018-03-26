@@ -80,4 +80,4 @@ All non-successful responses should return appropriate status codes in the range
 | `POST   /cbs/:id/emails` | | `{ query: { password_reset: Bool } }` | `{ result: null }` | `POST /cb/pwd/reset` |
 | `POST   /visitors/statistics` | `Authorization: cb_admin_token` | `{ query: { group_by: { gender, activity, age: [18, 35, 51, 70], days: ['monday'] } }` | `{ result: { gender: { male, female, ... }, activity: { yoga: 12, ...}, age: { 0-17: 2, ... }, days: { monday: 2, ... } } }` | `POST /users/chart-all` <br/> `POST /users/filtered` |
 | `POST   /cb/feedback` | `Authorization: std_token` | ` { query: { feedbackScore }` | `[ { result: { id, cb_id, feedback_score, feedback_date } } ]`| ✨ shiny shiny new ✨ |
-| `GET  /cb/feedback` | `Authorization: cb_admin_token` | ` { filter: { null || since: date, until: date }` | `[ { result: { [feedback_score: num, count: num] } } ]`| ✨ shiny shiny new ✨ |
+| `GET  /cb/feedback` | `Authorization: cb_admin_token` | ` { since: date || null, until: date || null }` | `[ { result: { [feedback_score: num, count: num] } } ]`| ✨ shiny shiny new ✨ |

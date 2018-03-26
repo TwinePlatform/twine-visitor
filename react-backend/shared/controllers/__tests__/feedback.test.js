@@ -10,14 +10,15 @@ test('GET /api/cb/feedback', tape => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
 
-  tape.test('GET /api/cb/feedback | successful empty query', t => {
+  tape.test('GET /api/cb/feedback | successful query with null params', t => {
     const cbAdminJwtSecret = app.get('cfg').session.cb_admin_jwt_secret;
     const token = jwt.sign(
       { email: 'findmyfroggy@frogfinders.com' },
       cbAdminJwtSecret
     );
     const successQuery = {
-      filter:JSON.stringify({}),
+      since: null,
+      until: null,
     };
 
     request(app)
@@ -40,7 +41,8 @@ test('GET /api/cb/feedback', tape => {
       cbAdminJwtSecret
     );
     const successQuery = {
-      filter:JSON.stringify({ since: "2018-03-25T12:00:00.000+03:00" }),
+      since: '2018-03-25T12:00:00.000+03:00',
+      until: null,
     };
 
     request(app)
@@ -64,6 +66,7 @@ test('GET /api/cb/feedback', tape => {
     );
     const badQuery = {
       since: 'not-a-date',
+      until: null,
     };
 
     request(app)
@@ -74,11 +77,9 @@ test('GET /api/cb/feedback', tape => {
       .expect('Content-Type', /json/)
       .end(async (err, res) => {
         t.deepEqual(
-          res.body,
-          {
-            error: { message: 'Failed to get feedback from database' },
-          },
-          'Empty payload returns error response object'
+          res.body.validation,
+          { since: ['must be a number of milliseconds or valid date string'] },
+          'Empty payload returns error response from Joi'
         );
         t.notOk(err, err || 'Passes supertest expect criteria');
         t.end();
@@ -111,24 +112,22 @@ test('POST /api/cb/feedback', tape => {
       });
   });
 
-  tape.test('POST /api/cb/feedback | empty payload', t => {
+  tape.test('POST /api/cb/feedback | bad payload', t => {
     const secret = app.get('cfg').session.standard_jwt_secret;
     const token = jwt.sign({ email: 'findmyfroggy@frogfinders.com' }, secret);
-    const emptyPayload = {};
+    const badPayload = { query: { feedbackScore: 'lol' } };
 
     request(app)
       .post('/api/cb/feedback')
       .set('authorization', token)
-      .send(emptyPayload)
+      .send(badPayload)
       .expect(400)
       .expect('Content-Type', /json/)
       .end(async (err, res) => {
         t.deepEqual(
-          res.body,
-          {
-            error: { message: 'Failed to add feedback to database' },
-          },
-          'Empty payload returns error response object'
+          res.body.validation,
+          { feedbackScore: ['must be a number'] },
+          'Bad payload returns error response from Joi'
         );
         t.notOk(err, err || 'Passes supertest expect criteria');
         t.end();
