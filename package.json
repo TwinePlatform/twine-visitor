@@ -11,7 +11,7 @@
     "heroku-postbuild":
       "cd react-backend/client && npm install --only=dev && npm install && npm run build",
     "build.client": "cd react-backend/client && npm run build",
-    "test": "NODE_ENV=test tape '**/__tests__/*.test.js' | tap-spec",
+    "test": "NODE_ENV=test tape 'react-backend/!(client)/**/__tests__/*.test.js' | tap-spec",
     "start.client": "cd react-backend/client && npm run start",
     "cover": "nyc npm test",
     "cover.report": "nyc report --reporter=html",
