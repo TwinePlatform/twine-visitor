@@ -3,31 +3,32 @@ import PropTypes from 'prop-types';
 import { Doughnut } from 'react-chartjs-2';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
-import { PrimaryButtonNoFill, PrimaryButton } from '../../shared/components/form/base';
+import { CbAdmin } from '../../api';
+import { PrimaryButton } from '../../shared/components/form/base';
+import { FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Link, Paragraph } from '../../shared/components/text/base';
 import { colors } from '../../shared/style_guide';
 import '../../DatePicker.css';
-import Logoutbutton from '../../components/visitors/logoutbutton';
-import { CbAdmin } from '../../api';
 
 const FeedbackPrimaryButton = PrimaryButton.extend`
   width: auto;
-  margin: 0px 10px
-`;
-
-const FeedbackPrimaryButtonNoFill = PrimaryButtonNoFill.extend`
-  width: auto;
-  display: block;
+  margin: 0px 1rem;
+  padding: 0.5rem;
 `;
 
 const FeedbackParagraph = Paragraph.extend`
   display: inline-block;
 `;
 
+const SpaceBetweenFlexContainerRow = FlexContainerRow.extend`
+  justify-content: space-between;
+  margin-top: 1rem;
+`;
+
 const feedbackColors = [
   {
     feedback_score: -1,
-    label: 'Unimpressed',
+    label: 'Unsatisfied',
     backgroundColor: colors.highlight_secondary,
     hoverBackgroundColor: colors.hover_secondary,
   },
@@ -39,7 +40,7 @@ const feedbackColors = [
   },
   {
     feedback_score: 1,
-    label: 'Impressed',
+    label: 'Satisfied',
     backgroundColor: colors.highlight_primary,
     hoverBackgroundColor: colors.hover_primary,
   },
@@ -59,6 +60,11 @@ const donutConfig = (colorConfig, feedbackCountArray) =>
       },
     ],
   });
+
+const logout = props => () => {
+  localStorage.removeItem('token');
+  props.updateLoggedIn();
+};
 
 const lastCallStates = {
   ALL: 'ALL',
@@ -106,7 +112,6 @@ export default class CbAdminFeedbackPage extends Component {
           : this.setState({ error: 'Sorry, no data was found', data: null });
       })
       .catch((err) => {
-        console.log(err.response);
         if (err.response.status === 401) {
           this.props.history.push('/admin/login');
         }
@@ -126,43 +131,40 @@ export default class CbAdminFeedbackPage extends Component {
     const visibility = this.state.showDatePicker ? 'visible' : 'hidden';
     return (
       <div>
-        <Link to="/" onClick={this.removeAdmin}>
-          <FeedbackPrimaryButtonNoFill>Back to the main page</FeedbackPrimaryButtonNoFill>
-        </Link>
-        <Logoutbutton
-          updateLoggedIn={this.props.updateLoggedIn}
-          redirectUser={this.props.history.push}
-        />
+        <SpaceBetweenFlexContainerRow>
+          <Link to="/" onClick={this.removeAdmin}>
+          Back to the main page
+          </Link>
+          <Link to="/logincb" onClick={logout(this.props)}> Logout </Link>
+        </SpaceBetweenFlexContainerRow>
+
         <Heading>Visitor Satisfaction</Heading>
-
-        <div className="daterange-container">
-          <div className="daterange-view-option">
-            <FeedbackParagraph displayInline>View:</FeedbackParagraph>
-            <FeedbackPrimaryButton onClick={this.handleAllDates}>
+        <div>
+          <FeedbackParagraph displayInline>View:</FeedbackParagraph>
+          <FeedbackPrimaryButton onClick={this.handleAllDates}>
               All dates
-            </FeedbackPrimaryButton>
-            <FeedbackPrimaryButton
-              onClick={() =>
-                this.setState({ showDatePicker: !this.state.showDatePicker })}
-            >
+          </FeedbackPrimaryButton>
+          <FeedbackPrimaryButton
+            onClick={() =>
+              this.setState({ showDatePicker: !this.state.showDatePicker })}
+          >
               Dates between...
-            </FeedbackPrimaryButton>
-          </div>
+          </FeedbackPrimaryButton>
+        </div>
 
-          <div style={{ visibility }} className="daterange-picker">
-            <DateRangePicker
-              startDate={this.state.startDate}
-              startDateId="start_date_id"
-              endDate={this.state.endDate}
-              endDateId="end_date_id"
-              onDatesChange={
-                ({ startDate, endDate }) =>
-                  this.setState({ startDate, endDate, lastCall: lastCallStates.DATERANGEPICKER })
-              }
-              focusedInput={this.state.focusedInput}
-              onFocusChange={focusedInput => this.setState({ focusedInput })}
-            />
-          </div>
+        <div style={{ visibility }}>
+          <DateRangePicker
+            startDate={this.state.startDate}
+            startDateId="start_date_id"
+            endDate={this.state.endDate}
+            endDateId="end_date_id"
+            onDatesChange={
+              ({ startDate, endDate }) =>
+                this.setState({ startDate, endDate, lastCall: lastCallStates.DATERANGEPICKER })
+            }
+            focusedInput={this.state.focusedInput}
+            onFocusChange={focusedInput => this.setState({ focusedInput })}
+          />
         </div>
 
         {this.state.data
@@ -175,6 +177,5 @@ export default class CbAdminFeedbackPage extends Component {
 
 CbAdminFeedbackPage.propTypes = {
   auth: PropTypes.string.isRequired,
-  updateLoggedIn: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

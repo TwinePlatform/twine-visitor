@@ -4,7 +4,6 @@ import { PrimaryButtonNoFill } from '../../shared/components/form/base';
 
 const LogoutPrimaryButtonNoFill = PrimaryButtonNoFill.extend`
   width: auto;
-  display: block;
 `;
 
 export default class Logoutbutton extends Component {
