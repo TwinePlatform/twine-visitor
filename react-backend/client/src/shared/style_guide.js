@@ -5,6 +5,8 @@
 export const colors = {
   highlight_primary: '#FDBD2D',
   highlight_secondary: '#833FF7',
+  hover_primary: '#DE9B06',
+  hover_secondary: '#6717F3',
   darker: '#424242',
   dark: '#666666',
   light: '#DBDBDB',
