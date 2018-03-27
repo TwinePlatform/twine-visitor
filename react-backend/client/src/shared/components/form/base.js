@@ -75,25 +75,15 @@ export const Button = styled.button`
 `;
 
 export const PrimaryButton = Button.extend`
-  max-width: 25vw;
-  width: 90%;
   background-color: ${colors.highlight_primary}; /* Fallback */
   background: linear-gradient(0, ${rgba(colors.highlight_primary, 0.75)} 0%, ${colors.highlight_primary} 100%);
-
-  /* Computed styles */
-  height: ${props => (props.large ? '20vh' : '100%')};
 `;
 
 export const SecondaryButton = Button.extend`
-  max-width: 25vw;
-  width: 90%;
   color: ${colors.white};
   background-color: ${colors.highlight_secondary}; /* Fallback */
   background: linear-gradient(0, ${rgba(colors.highlight_secondary, 0.75)} 0%, ${colors.highlight_secondary} 100%);
   border-radius: 0;
-
-  /* Computed styles */
-  height: ${props => (props.large ? '20vh' : '100%')};
 `;
 
 export const PrimaryButtonNoFill = PrimaryButton.extend`
@@ -111,7 +101,9 @@ export const Form = styled.form`
   display: flex;
   flex-wrap: wrap;
   height: 100%;
+  align-items: center;
   align-content: center;
+  justify-content: center;
 `;
 
 export const FormSection = styled.section`
@@ -120,4 +112,12 @@ export const FormSection = styled.section`
 
   /* Computed styles */
   order: ${props => props.flexOrder};
+`;
+
+export const PrimaryButtonNoFillCircle = PrimaryButtonNoFill.extend`
+  border-style: solid;
+  border-width: 0.5em;
+  border-image-slice: 50%;
+  border-image-width: 1.5em;
+  border-image-source: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgODAgODAiIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPjxjaXJjbGUgY3g9IjQwIiBjeT0iNDAiIHN0eWxlPSJzdHJva2U6IG5vbmU7IHN0cm9rZS13aWR0aDogMXB4OyBmaWxsOiAjRkRCRDJEOyIgcj0iNDAiPjwvY2lyY2xlPjwvc3ZnPg==');
 `;

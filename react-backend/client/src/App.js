@@ -57,7 +57,13 @@ class App extends Component {
     return (
       <Container>
         <Switch>
-          <PrivateRoute auth={this.state.loggedIn} exact path="/" component={HomePage} />
+          <PrivateRoute
+            auth={this.state.loggedIn}
+            updateLoggedIn={this.updateLoggedIn}
+            exact
+            path="/"
+            component={HomePage}
+          />
 
           <Route exact path="/signupcb" component={CbSignupPage} />
           <Route exact path="/newPassword/:token" component={NewPassword} />

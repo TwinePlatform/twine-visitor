@@ -26,12 +26,26 @@ const FlexItem = styled.div`
   flex: ${props => props.flex || '1'};
 `;
 
+const ButtonLeft = styled(PrimaryButtonNoFill)`
+  width: 30vh;
+  height: 25vh;
+`;
 
-export default () => (
+const ButtonRight = styled(SecondaryButton) `
+  width: 30vh;
+  height: 25vh;
+`;
+
+const logout = props => () => {
+  localStorage.removeItem('token');
+  props.updateLoggedIn();
+};
+
+export default props => (
   <FlexContainerCol justify="space-around">
     <StyledNav>
       <FlexItem>
-        <HyperLink to="/logincb"> Logout </HyperLink>
+        <HyperLink to="/logincb" onClick={logout(props)}> Logout </HyperLink>
       </FlexItem>
       <FlexItem flex="2">
         <Heading> Who are you? </Heading>
@@ -40,10 +54,10 @@ export default () => (
     </StyledNav>
     <StyledSection>
       <FlexLink to="/visitor">
-        <PrimaryButtonNoFill large> Visitor </PrimaryButtonNoFill>
+        <ButtonLeft large> Visitor </ButtonLeft>
       </FlexLink>
       <FlexLink to="/admin/login">
-        <SecondaryButton large> Admin </SecondaryButton>
+        <ButtonRight large> Admin </ButtonRight>
       </FlexLink>
     </StyledSection>
     <StyledSection />
