@@ -164,7 +164,7 @@ export default class CbAdminSignup extends React.Component {
 
           <FormSection flexOrder={4}>
             <Paragraph>
-              Already a subscriber? <Link to="/logincb">Login</Link>
+              Already a subscriber? <Link to="/cb/login">Login</Link>
             </Paragraph>
           </FormSection>
         </Form>

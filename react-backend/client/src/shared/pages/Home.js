@@ -45,7 +45,7 @@ export default props => (
   <FlexContainerCol justify="space-around">
     <StyledNav>
       <FlexItem>
-        <HyperLink to="/logincb" onClick={logout(props)}> Logout </HyperLink>
+        <HyperLink to="/cb/login" onClick={logout(props)}> Logout </HyperLink>
       </FlexItem>
       <FlexItem flex="2">
         <Heading> Who are you? </Heading>

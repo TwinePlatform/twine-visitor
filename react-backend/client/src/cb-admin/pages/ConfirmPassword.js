@@ -64,7 +64,7 @@ export default class ConfirmPassword extends React.Component {
             />
             <SubmitButton>CONTINUE</SubmitButton>
             <div style={{ textAlign: 'center', margin: '2em 0', width: '90%' }}>
-              <Link to="/pswdresetcb">Forgot password?</Link>
+              <Link to="/cb/password/forgot">Forgot password?</Link>
             </div>
           </FormSection>
         </Form>

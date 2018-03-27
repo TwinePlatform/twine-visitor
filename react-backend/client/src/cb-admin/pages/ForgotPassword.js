@@ -80,7 +80,7 @@ export default class ForgotPassword extends React.Component {
             />
             <SubmitButton>CONTINUE</SubmitButton>
             <div style={{ textAlign: 'center', margin: '2em 0', width: '90%' }}>
-              <Link to="/logincb">Back to login</Link>
+              <Link to="/cb/login">Back to login</Link>
             </div>
           </FormSection>
         </Form>

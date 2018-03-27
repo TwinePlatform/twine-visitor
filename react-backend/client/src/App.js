@@ -66,12 +66,12 @@ class App extends Component {
             component={HomePage}
           />
 
-          <Route exact path="/signupcb" component={CbSignupPage} />
-          <Route exact path="/newPassword/:token" component={ResetPassword} />
-          <Route exact path="/pswdresetcb" component={ForgotPassword} />
+          <Route exact path="/cb/register" component={CbSignupPage} />
+          <Route exact path="/cb/password/reset/:token" component={ResetPassword} />
+          <Route exact path="/cb/password/forgot" component={ForgotPassword} />
           <Route
             exact
-            path="/logincb"
+            path="/cb/login"
             render={props =>
               (this.state.loggedIn ? (
                 <Redirect to="/" />
