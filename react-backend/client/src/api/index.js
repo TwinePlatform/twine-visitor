@@ -153,15 +153,6 @@ export const Visitors = {
       { headers: { Authorization: tkn } },
     ),
 
-  login: ({ email, password }) =>
-    axios.post(
-      '/api/cb/login',
-      {
-        formEmail: email,
-        formPswd: password,
-      },
-    ),
-
   getStatistics: (tkn, { groupBy, sort, filter } = {}) => {
     if (groupBy || filter || sort) {
       return axios.post(
@@ -227,7 +218,16 @@ export const CbAdmin = {
       },
     ),
 
-  login: (tkn, { password }) =>
+  login: ({ email, password }) =>
+    axios.post(
+      '/api/cb/login',
+      {
+        formEmail: email,
+        formPswd: password,
+      },
+    ),
+
+  upgradePermissions: (tkn, { password }) =>
     axios.post(
       '/api/admin/login',
       {

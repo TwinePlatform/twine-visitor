@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { pick, pathOr, equals } from 'ramda';
 import { CbAdmin } from '../../api';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
@@ -47,6 +48,10 @@ const getErrorStatus = pathOr(null, ['response', 'status']);
 const getValidationErrors = pathOr('Unknown error', ['response', 'data', 'validation']);
 const errorStatusEquals = (error, status) => equals(getErrorStatus(error), status);
 
+const SubmitButton = styled(PrimaryButton)`
+  height: 4em;
+  width: 90%;
+`;
 
 export default class CbAdminSignup extends React.Component {
   constructor(props) {
@@ -154,12 +159,12 @@ export default class CbAdminSignup extends React.Component {
           </FormSection>
 
           <FormSection flexOrder={3}>
-            <PrimaryButton>Submit</PrimaryButton>
+            <SubmitButton type="submit">SUBMIT</SubmitButton>
           </FormSection>
 
           <FormSection flexOrder={4}>
             <Paragraph>
-              Already a subscriber? <Link to="/cb/login">Login</Link>
+              Already a subscriber? <Link to="/logincb">Login</Link>
             </Paragraph>
           </FormSection>
         </Form>

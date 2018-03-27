@@ -7,6 +7,7 @@ export const FlexContainer = styled.div`
 
 export const FlexContainerCol = styled(FlexContainer)`
   flex-direction: column;
+  justify-content: ${props => props.justify || 'center'};
 `;
 
 export const FlexContainerRow = styled(FlexContainer) `
