@@ -1,44 +1,44 @@
 const router = require('express').Router();
-const validator = require('validator');
+const Joi = require('joi');
+const Boom = require('boom');
 const cbCheckExists = require('../../database/queries/cb/cb_check_exists');
 const resetTokenGen = require('../../functions/tokengen');
 const pwdTokenAdd = require('../../database/queries/cb/pwd_token_add');
 const sendResetEmail = require('../../functions/sendResetEmail');
+const { validate } = require('../../shared/middleware');
 
-router.post('/', (req, res, next) => {
+
+const schemas = {
+  body: {
+    email: Joi.string().email().required(),
+  },
+};
+
+const TTL_TOKEN = 1000 * 60 * 60 * 1; // 1 hour
+
+router.post('/', validate(schemas), async (req, res, next) => {
+  const { email } = req.body;
   const pgClient = req.app.get('client:psql');
   const pmClient = req.app.get('client:postmark');
-  const { formEmail } = req.body;
-  const tokenExpire = Date.now() + 3600000;
+  const tokenExpire = Date.now() + TTL_TOKEN;
 
-  const isEmpty = !formEmail.length;
-  const notEmail = !validator.isEmail(formEmail);
+  try {
+    const exists = await cbCheckExists(pgClient, email);
 
-  const validationError =
-    (isEmpty && 'noinput') || (notEmail && 'email') || null;
+    if (! exists) {
+      return next(Boom.unauthorized('Email not recognised'));
+    }
 
-  if (validationError) return res.send(validationError);
+    const token = await resetTokenGen();
+    const pAddToken = pwdTokenAdd(pgClient, token, tokenExpire, email);
+    const pSendMail = sendResetEmail(pmClient, email, token);
 
-  cbCheckExists(pgClient, formEmail)
-    .then(exists => {
-      if (exists) {
-        resetTokenGen()
-          .then(token =>
-            Promise.all([
-              pwdTokenAdd(pgClient, token, tokenExpire, formEmail),
-              sendResetEmail(pmClient, formEmail, token),
-            ])
-          )
-          .then(() => res.send(exists))
-          .catch(err => {
-            console.log('Error sending email:', err);
-            res.status(502).send('failed');
-          });
-      } else {
-        res.status(400).send(exists);
-      }
-    })
-    .catch(next);
+    await Promise.all([pAddToken, pSendMail]);
+    return res.send({ result: null });
+
+  } catch (error) {
+    return next(error);
+  }
 });
 
 module.exports = router;

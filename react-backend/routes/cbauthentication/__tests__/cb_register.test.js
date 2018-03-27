@@ -19,14 +19,15 @@ test('POST /api/cb/register | viable & registered CB', async t => {
     password: 'Chickens5*',
     passwordConfirm: 'Chickens5*',
   };
+
   request(app)
     .post('/api/cb/register')
     .send(successPayload)
-    .expect(200)
+    .expect(409)
     .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
-      t.equal(res.text, 'true');
+      t.deepEqual(res.body, { result: null, error: 'Business already registered' });
       dbConnection.end(t.end);
     });
 });
@@ -51,7 +52,7 @@ test('POST /api/cb/register | viable & non-registered CB', async t => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.deepEqual(res.body, { success: true });
+        t.deepEqual(res.body, { result: null });
         dbConnection.end(t.end);
       });
   });

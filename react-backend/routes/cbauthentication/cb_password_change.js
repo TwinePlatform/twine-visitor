@@ -1,43 +1,54 @@
 const router = require('express').Router();
+const Joi = require('joi');
+const Boom = require('boom');
 const pwdChange = require('../../database/queries/cb/pwd_change');
 const hash = require('../../functions/cbhash');
 const checkExpire = require('../../functions/checkExpire');
 const checkExists = require('../../functions/checkExists');
-const { checkHasLength } = require('../../functions/helpers');
+const { validate } = require('../../shared/middleware');
 
-const strongPassword = new RegExp(
-  '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
-);
 
-router.post('/', (req, res, next) => {
-  const { formPswd, formPswdConfirm, token } = req.body;
+const schemas = {
+  body: {
+    token: Joi.string().required(),
+
+    password: Joi.string()
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, 'strong_pwd')
+      .required()
+      .options({ language: { string: { regex: { base: 'is too weak' } } } }),
+
+    passwordConfirm: Joi.string()
+      .only(Joi.ref('password'))
+      .required()
+      .options({ language: { string: { allowOnly: 'must match password' } } }),
+  },
+};
+
+
+router.post('/', validate(schemas), async (req, res, next) => {
+  const { password, token } = req.body;
   const secret = req.app.get('cfg').session.hmac_secret;
   const pgClient = req.app.get('client:psql');
 
-  Promise.all([checkExists(pgClient, token), checkExpire(pgClient, token)])
-    .then(([exists, notExpired]) => {
-      const hasInput = checkHasLength([formPswd, formPswdConfirm, token]);
-      const pwdsMatch = formPswd === formPswdConfirm;
-      const strongPwd = strongPassword.test(formPswd);
+  try {
+    const exists = await checkExists(pgClient, token);
+    const notExpired = await checkExpire(pgClient, token);
 
-      const validationError =
-        (!hasInput && 'noinput') ||
-        (!exists && 'tokenmatch') ||
-        (!notExpired && 'tokenexpired') ||
-        (!pwdsMatch && 'pswdmatch') ||
-        (!strongPwd && 'pswdweak') ||
-        null;
+    if (!exists) {
+      return next(Boom.unauthorized('Token not recognised'));
+    }
 
-      if (validationError) return res.status(400).send(validationError);
+    if (!notExpired) {
+      return next(Boom.unauthorized('Token expired'));
+    }
 
-      const password = hash(secret, formPswd);
-      pwdChange(pgClient, password, token)
-        .then(() => {
-          res.send(true);
-        })
-        .catch(next);
-    })
-    .catch(next);
+    await pwdChange(pgClient, hash(secret, password), token);
+
+    res.send({ result: null });
+
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

@@ -10,7 +10,7 @@ test('POST /api/cb/login', (tape) => {
   const dbConnection = app.get('client:psql');
 
   tape.test('POST /api/cb/login | authentication successful', (t) => {
-    const successPayload = { formEmail: 'findmyfroggy@frogfinders.com', formPswd: 'Funnyfingers11!' };
+    const successPayload = { email: 'findmyfroggy@frogfinders.com', password: 'Funnyfingers11!' };
 
     request(app)
       .post('/api/cb/login')
@@ -18,16 +18,16 @@ test('POST /api/cb/login', (tape) => {
       .expect(200)
       .expect('Content-Type', /json/)
       .end((err, res) => {
-        t.ok(res.body.success, 'cb successfully logged in with correct password');
+        t.ok(res.body.result.token, 'cb successfully logged in with correct password');
         t.end();
       });
   });
 
   tape.test('POST /api/cb/login | authentication unsuccessful', (t) => {
-    t.plan(4);
+    t.plan(6);
 
-    const failPayload = { formEmail: 'findmyfroggy@frogfinders.com', formPswd: 'password123' };
-    const emptyPayload = { formEmail: '', formPswd: '' };
+    const failPayload = { email: 'findmyfroggy@frogfinders.com', password: 'password123' };
+    const emptyPayload = { email: '', password: '' };
 
     request(app)
       .post('/api/cb/login')
@@ -36,7 +36,7 @@ test('POST /api/cb/login', (tape) => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.notOk(res.body.success, 'cb failed to log in with incorrect password');
+        t.deepEqual(res.body, { result: null, error: 'Credentials not recognised' }, 'failed to log in with incorrect password');
       });
 
     request(app)
@@ -46,7 +46,12 @@ test('POST /api/cb/login', (tape) => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         t.notOk(err, err || 'Passes supertest expect criteria');
-        t.notOk(res.body.success, 'cb failed to log in with no submitted data');
+        t.ok(res.body.error);
+        t.equal(res.body.result, null);
+        t.deepEqual(res.body.validation, {
+          email: ['is not allowed to be empty', 'must be a valid email'],
+          password: ['is not allowed to be empty', 'length must be at least 1 characters long'],
+        });
       });
   });
 

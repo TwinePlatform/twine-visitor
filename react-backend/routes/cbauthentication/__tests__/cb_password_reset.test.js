@@ -12,7 +12,7 @@ test('POST api/cb/pwd/reset | token creation successful', async (t) => {
   await refreshDB();
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
-  const successPayload = { formEmail: 'findmyfroggy@frogfinders.com' };
+  const successPayload = { email: 'findmyfroggy@frogfinders.com' };
 
   nock('https://api.postmarkapp.com')
     .post('/email/withTemplate')
@@ -24,18 +24,24 @@ test('POST api/cb/pwd/reset | token creation successful', async (t) => {
     .post('/api/cb/pwd/reset')
     .send(successPayload)
     .expect(200)
-    .end(async (err) => {
+    .end(async (err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
+      t.deepEqual(res.body, { result: null }, 'Empty successful response body');
+
       try {
-        const getTokenFromDb = await dbConnection.query(
-          "SELECT * FROM cbusiness WHERE (token IS NOT NULL) AND email = 'findmyfroggy@frogfinders.com'",
-        );
-        t.ok(getTokenFromDb.rows.length, 'route successfully created a token in db');
-        await dbConnection.end();
+        const records = await dbConnection.query(`
+          SELECT * FROM cbusiness
+          WHERE (token IS NOT NULL)
+          AND email='findmyfroggy@frogfinders.com'
+        `);
+        t.ok(records.rows.length, 'route successfully created a token in db');
         t.end();
+
       } catch (error) {
-        await dbConnection.end();
         t.end(error);
+
+      } finally {
+        dbConnection.end();
       }
     });
 });
@@ -46,15 +52,15 @@ test('POST api/cb/pwd/reset | token creation unsuccessful', async (t) => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
 
-  const unsuccessPayload = { formEmail: 'idont@exist.com' };
+  const unsuccessPayload = { email: 'idont@exist.com' };
 
   request(app)
     .post('/api/cb/pwd/reset')
     .send(unsuccessPayload)
-    .expect(400)
+    .expect(401)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
-      t.notOk(res.body, 'Non existing email returns false');
+      t.deepEqual(res.body, { result: null, error: 'Email not recognised' }, 'Non-existent email');
       dbConnection.end(t.end);
     });
 });

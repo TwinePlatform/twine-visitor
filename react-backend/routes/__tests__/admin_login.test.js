@@ -16,6 +16,7 @@ test('POST /api/admin/login | password match database hash', t => {
   const successPayload = {
     password: 'Sallydog7&',
   };
+
   request(app)
     .post('/api/admin/login')
     .set('authorization', token)
@@ -24,7 +25,12 @@ test('POST /api/admin/login | password match database hash', t => {
     .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
-      t.equal(res.body.success, true);
+
+      const tokenPayload = jwt.decode(res.body.result.token);
+
+      t.deepEqual(tokenPayload.email, 'jinglis12@googlemail.com');
+      t.equal(tokenPayload.admin, true);
+
       dbConnection.end(t.end);
     });
 });
@@ -43,11 +49,11 @@ test('POST /api/admin/login | no password match for database hash', t => {
     .post('/api/admin/login')
     .set('authorization', token)
     .send(failurePayload)
-    .expect(200)
+    .expect(401)
     .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
-      t.notEqual(res.body.success, true);
+      t.deepEqual(res.body, { result: null, error: 'Incorrect password' });
       dbConnection.end(t.end);
     });
 });
