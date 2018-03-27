@@ -36,8 +36,8 @@ export default (submitHandler, forwarding = {}) => (Child) => {
     onSubmit = (e) => {
       e.preventDefault();
 
-      const fdata = new FormData(e.target);
-      const data = Array.from(fdata.entries())
+      const formData = new FormData(e.target);
+      const data = Array.from(formData.entries())
         .reduce((acc, [key, value]) => assoc(key, value, acc), {});
 
       this.submission = toCancellable(submitHandler(data));

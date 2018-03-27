@@ -121,7 +121,7 @@ const CbAdminSignup = ({ errors, onChange, onSubmit }) => (
 
       <FormSection flexOrder={4}>
         <Paragraph>
-          Already a subscriber? <Link to="/cb/login">Login</Link>
+          Already a subscriber? <Link to="/logincb">Login</Link>
         </Paragraph>
       </FormSection>
     </Form>
