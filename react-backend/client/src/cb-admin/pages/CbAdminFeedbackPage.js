@@ -10,14 +10,16 @@ import '../../DatePicker.css';
 import Logoutbutton from '../../components/visitors/logoutbutton';
 import { CbAdmin } from '../../api';
 
-
 const FeedbackPrimaryButton = PrimaryButton.extend`
   width: auto;
+  margin: 0px 10px
 `;
+
 const FeedbackPrimaryButtonNoFill = PrimaryButtonNoFill.extend`
   width: auto;
   display: block;
 `;
+
 const FeedbackParagraph = Paragraph.extend`
   display: inline-block;
 `;
@@ -56,8 +58,7 @@ const donutConfig = (colorConfig, feedbackCountArray) =>
         hoverBackgroundColor: feedbackColors.map(el => el.hoverBackgroundColor),
       },
     ],
-  })
-;
+  });
 
 const lastCallStates = {
   ALL: 'ALL',
@@ -74,11 +75,14 @@ export default class CbAdminFeedbackPage extends Component {
       endDate: null,
       focusedInput: null,
       lastCall: null,
+      showDatePicker: false,
     };
   }
+
   componentDidMount() {
     this.handleGetFeedback();
   }
+
   componentDidUpdate(prevProps, prevState) {
     if (
       prevState.focusedInput !== this.state.focusedInput
@@ -104,20 +108,22 @@ export default class CbAdminFeedbackPage extends Component {
       .catch((err) => {
         console.log(err.response);
         if (err.response.status === 401) {
-          console.log('in if statement');
+          this.props.history.push('/admin/login');
         }
         this.setState({ error: 'Sorry there has been an error with your request' });
       });
   }
+
   handleAllDates = () => {
     this.setState({
       startDate: null,
       endDate: null,
       lastCall: lastCallStates.ALL,
     });
-
   }
+
   render() {
+    const visibility = this.state.showDatePicker ? 'visible' : 'hidden';
     return (
       <div>
         <Link to="/" onClick={this.removeAdmin}>
@@ -135,12 +141,15 @@ export default class CbAdminFeedbackPage extends Component {
             <FeedbackPrimaryButton onClick={this.handleAllDates}>
               All dates
             </FeedbackPrimaryButton>
-            <FeedbackPrimaryButton>
+            <FeedbackPrimaryButton
+              onClick={() =>
+                this.setState({ showDatePicker: !this.state.showDatePicker })}
+            >
               Dates between...
             </FeedbackPrimaryButton>
           </div>
 
-          <div className="daterange-picker">
+          <div style={{ visibility }} className="daterange-picker">
             <DateRangePicker
               startDate={this.state.startDate}
               startDateId="start_date_id"
