@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Pie, Bar } from 'react-chartjs-2';
 import Logoutbutton from '../visitors/logoutbutton';
 import { DropdownSelect, CheckboxGroup } from './filter_components/UserInputs';
 import { Visitors } from '../../api';
-
-const PieChart = require('react-chartjs').Pie;
-const BarChart = require('react-chartjs').Bar;
 
 export default class AdminUsersPage extends Component {
   constructor(props) {
@@ -51,32 +49,6 @@ export default class AdminUsersPage extends Component {
       .catch(error => this.setErrorMessage(error, 'Error fetching gender numbers'));
   }
 
-  getColorPair = (index) => {
-    const colors = [
-      {
-        color: '#F7464A',
-        highlight: '#FF5A5E',
-      },
-      {
-        color: '#46BFBD',
-        highlight: '#5AD3D1',
-      },
-      {
-        color: '#FDB45C',
-        highlight: '#FFC870',
-      },
-      {
-        color: '#949FB1',
-        highlight: '#A8B3C5',
-      },
-      {
-        color: '#4D5360',
-        highlight: '#616774',
-      },
-    ];
-    return colors[index % colors.length];
-  };
-
   setErrorMessage = (error, errorString) => {
     // console.log(error) // Uncomment to display full errors in the console.
     this.setState({ errorMessage: errorString });
@@ -85,23 +57,29 @@ export default class AdminUsersPage extends Component {
   getActivitiesForChart = (activities) => {
     if (!activities) return [];
 
-    return activities.map(({ name, count }, index) => ({
-      value: count,
-      color: this.getColorPair(index).color,
-      highlight: this.getColorPair(index).highlight,
-      label: name,
-    }));
+    const activitiesData = {
+      labels: activities.map(el => el.name),
+      datasets: [
+        {
+          data: activities.map(el => el.count),
+        },
+      ],
+    };
+    return activitiesData;
   };
 
   getGendersForChart = (genders) => {
     if (!genders) return [];
 
-    return genders.map(({ sex, count }, index) => ({
-      value: count,
-      color: this.getColorPair(index).color,
-      highlight: this.getColorPair(index).highlight,
-      label: sex,
-    }));
+    const genderData = {
+      labels: genders.map(el => el.sex),
+      datasets: [
+        {
+          data: genders.map(el => el.count),
+        },
+      ],
+    };
+    return genderData;
   };
 
   getVisitsWeek = (visits) => {
@@ -134,10 +112,6 @@ export default class AdminUsersPage extends Component {
       datasets: [
         {
           label: 'Visits over the last week',
-          fillColor: '#F7464A',
-          strokeColor: 'rgba(220,220,220,0.8)',
-          highlightFill: '#FF5A5E',
-          highlightStroke: 'rgba(220,220,220,1)',
           data: buildDaysWithOffset(dayWeek.getDay(), visitCount),
         },
       ],
@@ -146,18 +120,25 @@ export default class AdminUsersPage extends Component {
 
   getAgeGroupsForChart = (ageGroups) => {
     if (!ageGroups) return [];
-    return ageGroups.map(({ agegroups, agecount }, index) => ({
-      value: agecount,
-      color: this.getColorPair(index).color,
-      highlight: this.getColorPair(index).highlight,
-      label: agegroups,
-    }));
+
+    const ageData = {
+      labels: ageGroups.map(el => el.agegroups),
+      datasets: [
+        {
+          data: ageGroups.map(el => el.agecount),
+        },
+      ],
+    };
+    return ageData;
   };
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   updateResults = () =>
-    Visitors.getStatistics(this.props.auth, { filter: this.state.filters, sort: { [this.state.orderBy]: 'asc' } })
+    Visitors.getStatistics(this.props.auth, {
+      filter: this.state.filters,
+      sort: { [this.state.orderBy]: 'asc' },
+    })
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
         return res.data;
@@ -220,7 +201,12 @@ export default class AdminUsersPage extends Component {
             <br />
             {this.state.activities.map(activity => (
               <label key={activity} htmlFor={`user-data-${activity}-input`}>
-                <input id={`user-data-${activity}-input`} type="checkbox" value={activity} onChange={this.filter('activity')} />
+                <input
+                  id={`user-data-${activity}-input`}
+                  type="checkbox"
+                  value={activity}
+                  onChange={this.filter('activity')}
+                />
                 {activity}
               </label>
             ))}
@@ -228,7 +214,7 @@ export default class AdminUsersPage extends Component {
         </form>
         <h4 id="visitChart">Visitor Numbers</h4>
         <div id="barChartDiv">
-          <BarChart
+          <Bar
             data={this.state.visitNumbers}
             options={{ responsive: true, maintainAspectRatio: false }}
           />
@@ -244,13 +230,13 @@ export default class AdminUsersPage extends Component {
           <tbody>
             <tr>
               <td>
-                <PieChart data={this.state.genderNumbers} />
+                <Pie data={this.state.genderNumbers} />
               </td>
               <td>
-                <PieChart data={this.state.activitiesGroups} />
+                <Pie data={this.state.activitiesGroups} />
               </td>
               <td>
-                <PieChart data={this.state.ageGroups} />
+                <Pie data={this.state.ageGroups} />
               </td>
             </tr>
           </tbody>
