@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { CbAdmin } from '../../api';
-import errorMessages from '../../components/errors';
+import { CbAdmin, ErrorUtils } from '../../api';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
@@ -35,26 +34,24 @@ export default class ForgotPassword extends React.Component {
     e.preventDefault();
 
     CbAdmin.email(null, { email: this.state.email })
-      .then((data) => {
-        switch (data) {
-          case 'email':
-            this.setError([errorMessages.EMAIL_ERROR]);
-            break;
-          case 'noinput':
-            this.setError([errorMessages.NO_INPUT_ERROR]);
-            break;
-          case 'false':
-            this.setError([errorMessages.RESET_DETAILS_ERROR]);
-            break;
-          case 'failed':
-            throw new Error('Failed to send reset email');
-          default:
-            this.props.history.push('/logincb');
-            break;
+      .then(() => this.props.history.push('/cb/login'))
+      .catch((error) => {
+        if (ErrorUtils.errorStatusEquals(error, 400)) {
+          this.setState({ errors: ErrorUtils.getValidationErrors(error) });
+
+        } else if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.setState({ errors: { email: error.response.data.error } });
+
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.history.push('/error/500');
+
+        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+          this.history.push('/error/404');
+
+        } else {
+          this.history.push('/error/unknown');
+
         }
-      })
-      .catch(() => {
-        this.props.history.push('/internalServerError');
       });
 
   }

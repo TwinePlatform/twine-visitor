@@ -42,6 +42,9 @@ export default class ResetPassword extends React.Component {
         if (errorStatusEquals(error, 400)) {
           this.setState({ errors: getValidationErrors(error) });
 
+        } else if (errorStatusEquals(error, 401)) {
+          this.setState({ errors: { password: error.response.data.error } });
+
         } else if (errorStatusEquals(error, 500)) {
           this.history.push('/error/500');
 
@@ -68,7 +71,7 @@ export default class ResetPassword extends React.Component {
               label="New password"
               type="password"
               name="password"
-              errror={errors.password}
+              error={errors.password}
               required
             />
             <LabelledInput
@@ -76,7 +79,7 @@ export default class ResetPassword extends React.Component {
               label="Confirm new password"
               type="password"
               name="passwordConfirm"
-              errror={errors.passwordConfirm}
+              error={errors.passwordConfirm}
               required
             />
             <SubmitButton type="submit">Submit</SubmitButton>
