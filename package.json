@@ -8,8 +8,7 @@
     "start": "node ./react-backend/index.js",
     "startmon": "nodemon ./react-backend/index.js",
     "postinstall": "cd react-backend/client && npm install",
-    "heroku-postbuild":
-      "cd react-backend/client && npm install --only=dev && npm install && npm run build",
+    "heroku-postbuild": "cd react-backend/client && npm install --only=dev && npm install && npm run build",
     "build.client": "cd react-backend/client && npm run build",
     "test": "NODE_ENV=test tape 'react-backend/!(client)/**/__tests__/*.test.js' | tap-spec",
     "start.client": "cd react-backend/client && npm run start",
@@ -47,7 +46,7 @@
   },
   "homepage": "https://github.com/FAC-11/DataPower#readme",
   "devDependencies": {
-    "eslint": "^4.19.0",
+    "eslint": "^4.19.1",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.9.0",

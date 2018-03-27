@@ -14,7 +14,7 @@
     "react": "^16.2.0",
     "react-chartjs": "^1.2.0",
     "react-chartjs-2": "^2.7.0",
-    "react-dates": "^16.3.6",
+    "react-dates": "^16.4.0",
     "react-dom": "^16.2.0",
     "react-dropzone": "^4.2.9",
     "react-router-dom": "^4.2.2",
@@ -30,7 +30,7 @@
   },
   "proxy": "http://localhost:4000",
   "devDependencies": {
-    "eslint": "^4.19.0",
+    "eslint": "^4.19.1",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.9.0",
