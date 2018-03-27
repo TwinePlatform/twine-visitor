@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Input from '../visitors/input';
 import Button from '../visitors/button';
 import errorMessages from '../errors';
-import { Visitors } from '../../api';
+import { CbAdmin } from '../../api';
 
 class CBlogin extends Component {
   constructor(props) {
@@ -26,7 +26,7 @@ class CBlogin extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    Visitors.login({ email: this.state.email, password: this.state.password })
+    CbAdmin.login({ email: this.state.email, password: this.state.password })
       .then(res => res.data)
       .then((data) => {
         if (data.success === true) {

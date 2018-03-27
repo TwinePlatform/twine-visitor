@@ -20,7 +20,7 @@ export default class AdminLogin extends Component {
 
     try {
       const localToken = localStorage.getItem('token');
-      const res = await CbAdmin.login(localToken, { password: this.state.password });
+      const res = await CbAdmin.upgradePermissions(localToken, { password: this.state.password });
       const { success, token, reason } = res.data;
 
       if (!success || !token || reason) {
