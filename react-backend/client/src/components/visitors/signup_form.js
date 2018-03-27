@@ -1,70 +1,109 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Input from './input';
-import Select from './select';
+import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
+import { Heading, Paragraph, Link } from '../../shared/components/text/base';
+import LabelledInput from '../../shared/components/form/LabelledInput';
+import LabelledSelect from '../../shared/components/form/LabelledSelect';
+import { FlexContainerCol } from '../../shared/components/layout/base';
+
+const SubmitButton = PrimaryButton.extend`
+height: 4em;
+width: 90%;
+`;
+
+const CenteredParagraph = Paragraph.extend`
+width: 90%;
+margin: 2em 0;
+margin-bottom: -5em;
+line-height: 1.5em;
+`;
+
+const CenteredHeading = Heading.extend`
+width: 90%;
+text-align: center;
+`;
+
+const TitleParagraph = Paragraph.extend`
+font-weight: medium;
+width: 90%;
+font-size: 19px;
+margin-top: -2px;
+margin-bottom: -1em;
+`;
+
+const LabelledInputCheckbox = LabelledInput.extend`
+width: 30%;
+`;
+
+const genders = [
+  { key: '1', value: '' },
+  { key: '2', value: 'male' },
+  { key: '3', value: 'female' },
+  { key: '4', value: 'prefer not to say' },
+];
 
 const signupForm = props => (
-  <div>
-    <form className="SignupForm" onChange={props.handleChange}>
-      <section className="Main col-9">
-        <h1>Please tell us about yourself</h1>
-        {props.error && (
-          <div className="ErrorText">
-            {props.error.map(el => <span key={el}>{el}</span>)}
-          </div>
-        )}
-        <Input name="fullname" question="Name" option="fullname" required />
-        <Input name="email" question="Email" option="email" required />
-        <Input name="phone" question="Phone Number (optional)" option="phone" />
-        <Select
-          name="gender"
-          question="Gender"
-          option="gender"
-          choices={['', 'male', 'female', 'prefer not to say']}
-          required
-        />
-        <Select name="fullname" question="Year of Birth" option="year" choices={props.years} required />
-        <button onClick={props.checkUserExists} className="Button" type="submit">
-          Submit
-        </button>
-      </section>
-      <aside className="Privacy col-3">
-        <h3 className="Privacy__title">
-          Why are we collecting this information?
-        </h3>
-        <p className="Privacy__text">
-          Here at XXXXXXXX, we take your privacy seriously: we will only use
-          your personal information to administer your account to provide the
-          products and services you have requested from us, and improve how we
-          deliver those.
+  <FlexContainerCol>
+    <CenteredHeading>Please tell us about yourself</CenteredHeading>
+    <Form className="SignupForm" onChange={props.handleChange}>
+      <FormSection flexOrder={1}>
+        <div>
+          {props.error && (
+            <div className="ErrorText">{props.error.map(el => <span key={el}>{el}</span>)}</div>
+          )}
+          <LabelledInput label="Full Name" name="fullname" option="fullname" required />
+          <LabelledInput label="Email Address" name="email" option="email" required />
+          <LabelledInput label="Phone Number (optional)" name="phone" option="phone" />
+          <LabelledSelect
+            name="gender"
+            label="Gender"
+            options={genders}
+            required
+          />
+          <LabelledSelect
+            name="fullname"
+            label="Year of Birth"
+            options={props.years}
+            required
+          />
+        </div>
+      </FormSection>
+      <FormSection flexOrder={2}>
+        <TitleParagraph>Why are we collecting this information?</TitleParagraph>
+        <CenteredParagraph>
+          Here at XXXXXXXX, we take your privacy seriously: we will only use your personal
+          information to administer your account to provide the products and services you have
+          requested from us, and improve how we deliver those.
           <br />
           <br />
-          However, from time to time we would like to contact you with details
-          of other offers we provide. If you consent to us contacting you by
-          email, please tick to agree:
-        </p>
-        <Input type="checkbox" name="emailContact" />
-        <p className="Privacy__text">
+          However, from time to time we would like to contact you with details of other offers we
+          provide. If you consent to us contacting you by email, please tick to agree:
+        </CenteredParagraph>
+        <LabelledInputCheckbox type="checkbox" name="emailContact" />
+        <CenteredParagraph>
           <br />
           <br />
-          We would like to send you surveys in order to improve our work via
-          SMS. If you agree to us using your personal data for that purpose,
-          please tick to agree:
-        </p>
-        <Input type="checkbox" name="smsContact" />
-        <p className="Privacy__text">
-          <br />
-          <br />
-          <a
-            href="http://www.powertochange.org.uk/data-protection-funding-applications/"
-            className="Policy"
-          >
-            Data Protection Policy
-          </a>
-        </p>
-      </aside>
-    </form>
-  </div>
+          We would like to send you surveys in order to improve our work via SMS. If you agree to us
+          using your personal data for that purpose, please tick to agree:
+        </CenteredParagraph>
+        <LabelledInputCheckbox type="checkbox" name="smsContact" />
+      </FormSection>
+
+      <FormSection flexOrder={3}>
+        <SubmitButton onClick={props.checkUserExists}>
+          CONTINUE
+        </SubmitButton>
+      </FormSection>
+
+      <FormSection flexOrder={4}>
+        <Link
+          to="http://www.twine-together.com/privacy-policy/"
+        >
+          Data Protection Policy
+        </Link>
+      </FormSection>
+    </Form>
+  </FlexContainerCol>
 );
 
 signupForm.propTypes = {
