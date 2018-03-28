@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
-import { Route, Link, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import qrcodelogo from '../../qrcodelogo.png';
 import SignupForm from '../visitors/signup_form';
 import NotFound from '../NotFound';
 import errorMessages from '../errors';
 import { Visitors } from '../../api';
+import { Heading, Paragraph, Link } from '../../shared/components/text/base';
+import { PrimaryButton } from '../../shared/components/form/base';
+import { FlexContainerCol } from '../../shared/components/layout/base';
 
 const generateYearsArray = (startYear, currentYear) =>
   Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
 
 const years = generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear());
+console.log(years);
 
 export default class Main extends Component {
   constructor(props) {
@@ -130,20 +134,19 @@ export default class Main extends Component {
 
           <Route path="/visitor/signup/thankyou">
             <section className="col-12">
-              <div className="hidden-printer col-12">
-                <h1>
+              <FlexContainerCol className="hidden-printer col-12">
+                <Heading>
                   Here is your QR code. Please print this page and use the code to sign in when you
-                  visit us.
-                </h1>
-                <h2>We have also emailed you a copy.</h2>
+                  visit us. We have also emailed you a copy.
+                </Heading>
                 <img className="QR__image" src={url} alt="This is your QRcode" />
                 <Link to="/visitor">
-                  <button className="Button">Next</button>
+                  <PrimaryButton>Next</PrimaryButton>
                 </Link>
-                <button className="Button" onClick={window.print}>
+                <PrimaryButton onClick={window.print}>
                   Print
-                </button>
-              </div>
+                </PrimaryButton>
+              </FlexContainerCol>
 
               {/* This is the print layout of the QRcode */}
               <div className="visible-printer qr-code-to-print">

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
+import StyledLabelledCheckbox from '../../shared/components/form/StyledLabelledCheckbox';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 
@@ -29,10 +30,6 @@ width: 90%;
 font-size: 19px;
 margin-top: -2px;
 margin-bottom: -1em;
-`;
-
-const LabelledInputCheckbox = LabelledInput.extend`
-width: 30%;
 `;
 
 const genders = [
@@ -79,14 +76,14 @@ const signupForm = props => (
           However, from time to time we would like to contact you with details of other offers we
           provide. If you consent to us contacting you by email, please tick to agree:
         </CenteredParagraph>
-        <LabelledInputCheckbox type="checkbox" name="emailContact" />
+        <StyledLabelledCheckbox name="emailContact" id="emailCheckboxInput" />
         <CenteredParagraph>
           <br />
           <br />
           We would like to send you surveys in order to improve our work via SMS. If you agree to us
           using your personal data for that purpose, please tick to agree:
         </CenteredParagraph>
-        <LabelledInputCheckbox type="checkbox" name="smsContact" />
+        <StyledLabelledCheckbox name="smsContact" id="smsCheckboxInput" />
       </FormSection>
 
       <FormSection flexOrder={3}>
