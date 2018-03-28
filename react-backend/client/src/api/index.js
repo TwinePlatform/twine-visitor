@@ -2,6 +2,7 @@
  *
  */
 import axios from 'axios';
+import { head, pathOr, equals } from 'ramda';
 
 
 export const Activities = {
@@ -212,8 +213,8 @@ export const CbAdmin = {
     axios.post(
       '/api/cb/pwd/change',
       {
-        formPswd: password,
-        formPswdConfirm: passwordConfirm,
+        password,
+        passwordConfirm,
         token: tkn,
       },
     ),
@@ -222,8 +223,8 @@ export const CbAdmin = {
     axios.post(
       '/api/cb/login',
       {
-        formEmail: email,
-        formPswd: password,
+        email,
+        password,
       },
     ),
 
@@ -240,7 +241,7 @@ export const CbAdmin = {
     axios.post(
       '/api/cb/pwd/reset',
       {
-        formEmail: email,
+        email,
       },
     ),
 
@@ -256,8 +257,16 @@ export const CbAdmin = {
 };
 
 
+export const ErrorUtils = {
+  getErrorStatus: pathOr(null, ['response', 'status']),
+  getValidationErrors: head(pathOr('Unknown error', ['response', 'data', 'validation'])),
+  errorStatusEquals: (error, status) => equals(ErrorUtils.getErrorStatus(error), status),
+};
+
+
 export default {
   Activities,
   Visitors,
   CbAdmin,
+  ErrorUtils,
 };

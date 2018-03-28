@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { pick, pathOr, equals } from 'ramda';
-import { CbAdmin } from '../../api';
+import { pick } from 'ramda';
+import { CbAdmin, ErrorUtils } from '../../api';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
@@ -44,10 +44,6 @@ const payloadFromState = pick([
   'password_confirm',
 ]);
 
-const getErrorStatus = pathOr(null, ['response', 'status']);
-const getValidationErrors = pathOr('Unknown error', ['response', 'data', 'validation']);
-const errorStatusEquals = (error, status) => equals(getErrorStatus(error), status);
-
 const SubmitButton = styled(PrimaryButton)`
   height: 4em;
   width: 90%;
@@ -79,18 +75,17 @@ export default class CbAdminSignup extends React.Component {
         this.props.history.push('/cb/login?ref=signup');
       })
       .catch((error) => {
-        console.log(error.response);
-        if (errorStatusEquals(error, 400)) {
-          this.setState({ errors: getValidationErrors(error) });
+        if (ErrorUtils.errorStatusEquals(error, 400)) {
+          this.setState({ errors: ErrorUtils.getValidationErrors(error) });
 
-        } else if (errorStatusEquals(error, 500)) {
-          this.history.push('/error/500');
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
 
-        } else if (errorStatusEquals(error, 404)) {
-          this.history.push('/error/404');
+        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+          this.props.history.push('/error/404');
 
         } else {
-          this.history.push('/error/unknown');
+          this.props.history.push('/error/unknown');
 
         }
       });
@@ -164,7 +159,7 @@ export default class CbAdminSignup extends React.Component {
 
           <FormSection flexOrder={4}>
             <Paragraph>
-              Already a subscriber? <Link to="/logincb">Login</Link>
+              Already a subscriber? <Link to="/cb/login">Login</Link>
             </Paragraph>
           </FormSection>
         </Form>

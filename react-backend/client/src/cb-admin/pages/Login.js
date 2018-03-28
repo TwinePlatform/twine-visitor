@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { CbAdmin } from '../../api';
-import errorMessages from '../../components/errors';
+import { CbAdmin, ErrorUtils } from '../../api';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
@@ -40,22 +39,28 @@ export default class Login extends React.Component {
     e.preventDefault();
 
     CbAdmin.login({ email: this.state.email, password: this.state.password })
-      .then(res => res.data)
-      .then((data) => {
-        if (data.success === true) {
-          localStorage.setItem('token', data.token);
-          this.props.setLoggedIn();
-          this.props.history.push('/');
-        } else if (data.reason === 'email') {
-          this.setError([errorMessages.EMAIL_ERROR]);
-        } else if (data.reason === 'noinput') {
-          this.setError([errorMessages.NO_INPUT_ERROR]);
-        } else {
-          this.setError([errorMessages.DETAILS_ERROR]);
-        }
+      .then((res) => {
+        localStorage.setItem('token', res.data.token);
+        this.props.setLoggedIn();
+        this.props.history.push('/');
       })
-      .catch(() => {
-        this.props.history.push('/internalServerError');
+      .catch((error) => {
+        if (ErrorUtils.errorStatusEquals(error, 400)) {
+          this.setState({ errors: ErrorUtils.getValidationErrors(error) });
+
+        } else if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.setState({ errors: { email: error.response.data.error } });
+
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
+
+        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+          this.props.history.push('/error/404');
+
+        } else {
+          this.props.history.push('/error/unknown');
+
+        }
       });
   }
 
@@ -73,7 +78,7 @@ export default class Login extends React.Component {
               label="Email"
               name="email"
               type="email"
-              errors={errors.email}
+              error={errors.email}
               requried
             />
             <LabelledInput
@@ -81,17 +86,17 @@ export default class Login extends React.Component {
               label="Password"
               name="password"
               type="password"
-              errors={errors.password}
+              error={errors.password}
               requried
             />
             <SubmitButton>LOGIN</SubmitButton>
           </FormSection>
         </Form>
         <CenteredParagraph>
-          Not a subscriber? <Link to="/signupcb">Create a new account</Link>
+          Not a subscriber? <Link to="/cb/register">Create a new account</Link>
         </CenteredParagraph>
         <CenteredParagraph>
-          <LightLink to="/pswdresetcb">Forgot your password?</LightLink>
+          <LightLink to="/cb/password/forgot">Forgot your password?</LightLink>
         </CenteredParagraph>
       </FlexContainerCol>
     );

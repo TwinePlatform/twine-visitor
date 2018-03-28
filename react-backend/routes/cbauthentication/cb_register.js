@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Joi = require('joi');
+const Boom = require('boom');
 const hashCB = require('../../functions/cbhash');
 const cbAdd = require('../../database/queries/cb/cb_add');
 const sendCBemail = require('../../functions/sendCBemail');
@@ -47,13 +48,13 @@ router.post('/', validate(schemas), async (req, res, next) => {
     const orgNameLower = orgName.toLowerCase();
     const exists = await cbCheckExists(db, email);
 
-    if (!exists) {
-      await cbAdd(db, orgNameLower, email, category, hashedPassword);
-      await sendCBemail(pmClient, email, orgNameLower);
-      return res.send({ success: true });
+    if (exists) {
+      return next(Boom.conflict('Business already registered'));
     }
 
-    return res.send(exists);
+    await cbAdd(db, orgNameLower, email, category, hashedPassword);
+    await sendCBemail(pmClient, email, orgNameLower);
+    return res.send({ result: null });
 
   } catch (error) {
     return next(error);

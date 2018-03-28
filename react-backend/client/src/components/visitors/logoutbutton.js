@@ -11,7 +11,7 @@ export default class Logoutbutton extends Component {
     localStorage.removeItem('token');
     localStorage.removeItem('adminToken');
     this.props.updateLoggedIn();
-    this.props.redirectUser('/logincb');
+    this.props.redirectUser('/cb/login');
   };
 
   render() {

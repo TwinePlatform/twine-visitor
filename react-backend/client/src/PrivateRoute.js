@@ -11,7 +11,7 @@ const ProtectedRoute = ({ auth, component: Component, ...rest }) => (
           ? <Component {...props} {...rest} />
           : <Redirect
             to={{
-              pathname: '/logincb',
+              pathname: '/cb/login',
               state: { from: props.location }, // eslint-disable-line react/prop-types
             }}
           />

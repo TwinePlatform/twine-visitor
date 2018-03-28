@@ -1,38 +1,42 @@
 const router = require('express').Router();
-const validator = require('validator');
+const Joi = require('joi');
+const Boom = require('boom');
 const jwt = require('jsonwebtoken');
 const hashCB = require('../../functions/cbhash');
 const cbLogin = require('../../database/queries/cb/cb_login');
-const { checkHasLength } = require('../../functions/helpers');
+const { validate } = require('../../shared/middleware');
 
-router.post('/', (req, res, next) => {
-  const { formEmail, formPswd } = req.body;
 
+const schemas = {
+  body: {
+    email: Joi.string().email().required(),
+    password: Joi.string().min(1).required(),
+  },
+};
+
+
+router.post('/', validate(schemas), async (req, res, next) => {
+  const { email, password } = req.body;
   const pgClient = req.app.get('client:psql');
   const secret = req.app.get('cfg').session.hmac_secret;
   const standardJwtSecret = req.app.get('cfg').session.standard_jwt_secret;
 
-  const notEmail = (!validator.isEmail(formEmail) && 'email') || '';
-  const noInput = (!checkHasLength([formEmail, formPswd]) && 'noinput') || '';
+  const passwordHash = hashCB(secret, password);
 
-  const validationError = noInput || notEmail;
+  try {
+    const exists = await cbLogin(pgClient, email, passwordHash);
 
-  if (validationError) return res.status(400).send({ reason: validationError });
+    if (! exists) {
+      return next(Boom.unauthorized('Credentials not recognised'));
+    }
 
-  const passwordHash = hashCB(secret, formPswd);
+    const token = jwt.sign({ email }, standardJwtSecret);
+    res.send({ result: { token } });
 
-  cbLogin(pgClient, formEmail, passwordHash)
-    .then(exists => {
-      if (exists) {
-        const token = jwt.sign({ email: formEmail }, standardJwtSecret);
-        const loggedInResponse = { success: true, token };
-        res.send(loggedInResponse);
-      } else {
-        const errorResponse = { success: false };
-        res.status(401).send(errorResponse);
-      }
-    })
-    .catch(next);
+  } catch (error) {
+    return next(error);
+  }
+
 });
 
 module.exports = router;
