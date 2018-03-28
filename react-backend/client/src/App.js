@@ -19,7 +19,6 @@ import AdminVisitsPage from './components/admin/adminVisitsPage';
 import AdminUsersPage from './components/admin/adminUsersPage';
 import AdminUserDetailsPage from './components/admin/adminUserDetailsPage';
 import AdminCBSettingsPage from './components/admin/adminCBSettingsPage';
-import CbAdminFeedbackPage from './cb-admin/pages/CbAdminFeedbackPage';
 
 import NotFound from './components/NotFound';
 import InternalServerError from './components/InternalServerError';
@@ -33,6 +32,7 @@ import ConfirmPassword from './cb-admin/pages/ConfirmPassword';
 import ForgotPassword from './cb-admin/pages/ForgotPassword';
 import ResetPassword from './cb-admin/pages/ResetPassword';
 import CbDashboard from './cb-admin/pages/Dashboard';
+import CbAdminFeedbackPage from './cb-admin/pages/FeedbackPage';
 
 
 class App extends Component {
