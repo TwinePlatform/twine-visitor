@@ -1,10 +1,24 @@
 const router = require('express').Router();
 const userRegister = require('../database/queries/user_register');
+const Joi = require('joi');
+const { validate } = require('../shared/middleware');
 const qrcodemaker = require('../functions/qrcodemaker');
 const hash = require('../functions/hash');
 const sendQrCode = require('../functions/qr_send');
 
-router.post('/', (req, res, next) => {
+const schema = {
+  body: {
+    formSender: Joi.string().required(), 
+    formPhone: Joi.number().required(), 
+    formGender: Joi.string().required(), 
+    formYear: Joi.number().required(), 
+    formEmail: Joi.string().email().required(), 
+    formEmailContact: Joi.bool().required(), 
+    formSmsContact:  Joi.bool().required(),
+  },
+};
+
+router.post('/', validate(schema), (req, res, next) => {
   const pmClient = req.app.get('client:postmark');
   const pgClient = req.app.get('client:psql');
   const secret = req.app.get('cfg').session.hmac_secret;
