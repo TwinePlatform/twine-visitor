@@ -8,10 +8,10 @@ router.post('/', (req, res, next) => {
   const pmClient = req.app.get('client:postmark');
   const pgClient = req.app.get('client:psql');
   const secret = req.app.get('cfg').session.hmac_secret;
-  const { formSender, formPhone, formGender, formYear, formEmail, formEmailContact, formSMSContact } = req.body;
+  const { formSender, formPhone, formGender, formYear, formEmail, formEmailContact, formSmsContact } = req.body;
   const hashString = hash(secret, req.body);
   const name = formSender.toLowerCase();
-
+  
   userRegister(
     pgClient,
     req.auth.cb_id,
@@ -22,15 +22,15 @@ router.post('/', (req, res, next) => {
     formEmail,
     hashString,
     formEmailContact,
-    formSMSContact,
+    formSmsContact,
   )
-    .then(() => {
-      sendQrCode(pmClient, formEmail, formSender, hashString, req.auth.cb_logo);
-      return hashString;
-    })
-    .then(qrcodemaker)
-    .then(qr => res.send({ qr, cb_logo: req.auth.cb_logo }))
-    .catch(next);
+  .then(() => {
+    sendQrCode(pmClient, formEmail, formSender, hashString, req.auth.cb_logo);
+    return hashString;
+  })
+  .then(qrcodemaker)
+  .then(qr => res.send({ qr, cb_logo: req.auth.cb_logo }))
+  .catch(next);
 });
 
 module.exports = router;
