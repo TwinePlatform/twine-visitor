@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Doughnut } from 'react-chartjs-2';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
+import styled from 'styled-components';
 import { CbAdmin } from '../../api';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerRow } from '../../shared/components/layout/base';
@@ -23,6 +24,10 @@ const FeedbackParagraph = Paragraph.extend`
 const SpaceBetweenFlexContainerRow = FlexContainerRow.extend`
   justify-content: space-between;
   margin-top: 1rem;
+`;
+
+const InvisibleDiv = styled.div`
+visibility: ${props => (props.visible ? 'visible' : 'hidden')}
 `;
 
 const feedbackColors = [
@@ -128,7 +133,6 @@ export default class CbAdminFeedbackPage extends Component {
   }
 
   render() {
-    const visibility = this.state.showDatePicker ? 'visible' : 'hidden';
     return (
       <div>
         <SpaceBetweenFlexContainerRow>
@@ -151,8 +155,7 @@ export default class CbAdminFeedbackPage extends Component {
               Dates between...
           </FeedbackPrimaryButton>
         </div>
-
-        <div style={{ visibility }}>
+        <InvisibleDiv visible={this.state.showDatePicker} >
           <DateRangePicker
             startDate={this.state.startDate}
             startDateId="start_date_id"
@@ -165,7 +168,7 @@ export default class CbAdminFeedbackPage extends Component {
             focusedInput={this.state.focusedInput}
             onFocusChange={focusedInput => this.setState({ focusedInput })}
           />
-        </div>
+        </InvisibleDiv>
 
         {this.state.data
           ? <Doughnut data={donutConfig(feedbackColors, this.state.data.result)} />
