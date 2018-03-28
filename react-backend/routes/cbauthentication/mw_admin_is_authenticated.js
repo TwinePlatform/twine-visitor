@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const Boom = require('boom');
 const getCBFromEmail = require('../../database/queries/cb/cb_from_email');
 
 const adminIsAuthenticated = (req, res, next) => {
@@ -7,8 +8,9 @@ const adminIsAuthenticated = (req, res, next) => {
 
   jwt.verify(req.headers.authorization, cbAdminJwtSecret, (err, payload) => {
     if (err) {
-      return res.status(401).send({ error: 'Token expired' });
+      return next(Boom.unauthorized('CB admin token invalid'));
     }
+
     getCBFromEmail(pgClient, payload.email)
       .then(cb => {
         const token = jwt.sign(
@@ -28,10 +30,7 @@ const adminIsAuthenticated = (req, res, next) => {
         res.set('Authorization', token);
         next();
       })
-      .catch(err => {
-        console.log(err);
-        return res.status(401).send({ error: 'Not logged in' });
-      });
+      .catch(next);
   });
 };
 
