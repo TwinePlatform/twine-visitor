@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Doughnut } from 'react-chartjs-2';
 import 'react-dates/initialize';
-import { DateRangePicker } from 'react-dates';
+import { DateRangePicker, isInclusivelyBeforeDay } from 'react-dates';
+import moment from 'moment';
 import styled from 'styled-components';
 import { CbAdmin } from '../../api';
 import { PrimaryButton } from '../../shared/components/form/base';
-import { FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Link, Paragraph } from '../../shared/components/text/base';
 import { colors } from '../../shared/style_guide';
 import '../../DatePicker.css';
 
 const FeedbackPrimaryButton = PrimaryButton.extend`
   width: auto;
-  margin: 0px 1rem;
+  margin-left: 2rem;
   padding: 0.5rem;
 `;
 
@@ -21,13 +21,19 @@ const FeedbackParagraph = Paragraph.extend`
   display: inline-block;
 `;
 
-const SpaceBetweenFlexContainerRow = FlexContainerRow.extend`
+const StyledNav = styled.nav`
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-top: 1rem;
 `;
 
 const InvisibleDiv = styled.div`
-visibility: ${props => (props.visible ? 'visible' : 'hidden')}
+  visibility: ${props => (props.visible ? 'visible' : 'hidden')};
+  display: inline-block;
+  margin-left: 2rem;
+`;
+const DoughnutContainer = styled.div`
+  margin-top: 2rem;
 `;
 
 const feedbackColors = [
@@ -51,20 +57,20 @@ const feedbackColors = [
   },
 ];
 
-const donutConfig = (colorConfig, feedbackCountArray) =>
-  ({
-    labels: feedbackColors.map(el => el.label),
-    datasets: [
-      {
-        data: feedbackColors.map(
-          el => feedbackCountArray.filter(feedbackCount =>
-            feedbackCount.feedback_score === el.feedback_score)[0].count,
-        ),
-        backgroundColor: feedbackColors.map(el => el.backgroundColor),
-        hoverBackgroundColor: feedbackColors.map(el => el.hoverBackgroundColor),
-      },
-    ],
-  });
+const doughnutConfig = (colorConfig, feedbackCountArray) => ({
+  labels: feedbackColors.map(el => el.label),
+  datasets: [
+    {
+      data: feedbackColors.map(
+        el => feedbackCountArray.filter(
+          feedbackCount => feedbackCount.feedback_score === el.feedback_score,
+        )[0].count,
+      ),
+      backgroundColor: feedbackColors.map(el => el.backgroundColor),
+      hoverBackgroundColor: feedbackColors.map(el => el.hoverBackgroundColor),
+    },
+  ],
+});
 
 const logout = props => () => {
   localStorage.removeItem('token');
@@ -95,11 +101,10 @@ export default class CbAdminFeedbackPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.focusedInput !== this.state.focusedInput
-      && !this.state.focusedInput
-      && this.state.startDate
-      && this.state.endDate) {
+    if (prevState.focusedInput !== this.state.focusedInput
+        && !this.state.focusedInput
+        && this.state.startDate
+        && this.state.endDate) {
       this.handleGetFeedback();
     }
 
@@ -109,7 +114,7 @@ export default class CbAdminFeedbackPage extends Component {
     }
   }
 
-  handleGetFeedback= () => {
+  handleGetFeedback = () => {
     CbAdmin.getFeedback(this.props.auth, this.state.startDate, this.state.endDate)
       .then(({ data }) => {
         data.result[0] //eslint-disable-line
@@ -122,7 +127,7 @@ export default class CbAdminFeedbackPage extends Component {
         }
         this.setState({ error: 'Sorry there has been an error with your request' });
       });
-  }
+  };
 
   handleAllDates = () => {
     this.setState({
@@ -130,49 +135,52 @@ export default class CbAdminFeedbackPage extends Component {
       endDate: null,
       lastCall: lastCallStates.ALL,
     });
-  }
+  };
 
   render() {
     return (
       <div>
-        <SpaceBetweenFlexContainerRow>
+        <StyledNav>
           <Link to="/" onClick={this.removeAdmin}>
-          Back to the main page
+            Back to the main page
           </Link>
-          <Link to="/logincb" onClick={logout(this.props)}> Logout </Link>
-        </SpaceBetweenFlexContainerRow>
+          <Heading>Visitor Satisfaction</Heading>
+          <Link to="/logincb" onClick={logout(this.props)}>
+            Logout
+          </Link>
+        </StyledNav>
 
-        <Heading>Visitor Satisfaction</Heading>
         <div>
           <FeedbackParagraph displayInline>View:</FeedbackParagraph>
-          <FeedbackPrimaryButton onClick={this.handleAllDates}>
-              All dates
-          </FeedbackPrimaryButton>
+          <FeedbackPrimaryButton onClick={this.handleAllDates}>All dates</FeedbackPrimaryButton>
           <FeedbackPrimaryButton
-            onClick={() =>
-              this.setState({ showDatePicker: !this.state.showDatePicker })}
+            onClick={() => this.setState({ showDatePicker: !this.state.showDatePicker })}
           >
-              Dates between...
+            Dates between...
           </FeedbackPrimaryButton>
-        </div>
-        <InvisibleDiv visible={this.state.showDatePicker} >
-          <DateRangePicker
-            startDate={this.state.startDate}
-            startDateId="start_date_id"
-            endDate={this.state.endDate}
-            endDateId="end_date_id"
-            onDatesChange={
-              ({ startDate, endDate }) =>
+          <InvisibleDiv visible={this.state.showDatePicker}>
+            <DateRangePicker
+              orientation={'vertical'}
+              isOutsideRange={day => !isInclusivelyBeforeDay(day, moment())}
+              startDate={this.state.startDate}
+              startDateId="start_date_id"
+              endDate={this.state.endDate}
+              endDateId="end_date_id"
+              onDatesChange={({ startDate, endDate }) =>
                 this.setState({ startDate, endDate, lastCall: lastCallStates.DATERANGEPICKER })
-            }
-            focusedInput={this.state.focusedInput}
-            onFocusChange={focusedInput => this.setState({ focusedInput })}
-          />
-        </InvisibleDiv>
+              }
+              focusedInput={this.state.focusedInput}
+              onFocusChange={focusedInput => this.setState({ focusedInput })}
+            />
+          </InvisibleDiv>
+        </div>
 
         {this.state.data
-          ? <Doughnut data={donutConfig(feedbackColors, this.state.data.result)} />
-          : <h2>{this.state.error}.</h2> }
+          ? <DoughnutContainer>
+            <Doughnut data={doughnutConfig(feedbackColors, this.state.data.result)} />
+          </DoughnutContainer>
+          : <h2>{this.state.error}.</h2>
+        }
       </div>
     );
   }

@@ -5,9 +5,10 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-eslint": "^8.2.2",
+    "chart.js": "^2.7.2",
+    "moment": "^2.21.0",
     "normalize.css": "^8.0.0",
     "polished": "^1.9.2",
-    "chart.js": "^2.7.2",
     "prop-types": "^15.6.1",
     "ramda": "^0.25.0",
     "react": "^16.2.0",
