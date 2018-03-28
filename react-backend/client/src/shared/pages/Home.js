@@ -6,7 +6,7 @@ import { Heading, Link as HyperLink } from '../components/text/base';
 import { FlexContainerCol } from '../components/layout/base';
 
 
-const StyledNav = styled.nav`
+const Nav = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -43,7 +43,7 @@ const logout = props => () => {
 
 export default props => (
   <FlexContainerCol justify="space-around">
-    <StyledNav>
+    <Nav>
       <FlexItem>
         <HyperLink to="/cb/login" onClick={logout(props)}> Logout </HyperLink>
       </FlexItem>
@@ -51,13 +51,13 @@ export default props => (
         <Heading> Who are you? </Heading>
       </FlexItem>
       <FlexItem />
-    </StyledNav>
+    </Nav>
     <StyledSection>
       <FlexLink to="/visitor">
-        <ButtonLeft large> Visitor </ButtonLeft>
+        <ButtonLeft> Visitor </ButtonLeft>
       </FlexLink>
       <FlexLink to="/admin/login">
-        <ButtonRight large> Admin </ButtonRight>
+        <ButtonRight> Admin </ButtonRight>
       </FlexLink>
     </StyledSection>
     <StyledSection />
