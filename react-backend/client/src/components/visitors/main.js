@@ -54,7 +54,7 @@ export default class Main extends Component {
   createVisitor = () => {
     Visitors.create(localStorage.getItem('token'), {
       name: this.state.fullname,
-      gender: this.state.sex,
+      gender: this.state.gender,
       phoneNumber: this.state.phone,
       email: this.state.email,
       yob: this.state.year,
@@ -78,7 +78,7 @@ export default class Main extends Component {
       name: this.state.fullname,
       email: this.state.email,
       phone_number: this.state.phone,
-      gender: this.this.state.gender,
+      gender: this.state.gender,
       yob: this.state.year,
     })
       .then(() => this.createVisitor())
