@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { colors, fonts } from '../style_guide';
+import { fonts } from '../style_guide';
 
 export default styled.main`
   margin: 0 auto;
-  width: 66%;
+  width: 75%;
   height: 100vh;
   overflow-x: hidden;
-  background-color: ${colors.background};
+  background: transparent;
   font-family: ${fonts.family.default};
 `;

@@ -27,7 +27,7 @@ export default class AdminCBSettingsPage extends Component {
     CbAdmin.get(this.props.auth)
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
-        return res.data.details[0];
+        return res.data.result;
       })
       .then(this.setCB)
       .catch((error) => {
