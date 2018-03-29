@@ -8,13 +8,19 @@ const sendQrCode = require('../functions/qr_send');
 
 const schema = {
   body: {
-    formSender: Joi.string().required(), 
-    formPhone: Joi.number().required(), 
-    formGender: Joi.string().required(), 
-    formYear: Joi.number().required(), 
-    formEmail: Joi.string().email().required(), 
-    formEmailContact: Joi.bool().required(), 
-    formSmsContact:  Joi.bool().required(),
+    formSender: Joi.string().required(),
+    formPhone: Joi.string().required(),
+    formGender: Joi.string().required(),
+    formYear: Joi.number()
+      .integer()
+      .min(new Date().getFullYear() - 113)
+      .max(new Date().getFullYear())
+      .required(),
+    formEmail: Joi.string()
+      .email()
+      .required(),
+    formEmailContact: Joi.bool().required(),
+    formSmsContact: Joi.bool().required(),
   },
 };
 
@@ -22,10 +28,18 @@ router.post('/', validate(schema), (req, res, next) => {
   const pmClient = req.app.get('client:postmark');
   const pgClient = req.app.get('client:psql');
   const secret = req.app.get('cfg').session.hmac_secret;
-  const { formSender, formPhone, formGender, formYear, formEmail, formEmailContact, formSmsContact } = req.body;
+  const {
+    formSender,
+    formPhone,
+    formGender,
+    formYear,
+    formEmail,
+    formEmailContact,
+    formSmsContact,
+  } = req.body;
   const hashString = hash(secret, req.body);
   const name = formSender.toLowerCase();
-  
+
   userRegister(
     pgClient,
     req.auth.cb_id,
@@ -36,15 +50,15 @@ router.post('/', validate(schema), (req, res, next) => {
     formEmail,
     hashString,
     formEmailContact,
-    formSmsContact,
+    formSmsContact
   )
-  .then(() => {
-    sendQrCode(pmClient, formEmail, formSender, hashString, req.auth.cb_logo);
-    return hashString;
-  })
-  .then(qrcodemaker)
-  .then(qr => res.send({ qr, cb_logo: req.auth.cb_logo }))
-  .catch(next);
+    .then(() => {
+      sendQrCode(pmClient, formEmail, formSender, hashString, req.auth.cb_logo);
+      return hashString;
+    })
+    .then(qrcodemaker)
+    .then(qr => res.send({ qr, cb_logo: req.auth.cb_logo }))
+    .catch(next);
 });
 
 module.exports = router;
