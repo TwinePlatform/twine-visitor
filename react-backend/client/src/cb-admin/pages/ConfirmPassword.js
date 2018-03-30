@@ -6,7 +6,6 @@ import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 
-
 const SubmitButton = PrimaryButton.extend`
   height: 4em;
   width: 90%;
@@ -18,7 +17,6 @@ const CenteredParagraph = Paragraph.extend`
   margin: 2em 0;
 `;
 
-
 export default class ConfirmPassword extends React.Component {
   constructor(props) {
     super(props);
@@ -28,7 +26,7 @@ export default class ConfirmPassword extends React.Component {
     };
   }
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value })
+  onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   onSubmit = (e) => {
     e.preventDefault();
@@ -38,13 +36,15 @@ export default class ConfirmPassword extends React.Component {
     CbAdmin.upgradePermissions(stdToken, { password: this.state.password })
       .then(res => res.data)
       .then((data) => {
-        this.props.updateAdminToken(data.token);
+        this.props.updateAdminToken(data.result.token);
+      })
+      .then(() => {
         this.props.history.push('/admin');
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   render() {
     const { errors } = this.state;
@@ -68,12 +68,10 @@ export default class ConfirmPassword extends React.Component {
             </div>
           </FormSection>
         </Form>
-
       </FlexContainerCol>
     );
   }
 }
-
 
 ConfirmPassword.propTypes = {
   updateAdminToken: PropTypes.func.isRequired,
