@@ -18,7 +18,6 @@ import AdminActivitiesPage from './components/admin/adminActivitiesPage';
 import AdminVisitsPage from './components/admin/adminVisitsPage';
 import AdminUsersPage from './components/admin/adminUsersPage';
 import AdminUserDetailsPage from './components/admin/adminUserDetailsPage';
-import AdminCBSettingsPage from './components/admin/adminCBSettingsPage';
 
 import NotFound from './components/NotFound';
 import InternalServerError from './components/InternalServerError';

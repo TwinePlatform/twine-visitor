@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import { assocPath, compose, pick, prop, filter } from 'ramda';
@@ -206,3 +207,9 @@ export default class SettingsPage extends React.Component {
     );
   }
 }
+
+SettingsPage.propTypes = {
+  auth: PropTypes.string.isRequired,
+  updateAdminToken: PropTypes.func.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

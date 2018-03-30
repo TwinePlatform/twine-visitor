@@ -195,7 +195,7 @@ export const CbAdmin = {
       },
     ),
 
-  update: (tkn, { orgName, sector, email, region, logoUrl }) =>
+  update: (tkn, { orgName, sector, email, region, logoUrl }) => // eslint-disable-line
     axios.post(
       '/api/cb/details/update',
       {
