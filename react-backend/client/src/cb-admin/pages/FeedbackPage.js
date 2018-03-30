@@ -145,7 +145,7 @@ export default class FeedbackPage extends Component {
             Back to the main page
           </Link>
           <Heading>Visitor Satisfaction</Heading>
-          <Link to="/logincb" onClick={logout(this.props)}>
+          <Link to="/cb/login" onClick={logout(this.props)}>
             Logout
           </Link>
         </StyledNav>
