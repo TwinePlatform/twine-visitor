@@ -1,5 +1,5 @@
 const getCBDetailsQuery = `
-  SELECT *
+  SELECT id, org_name, genre, email, uploadedFileCloudinaryUrl, date
   FROM cbusiness
   WHERE id = $1`;
 

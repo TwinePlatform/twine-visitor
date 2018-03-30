@@ -10,7 +10,7 @@ router.post('/', (req, res, next) => {
     req.body.email,
     req.body.uploadedFileCloudinaryUrl
   )
-    .then(details => res.send({ details }))
+    .then(details => res.send({ result: details }))
     .catch(next);
 });
 
