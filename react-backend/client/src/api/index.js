@@ -195,12 +195,12 @@ export const CbAdmin = {
       },
     ),
 
-  update: (tkn, { orgName, category, email, logoUrl }) =>
+  update: (tkn, { orgName, sector, email, region, logoUrl }) =>
     axios.post(
       '/api/cb/details/update',
       {
         org_name: orgName,
-        genre: category,
+        genre: sector,
         email,
         uploadedFileCloudinaryUrl: logoUrl,
       },
@@ -257,6 +257,23 @@ export const CbAdmin = {
 };
 
 
+export const Cloudinary = {
+  UPLOAD_URL: 'https://api.cloudinary.com/v1_1/dqzxe8mav/upload',
+  UPLOAD_PRESET: 'cklrrn9k',
+
+  upload: (file) => {
+    const form = new FormData();
+    form.append('file', file);
+    form.append('upload_preset', Cloudinary.UPLOAD_PRESET);
+
+    return axios.post(
+      Cloudinary.UPLOAD_URL,
+      form,
+    );
+  },
+};
+
+
 export const ErrorUtils = {
   getErrorStatus: pathOr(null, ['response', 'status']),
   getValidationErrors: head(pathOr('Unknown error', ['response', 'data', 'validation'])),
@@ -268,5 +285,6 @@ export default {
   Activities,
   Visitors,
   CbAdmin,
+  Cloudinary,
   ErrorUtils,
 };
