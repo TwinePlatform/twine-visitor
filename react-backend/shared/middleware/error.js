@@ -15,6 +15,10 @@ exports.notFound = (req, res, next) => {
 
 // error handler
 exports.errorHandler = (err, req, res, next) => { // eslint-disable-line
+  if (process.env.NODE_ENV === 'dev') {
+    console.error(err);
+  }
+
   if (Boom.isBoom(err)) {
     const { statusCode, message } = err.output.payload;
 
