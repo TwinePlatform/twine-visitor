@@ -10,8 +10,8 @@ Throughout, a question mark (`?`) indicates fields in objects that are optional 
 | `POST /cb/login` | | `{ formEmail, formPswd }` | `{ success?: Bool, reason?: String, token?: String }` |
 | `POST /cb/pwd/change` | | `{ formPswd, formPswdConfirm, token }` | `String?` or `Bool` |
 | `POST /cb/pwd/reset` | | `{ formEmail }` | `String?` or `Bool` |
-| `POST /cb/details` | `Authorization: cb_admin_token` | | `[{ id, org_name, genre, email, uploadedFileCloudinaryUrl, token, tokenExpire, date }]` |
-| `POST /cb/details/update` | `Authorization: cb_admin_token` | `{ org_name, genre, email, uploadedFileCloudinaryUrl }` | `{ details: { `☝️` } }` |
+| `POST /cb/details` | `Authorization: cb_admin_token` | | `{ results: { id, org_name, genre, email, uploadedFileCloudinaryUrl, date } }` |
+| `POST /cb/details/update` | `Authorization: cb_admin_token` | `{ org_name, genre, email, uploadedFileCloudinaryUrl }` | `{ results: { `☝️` } }` |
 | `POST /qr/generator` | `Authorization: std_token` | `{ formSender, formPhone, formGender, formYear, formEmail, formEmailContact, formSMSContact}` | `{ qr: String, cb_logo: String }` |
 | `POST /user/details` | `Authorization: cb_admin_token` | `{ userId }` | `{ details: [{ id, cb_id, fullName, sex, yearOfBirth, email, phone, date, hash, emailcontact, smscontact}] }` |
 | `POST /user/details/update` | `Authorization: cb_admin_token` | `{ userId, userFullName, sex, yearOfBirth, email, phoneNumber, emailConsent, smsConsent }` | `{ details: { `☝️` } }` |

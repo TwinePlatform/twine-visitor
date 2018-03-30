@@ -1,31 +1,29 @@
-const putNewCBDetailsQuery = image =>
-  `UPDATE cbusiness
-  SET org_name = $2, genre = $3, email = $4
-  ${(image && ', uploadedFileCloudinaryUrl=$5') || ''}
-  WHERE id = $1
-  RETURNING *`;
+const { filter } = require('ramda');
+const { updateQuery } = require('../../../shared/models/query_builder');
+const getCbDetails = require('./cb_details');
 
-const putNewCBDetails = (
+const putNewCBDetails = async (
   dbConnection,
   id,
   orgName,
   genre,
   email,
   uploadedFileCloudinaryUrl
-) =>
-  new Promise((resolve, reject) => {
-    const values = [id, orgName, genre, email];
-    const combinedValues = uploadedFileCloudinaryUrl
-      ? [...values, uploadedFileCloudinaryUrl]
-      : values;
+) => {
+  const values = filter(Boolean, { org_name: orgName, genre, email, uploadedFileCloudinaryUrl });
 
-    dbConnection
-      .query(putNewCBDetailsQuery(uploadedFileCloudinaryUrl), combinedValues)
-      .then(res => {
-        if (!res.rowCount) return reject('No user found');
-        return resolve(res.rows[0]);
-      })
-      .catch(reject);
-  });
+  if (Object.keys(values).length === 0) {
+    return getCbDetails(dbConnection, id);
+  }
 
+  const query = updateQuery('cbusiness', values, { id }, 'id, org_name, genre, email, uploadedFileCloudinaryUrl, date');
+
+  const res = await dbConnection.query(query);
+
+  if (!res.rowCount) {
+    throw new Error('No corresponding user found');
+  }
+
+  return res.rows[0];
+};
 module.exports = putNewCBDetails;
