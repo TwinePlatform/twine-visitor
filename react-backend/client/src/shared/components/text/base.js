@@ -1,7 +1,7 @@
 /*
  * Basic styled form elements
  */
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link as RouterLink } from 'react-router-dom';
 import { colors, fonts } from '../../style_guide';
 
@@ -9,6 +9,7 @@ export const Heading = styled.h1`
   font-size: ${fonts.size.heading};
   font-weight: ${fonts.weight.light};
   text-align: center;
+  ${props => (props.flex ? css`flex: ${props.flex};` : '')}
 `;
 export const Heading2 = styled.h2`
   font-size: ${fonts.size.heading2};

@@ -33,6 +33,7 @@ import ForgotPassword from './cb-admin/pages/ForgotPassword';
 import ResetPassword from './cb-admin/pages/ResetPassword';
 import CbDashboard from './cb-admin/pages/Dashboard';
 import CbAdminFeedbackPage from './cb-admin/pages/FeedbackPage';
+import CbSettingsPage from './cb-admin/pages/Settings';
 
 
 class App extends Component {
@@ -190,7 +191,7 @@ class App extends Component {
               exact
               path="/cb/settings"
               updateLoggedIn={this.updateLoggedIn}
-              component={AdminCBSettingsPage}
+              component={CbSettingsPage}
             />
 
             <AdminRoute
