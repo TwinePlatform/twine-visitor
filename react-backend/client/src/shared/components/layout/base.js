@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const FlexContainer = styled.div`
   height: 100%;
@@ -13,4 +13,5 @@ export const FlexContainerCol = styled(FlexContainer)`
 export const FlexContainerRow = styled(FlexContainer) `
   flex-direction: row;
   flex-wrap: wrap;
+  ${props => (props.flex ? css`flex: ${props.flex};` : '')}
 `;
