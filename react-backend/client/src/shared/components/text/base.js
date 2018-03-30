@@ -17,6 +17,7 @@ export const Heading2 = styled.h2`
   font-weight: ${fonts.weight.light};
   color: ${colors.dark};
   text-align: center;
+  ${props => (props.flex ? css`flex: ${props.flex};` : '')}
 `;
 
 export const Heading3 = styled.h3`
