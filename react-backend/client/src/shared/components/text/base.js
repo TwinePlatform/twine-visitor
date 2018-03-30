@@ -10,6 +10,11 @@ export const Heading = styled.h1`
   font-weight: ${fonts.weight.light};
   text-align: center;
 `;
+export const Heading2 = styled.h2`
+  font-size: ${fonts.size.heading2};
+  font-weight: ${fonts.weight.light};
+  text-align: center;
+`;
 
 export const Paragraph = styled.p`
   font-size: ${fonts.size.base};
