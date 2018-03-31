@@ -77,6 +77,7 @@ export const Button = styled.button`
 export const PrimaryButton = Button.extend`
   background-color: ${colors.highlight_primary}; /* Fallback */
   background: linear-gradient(0, ${rgba(colors.highlight_primary, 0.75)} 0%, ${colors.highlight_primary} 100%);
+
   &:hover {
     background:linear-gradient(0, ${rgba(colors.hover_primary, 0.75)} 0%, ${colors.hover_primary} 100%);
   }
@@ -93,9 +94,10 @@ export const PrimaryButtonNoFill = PrimaryButton.extend`
   background: transparent;
   border: 0.1em solid ${colors.highlight_primary};
   border-radius: 0;
-&:hover{
-  background:transparent
-}
+
+  &:hover{
+    background:transparent
+  }
 `;
 
 export const SecondaryButtonNoFill = SecondaryButton.extend`

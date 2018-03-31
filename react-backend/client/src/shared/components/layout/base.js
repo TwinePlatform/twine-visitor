@@ -12,4 +12,5 @@ export const FlexContainerCol = styled(FlexContainer)`
 
 export const FlexContainerRow = styled(FlexContainer) `
   flex-direction: row;
+  flex-wrap: wrap;
 `;

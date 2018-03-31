@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const Boom = require('boom');
 const cbFromEmail = require('../../database/queries/cb/cb_from_email');
 
 const isAuthenticated = (req, res, next) => {
@@ -7,9 +8,9 @@ const isAuthenticated = (req, res, next) => {
 
   jwt.verify(req.headers.authorization, standardJwtSecret, (err, payload) => {
     if (err) {
-      console.log(err);
-      return next('notauthorized');
+      return Boom.unauthorized('Standard token invalid');
     }
+
     cbFromEmail(pgClient, payload.email)
       .then(cb => {
         req.auth = req.auth || {};
@@ -21,10 +22,7 @@ const isAuthenticated = (req, res, next) => {
         req.auth.cb_logo = cb.uploadedfilecloudinaryurl;
         next();
       })
-      .catch(err => {
-        console.log(err);
-        return next('notauthorized');
-      });
+      .catch(next);
   });
 };
 
