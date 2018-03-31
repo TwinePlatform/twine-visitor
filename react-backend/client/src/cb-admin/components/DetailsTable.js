@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { rgba } from 'polished';
 import { colors } from '../../shared/style_guide';
@@ -20,27 +21,37 @@ const TableRow = styled.tr``;
 const TableCell = styled.td``;
 
 
-const rows = [
-  { name: 'Business ID', key: 'id' },
-  { name: 'Type of business', key: 'sector' },
-  { name: 'Email', key: 'email' },
-  { name: 'Region', key: 'region' },
-  { name: 'Registration date', key: 'registeredAt' },
-];
-
-
-export default props => (
+const DetailsTable = ({ caption, rows }) => (
   <Table>
-    <TableCaption>Business details</TableCaption>
+    {
+      caption && <TableCaption>{caption}</TableCaption>
+    }
     <TableBody>
       {
-        rows.map(({ name, key }) => (
-          <TableRow key={key}>
+        rows.map(({ name, value }) => (
+          <TableRow key={name}>
             <TableCell>{name}</TableCell>
-            <TableCell>{props[key]}</TableCell>
+            <TableCell>{value}</TableCell>
           </TableRow>
         ))
       }
     </TableBody>
   </Table>
 );
+
+DetailsTable.propTypes = {
+  caption: PropTypes.string,
+  rows: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    }),
+  ),
+};
+
+DetailsTable.defaultProps = {
+  caption: null,
+  rows: [],
+};
+
+export default DetailsTable;

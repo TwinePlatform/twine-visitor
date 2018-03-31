@@ -151,6 +151,13 @@ export default class SettingsPage extends React.Component {
 
   render() {
     const { errors, ...rest } = this.state;
+    const rows = [
+      { name: 'Business ID', value: rest.id },
+      { name: 'Type of business', value: rest.sector },
+      { name: 'Email', value: rest.email },
+      { name: 'Region', value: rest.region },
+      { name: 'Registration date', value: rest.registeredAt },
+    ];
 
     return (
       <FlexContainerCol>
@@ -161,7 +168,7 @@ export default class SettingsPage extends React.Component {
         </Nav>
         <Row>
           <FlexItem flex={7}>
-            <DetailsTable {...rest} />
+            <DetailsTable rows={rows} caption="Business details" />
           </FlexItem>
           <FlexItem flex={4}>
             <Logo src={rest.logoUrl} alt="Business logo" />
