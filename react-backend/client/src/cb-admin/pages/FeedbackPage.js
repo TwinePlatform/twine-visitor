@@ -141,8 +141,8 @@ export default class FeedbackPage extends Component {
     return (
       <div>
         <StyledNav>
-          <Link to="/" onClick={this.removeAdmin}>
-            Back to the main page
+          <Link to="/admin" onClick={this.removeAdmin}>
+            Back to dashboard
           </Link>
           <Heading>Visitor Satisfaction</Heading>
           <Link to="/cb/login" onClick={logout(this.props)}>
