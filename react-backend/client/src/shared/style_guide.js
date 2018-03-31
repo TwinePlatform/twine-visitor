@@ -27,7 +27,7 @@ export const fonts = {
     base: '1em',
     heading: '2em',
     heading2: '1.5em',
-    small: '0.75em',
+    small: '0.65em',
   },
   weight: {
     base: '400',

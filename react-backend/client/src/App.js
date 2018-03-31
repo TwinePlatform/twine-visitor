@@ -17,7 +17,6 @@ import ThankYouFeedback from './components/visitors/thank_you_feedback';
 import AdminActivitiesPage from './components/admin/adminActivitiesPage';
 import AdminVisitsPage from './components/admin/adminVisitsPage';
 import AdminUsersPage from './components/admin/adminUsersPage';
-import AdminUserDetailsPage from './components/admin/adminUserDetailsPage';
 
 import NotFound from './components/NotFound';
 import InternalServerError from './components/InternalServerError';
@@ -33,6 +32,7 @@ import ResetPassword from './cb-admin/pages/ResetPassword';
 import CbDashboard from './cb-admin/pages/Dashboard';
 import CbAdminFeedbackPage from './cb-admin/pages/FeedbackPage';
 import CbSettingsPage from './cb-admin/pages/Settings';
+import CbVisitorPage from './cb-admin/pages/Visitor';
 
 
 class App extends Component {
@@ -179,9 +179,9 @@ class App extends Component {
               auth={this.state.adminToken}
               updateAdminToken={this.updateAdminToken}
               exact
-              path="/cb/visitors/:userId"
+              path="/cb/visitors/:id"
               updateLoggedIn={this.updateLoggedIn}
-              component={AdminUserDetailsPage}
+              component={CbVisitorPage}
             />
 
             <AdminRoute
