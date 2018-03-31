@@ -72,6 +72,7 @@ export const Button = styled.button`
   font: ${fonts.base};
   font-size: ${fonts.size.base};
   color: ${colors.black};
+  letter-spacing: 0.2em;
 `;
 
 export const PrimaryButton = Button.extend`

@@ -6,6 +6,7 @@ export default styled.div`
   left: 50%;
   top: 0;
   transform: translate3d(-50%, 0, 0);
+  overflow: hidden;
 
   &, &::before, &::after {
     background-color: #FFF;
@@ -27,5 +28,9 @@ export default styled.div`
 
   &::before {
     right: 100%;
+  }
+
+  @media print {
+    background: white;
   }
 `;
