@@ -2,9 +2,39 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import styled from 'styled-components';
 import PurposeButton from './purposeButton';
 import QRPrivacy from '../visitors/qrprivacy';
 import { Activities, Visitors } from '../../api';
+import { Heading } from '../../shared/components/text/base';
+import { FlexContainerRow } from '../../shared/components/layout/base';
+
+const StyledNav = styled.nav`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StyledSection = styled.section`
+  margin: 3rem 0;
+  display: flex;
+  justify-content: center;
+`;
+
+const HalfFlexContainerRow = FlexContainerRow.extend`
+  width: 50%;
+  padding: 1rem;
+  flex-wrap: wrap;
+`;
+
+const SnakeContainerRow = FlexContainerRow.extend`
+  width: 100%;
+  justify-content: space-between;
+  &:nth-child(2n) {
+  flex-direction: row-reverse;
+  `;
+
+const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
 
 
 function instascan() {
@@ -131,23 +161,36 @@ export default class QRCode extends Component {
       );
     }
     return (
-      <div className="row">
-        <section className="Main col-9">
-          <h1 className="capitalise" id="username">
-              Welcome Back, {this.state.username}
-          </h1>
-
-          {this.state.activities.map(activity => (
-            <PurposeButton
-              key={activity.name}
-              session={activity.name}
-              activity={this.state.activity}
-              onClick={this.changeActivity}
-            />
-          ))}
-        </section>
-        <QRPrivacy className="col-3" />
-      </div>
+      <section>
+        <StyledNav>
+          <Heading>
+              Welcome back, {capitaliseFirstName(this.state.username)}! Why are you here today?
+          </Heading>
+        </StyledNav>
+        <StyledSection>
+          <HalfFlexContainerRow>
+            {this.state.activities.map((activity, index) => (
+              <PurposeButton
+                key={activity.name}
+                color={index}
+                session={activity.name}
+                activity={this.state.activity}
+                onClick={this.changeActivity}
+              />
+            ))
+              .reduce((acc, el, index, array) =>
+                (index % 2 === 0
+                  ? acc.concat([
+                    <SnakeContainerRow key={el.key}>{el} {array[index + 1]}</SnakeContainerRow >])
+                  : acc)
+                , [])
+            }
+          </HalfFlexContainerRow>
+          <HalfFlexContainerRow>
+            <QRPrivacy />
+          </HalfFlexContainerRow>
+        </StyledSection>
+      </section>
     );
   }
 }
