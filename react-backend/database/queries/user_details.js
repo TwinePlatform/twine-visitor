@@ -1,9 +1,28 @@
-const getUserDetailsQuery = `
-  SELECT id, cb_id, fullname, sex, yearofbirth, email, phone_number AS phone, date, hash, is_email_contact_consent_granted AS emailcontact, is_sms_contact_consent_granted AS smscontact
-  FROM users
-  WHERE cb_id = $1 AND id = $2`;
+const { selectQuery } = require('../../shared/models/query_builder');
 
-const getUserDetails = (dbConnection, cbId, userId) =>
-  dbConnection.query(getUserDetailsQuery, [cbId, userId]).then(res => res.rows);
+
+const getUserDetails = async (dbConnection, cbId, userId) => {
+  const query = selectQuery(
+    'users',
+    [
+      'id',
+      'cb_id',
+      'fullname AS name',
+      'sex AS gender',
+      'yearofbirth AS yob',
+      'email',
+      'phone_number',
+      'date AS registered_at',
+      'hash',
+      'is_email_contact_consent_granted AS email_consent',
+      'is_sms_contact_consent_granted AS sms_consent',
+    ],
+    { cb_id: cbId, id: userId }
+  );
+
+  const result = await dbConnection.query(query);
+
+  return result.rows[0] || null;
+};
 
 module.exports = getUserDetails;

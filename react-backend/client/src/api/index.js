@@ -118,7 +118,7 @@ export const Visitors = {
       { headers: { Authorization: tkn } },
     ),
 
-  update: (tkn, { id, name, gender, yob, email }) =>
+  update: (tkn, { id, name, gender, yob, email, phoneNumber }) => // eslint-disable-line
     axios.post(
       '/api/user/details/update',
       {
