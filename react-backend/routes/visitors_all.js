@@ -3,7 +3,7 @@ const visitorsAll = require('../database/queries/visitors_all');
 
 router.post('/', (req, res, next) => {
   visitorsAll(req.app.get('client:psql'), req.auth.cb_id)
-    .then(users => res.send({ users }))
+    .then(users => res.send({ result: users }))
     .catch(next);
 });
 

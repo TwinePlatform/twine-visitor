@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', (req, res, next) => {
   activities(req.app.get('client:psql'), req.auth.cb_id)
-    .then(activities => res.send({ activities }))
+    .then(activities => res.send({ result: activities }))
     .catch(next);
 });
 

@@ -29,10 +29,11 @@ import CbSignupPage from './cb-admin/pages/Signup';
 import ConfirmPassword from './cb-admin/pages/ConfirmPassword';
 import ForgotPassword from './cb-admin/pages/ForgotPassword';
 import ResetPassword from './cb-admin/pages/ResetPassword';
-import CbDashboard from './cb-admin/pages/Dashboard';
+import CbAdminDashboard from './cb-admin/pages/Dashboard';
 import CbAdminFeedbackPage from './cb-admin/pages/FeedbackPage';
-import CbSettingsPage from './cb-admin/pages/Settings';
-import CbVisitorPage from './cb-admin/pages/Visitor';
+import CbAdminSettingsPage from './cb-admin/pages/Settings';
+import CbAdminVisitorPage from './cb-admin/pages/Visitor';
+import CbAdminVisitorDetailsPage from './cb-admin/pages/VisitorDetails';
 
 
 class App extends Component {
@@ -146,7 +147,7 @@ class App extends Component {
               exact
               path="/admin"
               updateLoggedIn={this.updateLoggedIn}
-              component={CbDashboard}
+              component={CbAdminDashboard}
             />
 
             <AdminRoute
@@ -163,7 +164,7 @@ class App extends Component {
               exact
               path="/cb/visits"
               updateLoggedIn={this.updateLoggedIn}
-              component={AdminVisitsPage}
+              component={CbAdminVisitorDetailsPage}
             />
 
             <AdminRoute
@@ -181,7 +182,7 @@ class App extends Component {
               exact
               path="/cb/visitors/:id"
               updateLoggedIn={this.updateLoggedIn}
-              component={CbVisitorPage}
+              component={CbAdminVisitorPage}
             />
 
             <AdminRoute
@@ -190,7 +191,7 @@ class App extends Component {
               exact
               path="/cb/settings"
               updateLoggedIn={this.updateLoggedIn}
-              component={CbSettingsPage}
+              component={CbAdminSettingsPage}
             />
 
             <AdminRoute

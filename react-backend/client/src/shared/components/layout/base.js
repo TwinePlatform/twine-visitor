@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 export const FlexContainer = styled.div`
-  height: 100%;
+  ${props => (props.expand ? '' : css`height: 100%;`)}
   display: flex;
 `;
 
