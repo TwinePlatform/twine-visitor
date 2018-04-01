@@ -17,18 +17,20 @@ test('DB Query | visitors_all', async tape => {
       const actual = await getAllUsersQuery(client, 3);
       const expected = [
         {
-          id: 4,
-          sex: 'female',
-          yearofbirth: 1998,
-          name: 'Swimming',
-          date: new Date('Sat Apr 29 2017 22:03:17 GMT+0000 (UTC)'),
+          visit_id: 64,
+          visitor_id: 4,
+          gender: 'female',
+          yob: 1998,
+          activity: 'Swimming',
+          visit_date: new Date('Sat Apr 29 2017 22:03:17 GMT+0000 (UTC)'),
         },
         {
-          id: 4,
-          sex: 'female',
-          yearofbirth: 1998,
-          name: 'Swimming',
-          date: new Date('Thu Jun 22 2017 17:45:00 GMT+0000 (UTC)'),
+          visit_id: 65,
+          visitor_id: 4,
+          gender: 'female',
+          yob: 1998,
+          activity: 'Swimming',
+          visit_date: new Date('Thu Jun 22 2017 17:45:00 GMT+0000 (UTC)'),
         },
       ];
       t.deepEquals(actual, expected, 'getAllUsers returns inner join magic');

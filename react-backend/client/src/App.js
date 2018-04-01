@@ -15,7 +15,6 @@ import HomeVisitor from './components/visitors/homeVisitor';
 import ThankYouFeedback from './components/visitors/thank_you_feedback';
 
 import AdminActivitiesPage from './components/admin/adminActivitiesPage';
-import AdminVisitsPage from './components/admin/adminVisitsPage';
 import AdminUsersPage from './components/admin/adminUsersPage';
 
 import NotFound from './components/NotFound';
