@@ -53,7 +53,10 @@ const TranslucentTable = ({ caption, columns, rows, headAlign }) => (
         columns &&
           <TableHead>
             <TableRow>
-              {columns.map(col => <TableColHeading align={headAlign} key={col}>{col}</TableColHeading>)}
+              {
+                columns.map(col =>
+                  <TableColHeading align={headAlign} key={col}>{col}</TableColHeading>)
+              }
             </TableRow>
           </TableHead>
       }
@@ -62,7 +65,7 @@ const TranslucentTable = ({ caption, columns, rows, headAlign }) => (
           rows.map(({ key, data }) => (
             <TableRow border key={key}>
               {
-                data.map((cell, i) => <TableCell key={i}>{cell}</TableCell>)
+                data.map((cell, i) => <TableCell key={i}>{cell}</TableCell>) // eslint-disable-line
               }
             </TableRow>
           ))
@@ -73,6 +76,22 @@ const TranslucentTable = ({ caption, columns, rows, headAlign }) => (
 );
 
 
-TranslucentTable.propTypes = {};
+TranslucentTable.propTypes = {
+  caption: PropTypes.node,
+  columns: PropTypes.arrayOf(PropTypes.string),
+  rows: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string,
+      data: PropTypes.arrayOf(PropTypes.string),
+    })),
+  headAlign: PropTypes.oneOf(['left', 'center', 'right']),
+};
+
+TranslucentTable.defaultProps = {
+  caption: null,
+  columns: [],
+  rows: [],
+  headAlign: 'left',
+};
 
 export default TranslucentTable;
