@@ -123,11 +123,3 @@ export const FormSection = styled.section`
   /* Computed styles */
   order: ${props => props.flexOrder};
 `;
-
-export const PrimaryButtonNoFillCircle = PrimaryButtonNoFill.extend`
-  border-style: solid;
-  border-width: 0.5em;
-  border-image-slice: 50%;
-  border-image-width: 1.5em;
-  border-image-source: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgODAgODAiIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPjxjaXJjbGUgY3g9IjQwIiBjeT0iNDAiIHN0eWxlPSJzdHJva2U6IG5vbmU7IHN0cm9rZS13aWR0aDogMXB4OyBmaWxsOiAjRkRCRDJEOyIgcj0iNDAiPjwvY2lyY2xlPjwvc3ZnPg==');
-`;

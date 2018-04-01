@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { PrimaryButtonNoFill, SecondaryButton } from '../../shared/components/form/base';
+import DotButton from '../../shared/components/form/DottedButton';
 import { Heading, Link as StyledLink } from '../../shared/components/text/base';
 import { CbAdmin } from '../../api';
 
@@ -17,7 +18,7 @@ const FlexItem = styled.div`
   flex: ${props => props.flex || '1'};
 `;
 
-const ButtonOne = PrimaryButtonNoFill.extend`
+const ButtonOne = styled(DotButton)`
   width: 14em;
   height: 12em;
 `;

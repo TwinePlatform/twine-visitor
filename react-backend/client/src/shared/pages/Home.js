@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { PrimaryButtonNoFill, SecondaryButton } from '../components/form/base';
+import { SecondaryButton } from '../components/form/base';
 import { Heading, Link as HyperLink } from '../components/text/base';
 import { FlexContainerCol } from '../components/layout/base';
+import DotButton from '../components/form/DottedButton';
 
 
 const Nav = styled.nav`
@@ -26,14 +27,14 @@ const FlexItem = styled.div`
   flex: ${props => props.flex || '1'};
 `;
 
-const ButtonLeft = styled(PrimaryButtonNoFill)`
-  width: 30vh;
-  height: 25vh;
+const ButtonLeft = styled(DotButton)`
+  width: 14.5em;
+  height: 12em;
 `;
 
-const ButtonRight = styled(SecondaryButton) `
-  width: 30vh;
-  height: 25vh;
+const ButtonRight = SecondaryButton.extend`
+  width: 14.5em;
+  height: 12em;
 `;
 
 const logout = props => () => {
