@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import { PrimaryButtonNoFill, SecondaryButton } from '../../shared/components/form/base';
 
 const ActivitiesButtonYellow = PrimaryButtonNoFill.extend`
-  width: 10rem;
+  width: 9rem;
   margin: 1rem;
   padding: 1rem;
 `;
-
 
 const ActivitiesButtonPurple = SecondaryButton.extend`
-  width: 10rem;
+  width: 9rem;
   margin: 1rem;
   padding: 1rem;
 `;
+
 export default class PurposeButton extends Component {
   constructor(props) {
     super(props);
@@ -25,7 +25,6 @@ export default class PurposeButton extends Component {
   }
 
   render() {
-
     return (
       <Fragment>
         { this.props.color % 2 === 0

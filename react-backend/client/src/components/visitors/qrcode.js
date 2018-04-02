@@ -16,15 +16,27 @@ const StyledNav = styled.nav`
 `;
 
 const StyledSection = styled.section`
-  margin: {props => props.margin 'rem 0'}
+  margin: ${props => props.margin}rem 0;
   display: flex;
   justify-content: center;
 `;
 
-const HalfFlexContainerRow = FlexContainerRow.extend`
-  width: 50%;
+const BigFlexContainerRow = FlexContainerRow.extend`
+  width: 60%;
   padding: 1rem;
   flex-wrap: wrap;
+  @media (min-width: 1000px) {
+    width: 50%;
+  }
+`;
+
+const SmallFlexContainerRow = FlexContainerRow.extend`
+  width: 40%;
+  padding: 1rem;
+  flex-wrap: wrap;
+  @media (min-width: 1000px) {
+    width: 50%;
+  }
 `;
 
 const FlexItem = styled.div`
@@ -189,7 +201,7 @@ export default class QRCode extends Component {
           </Heading>
         </StyledNav>
         <StyledSection margin={3}>
-          <HalfFlexContainerRow>
+          <BigFlexContainerRow>
             {this.state.activities
               .map((activity, index) => (
                 <PurposeButton
@@ -211,10 +223,10 @@ export default class QRCode extends Component {
                     : acc),
                 [],
               )}
-          </HalfFlexContainerRow>
-          <HalfFlexContainerRow>
+          </BigFlexContainerRow>
+          <SmallFlexContainerRow>
             <QRPrivacy />
-          </HalfFlexContainerRow>
+          </SmallFlexContainerRow>
         </StyledSection>
       </Fragment>
     );
