@@ -1,12 +1,14 @@
 import React from 'react';
+import { Heading, Heading2 } from '../../shared/components/text/base';
+import { FlexContainerCol } from '../../shared/components/layout/base';
 
 export default () => (
-  <div>
-    <h1>
+  <FlexContainerCol>
+    <Heading>
       Thank you for your feedback<br />
-    </h1>
+    </Heading>
 
     <br />
-    <h2>See you soon!</h2>
-  </div>
+    <Heading2>See you soon!</Heading2>
+  </FlexContainerCol>
 );
