@@ -27,14 +27,15 @@ const FlexLink = styled(Link)`
 
 const FlexItem = styled.div`
   flex: ${props => props.flex || '1'};
+  text-align: ${props => (props.textRight ? 'right' : 'left')};
 `;
 
-const ButtonLeft = styled(PrimaryButtonNoFill)`
+const ButtonLeft = PrimaryButtonNoFill.extend`
   width: 14rem;
   height: 11rem;
 `;
 
-const ButtonRight = styled(SecondaryButton)`
+const ButtonRight = SecondaryButton.extend`
   width: 14rem;
   height: 11rem;
 `;
@@ -48,11 +49,6 @@ const FeedbackButton = PrimaryButtonNoFill.extend`
 const FeedbackStyledSection = styled.section`
   width: 60%;
   margin: 0 auto;
-`;
-
-const ATag = styled.a`
-  position: absolute;
-  bottom: 1rem;
 `;
 
 const postFeedback = (feedbackScore, props) => {
@@ -85,18 +81,18 @@ export default props => (
         <FlexItem flex="2">
           <Heading>Welcome Visitor</Heading>
         </FlexItem>
-        <FlexItem>
+        <FlexItem textRight>
           <HyperLink to="/cb/login" onClick={logout(props)}>
             Logout
           </HyperLink>
         </FlexItem>
       </StyledNav>
       <StyledSection>
-        <FlexLink to="/visitor/signup">
-          <ButtonLeft large>Sign up</ButtonLeft>
-        </FlexLink>
         <FlexLink to="/visitor/login">
-          <ButtonRight large>Login</ButtonRight>
+          <ButtonLeft large>Sign in with QR code</ButtonLeft>
+        </FlexLink>
+        <FlexLink to="/visitor/signup">
+          <ButtonRight large>Sign up</ButtonRight>
         </FlexLink>
       </StyledSection>
       <FeedbackStyledSection>
@@ -114,9 +110,5 @@ export default props => (
         </FlexContainerRow>
       </FeedbackStyledSection>
     </FlexContainerCol>
-
-    <ATag href="http://www.powertochange.org.uk/data-protection-funding-applications/">
-      Data Protection Policy
-    </ATag>
   </div>
 );
