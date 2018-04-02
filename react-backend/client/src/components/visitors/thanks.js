@@ -1,8 +1,10 @@
 import React from 'react';
+import { Heading, Heading2 } from '../../shared/components/text/base';
+import { FlexContainerCol } from '../../shared/components/layout/base';
 
 export default () => (
-  <section>
-    <h1>Thank you for joining us today</h1>
-    <h2>Enjoy your visit!</h2>
-  </section>
+  <FlexContainerCol>
+    <Heading>Thank you for joining us today</Heading>
+    <Heading2>Enjoy your visit!</Heading2>
+  </FlexContainerCol>
 );
