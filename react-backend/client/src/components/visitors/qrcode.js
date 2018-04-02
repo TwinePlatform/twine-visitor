@@ -131,7 +131,6 @@ export default class QRCode extends Component {
             reject('failure stopping scanner');
           });
       } else {
-        this.previewDiv.play();
         reject('ADD LISTENER FAILED');
       }
     });
@@ -144,9 +143,7 @@ export default class QRCode extends Component {
           reject('ERROR HAPPENING AT getCameras');
         }
       })
-      .catch((err) => {
-        reject(err);
-      });
+      .catch(reject);
   })
 
   handleVideo = () => this.setState({ login: this.state.login + 1 });
