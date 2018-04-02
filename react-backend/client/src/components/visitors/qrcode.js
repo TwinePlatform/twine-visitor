@@ -57,41 +57,6 @@ const SnakeContainerRow = FlexContainerRow.extend`
 
 const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
 
-function instascan() {
-  return new Promise((resolve, reject) => {
-    const scanner = new Instascan.Scanner({
-      video: document.getElementById('preview'),
-      scanPeriod: 5,
-    });
-    scanner.addListener('scan', (content) => {
-      if (document.getElementById('preview')) {
-        scanner
-          .stop()
-          .then(() => {
-            resolve(content);
-          })
-          .catch(() => {
-            reject('failure stopping scanner');
-          });
-      } else {
-        document.getElementById('preview').play();
-        reject('ADD LISTENER FAILED');
-      }
-    });
-    Instascan.Camera.getCameras()
-      .then((cameras) => {
-        if (cameras.length > 0) {
-          scanner.start(cameras[0]);
-        } else {
-          reject('ERROR HAPPENING AT getCameras');
-        }
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-}
-
 export default class QRCode extends Component {
   constructor() {
     super();
@@ -105,13 +70,18 @@ export default class QRCode extends Component {
     };
 
     this.handleVideo = this.handleVideo.bind(this);
-
     this.changeActivity = this.changeActivity.bind(this);
+
+    this.previewDiv = null;
+
+    this.previewRef = (element) => {
+      this.previewDiv = element;
+    };
   }
 
   componentDidMount() {
     if (this.state.login === 1) {
-      instascan()
+      this.instascan()
         .then((content) => {
           this.handleVideo();
           return Visitors.get(localStorage.getItem('token'), { hash: content });
@@ -143,6 +113,41 @@ export default class QRCode extends Component {
       this.props.history.push('/visitor/qrerror');
     }
   }
+  instascan = () => new Promise((resolve, reject) => {
+
+    const scanner = new Instascan.Scanner({
+      video: this.previewDiv,
+      scanPeriod: 5,
+    });
+
+    scanner.addListener('scan', (content) => {
+      if (this.previewDiv) {
+        scanner
+          .stop()
+          .then(() => {
+            resolve(content);
+          })
+          .catch(() => {
+            reject('failure stopping scanner');
+          });
+      } else {
+        this.previewDiv.play();
+        reject('ADD LISTENER FAILED');
+      }
+    });
+
+    Instascan.Camera.getCameras()
+      .then((cameras) => {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          reject('ERROR HAPPENING AT getCameras');
+        }
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  })
 
   handleVideo = () => this.setState({ login: this.state.login + 1 });
 
@@ -185,8 +190,8 @@ export default class QRCode extends Component {
           <StyledSection margin={0}>
             <FlexContainerCol>
               <QrParagraph>Please scan your QR code to log in</QrParagraph>
-              <div id="instascan">
-                <video id="preview" className="Video active" />
+              <div>
+                <video ref={this.previewRef} />
               </div>
             </FlexContainerCol>
           </StyledSection>
