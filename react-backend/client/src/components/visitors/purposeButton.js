@@ -1,5 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { PrimaryButtonNoFill, SecondaryButton } from '../../shared/components/form/base';
+
+const ActivitiesButtonYellow = PrimaryButtonNoFill.extend`
+  width: 9rem;
+  margin: 1rem;
+  padding: 1rem;
+`;
+
+const ActivitiesButtonPurple = SecondaryButton.extend`
+  width: 9rem;
+  margin: 1rem;
+  padding: 1rem;
+`;
 
 export default class PurposeButton extends Component {
   constructor(props) {
@@ -13,9 +26,17 @@ export default class PurposeButton extends Component {
 
   render() {
     return (
-      <button className="Button" name={this.props.session} onClick={this.handleClick}>
-        {this.props.session}
-      </button>
+      <Fragment>
+        { this.props.color % 2 === 0
+          ? <ActivitiesButtonYellow name={this.props.session} onClick={this.handleClick}>
+            {this.props.session}
+          </ActivitiesButtonYellow>
+
+          : <ActivitiesButtonPurple name={this.props.session} onClick={this.handleClick}>
+            {this.props.session}
+          </ActivitiesButtonPurple>
+        }
+      </Fragment>
     );
   }
 }
@@ -23,6 +44,7 @@ export default class PurposeButton extends Component {
 PurposeButton.propTypes = {
   onClick: PropTypes.func,
   session: PropTypes.string,
+  color: PropTypes.number.isRequired,
 };
 
 PurposeButton.defaultProps = {

@@ -1,11 +1,61 @@
 /* global Instascan */
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import styled from 'styled-components';
 import PurposeButton from './purposeButton';
 import QRPrivacy from '../visitors/qrprivacy';
 import { Activities, Visitors } from '../../api';
+import { Heading, Paragraph, Link as HyperLink } from '../../shared/components/text/base';
+import { FlexContainerRow, FlexContainerCol } from '../../shared/components/layout/base';
 
+const StyledNav = styled.nav`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StyledSection = styled.section`
+  margin: ${props => props.margin}rem 0;
+  display: flex;
+  justify-content: center;
+`;
+
+const BigFlexContainerRow = FlexContainerRow.extend`
+  width: 60%;
+  padding: 1rem;
+  flex-wrap: wrap;
+  @media (min-width: 1000px) {
+    width: 50%;
+  }
+`;
+
+const SmallFlexContainerRow = FlexContainerRow.extend`
+  width: 40%;
+  padding: 1rem;
+  flex-wrap: wrap;
+  @media (min-width: 1000px) {
+    width: 50%;
+  }
+`;
+
+const FlexItem = styled.div`
+  flex: ${props => props.flex || '1'};
+`;
+
+const QrParagraph = Paragraph.extend`
+  text-align: center;
+  margin-bottom: 3rem;
+`;
+
+const SnakeContainerRow = FlexContainerRow.extend`
+  width: 100%;
+  justify-content: space-between;
+  &:nth-child(2n) {
+  flex-direction: row-reverse;
+  `;
+
+const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
 
 function instascan() {
   return new Promise((resolve, reject) => {
@@ -94,7 +144,7 @@ export default class QRCode extends Component {
     }
   }
 
-  handleVideo = () => this.setState({ login: this.state.login + 1 })
+  handleVideo = () => this.setState({ login: this.state.login + 1 });
 
   headers = new Headers({
     Authorization: localStorage.getItem('token'),
@@ -108,7 +158,10 @@ export default class QRCode extends Component {
   changeActivity = (newActivity) => {
     this.setState({ activity: newActivity });
 
-    Visitors.createVisit(localStorage.getItem('token'), { hash: this.state.hash, activity: newActivity })
+    Visitors.createVisit(localStorage.getItem('token'), {
+      hash: this.state.hash,
+      activity: newActivity,
+    })
       .then(() => this.props.history.push('/visitor/end'))
       .catch((error) => {
         console.log('ERROR HAPPENING AT FETCH /api/visit/add', error);
@@ -119,35 +172,63 @@ export default class QRCode extends Component {
   render() {
     if (this.state.login === 1) {
       return (
-        <div className="row">
-          <section className="Main col-9">
-            <h1>WELCOME BACK!</h1>
-            <div id="instascan">
-              <video id="preview" className="Video active" />
-            </div>
-          </section>
-          <QRPrivacy className="col-3" />
-        </div>
+        <Fragment>
+          <StyledNav>
+            <FlexItem>
+              <HyperLink to="/">Back to the main page</HyperLink>
+            </FlexItem>
+            <FlexItem flex="2">
+              <Heading>Welcome Visitor!</Heading>
+            </FlexItem>
+            <FlexItem />
+          </StyledNav>
+          <StyledSection margin={0}>
+            <FlexContainerCol>
+              <QrParagraph>Please scan your QR code to log in</QrParagraph>
+              <div id="instascan">
+                <video id="preview" className="Video active" />
+              </div>
+            </FlexContainerCol>
+          </StyledSection>
+        </Fragment>
       );
     }
     return (
-      <div className="row">
-        <section className="Main col-9">
-          <h1 className="capitalise" id="username">
-              Welcome Back, {this.state.username}
-          </h1>
-
-          {this.state.activities.map(activity => (
-            <PurposeButton
-              key={activity.name}
-              session={activity.name}
-              activity={this.state.activity}
-              onClick={this.changeActivity}
-            />
-          ))}
-        </section>
-        <QRPrivacy className="col-3" />
-      </div>
+      <Fragment>
+        <StyledNav>
+          <Heading>
+            Welcome back, {capitaliseFirstName(this.state.username)}! Why are you here today?
+          </Heading>
+        </StyledNav>
+        <StyledSection margin={3}>
+          <BigFlexContainerRow>
+            {this.state.activities
+              .map((activity, index) => (
+                <PurposeButton
+                  key={activity.name}
+                  color={index}
+                  session={activity.name}
+                  activity={this.state.activity}
+                  onClick={this.changeActivity}
+                />
+              ))
+              .reduce(
+                (acc, el, index, array) =>
+                  (index % 2 === 0
+                    ? acc.concat([
+                      <SnakeContainerRow key={el.key}>
+                        {el} {array[index + 1]}
+                      </SnakeContainerRow>,
+                    ])
+                    : acc),
+                [],
+              )}
+          </BigFlexContainerRow>
+          <SmallFlexContainerRow>
+            <QRPrivacy />
+          </SmallFlexContainerRow>
+        </StyledSection>
+      </Fragment>
     );
   }
 }
