@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
-import { PrimaryButtonNoFill, SecondaryButton } from '../../shared/components/form/base';
+import { SecondaryButton } from '../../shared/components/form/base';
 import DotButton from '../../shared/components/form/DottedButton';
 import { Heading, Link as StyledLink } from '../../shared/components/text/base';
 import { CbAdmin } from '../../api';
