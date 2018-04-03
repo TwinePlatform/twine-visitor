@@ -270,7 +270,7 @@ export default class AdminUsersPage extends Component {
               <tr key={user.id}>
                 <td>{user.id}</td>
                 <td>
-                  <Link to={`/admin/user/${user.id}`}>{user.fullname}</Link>
+                  <Link to={`/cb/visitors/${user.id}`}>{user.fullname}</Link>
                 </td>
                 <td>{user.sex}</td>
                 <td>{user.yearofbirth}</td>
