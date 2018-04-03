@@ -1,32 +1,11 @@
-const updateActivityQuery = `
-UPDATE activities SET monday = $2, tuesday = $3, wednesday=$4,
-thursday=$5, friday=$6, saturday=$7, sunday=$8
-WHERE id = $1 AND cb_id = $9`;
+const { updateQuery } = require('../../shared/models/query_builder');
 
-const updateActivity = (
-  dbConnection,
-  id,
-  monday,
-  tuesday,
-  wednesday,
-  thursday,
-  friday,
-  saturday,
-  sunday,
-  cbId
-) => {
-  if (!id || !cbId) return Promise.reject(new Error('Bad query arguments'));
-  return dbConnection.query(updateActivityQuery, [
-    id,
-    monday,
-    tuesday,
-    wednesday,
-    thursday,
-    friday,
-    saturday,
-    sunday,
-    cbId,
-  ]);
+const updateActivity = async (dbConnection, id, cbId, columns) => {
+  if (!id || !cbId)
+    throw new Error('Bad query arguments');
+
+  const activity = await dbConnection.query(updateQuery('activities', columns, { id, cb_id: cbId }, '*'));
+  return activity.rows[0] || null;
 };
 
 module.exports = updateActivity;

@@ -110,7 +110,7 @@ test('Tests insertActivity inserts an activity', async t => {
   const oldId = oldIdQuery.rows[0].max;
 
   const activitiesPreInsert = await activities(client, 2);
-  const newId = await insertActivity(client, 'Test', 2);
+  const result = await insertActivity(client, 'Test', 2);
   const activitiesPostInsert = await activities(client, 2);
 
   t.notEqual(
@@ -118,7 +118,7 @@ test('Tests insertActivity inserts an activity', async t => {
     activitiesPostInsert.length,
     'Inserted activity!'
   );
-  t.equal(newId, oldId + 1, 'Query returns the id of the new activity');
+  t.equal(result.id, oldId + 1, 'Query returns the id of the new activity');
 
   try {
     await insertActivity(client, '', 2);
@@ -144,14 +144,22 @@ test('Tests insertActivity inserts an activity', async t => {
   t.end();
 });
 
-test('Tests updateAcivity updates an activity', async t => {
+test('Tests updateActivity updates an activity', async t => {
   await refreshDB();
 
   const client = new pg.Client(config.psql);
   await client.connect();
 
   const activitiesPreUpdate = await activities(client, 1);
-  await updateActivity(client, 1, true, true, true, true, true, true, true, 1);
+  await updateActivity(client, 1, 1, {
+    monday: true,
+    tuesday: true,
+    wednesday: true,
+    thursday: true,
+    friday: true,
+    saturday: true,
+    sunday: true,
+  });
   const activitiesPostUpdate = await activities(client, 1);
 
   t.notDeepEqual(activitiesPreUpdate, activitiesPostUpdate, 'Updated activity');
@@ -160,14 +168,16 @@ test('Tests updateAcivity updates an activity', async t => {
     await updateActivity(
       client,
       null,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      null
+      null,
+      {
+        monday: true,
+        tuesday: true,
+        wednesday: true,
+        thursday: true,
+        friday: true,
+        saturday: true,
+        sunday: true,
+      }
     );
     t.fail('Worked with bad inputs');
   } catch (e) {
@@ -178,14 +188,16 @@ test('Tests updateAcivity updates an activity', async t => {
     await updateActivity(
       client,
       1,
-      'blah',
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      1
+      1,
+      {
+        monday: 'blah',
+        tuesday: true,
+        wednesday: true,
+        thursday: true,
+        friday: true,
+        saturday: true,
+        sunday: true,
+      }
     );
     t.fail('Worked with bad inputs');
   } catch (e) {

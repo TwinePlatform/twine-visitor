@@ -4,20 +4,14 @@ const activityUpdate = require('../database/queries/activity_update');
 const router = express.Router();
 
 router.post('/', (req, res, next) => {
-  const activity = req.body;
+  const { id, ...activity } = req.body;
   activityUpdate(
     req.app.get('client:psql'),
-    activity.id,
-    activity.monday,
-    activity.tuesday,
-    activity.wednesday,
-    activity.thursday,
-    activity.friday,
-    activity.saturday,
-    activity.sunday,
-    req.auth.cb_id
+    id,
+    req.auth.cb_id,
+    activity,
   )
-    .then(() => res.send({ success: 'success' }))
+    .then((data) => res.send({ result: data }))
     .catch(next);
 });
 

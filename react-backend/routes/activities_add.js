@@ -8,7 +8,7 @@ router.post('/', (req, res, next) => {
   const pgClient = req.app.get('client:psql');
 
   activityAdd(pgClient, activityToAdd, req.auth.cb_id)
-    .then(id => res.send({ id }))
+    .then(data => res.send({ result: data }))
     .catch(next);
 });
 
