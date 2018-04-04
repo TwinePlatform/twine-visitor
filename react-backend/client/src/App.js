@@ -14,8 +14,6 @@ import Thanks from './components/visitors/thanks';
 import HomeVisitor from './components/visitors/homeVisitor';
 import ThankYouFeedback from './components/visitors/thank_you_feedback';
 
-import AdminUsersPage from './components/admin/adminUsersPage';
-
 import NotFound from './components/NotFound';
 import InternalServerError from './components/InternalServerError';
 
@@ -33,6 +31,7 @@ import CbAdminSettingsPage from './cb-admin/pages/Settings';
 import CbAdminVisitorPage from './cb-admin/pages/Visitor';
 import CbAdminVisitorDetailsPage from './cb-admin/pages/VisitorDetails';
 import CbAdminActivitiesPage from './cb-admin/pages/Activities';
+import CbAdminVisitsDataPage from './cb-admin/pages/VisitsData';
 
 
 class App extends Component {
@@ -172,7 +171,7 @@ class App extends Component {
               exact
               path="/cb/visitors"
               updateLoggedIn={this.updateLoggedIn}
-              component={AdminUsersPage}
+              component={CbAdminVisitsDataPage}
             />
 
             <AdminRoute

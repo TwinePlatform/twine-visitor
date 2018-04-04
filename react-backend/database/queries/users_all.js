@@ -1,9 +1,13 @@
-const getAllUsersQuery = `
-  SELECT users.id, users.fullName, users.sex, users.yearofbirth, users.email, users.date
-  FROM users
-  WHERE users.cb_id = $1`;
+const { selectQuery } = require('../../shared/models/query_builder');
 
 const getUserList = (dbConnection, cbId) =>
-  dbConnection.query(getAllUsersQuery, [cbId]).then(res => res.rows);
+  dbConnection.query(
+    selectQuery(
+      'users',
+      ['id', 'fullName AS name', 'sex AS gender', 'yearofbirth AS yob', 'email', 'date AS visit_date'],
+      { cb_id: cbId }
+    )
+  )
+    .then(res => res.rows);
 
 module.exports = getUserList;
