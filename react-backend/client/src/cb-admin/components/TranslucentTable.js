@@ -62,8 +62,8 @@ const TranslucentTable = ({ caption, columns, rows, headAlign }) => (
       }
       <TableBody>
         {
-          rows.map(({ key, data }) => (
-            <TableRow border key={key}>
+          rows.map(({ key, data, onClick }) => (
+            <TableRow border key={key} onClick={onClick}>
               {
                 data.map((cell, i) => <TableCell key={i}>{cell}</TableCell>) // eslint-disable-line
               }
@@ -81,8 +81,8 @@ TranslucentTable.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.string),
   rows: PropTypes.arrayOf(
     PropTypes.shape({
-      key: PropTypes.string,
-      data: PropTypes.arrayOf(PropTypes.string),
+      key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
     })),
   headAlign: PropTypes.oneOf(['left', 'center', 'right']),
 };

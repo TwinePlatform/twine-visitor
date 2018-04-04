@@ -1,5 +1,5 @@
 const query = (filterBy, orderBy) => `
-SELECT * FROM (
+SELECT id, fullName AS name, sex AS gender, yearofbirth AS yob, email, date FROM (
 SELECT DISTINCT ON (users.id) users.id, users.fullName, users.sex, users.yearofbirth, users.email, users.date
 FROM users
 FULL OUTER JOIN visits
@@ -10,7 +10,7 @@ WHERE users.cb_id = $1 ${filterBy} ) users ${orderBy}`;
 
 const getValidatedFilters = filterArray => {
   const validFilterTypes = {
-    gender: ['male', 'female', 'prefer_not_to_say'],
+    gender: ['male', 'female', 'prefer not to say'],
     age: ['0-17', '18-34', '35-50', '51-69', '70-more'],
   };
 
@@ -33,7 +33,7 @@ const buildGenderQuery = genderQueries => {
   const validQueries = {
     male: "users.sex = 'male'",
     female: "users.sex = 'female'",
-    prefer_not_to_say: "users.sex = 'prefer not to say'",
+    'prefer not to say': "users.sex = 'prefer not to say'",
   };
 
   return genderQueries
