@@ -20,19 +20,32 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 // ];
 // console.log(years);
 
+const ButtonsFlexContainerCol = FlexContainerCol.extend`
+padding-bottom: 30%;
+width: 40%;
+`;
+
+const SubmitButton = PrimaryButton.extend`
+  height: 4em;
+  width: 90%;
+  margin-bottom: 5%;
+`;
+
 const CenteredParagraph = Paragraph.extend`
   width: 90%;
-  margin: 2em 0;
-  margin-bottom: -5em;
-  line-height: 1.5em;
   font-weight: medium;
-  font-size: 19px;
+  font-size: 21px;
+  text-align: center;
+  margin-top: 5%;
+  padding-left: 15%;
 `;
 
 const CenteredHeading = Heading.extend`
-padding-top: 40%;
+  padding-top: 20%;
+  padding-left: 10%;
   width: 90%;
   text-align: center;
+  font-weight: heavy;
 `;
 
 const PrintContainer = styled.div`
@@ -48,8 +61,12 @@ const PrintContainer = styled.div`
 `;
 
 const QRimg = styled.img`
-width=250px;
-height=250px;
+height: 25em;
+width: 100%;
+object-fit: contain;
+object-position: left;
+display: block;
+margin-top:10%;
 `;
 
 const NotPrint = FlexContainerCol.extend`
@@ -67,6 +84,11 @@ const QrCodePrint = styled.img``;
 const PrintHeaderRow = FlexContainerRow.extend`
   justify-content: center;
   align-items: center;
+`;
+
+const QRContainer = styled.div`
+top: 50%;
+display: block;
 `;
 
 const years = [
@@ -219,11 +241,15 @@ export default class Main extends Component {
             emailed you a copy.
           </CenteredParagraph>
           <FlexContainerRow>
-            <QRimg src={state.url} alt="This is your QRcode" />
-            <Link to="/visitor">
-              <PrimaryButton>Next</PrimaryButton>
-            </Link>
-            <PrimaryButton onClick={this.onClickPrint}>Print</PrimaryButton>
+            <QRContainer>
+              <QRimg src={state.url} alt="This is your QRcode" />
+            </QRContainer>
+            <ButtonsFlexContainerCol>
+              <Link to="/visitor">
+                <SubmitButton>NEXT</SubmitButton>
+              </Link>
+              <SubmitButton onClick={this.onClickPrint}>PRINT QR CODE</SubmitButton>
+            </ButtonsFlexContainerCol>
           </FlexContainerRow>
         </FlexContainerCol>
       </NotPrint>
