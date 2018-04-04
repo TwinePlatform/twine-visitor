@@ -9,7 +9,7 @@ const sendQrCode = require('../functions/qr_send');
 const schema = {
   body: {
     formSender: Joi.string().required(),
-    formPhone: Joi.string().required(),
+    formPhone: [Joi.string(), Joi.empty()],
     formGender: Joi.string().required(),
     formYear: Joi.number()
       .integer()
