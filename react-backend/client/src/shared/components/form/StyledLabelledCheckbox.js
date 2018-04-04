@@ -5,7 +5,7 @@ import { colors } from '../../style_guide';
 
 const CheckboxDiv = styled.div`
   cursor: pointer;
-  
+
   & input {
     z-index: -1;
     opacity: 0;
@@ -27,11 +27,8 @@ const CheckboxDiv = styled.div`
     background: ${colors.highlight_primary};
   }
 `;
-const Input = styled.input`
-`;
-const Label = styled.label`
-`;
-
+const Input = styled.input``;
+const Label = styled.label``;
 
 const Checkbox = ({ id, onChange, ...props }) => (
   <CheckboxDiv>

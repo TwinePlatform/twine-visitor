@@ -8,29 +8,28 @@ import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 
 const SubmitButton = PrimaryButton.extend`
-height: 4em;
-width: 90%;
+  height: 4em;
+  width: 90%;
 `;
 
 const CenteredParagraph = Paragraph.extend`
-width: 90%;
-margin: 2em 0;
-margin-bottom: -5em;
-line-height: 1.5em;
+  width: 90%;
+  margin: 2em 0;
+  margin-bottom: -5em;
+  line-height: 1.5em;
 `;
 
 const CenteredHeading = Heading.extend`
-width: 90%;
-text-align: center;
+  width: 90%;
+  text-align: center;
 `;
 
-
 const TitleParagraph = Paragraph.extend`
-font-weight: medium;
-width: 90%;
-font-size: 19px;
-margin-top: -2px;
-margin-bottom: -1em;
+  font-weight: medium;
+  width: 90%;
+  font-size: 19px;
+  margin-top: -2px;
+  margin-bottom: -1em;
 `;
 
 const genders = [
@@ -52,18 +51,8 @@ const signupForm = props => (
           <LabelledInput label="Full Name" name="fullname" option="fullname" required />
           <LabelledInput label="Email Address" name="email" option="email" required />
           <LabelledInput label="Phone Number (optional)" name="phone" option="phone" />
-          <LabelledSelect
-            name="gender"
-            label="Gender"
-            options={genders}
-            required
-          />
-          <LabelledSelect
-            name="year"
-            label="Year of Birth"
-            options={props.years}
-            required
-          />
+          <LabelledSelect name="gender" label="Gender" options={genders} required />
+          <LabelledSelect name="year" label="Year of Birth" options={props.years} required />
         </div>
       </FormSection>
       <FormSection flexOrder={2}>
@@ -88,17 +77,11 @@ const signupForm = props => (
       </FormSection>
 
       <FormSection flexOrder={3}>
-        <SubmitButton onClick={props.checkUserExists}>
-          CONTINUE
-        </SubmitButton>
+        <SubmitButton onClick={props.checkUserExists}>CONTINUE</SubmitButton>
       </FormSection>
 
       <FormSection flexOrder={4}>
-        <Link
-          to="http://www.twine-together.com/privacy-policy/"
-        >
-          Data Protection Policy
-        </Link>
+        <Link to="http://www.twine-together.com/privacy-policy/">Data Protection Policy</Link>
       </FormSection>
     </Form>
   </FlexContainerCol>
