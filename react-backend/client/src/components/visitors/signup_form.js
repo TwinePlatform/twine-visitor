@@ -24,6 +24,7 @@ width: 90%;
 text-align: center;
 `;
 
+
 const TitleParagraph = Paragraph.extend`
 font-weight: medium;
 width: 90%;
@@ -58,7 +59,7 @@ const signupForm = props => (
             required
           />
           <LabelledSelect
-            name="fullname"
+            name="year"
             label="Year of Birth"
             options={props.years}
             required
@@ -75,15 +76,15 @@ const signupForm = props => (
           <br />
           However, from time to time we would like to contact you with details of other offers we
           provide. If you consent to us contacting you by email, please tick to agree:
+          <StyledLabelledCheckbox name="emailContact" id="emailCheckboxInput" />
         </CenteredParagraph>
-        <StyledLabelledCheckbox name="emailContact" id="emailCheckboxInput" />
         <CenteredParagraph>
           <br />
           <br />
           We would like to send you surveys in order to improve our work via SMS. If you agree to us
           using your personal data for that purpose, please tick to agree:
+          <StyledLabelledCheckbox name="smsContact" id="smsCheckboxInput" />
         </CenteredParagraph>
-        <StyledLabelledCheckbox name="smsContact" id="smsCheckboxInput" />
       </FormSection>
 
       <FormSection flexOrder={3}>

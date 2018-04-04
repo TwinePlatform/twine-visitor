@@ -10,11 +10,21 @@ import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 
-const generateYearsArray = (startYear, currentYear) =>
-  Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
+// const generateYearsArray = (startYear, currentYear) =>
+//   Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
 
-const years = generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear());
-console.log(years);
+// const years = [
+//   generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear())
+// .reduce((acc, cur, i) => { acc[i] = cur; return acc; }, {}),
+// ];
+// console.log(years);
+
+const years = [
+  { key: '1', value: '' },
+  { key: '2', value: '1992' },
+  { key: '3', value: '1356' },
+  { key: '4', value: '1792' },
+];
 
 export default class Main extends Component {
   constructor(props) {

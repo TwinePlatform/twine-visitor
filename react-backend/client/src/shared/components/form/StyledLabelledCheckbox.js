@@ -1,64 +1,52 @@
-/*
- * Labelled Input component
- */
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Input, Label } from './base';
+import { colors } from '../../style_guide';
 
 const CheckboxDiv = styled.div`
-width: 25px;
-height: 25px;
-background: #FDBD2D;
-border-radius: 100%;
+  cursor: pointer;
+  
+  & input {
+    z-index: -1;
+    opacity: 0;
+    position: absolute;
+  }
+
+  & input + label:before {
+    content: '';
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    border-radius: 50%;
+    border: 0.2em solid ${colors.highlight_primary};
+    background: transparent;
+    position: relative;
+  }
+
+  & input:checked + label:before {
+    background: ${colors.highlight_primary};
+  }
+`;
+const Input = styled.input`
+`;
+const Label = styled.label`
 `;
 
-const CheckboxLabel = Label.extend`
-display: block;
-width: 15px;
-height: 15px;
-border-radius: 100%;
--webkit-transition: all .5s ease;
--moz-transition: all .5s ease;
--o-transition: all .5s ease;
--ms-transition: all .5s ease;
-transition: all .5s ease;
-cursor: pointer;
-z-index: 1;
-position: relative;
-top: 5px;
-left: 5px;
-background: ${props => (props.checked ? 'inherited' : '#FFFFFF')};
-`;
 
-const InputCheckbox = Input.extend`
-visibility: hidden;
-width: 30%;
-`;
+const Checkbox = ({ id, onChange, ...props }) => (
+  <CheckboxDiv>
+    <Input id={id} type="checkbox" onChange={onChange} {...props} />
+    <Label htmlFor={id} />
+  </CheckboxDiv>
+);
 
-const StyledLabelledCheckbox = (props) => {
-  const { id, checked, ...rest } = props;
-  let isChecked = false;
-
-  return (
-    <CheckboxDiv>
-      <CheckboxLabel for={id} checked={isChecked} />
-      <InputCheckbox type="checkbox" id={id} onChange={(e) => { isChecked = e.target.checked; }} {...rest} />
-    </CheckboxDiv>
-  );
-};
-
-
-StyledLabelledCheckbox.propTypes = {
+Checkbox.propTypes = {
   id: PropTypes.string.isRequired,
-  checked: PropTypes.bool.isRequired,
+  onChange: PropTypes.func,
 };
 
-StyledLabelledCheckbox.defaultProps = {
-  error: null,
+Checkbox.defaultProps = {
+  onChange: () => {},
 };
 
-
-export default styled(StyledLabelledCheckbox)`
-  margin-bottom: 1em;
-`;
+export default Checkbox;
