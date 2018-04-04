@@ -51,7 +51,6 @@ test('POST /api/qr/generator | Missing info in payload', t => {
     .expect('Content-Type', /json/)
     .end((err, res) => {
       const expected = {
-        formPhone: ['is required'],
         formGender: ['is required'],
         formYear: ['is required'],
         formEmail: ['is required'],
