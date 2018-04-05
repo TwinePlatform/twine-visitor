@@ -5,7 +5,8 @@ import { colors } from '../../style_guide';
 
 const CheckboxDiv = styled.div`
   cursor: pointer;
-
+  margin-bottom: 0.5em;
+  padding-left: 40%;
   & input {
     z-index: -1;
     opacity: 0;

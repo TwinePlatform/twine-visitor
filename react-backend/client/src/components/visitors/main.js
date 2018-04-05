@@ -11,17 +11,18 @@ import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 
-// const generateYearsArray = (startYear, currentYear) =>
-//   Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
+const generateYearsArray = (startYear, currentYear) =>
+  Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
 
-// const years = [
-//   generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear())
-// .reduce((acc, cur, i) => { acc[i] = cur; return acc; }, {}),
-// ];
-// console.log(years);
+const years = [{ key: '', value: '' }].concat(
+  generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear()).map(y => ({
+    key: y,
+    value: y,
+  })),
+);
 
 const ButtonsFlexContainerCol = FlexContainerCol.extend`
-  padding-bottom: 30%;
+  padding-top: 10%;
   width: 40%;
 `;
 
@@ -41,7 +42,7 @@ const CenteredParagraph = Paragraph.extend`
 `;
 
 const CenteredHeading = Heading.extend`
-  padding-top: 20%;
+  padding-top: 5%;
   padding-left: 10%;
   width: 90%;
   text-align: center;
@@ -87,16 +88,10 @@ const PrintHeaderRow = FlexContainerRow.extend`
 `;
 
 const QRContainer = styled.div`
-  top: 50%;
+  height: 50%;
+  width: 50%;
   display: block;
 `;
-
-const years = [
-  { key: '1', value: '' },
-  { key: '2', value: '1992' },
-  { key: '3', value: '1356' },
-  { key: '4', value: '1792' },
-];
 
 export default class Main extends Component {
   constructor(props) {
