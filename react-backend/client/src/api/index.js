@@ -172,12 +172,10 @@ export const Visitors = {
     );
   },
 
-  getCbName: tkn =>
-    axios.get(
-      '/api/users/cb-name',
-      { headers: { Authorization: tkn } },
-    ),
-
+  getCbName: tkn => axios.get(
+    '/api/users/cb-name',
+    { headers: { Authorization: tkn } },
+  ),
 };
 
 

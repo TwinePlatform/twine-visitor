@@ -68,7 +68,7 @@ const signupForm = props => (
       <FormSection flexOrder={2}>
         <TitleParagraph>Why are we collecting this information?</TitleParagraph>
         <CenteredParagraph>
-          Here at XXXXXXXX, we take your privacy seriously: we will only use your personal
+          Here at {props.cbOrgName}, we take your privacy seriously: we will only use your personal
           information to administer your account to provide the products and services you have
           requested from us, and improve how we deliver those.
           <br />
@@ -103,6 +103,7 @@ signupForm.propTypes = {
   createVisitor: PropTypes.func.isRequired,
   years: PropTypes.arrayOf(PropTypes.number).isRequired,
   errors: PropTypes.arrayOf(PropTypes.object).isRequired,
+  cbOrgName: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
 };
 

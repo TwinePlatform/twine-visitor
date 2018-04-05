@@ -107,7 +107,7 @@ export default class Main extends Component {
       users: [],
       url: '',
       errors: {},
-      cb_logo: '',
+      cbLogoUrl: '',
       isPrinting: false,
       cbOrgName: '',
     };
@@ -187,7 +187,7 @@ export default class Main extends Component {
       <PrintContainer>
         <PrintHeaderRow>
           {state.cbLogoUrl ? (
-            <CbLogo src={this.state.cb_logo} alt="Business logo" />
+            <CbLogo src={this.state.cbLogoUrl} alt="Business logo" />
           ) : (
             <CbLogo src={p2cLogo} alt="Power to change logo" />
           )}
@@ -223,7 +223,7 @@ export default class Main extends Component {
     );
   }
   render() {
-    const { errors } = this.state;
+    const { errors, cbOrgName } = this.state;
 
     return (
       <div className="row">
@@ -234,6 +234,7 @@ export default class Main extends Component {
               errors={errors}
               years={years}
               createVisitor={this.createVisitor}
+              cbOrgName={cbOrgName}
             />
           </Route>
 
