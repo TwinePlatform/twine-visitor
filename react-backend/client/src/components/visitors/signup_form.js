@@ -1,20 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
-import { Heading, Paragraph, Link } from '../../shared/components/text/base';
+import { Heading, Paragraph } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import StyledLabelledCheckbox from '../../shared/components/form/StyledLabelledCheckbox';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { FlexContainerCol } from '../../shared/components/layout/base';
+import { colors, fonts } from '../../shared/style_guide';
 
 const SubmitButton = PrimaryButton.extend`
   height: 4em;
   width: 90%;
 `;
 
+const PrivacyLink = styled.a`
+  font-weight: ${fonts.weight.medium};
+  color: ${colors.dark};
+`;
+
 const CenteredParagraph = Paragraph.extend`
   width: 90%;
-  margin: 2em 0;
+  margin: 1.5em 0;
   margin-bottom: -5em;
   line-height: 1.5em;
 `;
@@ -22,14 +29,19 @@ const CenteredParagraph = Paragraph.extend`
 const CenteredHeading = Heading.extend`
   width: 90%;
   text-align: center;
+  margin-bottom: 5%;
 `;
 
 const TitleParagraph = Paragraph.extend`
   font-weight: medium;
-  width: 90%;
+  width: 100%;
   font-size: 19px;
-  margin-top: -2px;
-  margin-bottom: -1em;
+  margin-top: -8%;
+  margin-bottom: -0.5em;
+`;
+
+const PrivacySection = FormSection.extend`
+margin-top: 2em;
 `;
 
 const genders = [
@@ -80,9 +92,11 @@ const signupForm = props => (
         <SubmitButton onClick={props.checkUserExists}>CONTINUE</SubmitButton>
       </FormSection>
 
-      <FormSection flexOrder={4}>
-        <Link to="http://www.twine-together.com/privacy-policy/">Data Protection Policy</Link>
-      </FormSection>
+      <PrivacySection flexOrder={4}>
+        <PrivacyLink href="http://www.twine-together.com/privacy-policy/">
+      Data Protection Policy
+        </PrivacyLink>
+      </PrivacySection>
     </Form>
   </FlexContainerCol>
 );
