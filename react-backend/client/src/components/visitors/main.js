@@ -113,6 +113,15 @@ export default class Main extends Component {
     };
   }
 
+  componentDidMount() {
+    Visitors.getCbName(localStorage.getItem('token'))
+      .then(res =>
+        this.setState({
+          cbOrgName: res.data.result.org_name,
+          cbLogoUrl: res.data.result.uploadedfilecloudinaryurl,
+        }));
+  }
+
   onClickPrint = () => {
     window.print();
   };
@@ -120,6 +129,11 @@ export default class Main extends Component {
   setError(messagesArray) {
     this.setState({ error: messagesArray });
   }
+
+  headers = new Headers({
+    Authorization: localStorage.getItem('token'),
+    'Content-Type': 'application/json',
+  });
 
   handleChange = (e) => {
     switch (e.target.type) {

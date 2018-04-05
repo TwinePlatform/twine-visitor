@@ -23,6 +23,7 @@ const activitiesUpdate = require('./routes/activities_update');
 const activitiesDelete = require('./routes/activities_delete');
 const cbRegister = require('./routes/cbauthentication/cb_register');
 const cbLogin = require('./routes/cbauthentication/cb_login');
+const cbName = require('./routes/cb_name_check');
 const cbPasswordChange = require('./routes/cbauthentication/cb_password_change');
 const cbPasswordReset = require('./routes/cbauthentication/cb_password_reset');
 const cbFeedback = require('./shared/controllers/feedback');
@@ -45,6 +46,7 @@ router.use('/user/name-from-scan', mwIsAuthenticated, visitorName);
 router.use('/visit/add', mwIsAuthenticated, visitInsert);
 router.use('/activities/today', mwIsAuthenticated, activitiesToday);
 router.use('/admin/login', mwIsAuthenticated, adminLogin);
+router.use('/users/cb-name', mwIsAuthenticated, cbName);
 
 // Admin routes
 router.use('/user/qr/email', mwAdminIsAuthenticated, qrSend);
