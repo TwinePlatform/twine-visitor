@@ -125,8 +125,13 @@ export default class ActivitiesPage extends React.Component {
     this.setState(assocPath(['form', e.target.name], e.target.value))
 
   toggleCheckbox = (id, day) => {
-    Activities.update(this.props.auth, { id, [day]: true })
-      .then(res => this.props.updateAdminToken(res.headers.authorization))
+    const current = this.state.activities.items[id][day];
+
+    Activities.update(this.props.auth, { id, [day]: !current })
+      .then((res) => {
+        this.props.updateAdminToken(res.headers.authorization);
+        this.setState(assocPath(['activities', 'items', id], res.data.result));
+      })
       .catch(error =>
         (error.message === 'No admin token'
           ? this.props.history.push('/admin/login')
