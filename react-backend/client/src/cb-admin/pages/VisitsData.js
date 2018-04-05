@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
-import { filter, invertObj, project } from 'ramda';
+import { filter, project, contains } from 'ramda';
 import { Bar, Pie } from 'react-chartjs-2';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { Form as F, FormSection as FS } from '../../shared/components/form/base';
@@ -69,23 +69,34 @@ const ageOptions = [
 ];
 
 
+// const keyMap = {
+//   id: 'Visitor ID',
+//   name: 'Name',
+//   gender: 'Gender',
+//   yob: 'Year of birth',
+// };
+
 const keyMap = {
-  id: 'Visitor ID',
-  name: 'Name',
+  visit_id: null,
+  visitor_id: 'Visitor ID',
   gender: 'Gender',
   yob: 'Year of birth',
+  activity: 'Activities',
+  visit_date: 'Date of visit',
 };
-
-const colToState = invertObj(keyMap);
 
 const columns = Object.values(keyMap).filter(Boolean);
 
+const range = (start, end) => Array(+end - +start + 1).fill().map((_, idx) => +start + idx) //eslint-disable-line
+;
 
 export default class VisitsDataPage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      visitsList: [],
+      filteredVisitsList: [],
       users: [],
       activities: [],
       filters: {},
@@ -100,12 +111,14 @@ export default class VisitsDataPage extends React.Component {
   }
 
   componentDidMount() {
-    const pVisitors = Visitors.get(this.props.auth);
+    const pVisitors = Visitors.get(this.props.auth, { withVisits: true });
     const pStats = Visitors.getStatistics(this.props.auth);
 
     Promise.all([pVisitors, pStats])
       .then(([resVisitors, resStats]) => {
         this.props.updateAdminToken(resVisitors.headers.authorization);
+
+        const visits = resVisitors.data.result;
         const [visitsNumbers, genderNumbers, activitiesNumbers, ageGroups, activities] = resStats.data.result;
 
         this.setState({
@@ -116,6 +129,8 @@ export default class VisitsDataPage extends React.Component {
           activitiesGroups: this.getActivitiesForChart(activitiesNumbers),
           ageGroups: this.getAgeGroupsForChart(ageGroups),
           activities: activities.map(activity => activity.name),
+          visitsList: visits,
+          filteredVisitsList: visits,
         });
       })
       .catch(error => this.setState({ errors: { general: 'Unknown error' } }));
@@ -172,7 +187,7 @@ export default class VisitsDataPage extends React.Component {
       .filter(m => m.isAfter(lastWeek))
       .reduce((acc, m) => {
         const day = m.format('dddd');
-        acc[day]++;
+        acc[day]++; //eslint-disable-line
         return acc;
       }, initObj);
 
@@ -216,6 +231,22 @@ export default class VisitsDataPage extends React.Component {
 
   update = () => {
 
+    const { ageFilter, activityFilter, genderFilter, visitsList } = this.state;
+    let yearRange = [];
+
+    if (ageFilter) {
+      const year = moment().year();
+      const ages = ageFilter.split('-');
+      const ageRange = range(ages[0], ages[1]);
+      yearRange = ageRange.map(el => year - el);
+    }
+    const newFilteredVisitsList = visitsList
+      .filter(el => (genderFilter ? el.gender === genderFilter.toLowerCase() : el))
+      .filter(el => (activityFilter ? el.activity === activityFilter : el))
+      .filter(el => (ageFilter ? contains(el.yob, yearRange) : el));
+
+    this.setState({ filteredVisitsList: newFilteredVisitsList });
+
     Visitors.getStatistics(this.props.auth, {
       filter: [
         this.state.genderFilter && `gender@${this.state.genderFilter.toLowerCase()}`,
@@ -244,9 +275,8 @@ export default class VisitsDataPage extends React.Component {
   }
 
   render() {
-    const { errors } = this.state;
+    const { errors, filteredVisitsList } = this.state;
     const activityOptions = [''].concat(this.state.activities).map((a, i) => ({ key: `${i}`, value: a }));
-    console.log(this.state.users);
     return (
       <FlexContainerCol expand>
         <Nav>
@@ -317,11 +347,14 @@ export default class VisitsDataPage extends React.Component {
             headAlign="left"
             columns={columns}
             rows={
-              this.state.users
-                .map(v => ({
-                  key: `${v.id}`,
-                  onClick: () => this.props.history.push(`/cb/visitors/${v.id}`),
-                  data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [v])[0]),
+              filteredVisitsList
+                .map(visit => ({
+                  ...visit,
+                  visit_date: moment(visit.visit_date).format('DD-MM-YY HH:mm'),
+                }))
+                .map(visit => ({
+                  key: visit.visit_id,
+                  data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [visit])[0]),
                 }))
             }
           />
