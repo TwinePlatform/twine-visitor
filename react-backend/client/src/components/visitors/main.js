@@ -137,9 +137,9 @@ export default class Main extends Component {
     Visitors.create(localStorage.getItem('token'), {
       name: this.state.fullname,
       gender: this.state.gender,
-      phoneNumber: this.state.phone,
-      email: this.state.email,
       yob: this.state.year,
+      email: this.state.email,
+      phoneNumber: this.state.phone,
       emailContactConsent: this.state.emailContact,
       smsContactConsent: this.state.smsContact,
     })
@@ -246,7 +246,7 @@ export default class Main extends Component {
               handleChange={this.handleChange}
               error={error}
               years={years}
-              checkUserExists={this.checkUserExists}
+              createVisitor={this.createVisitor}
             />
           </Route>
 

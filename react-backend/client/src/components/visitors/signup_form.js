@@ -57,14 +57,11 @@ const signupForm = props => (
     <Form className="SignupForm" onChange={props.handleChange}>
       <FormSection flexOrder={1}>
         <div>
-          {props.error && (
-            <div className="ErrorText">{props.error.map(el => <span key={el}>{el}</span>)}</div>
-          )}
-          <LabelledInput label="Full Name" name="fullname" option="fullname" required />
-          <LabelledInput label="Email Address" name="email" option="email" required />
-          <LabelledInput label="Phone Number (optional)" name="phone" option="phone" />
-          <LabelledSelect name="gender" label="Gender" options={genders} required />
-          <LabelledSelect name="year" label="Year of Birth" options={props.years} required />
+          <LabelledInput label="Full Name" name="fullname" option="fullname" error={props.error.formSender} required />
+          <LabelledInput label="Email Address" name="email" option="email" error={props.error.formEmail} required />
+          <LabelledInput label="Phone Number (optional)" name="phone" option="phone" error={props.error.formPhone} />
+          <LabelledSelect name="gender" label="Gender" options={genders} error={props.error.formGender} required />
+          <LabelledSelect name="year" label="Year of Birth" options={props.years} error={props.error.formYear} required />
         </div>
       </FormSection>
       <FormSection flexOrder={2}>
@@ -89,7 +86,7 @@ const signupForm = props => (
       </FormSection>
 
       <FormSection flexOrder={3}>
-        <SubmitButton onClick={props.checkUserExists}>CONTINUE</SubmitButton>
+        <SubmitButton onClick={props.createVisitor}>CONTINUE</SubmitButton>
       </FormSection>
 
       <PrivacySection flexOrder={4}>
@@ -102,7 +99,7 @@ const signupForm = props => (
 );
 
 signupForm.propTypes = {
-  checkUserExists: PropTypes.func.isRequired,
+  createVisitor: PropTypes.func.isRequired,
   years: PropTypes.arrayOf(PropTypes.number).isRequired,
   error: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleChange: PropTypes.func.isRequired,
