@@ -97,7 +97,7 @@ export default class ActivitiesPage extends React.Component {
         order: [],
       },
       form: {},
-      errors: {},
+      errors: { view: false },
     };
   }
 
@@ -121,7 +121,7 @@ export default class ActivitiesPage extends React.Component {
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/internalServerError');
         } else {
-          this.setState({ errors: { general: 'Could not update activity' } });
+          this.setState({ errors: { general: 'Could not update activity', view: true } });
         }
       });
   }
@@ -136,13 +136,13 @@ export default class ActivitiesPage extends React.Component {
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
         this.setState(assocPath(['activities', 'items', id], res.data.result));
-        this.setState({ errors: { general: '' } });
+        this.setState(assocPath(['errors', 'view'], false));
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
           this.props.history.push('/admin/login');
         } else {
-          this.setState({ errors: { general: 'Could not update activity' } });
+          this.setState({ errors: { general: 'Could not update activity', view: true } });
         }
       });
   }
@@ -151,7 +151,7 @@ export default class ActivitiesPage extends React.Component {
     e.preventDefault();
 
     Activities.create(this.props.auth, this.state.form)
-      .then(res =>
+      .then((res) => {
         this.setState((state) => {
           const item = res.data.result;
           const order = state.activities.order.concat(item.id);
@@ -161,17 +161,19 @@ export default class ActivitiesPage extends React.Component {
               items: { ...state.activities.items, [item.id]: item },
               order,
             },
-            errors: { general: '' },
           };
-        }),
+        });
+        this.setState(assocPath(['errors', 'view'], false));
+      },
+
       )
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
           this.props.history.push('/admin/login');
         } else if (ErrorUtils.errorStatusEquals(error, 409)) {
-          this.setState({ errors: { general: 'Activity already exists' } });
+          this.setState({ errors: { general: 'Activity already exists', view: true } });
         } else {
-          this.setState({ errors: { general: 'Could not create activity' } });
+          this.setState({ errors: { general: 'Could not create activity', view: true } });
         }
       });
   }
@@ -180,17 +182,18 @@ export default class ActivitiesPage extends React.Component {
     Activities.delete(this.props.auth, { id })
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
+        this.setState(assocPath(['errors', 'view'], false));
         this.setState((state) => {
           const order = state.activities.order.filter(i => i !== id);
           const items = dissoc(id, state.activities.items);
-          return { ...state, activities: { order, items }, errors: { general: '' } };
+          return { ...state, activities: { order, items } };
         });
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
           this.props.history.push('/admin/login');
         } else {
-          this.setState({ errors: { general: 'Could not delete activity' } });
+          this.setState({ errors: { general: 'Could not delete activity' }, view: true });
         }
       },
 
@@ -199,7 +202,7 @@ export default class ActivitiesPage extends React.Component {
 
   render() {
     const { errors } = this.state;
-    const errorMessage = <ActivitiesError vis={errors.general}> {errors.general} </ActivitiesError>;
+    const errorMessage = <ActivitiesError vis={errors.view}> {errors.general} </ActivitiesError>;
     return (
       <FlexContainerCol expand>
         <Nav>
