@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { assocPath, dissoc, invertObj } from 'ramda';
 import { FlexContainerCol } from '../../shared/components/layout/base';
-import { Paragraph, Heading, Link as HyperLink } from '../../shared/components/text/base';
+import { Paragraph, Heading, Link as HyperLink, ErrorParagraph } from '../../shared/components/text/base';
 import { Form, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import Checkbox from '../components/Checkbox';
-import { Activities } from '../../api';
+import { Activities, ErrorUtils } from '../../api';
 import ActivityLabel from '../components/ActivityLabel';
 
 
@@ -26,6 +26,12 @@ const FlexItem = styled.div`
 const SubmitButton = PrimaryButton.extend`
   margin-left: 2em;
   height: 3em;
+`;
+
+const ActivitiesError = ErrorParagraph.extend`
+  height: 1rem;
+  text-align: center;
+  margin:0;
 `;
 
 const Table = styled.table`
@@ -108,15 +114,12 @@ export default class ActivitiesPage extends React.Component {
         this.props.updateAdminToken(res.headers.authorization);
       })
       .catch((error) => {
-        switch (error.status) {
-          case 401:
-            return this.props.history.push('/admin/login');
-
-          case 500:
-            return this.props.history.push('/internalServerError');
-
-          default:
-            return this.props.history.push('/admin/login');
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/internalServerError');
+        } else {
+          this.setState({ errors: { general: 'Could not update activity' } });
         }
       });
   }
@@ -131,12 +134,15 @@ export default class ActivitiesPage extends React.Component {
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
         this.setState(assocPath(['activities', 'items', id], res.data.result));
+        this.setState({ errors: { general: '' } });
       })
-      .catch(error =>
-        (error.message === 'No admin token'
-          ? this.props.history.push('/admin/login')
-          : this.setState({ errors: { general: 'Could not add activity' } })),
-      );
+      .catch((error) => {
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else {
+          this.setState({ errors: { general: 'Could not update activity' } });
+        }
+      });
   }
 
   addActivity = (e) => {
@@ -153,14 +159,19 @@ export default class ActivitiesPage extends React.Component {
               items: { ...state.activities.items, [item.id]: item },
               order,
             },
+            errors: { general: '' },
           };
         }),
       )
-      .catch(error => (
-        error.message === 'No admin token'
-          ? this.props.history.push('/admin/login')
-          : this.setState({ errors: { general: 'Could not add activity' } })
-      ));
+      .catch((error) => {
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else if (ErrorUtils.errorStatusEquals(error, 409)) {
+          this.setState({ errors: { general: 'Activity already exists' } });
+        } else {
+          this.setState({ errors: { general: 'Could not create activity' } });
+        }
+      });
   }
 
   deleteActivity = (id) => {
@@ -170,23 +181,29 @@ export default class ActivitiesPage extends React.Component {
         this.setState((state) => {
           const order = state.activities.order.filter(i => i !== id);
           const items = dissoc(id, state.activities.items);
-          return { ...state, activities: { order, items } };
+          return { ...state, activities: { order, items }, errors: { general: '' } };
         });
       })
-      .catch(error =>
-        (error.message === 'No admin token'
-          ? this.props.history.push('/admin/login')
-          : this.setState({ errors: { general: 'Could not add activity' } })),
+      .catch((error) => {
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else {
+          this.setState({ errors: { general: 'Could not delete activity' } });
+        }
+      },
+
       );
   }
 
   render() {
     const { errors } = this.state;
-
+    const errorMessage = <ActivitiesError> {errors.general} </ActivitiesError>;
     return (
       <FlexContainerCol expand>
         <Nav>
-          <HyperLink to="/admin"> Back to dashboard </HyperLink>
+          <FlexItem>
+            <HyperLink to="/admin"> Back to dashboard </HyperLink>
+          </FlexItem>
           <Heading flex={2}>Activities List</Heading>
           <FlexItem />
         </Nav>
@@ -215,6 +232,7 @@ export default class ActivitiesPage extends React.Component {
           />
           <SubmitButton type="submit">ADD</SubmitButton>
         </Form>
+        {errorMessage}
         <Table>
           <TableHead>
             <TableRow>

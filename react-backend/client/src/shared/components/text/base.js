@@ -35,3 +35,7 @@ export const Link = styled(RouterLink)`
   color: ${colors.dark};
   text-decoration: none;
 `;
+
+export const ErrorParagraph = Paragraph.extend`
+  color: ${colors.error}
+`;
