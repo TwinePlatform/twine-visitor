@@ -1,10 +1,10 @@
 const router = require('express').Router();
-const cbDetails = require('../database/queries/cb/cb_details');
 
-router.get('/', (req, res, next) => {
-  cbDetails(req.app.get('client:psql'), req.auth.cb_id)
-    .then(details => res.send({ result: details }))
-    .catch(next);
+router.get('/', (req, res) => {
+  const cbOrgName = req.auth.cb_name;
+  const cbLogoUrl = req.auth.cb_logo;
+
+  return res.send({ result: {cbOrgName, cbLogoUrl} });
 });
 
 module.exports = router;

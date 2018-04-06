@@ -182,7 +182,7 @@ export const CbAdmin = {
       { headers: { Authorization: tkn } },
     ),
 
-  getCbName: tkn => axios.get(
+  __DEPRECATED_get: tkn => axios.get( // eslint-disable-line
     '/api/users/cb-name',
     { headers: { Authorization: tkn } },
   ),

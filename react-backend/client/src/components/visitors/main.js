@@ -114,12 +114,13 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
-    CbAdmin.getCbName(localStorage.getItem('token'))
+    CbAdmin.__DEPRECATED_get(localStorage.getItem('token')) // eslint-disable-line
       .then(res =>
         this.setState({
-          cbOrgName: res.data.result.org_name,
-          cbLogoUrl: res.data.result.uploadedfilecloudinaryurl,
-        }));
+          cbOrgName: res.data.result.cbOrgName,
+          cbLogoUrl: res.data.result.cbLogoUrl,
+        }),
+      );
   }
 
   onClickPrint = () => {
@@ -160,19 +161,16 @@ export default class Main extends Component {
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 400)) {
           this.setState({ errors: ErrorUtils.getValidationErrors(error) });
-
         } else if (ErrorUtils.errorStatusEquals(error, 409)) {
-          this.setState({ errors: { formEmail: 'A user has already been registered with this name and email' } });
-
+          this.setState({
+            errors: { formEmail: 'A user has already been registered with this name and email' },
+          });
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
-
         } else if (ErrorUtils.errorStatusEquals(error, 404)) {
           this.props.history.push('/error/404');
-
         } else {
           this.props.history.push('/error/unknown');
-
         }
       });
   };
