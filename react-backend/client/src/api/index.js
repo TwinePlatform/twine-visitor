@@ -171,11 +171,6 @@ export const Visitors = {
       { headers: { Authorization: tkn } },
     );
   },
-
-  getCbName: tkn => axios.get(
-    '/api/users/cb-name',
-    { headers: { Authorization: tkn } },
-  ),
 };
 
 
@@ -186,6 +181,11 @@ export const CbAdmin = {
       {},
       { headers: { Authorization: tkn } },
     ),
+
+  getCbName: tkn => axios.get(
+    '/api/users/cb-name',
+    { headers: { Authorization: tkn } },
+  ),
 
   create: ({ orgName, category, email, password, passwordConfirm }) =>
     axios.post(
