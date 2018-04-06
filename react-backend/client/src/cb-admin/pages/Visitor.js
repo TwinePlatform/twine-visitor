@@ -157,7 +157,7 @@ export default class VisitorProfile extends React.Component {
     e.preventDefault();
     e.target.reset();
 
-    Visitors.update(this.props.auth, payloadFromState(this.state))
+    Visitors.update(this.props.auth, { ...payloadFromState(this.state), id: this.state.id })
       .then((res) => {
         this.updateStateFromApi(res.data.result);
       })
