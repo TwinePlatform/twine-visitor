@@ -187,7 +187,7 @@ export default class ActivitiesPage extends React.Component {
       <FlexContainerCol expand>
         <Nav>
           <HyperLink to="/admin"> Back to dashboard </HyperLink>
-          <Heading flex={2}>Visitor details</Heading>
+          <Heading flex={2}>Activities List</Heading>
           <FlexItem />
         </Nav>
         <Paragraph>
@@ -229,7 +229,7 @@ export default class ActivitiesPage extends React.Component {
                 const activity = this.state.activities.items[id];
 
                 return (
-                  <TableRow key={activity.name}>
+                  <TableRow key={activity.id}>
                     {
                       columns
                         .map(k => colToState[k])
