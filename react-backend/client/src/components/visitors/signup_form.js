@@ -8,6 +8,7 @@ import StyledLabelledCheckbox from '../../shared/components/form/StyledLabelledC
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 import { colors, fonts } from '../../shared/style_guide';
+import { VISITOR_NAME_INVALID } from '../../cb-admin/constants/error_text';
 
 const SubmitButton = PrimaryButton.extend`
   height: 4em;
@@ -57,11 +58,11 @@ const signupForm = props => (
     <Form className="SignupForm" onChange={props.handleChange}>
       <FormSection flexOrder={1}>
         <div>
-          <LabelledInput label="Full Name" name="fullname" option="fullname" error={props.error.formSender} required />
-          <LabelledInput label="Email Address" name="email" option="email" error={props.error.formEmail} required />
-          <LabelledInput label="Phone Number (optional)" name="phone" option="phone" error={props.error.formPhone} />
-          <LabelledSelect name="gender" label="Gender" options={genders} error={props.error.formGender} required />
-          <LabelledSelect name="year" label="Year of Birth" options={props.years} error={props.error.formYear} required />
+          <LabelledInput label="Full Name" name="fullname" option="fullname" error={props.errors.formSender && VISITOR_NAME_INVALID} required />
+          <LabelledInput label="Email Address" name="email" option="email" error={props.errors.formEmail} required />
+          <LabelledInput label="Phone Number (optional)" name="phone" option="phone" error={props.errors.formPhone} />
+          <LabelledSelect name="gender" label="Gender" options={genders} error={props.errors.formGender} required />
+          <LabelledSelect name="year" label="Year of Birth" options={props.years} error={props.errors.formYear} required />
         </div>
       </FormSection>
       <FormSection flexOrder={2}>
@@ -101,7 +102,7 @@ const signupForm = props => (
 signupForm.propTypes = {
   createVisitor: PropTypes.func.isRequired,
   years: PropTypes.arrayOf(PropTypes.number).isRequired,
-  error: PropTypes.arrayOf(PropTypes.object).isRequired,
+  errors: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleChange: PropTypes.func.isRequired,
 };
 

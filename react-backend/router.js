@@ -15,7 +15,6 @@ const visitorsFiltered = require('./routes/visitors_filtered');
 const adminLogin = require('./routes/admin_login');
 const adminCheck = require('./routes/admin_check');
 const visitorName = require('./routes/visitor_name');
-const visitorCheck = require('./routes/visitor_check');
 const visitInsert = require('./routes/visit_insert');
 const activitiesAll = require('./routes/activities_all');
 const activitiesToday = require('./routes/activities_today');
@@ -43,7 +42,6 @@ router.use('/cb/feedback', cbFeedback);
 // Authenticated routes
 router.use('/qr/generator', mwIsAuthenticated, qrGenerator);
 router.use('/user/name-from-scan', mwIsAuthenticated, visitorName);
-router.use('/visit/check', mwIsAuthenticated, visitorCheck);
 router.use('/visit/add', mwIsAuthenticated, visitInsert);
 router.use('/activities/today', mwIsAuthenticated, activitiesToday);
 router.use('/admin/login', mwIsAuthenticated, adminLogin);
