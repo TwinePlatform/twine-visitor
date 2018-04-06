@@ -8,6 +8,9 @@ import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { FlexContainerCol } from '../../shared/components/layout/base';
+import {
+  PASSWORD_CONFIRMATION_DOESNT_MATCH, PASSWORD_NOT_STRONG, ORG_NAME_INVALID,
+} from '../constants/error_text';
 
 const categories = [
   { key: '0', value: '' },
@@ -107,7 +110,7 @@ export default class CbAdminSignup extends React.Component {
               label="Business name"
               type="text"
               name="orgName"
-              error={errors.orgName}
+              error={errors.orgName && ORG_NAME_INVALID}
               required
             />
             <LabelledInput
@@ -142,7 +145,7 @@ export default class CbAdminSignup extends React.Component {
               label="Password"
               type="password"
               name="password"
-              error={errors.password}
+              error={errors.password && PASSWORD_NOT_STRONG}
               required
             />
             <LabelledInput
@@ -150,7 +153,7 @@ export default class CbAdminSignup extends React.Component {
               label="Confirm Password"
               type="password"
               name="passwordConfirm"
-              error={errors.passwordConfirm}
+              error={errors.passwordConfirm && PASSWORD_CONFIRMATION_DOESNT_MATCH}
               required
             />
           </FormSection>
