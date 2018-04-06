@@ -160,7 +160,7 @@ class App extends Component {
               auth={this.state.adminToken}
               updateAdminToken={this.updateAdminToken}
               exact
-              path="/cb/visits"
+              path="/cb/visitors"
               updateLoggedIn={this.updateLoggedIn}
               component={CbAdminVisitorDetailsPage}
             />
@@ -169,7 +169,7 @@ class App extends Component {
               auth={this.state.adminToken}
               updateAdminToken={this.updateAdminToken}
               exact
-              path="/cb/visitors"
+              path="/cb/visits"
               updateLoggedIn={this.updateLoggedIn}
               component={CbAdminVisitsDataPage}
             />
