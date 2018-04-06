@@ -10,6 +10,7 @@ import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 
 const categories = [
+  { key: '0', value: '' },
   { key: '1', value: 'Art centre or facility' },
   { key: '2', value: 'Community hub, facility or space' },
   { key: '3', value: 'Community pub, shop or café' },
@@ -27,6 +28,7 @@ const categories = [
 ];
 
 const regions = [
+  { key: '0', value: '' },
   { key: '1', value: 'North East' },
   { key: '2', value: 'North West' },
   { key: '3', value: 'Midlands' },
@@ -37,11 +39,11 @@ const regions = [
 ];
 
 const payloadFromState = pick([
-  'org_name',
+  'orgName',
   'category',
   'email',
   'password',
-  'password_confirm',
+  'passwordConfirm',
 ]);
 
 const SubmitButton = styled(PrimaryButton)`
@@ -53,12 +55,12 @@ export default class CbAdminSignup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      org_name: '',
+      orgName: '',
       category: '',
       email: '',
       region: '',
       password: '',
-      password_confirm: '',
+      passwordConfirm: '',
       errors: {},
     };
   }
@@ -104,7 +106,7 @@ export default class CbAdminSignup extends React.Component {
               id="cb-admin-name"
               label="Business name"
               type="text"
-              name="org_name"
+              name="orgName"
               error={errors.orgName}
               required
             />
@@ -147,7 +149,7 @@ export default class CbAdminSignup extends React.Component {
               id="cb-admin-password-confirmation"
               label="Confirm Password"
               type="password"
-              name="password_confirm"
+              name="passwordConfirm"
               error={errors.passwordConfirm}
               required
             />
