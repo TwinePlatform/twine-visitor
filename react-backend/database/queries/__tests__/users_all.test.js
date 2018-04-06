@@ -22,7 +22,9 @@ test('DB Query | users_all', async tape => {
           gender: 'male',
           yob: 1984,
           email: 'hello@yahoo.com',
-          visit_date: new Date('Mon May 15 2017 12:24:57 GMT+0000 (UTC)'),
+          registered_at: new Date('Mon May 15 2017 12:24:57 GMT+0000 (UTC)'),
+          email_consent: true,
+          sms_consent: true,
         },
         {
           id: 2,
@@ -30,7 +32,9 @@ test('DB Query | users_all', async tape => {
           gender: 'female',
           yob: 1982,
           email: 'goodbye@gmail.com',
-          visit_date: new Date('Mon May 15 2017 12:24:56 GMT+0000 (UTC)'),
+          registered_at: new Date('Mon May 15 2017 12:24:56 GMT+0000 (UTC)'),
+          email_consent: true,
+          sms_consent: false,
         },
         {
           id: 3,
@@ -38,7 +42,9 @@ test('DB Query | users_all', async tape => {
           gender: 'female',
           yob: 1993,
           email: 'sometimes@gmail.com',
-          visit_date: new Date('Mon May 15 2017 12:24:52 GMT+0000 (UTC)'),
+          registered_at: new Date('Mon May 15 2017 12:24:52 GMT+0000 (UTC)'),
+          email_consent: false,
+          sms_consent: true,
         },
       ];
 

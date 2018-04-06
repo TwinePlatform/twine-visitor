@@ -43,8 +43,11 @@ const FormSection = styled.section`
 const keyMap = {
   id: 'Visitor ID',
   name: 'Name',
+  email: 'Email',
   gender: 'Gender',
   yob: 'Year of birth',
+  email_consent: 'Email opt-in',
+  sms_consent: 'SMS opt-in',
 };
 
 const colToState = invertObj(keyMap);

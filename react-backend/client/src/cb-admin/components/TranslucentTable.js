@@ -65,7 +65,7 @@ const TranslucentTable = ({ caption, columns, rows, headAlign }) => (
           rows.map(({ key, data, onClick }) => (
             <TableRow border key={key} onClick={onClick}>
               {
-                data.map((cell, i) => <TableCell key={i}>{cell}</TableCell>) // eslint-disable-line
+                data.map((cell, i) => <TableCell key={i}>{`${cell}`}</TableCell>) // eslint-disable-line
               }
             </TableRow>
           ))
