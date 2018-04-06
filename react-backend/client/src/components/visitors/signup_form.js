@@ -55,7 +55,7 @@ const genders = [
 const signupForm = props => (
   <FlexContainerCol>
     <CenteredHeading>Please tell us about yourself</CenteredHeading>
-    <Form className="SignupForm" onChange={props.handleChange}>
+    <Form className="SignupForm" onChange={props.handleChange} onSubmit={props.createVisitor}>
       <FormSection flexOrder={1}>
         <div>
           <LabelledInput label="Full Name" name="fullname" option="fullname" error={props.errors.formSender && VISITOR_NAME_INVALID} required />
@@ -87,7 +87,7 @@ const signupForm = props => (
       </FormSection>
 
       <FormSection flexOrder={3}>
-        <SubmitButton onClick={props.createVisitor}>CONTINUE</SubmitButton>
+        <SubmitButton type="submit">CONTINUE</SubmitButton>
       </FormSection>
 
       <PrivacySection flexOrder={4}>
