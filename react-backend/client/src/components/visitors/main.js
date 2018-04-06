@@ -133,11 +133,6 @@ export default class Main extends Component {
     }
   };
 
-  headers = new Headers({
-    Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
-  });
-
   createVisitor = () => {
     Visitors.create(localStorage.getItem('token'), {
       name: this.state.fullname,
