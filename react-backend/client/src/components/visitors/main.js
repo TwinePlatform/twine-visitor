@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import p2cLogo from '../../qrcodelogo.png';
 import SignupForm from '../visitors/signup_form';
 import NotFound from '../NotFound';
-import { Visitors, ErrorUtils } from '../../api';
+import { CbAdmin, Visitors, ErrorUtils } from '../../api';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
@@ -114,7 +114,7 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
-    Visitors.getCbName(localStorage.getItem('token'))
+    CbAdmin.getCbName(localStorage.getItem('token'))
       .then(res =>
         this.setState({
           cbOrgName: res.data.result.org_name,
@@ -129,11 +129,6 @@ export default class Main extends Component {
   setError(messagesArray) {
     this.setState({ error: messagesArray });
   }
-
-  headers = new Headers({
-    Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
-  });
 
   handleChange = (e) => {
     switch (e.target.type) {
