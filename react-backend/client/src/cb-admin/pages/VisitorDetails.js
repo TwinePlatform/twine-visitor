@@ -2,14 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
-import { assocPath, filter, invertObj, map, project, sortBy } from 'ramda';
+import { filter, invertObj, project, contains } from 'ramda';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Link } from '../../shared/components/text/base';
 import { Form as Fm } from '../../shared/components/form/base';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import TranslucentTable from '../components/TranslucentTable';
 import { Visitors } from '../../api';
-
 
 const Nav = styled.nav`
   display: flex;
@@ -41,17 +40,16 @@ const FormSection = styled.section`
   width: 20%;
 `;
 
-
 const keyMap = {
-  visit_id: null,
-  visitor_id: 'Visitor ID',
+  id: 'Visitor ID',
+  name: 'Name',
   gender: 'Gender',
   yob: 'Year of birth',
-  activity: 'Activities',
-  visit_date: 'Date of visit',
 };
 
 const colToState = invertObj(keyMap);
+
+const range = (start, end) => Array(end - start + 1).fill().map((_, idx) => start + idx); //eslint-disable-line
 
 const columns = Object.values(keyMap).filter(Boolean);
 
@@ -73,21 +71,13 @@ const ageOptions = [
   { key: '5', value: '70+' },
 ];
 
-
-const sortItems = (items, order, field) =>
-  sortBy(id => items[id][field], order);
-
-const currentYear = () => (new Date()).getFullYear();
-
 export default class VisitorDetailsPage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      visits: {
-        items: {},
-        order: [],
-      },
+      users: [],
+      displayUsers: [],
       sort: '',
       genderFilter: '',
       ageFilter: '',
@@ -98,18 +88,11 @@ export default class VisitorDetailsPage extends React.Component {
   componentDidMount() {
     const cbAdminToken = this.props.auth;
 
-    Visitors.get(cbAdminToken, { withVisits: true })
+    Visitors.get(cbAdminToken)
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
-        const visits = res.data.result;
 
-        const order = visits.map(v => v.visit_id);
-        const items = visits.reduce((acc, v) => {
-          acc[v.visit_id] = { ...v, display: true };
-          return acc;
-        }, {});
-
-        this.setState(assocPath(['visits'], { order, items }));
+        this.setState({ users: res.data.result, displayUsers: res.data.result });
       })
       .catch(error => console.log(error));
   }
@@ -118,44 +101,30 @@ export default class VisitorDetailsPage extends React.Component {
     this.setState({ [e.target.name]: e.target.value }, this.update)
 
   update = () => {
-    const { sort, genderFilter, ageFilter, visits: { items, order } } = this.state;
-    let newOrder = [...order];
+    const { sort, genderFilter, ageFilter, users } = this.state;
 
-    if (sort) {
-      const by = sort && (colToState[sort] || 'visit_id');
-      newOrder = sortItems(items, order, by);
+    let yearRange = [];
+    if (ageFilter) {
+      const year = moment().year();
+      const ages = ageFilter.split(/[-+]/)
+        .filter(Boolean)
+        .map(el => (Number(el)))
+        .concat([113]);
+
+      const ageRange = range(ages[0], ages[1]);
+      yearRange = ageRange.map(el => year - el);
     }
 
-    const newItems = map((item) => {
-      const displayForGender = genderFilter ? item.gender === genderFilter.toLowerCase() : true;
-      let displayForAge = true;
+    const newOrder = [...users]
+      .sort((a, b) => (sort ? a[colToState[sort]] > b[colToState[sort]] : a))
+      .filter(el => (genderFilter ? el.gender === genderFilter.toLowerCase() : el))
+      .filter(el => (ageFilter ? contains(el.yob, yearRange) : el));
 
-      if (ageFilter) {
-        const age = currentYear() - item.yob;
-        const match = ageFilter.match(/(\d{1,2})[-+](\d{0,2})/);
-
-        if (match) {
-          const [_, min, max] = match; // eslint-disable-line
-          displayForAge = age > +min && age < (+max || Infinity);
-        } else {
-          displayForAge = true;
-        }
-      }
-
-      return { ...item, display: displayForAge && displayForGender };
-    }, items);
-
-    this.setState(state => ({
-      ...state,
-      visits: {
-        items: newItems,
-        order: newOrder,
-      },
-    }));
+    this.setState({ displayUsers: newOrder });
   }
 
   render() {
-    const { errors, visits } = this.state;
+    const { errors } = this.state;
 
     return (
       <FlexContainerCol expand>
@@ -199,19 +168,11 @@ export default class VisitorDetailsPage extends React.Component {
           <TranslucentTable
             headAlign="left"
             columns={columns}
-            rows={
-              visits.order
-                .map(visitId => visits.items[visitId])
-                .filter(visit => visit.display)
-                .map(visit => ({
-                  ...visit,
-                  visit_date: moment(visit.visit_date).format('DD-MM-YY HH:mm'),
-                }))
-                .map(visit => ({
-                  key: visit.visit_id,
-                  data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [visit])[0]),
-                }))
-            }
+            rows={this.state.displayUsers.map(v => ({
+              key: `${v.id}`,
+              onClick: () => this.props.history.push(`/cb/visitors/${v.id}`),
+              data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [v])[0]),
+            }))}
           />
         </FlexContainerRow>
       </FlexContainerCol>
@@ -222,4 +183,5 @@ export default class VisitorDetailsPage extends React.Component {
 VisitorDetailsPage.propTypes = {
   auth: PropTypes.string.isRequired,
   updateAdminToken: PropTypes.func.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

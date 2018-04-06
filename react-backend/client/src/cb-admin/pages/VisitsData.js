@@ -68,14 +68,6 @@ const ageOptions = [
   { key: '5', value: '70-more' },
 ];
 
-
-// const keyMap = {
-//   id: 'Visitor ID',
-//   name: 'Name',
-//   gender: 'Gender',
-//   yob: 'Year of birth',
-// };
-
 const keyMap = {
   visit_id: null,
   visitor_id: 'Visitor ID',
@@ -87,8 +79,7 @@ const keyMap = {
 
 const columns = Object.values(keyMap).filter(Boolean);
 
-const range = (start, end) => Array(+end - +start + 1).fill().map((_, idx) => +start + idx) //eslint-disable-line
-;
+const range = (start, end) => Array(+end - +start + 1).fill().map((_, idx) => +start + idx); //eslint-disable-line
 
 export default class VisitsDataPage extends React.Component {
   constructor(props) {
@@ -97,7 +88,6 @@ export default class VisitsDataPage extends React.Component {
     this.state = {
       visitsList: [],
       filteredVisitsList: [],
-      users: [],
       activities: [],
       filters: {},
       orderBy: '',
@@ -119,10 +109,9 @@ export default class VisitsDataPage extends React.Component {
         this.props.updateAdminToken(resVisitors.headers.authorization);
 
         const visits = resVisitors.data.result;
-        const [visitsNumbers, genderNumbers, activitiesNumbers, ageGroups, activities] = resStats.data.result;
+        const [visitsNumbers, genderNumbers, activitiesNumbers, ageGroups, activities] = resStats.data.result; //eslint-disable-line
 
         this.setState({
-          users: resVisitors.data.result,
           visits: visitsNumbers,
           visitNumbers: this.getVisitsWeek(visitsNumbers),
           genderNumbers: this.getGendersForChart(genderNumbers),
@@ -133,7 +122,7 @@ export default class VisitsDataPage extends React.Component {
           filteredVisitsList: visits,
         });
       })
-      .catch(error => this.setState({ errors: { general: 'Unknown error' } }));
+      .catch(() => this.setState({ errors: { general: 'Unknown error' } }));
   }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value }, this.update)
@@ -164,6 +153,7 @@ export default class VisitsDataPage extends React.Component {
           backgroundColor: [
             colors.highlight_primary,
             colors.highlight_secondary,
+            colors.light,
           ],
         },
       ],
@@ -236,7 +226,7 @@ export default class VisitsDataPage extends React.Component {
 
     if (ageFilter) {
       const year = moment().year();
-      const ages = ageFilter.split('-');
+      const ages = ageFilter.split('-').map(el => (el === 'more' ? 113 : el));
       const ageRange = range(ages[0], ages[1]);
       yearRange = ageRange.map(el => year - el);
     }
