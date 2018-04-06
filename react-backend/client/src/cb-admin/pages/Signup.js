@@ -83,6 +83,9 @@ export default class CbAdminSignup extends React.Component {
         if (ErrorUtils.errorStatusEquals(error, 400)) {
           this.setState({ errors: ErrorUtils.getValidationErrors(error) });
 
+        } else if (ErrorUtils.errorStatusEquals(error, 409)) {
+          this.setState({ errors: { email: 'CB using this email has already been registered' } });
+
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
 
