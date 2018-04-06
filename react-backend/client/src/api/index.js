@@ -2,7 +2,7 @@
  *
  */
 import axios from 'axios';
-import { head, pathOr, equals } from 'ramda';
+import { map, head, pathOr, equals, compose } from 'ramda';
 
 
 export const Activities = {
@@ -276,7 +276,7 @@ export const Cloudinary = {
 
 export const ErrorUtils = {
   getErrorStatus: pathOr(null, ['response', 'status']),
-  getValidationErrors: head(pathOr('Unknown error', ['response', 'data', 'validation'])),
+  getValidationErrors: compose(map(head), pathOr({ general: ['Unknown error'] }, ['response', 'data', 'validation'])),
   errorStatusEquals: (error, status) => equals(ErrorUtils.getErrorStatus(error), status),
 };
 
