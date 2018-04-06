@@ -29,9 +29,11 @@ const SubmitButton = PrimaryButton.extend`
 `;
 
 const ActivitiesError = ErrorParagraph.extend`
+  opacity: ${props => (props.vis ? '1' : '0')};
   height: 1rem;
   text-align: center;
   margin:0;
+  transition: opacity 0.7s ease;
 `;
 
 const Table = styled.table`
@@ -197,7 +199,7 @@ export default class ActivitiesPage extends React.Component {
 
   render() {
     const { errors } = this.state;
-    const errorMessage = <ActivitiesError> {errors.general} </ActivitiesError>;
+    const errorMessage = <ActivitiesError vis={errors.general}> {errors.general} </ActivitiesError>;
     return (
       <FlexContainerCol expand>
         <Nav>
