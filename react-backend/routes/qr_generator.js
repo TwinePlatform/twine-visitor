@@ -5,6 +5,8 @@ const { validate } = require('../shared/middleware');
 const qrcodemaker = require('../functions/qrcodemaker');
 const hash = require('../functions/hash');
 const sendQrCode = require('../functions/qr_send');
+const userCheckExists = require('../database/queries/user_check_exists');
+const Boom = require('boom');
 
 const schema = {
   body: {
@@ -24,7 +26,7 @@ const schema = {
   },
 };
 
-router.post('/', validate(schema), (req, res, next) => {
+router.post('/', validate(schema), async (req, res, next) => {
   const pmClient = req.app.get('client:postmark');
   const pgClient = req.app.get('client:psql');
   const secret = req.app.get('cfg').session.hmac_secret;
@@ -40,25 +42,32 @@ router.post('/', validate(schema), (req, res, next) => {
   const hashString = hash(secret, req.body);
   const name = formSender.toLowerCase();
 
-  userRegister(
-    pgClient,
-    req.auth.cb_id,
-    name,
-    formGender,
-    formPhone,
-    formYear,
-    formEmail,
-    hashString,
-    formEmailContact,
-    formSmsContact
-  )
-    .then(() => {
-      sendQrCode(pmClient, formEmail, formSender, hashString, req.auth.cb_logo);
-      return hashString;
-    })
-    .then(qrcodemaker)
-    .then(qr => res.send({ qr, cb_logo: req.auth.cb_logo }))
-    .catch(next);
+  try {
+
+    const exists = await userCheckExists(pgClient, name, formEmail);
+
+    if (exists) {
+      return next(Boom.conflict('User already registered'));
+    }
+
+    await userRegister(
+      pgClient,
+      req.auth.cb_id,
+      name,
+      formGender,
+      formPhone,
+      formYear,
+      formEmail,
+      hashString,
+      formEmailContact,
+      formSmsContact
+    );
+    await sendQrCode(pmClient, formEmail, formSender, hashString, req.auth.cb_logo);    
+    const qr = await qrcodemaker(hashString);
+    return res.send({ qr, cb_logo: req.auth.cb_logo });
+  } catch (error) {
+    return next(error);
+  }
 });
 
 module.exports = router;
