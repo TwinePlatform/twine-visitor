@@ -10,8 +10,11 @@ const Boom = require('boom');
 
 const schema = {
   body: {
-    formSender: Joi.string().required(),
-    formPhone: Joi.string().allow(),
+    formSender: Joi.string()
+    .regex(/[^\w\s\d]+/, { name: 'alphanumeric', invert: true })
+    .min(1)
+    .required(),
+    formPhone: Joi.string().allow(''),
     formGender: Joi.string().required(),
     formYear: Joi.number()
       .integer()
@@ -27,6 +30,7 @@ const schema = {
 };
 
 router.post('/', validate(schema), async (req, res, next) => {
+  console.log('this is post');
   const pmClient = req.app.get('client:postmark');
   const pgClient = req.app.get('client:psql');
   const secret = req.app.get('cfg').session.hmac_secret;
@@ -45,7 +49,7 @@ router.post('/', validate(schema), async (req, res, next) => {
   try {
 
     const exists = await userCheckExists(pgClient, name, formEmail);
-
+    console.log(exists);
     if (exists) {
       return next(Boom.conflict('User already registered'));
     }
@@ -64,6 +68,7 @@ router.post('/', validate(schema), async (req, res, next) => {
     );
     await sendQrCode(pmClient, formEmail, formSender, hashString, req.auth.cb_logo);    
     const qr = await qrcodemaker(hashString);
+    console.log(qr);
     return res.send({ qr, cb_logo: req.auth.cb_logo });
   } catch (error) {
     return next(error);

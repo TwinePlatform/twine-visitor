@@ -5,8 +5,7 @@ import styled from 'styled-components';
 import p2cLogo from '../../qrcodelogo.png';
 import SignupForm from '../visitors/signup_form';
 import NotFound from '../NotFound';
-import errorMessages from '../errors';
-import { Visitors } from '../../api';
+import { Visitors, ErrorUtils } from '../../api';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
@@ -107,7 +106,7 @@ export default class Main extends Component {
       smsContact: false,
       users: [],
       url: '',
-      error: [],
+      errors: {},
       cb_logo: '',
       isPrinting: false,
       cbOrgName: '',
@@ -133,7 +132,9 @@ export default class Main extends Component {
     }
   };
 
-  createVisitor = () => {
+  createVisitor = (e) => {
+    e.preventDefault();
+
     Visitors.create(localStorage.getItem('token'), {
       name: this.state.fullname,
       gender: this.state.gender,
@@ -148,49 +149,21 @@ export default class Main extends Component {
         this.props.history.push('/visitor/signup/thankyou');
       })
       .catch((error) => {
-        console.log('ERROR HAPPENING AT FETCH /qrgenerator', error);
-        this.props.history.push('/internalServerError');
-      });
-  };
+        if (ErrorUtils.errorStatusEquals(error, 400)) {
+          this.setState({ errors: ErrorUtils.getValidationErrors(error) });
 
-  checkUserExists = (e) => {
-    e.preventDefault();
+        } else if (ErrorUtils.errorStatusEquals(error, 409)) {
+          this.setState({ errors: { formEmail: 'A user has already been registered with this name and email' } });
 
-    Visitors.get(localStorage.getItem('token'), {
-      name: this.state.fullname,
-      email: this.state.email,
-      phone_number: this.state.phone,
-      gender: this.state.gender,
-      yob: this.state.year,
-    })
-      .then(() => this.createVisitor())
-      .catch((error) => {
-        if (error.response.status === 500) {
-          this.props.history.push('/internalServerError');
-        }
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
 
-        switch (error.response.data) {
-          case 'email':
-            this.setError([errorMessages.EMAIL_ERROR]);
-            break;
-          case 'name':
-            this.setError([errorMessages.NAME_ERROR]);
-            break;
-          case 'emailname':
-            this.setError([errorMessages.NAME_ERROR, errorMessages.EMAIL_ERROR]);
-            break;
-          case 'true':
-            this.setError([errorMessages.USER_EXISTS_ERROR]);
-            break;
-          case 'noinput':
-            this.setError([errorMessages.NO_INPUT_ERROR]);
-            break;
-          case 'phone':
-            this.setError([errorMessages.PHONE_ERROR]);
-            break;
-          default:
-            this.setError([errorMessages.UNKNOWN_ERROR]);
-            break;
+        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+          this.props.history.push('/error/404');
+
+        } else {
+          this.props.history.push('/error/unknown');
+
         }
       });
   };
@@ -236,7 +209,7 @@ export default class Main extends Component {
     );
   }
   render() {
-    const { error } = this.state;
+    const { errors } = this.state;
 
     return (
       <div className="row">
@@ -244,7 +217,7 @@ export default class Main extends Component {
           <Route exact path="/visitor/signup">
             <SignupForm
               handleChange={this.handleChange}
-              error={error}
+              errors={errors}
               years={years}
               createVisitor={this.createVisitor}
             />
