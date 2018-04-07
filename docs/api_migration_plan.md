@@ -30,6 +30,10 @@ Throughout, a question mark (`?`) indicates fields in objects that are optional 
 | `POST /activity/add` | `Authorization: cb_admin_token` | `{ name }` | `{ id }` |
 | `POST /activity/update` | `Authorization: cb_admin_token` | `{ id, monday, tuesday, wednesday, thursday, friday, saturday, sunday }` | `{ success: String }` |
 | `POST /activity/delete` | `Authorization: cb_admin_token` | `{ id }` | `{ success: String }` |
+| `POST /cb/feedback` | `Authorization: std_token` | ` { query: { feedbackScore }` | `[ { result: { id, cb_id, feedback_score, feedback_date } } ]`|
+| `GET  /cb/feedback` | `Authorization: cb_admin_token` | ` { since: date || null, until: date || null }` | `[ { result: { [feedback_score: num, count: num] } } ]`|
+| `GET  /users/cb-name` | `Authorization: std_token` | | `[ { result: {cbOrgName, cbLogoUrl} } ]`|
+
 
 
 ## New API
@@ -72,13 +76,12 @@ All non-successful responses should return appropriate status codes in the range
 | `POST   /visitors/login` | | `{ query: { email, password } }` | `{ result: { std_admin_token } }` | `POST /cb/login` |
 | `POST   /visitors/search` | `Authorization: std_token` | `{ query: { hash, withVisits } }` | `{ result: { id, gender, yob, email, signup_date, qr_code_url, cb_logo_url, visits?: [{ activity, visit_date }] } }` | `POST /user/name-from-scan` <br/> `POST /user/qr` |
 | `PUT    /visitors/:id` | `Authorization: cb_admin_token` | `{ query: { name?, gender?, yob?, email? } }` | `{ result: { id, name, gender, yob, email, signup_date, qr_code_url } }` | `POST /user/details/update` |
-| `GET    /cbs/:id` | `Authorization: cb_admin_token` | | `{ result: { id, org_name, category, email, logo_url, signup_date } }` | `POST /cb/details` |
+| `POST   /visitors/statistics` | `Authorization: cb_admin_token` | `{ query: { group_by: { gender, activity, age: [18, 35, 51, 70], days: ['monday'] } }` | `{ result: { gender: { male, female, ... }, activity: { yoga: 12, ...}, age: { 0-17: 2, ... }, days: { monday: 2, ... } } }` | `POST /users/chart-all` <br/> `POST /users/filtered` |
+| `GET    /cbs/:id` | `Authorization: cb_admin_token` | | `{ result: { id, org_name, category, email, logo_url, signup_date } }` | `POST /cb/details` <br/> `GET  /users/cb-name` |
 | `PUT    /cbs/:id` | `Authorization: cb_admin_token` | `{ query: { org_name?, category?, email?, logo_url? } }` | `{ result: { id, org_name, category, email, logo_url, signup_date } }` | `POST /cb/details/update` |
 | `PUT    /cbs/:id` | `Authorization: reset_token` | `{ query: { password, password_confirm } }` | `{ result: { id, org_name, category, email, logo_url, signup_date } }` | `POST /cb/pwd/change` |
 | `POST   /cbs` | | `{ query: { org_name, category, email, password, password_confirm, logo_url? } }` | `{ result: { id, org_name, category, email, logo_url, signup_date } }` | `POST /cb/register` <br/> `POST /cb/register/check` |
 | `POST   /cbs/login` | | `{ query: { email, password } }` | `{ result: { cb_admin_token } }` | `POST /admin/login` |
 | `POST   /cbs/:id/emails` | | `{ query: { password_reset: Bool } }` | `{ result: null }` | `POST /cb/pwd/reset` |
-| `POST   /visitors/statistics` | `Authorization: cb_admin_token` | `{ query: { group_by: { gender, activity, age: [18, 35, 51, 70], days: ['monday'] } }` | `{ result: { gender: { male, female, ... }, activity: { yoga: 12, ...}, age: { 0-17: 2, ... }, days: { monday: 2, ... } } }` | `POST /users/chart-all` <br/> `POST /users/filtered` |
-| `POST   /cb/feedback` | `Authorization: std_token` | ` { query: { feedbackScore }` | `[ { result: { id, cb_id, feedback_score, feedback_date } } ]`| ✨ shiny shiny new ✨ |
-| `GET  /cb/feedback` | `Authorization: cb_admin_token` | ` { since: date || null, until: date || null }` | `[ { result: { [feedback_score: num, count: num] } } ]`| ✨ shiny shiny new ✨ |
-| `GET  /users/cb-name` | `Authorization: std_token` | | `[ { result: {cbOrgName, cbLogoUrl} } ]`| ✨ shiny shiny new ✨ |
+| `GET    /cbs/:id/feedback` | `Authorization: cb_admin_token` | ` { since: date || null, until: date || null }` | `[ { result: { [feedback_score: num, count: num] } } ]`| `GET  /cb/feedback` |
+| `POST   /cbs/:id/feedback` | `Authorization: std_token` | ` { query: { feedbackScore }` | `[ { result: { id, cb_id, feedback_score, feedback_date } } ]`| `POST  /cb/feedback` |
