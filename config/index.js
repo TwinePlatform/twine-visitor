@@ -59,7 +59,7 @@ const nodeEnvs = {
   prod: (cfg) =>
     mergeDeepRight(cfg, {
       env: 'prod',
-      web: { port: 4002 },
+      web: { port: process.env.PORT || 4002 },
       psql: parseDbUrl(process.env.DATABASE_URL || process.env.DATABASE_URL_PROD),
       email: { postmark_key: process.env.POSTMARK_KEY_PROD },
     }),
