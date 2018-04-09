@@ -2,6 +2,9 @@
 
 This documents the desired architecture for this project. This was initially discussed in [this issue](https://github.com/TwinePlatform/DataPower/issues/212).
 
+### General
+The general principle is to arrange both applications with a kind of hub-and-spoke structure where each feature is a spoke, and the server and core application logic serves as the hub. There should ideally be no horizontal dependencies between features, each feature should only rely on the generic functionality provided by the hub. This should be reflected in the directory structure; if a feature directory is deleted, all other features should keep working.
+
 ### Root
 ```
 ./
