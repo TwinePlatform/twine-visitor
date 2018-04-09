@@ -1,6 +1,6 @@
 # Data Model
 
-The current data model is summarised below. See `/react-backend/database/dbBuild.sql` for the full schema.
+The current data model is summarised below. See `/db/schema.sql` for the full schema.
 
 <img alt="sql diagram" src="./assets/data_model.png" width="680px"></img>
 
