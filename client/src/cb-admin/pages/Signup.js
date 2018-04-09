@@ -142,6 +142,7 @@ const forwarding = {
   200: '/cb/login?ref=signup',
   401: '/cb/login?ref=unauth',
   404: '/error/404',
+  409: self => self.setState({ errors: { email: 'CB using this email has already been registered' } }),
   500: '/error/500',
   other: '/error/unknown',
 };
