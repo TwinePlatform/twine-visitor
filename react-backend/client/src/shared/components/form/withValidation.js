@@ -50,8 +50,15 @@ export default (submitHandler, forwarding = {}) => (Child) => {
             this.setState({ errors });
 
           } else {
-            const forwardingRoute = forwarding[getErrorStatus(error)];
-            this.props.history.push(forwardingRoute || forwarding.other);
+            const forwardingAction = forwarding[getErrorStatus(error)] || forwarding.other;
+
+            if (typeof forwardingAction === 'function') {
+              forwardingAction(this, error);
+
+            } else {
+              this.props.history.push(forwardingAction);
+
+            }
 
           }
         });
