@@ -1,7 +1,4 @@
-# HTTP API Migration Plan
-Throughout, a question mark (`?`) indicates fields in objects that are optional or nullable.
-
-## Current API
+# Current API
 | Path | Headers | Request Body | Response Body |
 |:----|:----:|:----:|:----:|
 | `POST /admin/login` | `Authorization: std_token` | `{ password }` | `{ success: Bool, reason?: String, token?: String }` |
@@ -60,7 +57,12 @@ This design is based on moving towards an API that is more RESTful, and attempti
 ### Error Response
 All non-successful responses should return appropriate status codes in the range `4xx` or `5xx`, with `"result": null`, and a descriptive message in `"error": { "message": "..." }`. If the error is due to validation, the `"error"` object should have a key of `"validation"` which is an array of strings describing the validation errors.
 
-### Routes
+### Accept and Content-Type Headers
+Clients should set the `Accept` header in order to indicate what content-type(s) they expect as a response. If no `Accept` header is set, the API will default to a `application/json` content-type. The API will set the `Content-Type` header accurately to reflect the response format. The two response formats that should be supported are:
+* JSON
+* XLS (via XML)
+
+### Route Summary
 | Path | Headers | Request Body | Response Body | Replaces |
 |:----|:----:|:----:|:----:|:----|
 | `GET    /activities` | `Authorization: cb_admin_token` | | `{ result: [{ id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday }] }` | `GET  /activities/all` |
