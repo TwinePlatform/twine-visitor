@@ -2,7 +2,8 @@
 
 ## Contents
 
-* [API Guide & Migration Plan](./api_migration_plan.md)
+* [Current API Guide](./current_api.md)
+* [New API Guide](./new_api.md)
 * [Architecture](./architecture.md)
 * [Configuration Guide](./config_guide.md)
 * [Developer Checklist](./dev_checklist.md)
