@@ -67,7 +67,7 @@ const CbAdminSignup = ({ errors, onChange, onSubmit }) => (
           label="Business name"
           type="text"
           name="orgName"
-          error={errors.orgName}
+          error={errors.orgName && ORG_NAME_INVALID}
           required
         />
         <LabelledInput
@@ -102,7 +102,7 @@ const CbAdminSignup = ({ errors, onChange, onSubmit }) => (
           label="Password"
           type="password"
           name="password"
-          error={errors.password}
+          error={errors.password && PASSWORD_NOT_STRONG}
           required
         />
         <LabelledInput
@@ -110,7 +110,7 @@ const CbAdminSignup = ({ errors, onChange, onSubmit }) => (
           label="Confirm Password"
           type="password"
           name="passwordConfirm"
-          error={errors.passwordConfirm}
+          error={errors.passwordConfirm && PASSWORD_CONFIRMATION_DOESNT_MATCH}
           required
         />
       </FormSection>
