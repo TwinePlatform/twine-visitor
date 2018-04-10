@@ -23,15 +23,15 @@ module.exports = (cfg) => {
   app.set('client:postmark', postmarkClient);
   app.set('client:psql', psqlPool);
 
-  app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+  app.use(favicon(path.join(cfg.root, 'client', 'public', 'favicon.ico')));
   app.use(logger(cfg.env));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cookieParser());
-  app.use(express.static(path.join(__dirname, 'client', 'build')));
+  app.use(express.static(path.join(cfg.root, 'client', 'build')));
 
   app.use('/api', apiRoutes);
-  app.get('/*', express.static(path.join(__dirname, 'client', 'build', 'index.html')));
+  app.get('/*', express.static(path.join(cfg.root, 'client', 'build', 'index.html')));
 
   app.use(validationError);
   app.use(notFound);

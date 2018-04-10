@@ -4,7 +4,11 @@
  * Can also hold non-secret, environment-invariant configuration
  * Merged into environment-specific configurations
  */
+const path = require('path');
+
+
 module.exports = {
+  root: path.resolve(__dirname, '..'),
   env: 'dev',
   web: {
     host: 'localhost',
