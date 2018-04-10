@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const Joi = require('joi');
 const Boom = require('boom');
-const hashCB = require('../../functions/cbhash');
 const cbAdd = require('../../database/queries/cb/cb_add');
 const sendCBemail = require('../../functions/sendCBemail');
 const cbCheckExists = require('../../database/queries/cb/cb_check_exists');
 const { validate } = require('../../shared/middleware');
+const { saltedHash } = require('../../shared/util/crypto');
 
 
 const schemas = {
@@ -40,11 +40,10 @@ router.post('/', validate(schemas), async (req, res, next) => {
   const { password, orgName, email, category } = req.body;
   const db = req.app.get('client:psql');
   const pmClient = req.app.get('client:postmark');
-  const secret = req.app.get('cfg').session.hmac_secret;
 
   // Process registration request
   try {
-    const hashedPassword = hashCB(secret, password);
+    const hashedPassword = await saltedHash(password);
     const orgNameLower = orgName.toLowerCase();
     const exists = await cbCheckExists(db, email);
 

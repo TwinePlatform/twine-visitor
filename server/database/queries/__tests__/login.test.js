@@ -28,7 +28,7 @@ test('test CB login detail validation query', async (t) => {
   const correct = await cbLogin(
     client,
     'findmyfroggy@frogfinders.com',
-    '0a0429fa911712f7aca189bb12995963e3fc8f361e2845f747994be499250762',
+    '$2b$10$vLW7acTSSIPhRiEnLhmKdOBJNQIrFAxD1COhHS5UvDWdIewTbEp96',
   );
   const incorrectPwd = await cbLogin(client, 'findmyfroggy@frogfinders.com', '1234');
   const incorrectEmail = await cbLogin(

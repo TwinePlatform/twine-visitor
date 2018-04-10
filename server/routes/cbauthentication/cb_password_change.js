@@ -2,10 +2,10 @@ const router = require('express').Router();
 const Joi = require('joi');
 const Boom = require('boom');
 const pwdChange = require('../../database/queries/cb/pwd_change');
-const hash = require('../../functions/cbhash');
 const checkExpire = require('../../functions/checkExpire');
 const checkExists = require('../../functions/checkExists');
 const { validate } = require('../../shared/middleware');
+const { saltedHash } = require('../../shared/util/crypto');
 
 
 const schemas = {
@@ -27,7 +27,6 @@ const schemas = {
 
 router.post('/', validate(schemas), async (req, res, next) => {
   const { password, token } = req.body;
-  const secret = req.app.get('cfg').session.hmac_secret;
   const pgClient = req.app.get('client:psql');
 
   try {
@@ -42,7 +41,8 @@ router.post('/', validate(schemas), async (req, res, next) => {
       return next(Boom.unauthorized('Token expired'));
     }
 
-    await pwdChange(pgClient, hash(secret, password), token);
+    const hashedPwd = await saltedHash(password);
+    await pwdChange(pgClient, hashedPwd, token);
 
     res.send({ result: null });
 

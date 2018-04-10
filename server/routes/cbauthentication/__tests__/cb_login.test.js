@@ -2,10 +2,13 @@ const test = require('tape');
 const request = require('supertest');
 const createApp = require('../../../app');
 const { getConfig } = require('../../../../config');
+const { refresh: refreshDB } = require('../../../../db/scripts');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('POST /api/cb/login', (tape) => {
+test('POST /api/cb/login', async (tape) => {
+  await refreshDB();
+
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
 

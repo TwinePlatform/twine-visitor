@@ -5,9 +5,9 @@ SET time zone 'UTC';
 INSERT INTO cbusiness
   (org_name, genre, email, hash_pwd, date)
 VALUES
-  ('Dog & Fish', 'pub', 'jinglis12@googlemail.com', '06dbc7f5b12c6984b3ae140221bdb54c69a81fa97dab00770a0f5a29d17a022b', '2018-01-11 21:50:10+00'),
+  ('Dog & Fish', 'pub', 'jinglis12@googlemail.com', '$2b$10$yhVpYk4HLvIdwd.NQFwdQe1zHcH87Cw9yLibu0bAM/YBv8V7j6kn.', '2018-01-11 21:50:10+00'),
   ('alina industries', 'pub', 'a@gmail.com', '9B8813FE04843F4B42735C199192CA745C3639581F72AF340F833556B965012F', '2017-05-15 12:24:56+00'),
-  ('Frog Finders', 'Environment or nature', 'findmyfroggy@frogfinders.com', '0a0429fa911712f7aca189bb12995963e3fc8f361e2845f747994be499250762', '2017-05-15 12:24:56+00');
+  ('Frog Finders', 'Environment or nature', 'findmyfroggy@frogfinders.com', '$2b$10$vLW7acTSSIPhRiEnLhmKdOBJNQIrFAxD1COhHS5UvDWdIewTbEp96', '2017-05-15 12:24:56+00');
 
 INSERT INTO users
   (cb_id, fullName, sex, yearOfBirth, email, date, hash, phone_number, is_email_contact_consent_granted, is_sms_contact_consent_granted)
