@@ -133,13 +133,11 @@ export const Visitors = {
 
   delete: () => { },
 
-  email: (tkn, { hash, email, name }) =>
+  email: (tkn, { id }) =>
     axios.post(
       '/api/user/qr/email',
       {
-        hash,
-        email,
-        name,
+        id,
       },
       { headers: { Authorization: tkn } },
     ),
