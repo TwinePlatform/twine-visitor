@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { filter, project, contains } from 'ramda';
 import { Bar, Pie } from 'react-chartjs-2';
+import { CSVLink } from 'react-csv';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { Form as F, FormSection as FS } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
@@ -76,6 +77,15 @@ const keyMap = {
   activity: 'Activities',
   visit_date: 'Date of visit',
 };
+
+const csvHeaders = [
+  { label: 'Activity', key: 'activity' },
+  { label: 'Gender', key: 'gender' },
+  { label: 'Visit Date', key: 'visit_date' },
+  { label: 'Visit ID', key: 'visit_id' },
+  { label: 'Visitor ID', key: 'visitor_id' },
+  { label: 'Year of Birth', key: 'yob' },
+];
 
 const columns = Object.values(keyMap).filter(Boolean);
 
@@ -349,6 +359,7 @@ export default class VisitsDataPage extends React.Component {
             }
           />
         </Row>
+        <CSVLink headers={csvHeaders} data={this.state.visitsList}> Download Me</CSVLink>
       </FlexContainerCol>
     );
   }
