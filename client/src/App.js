@@ -202,6 +202,8 @@ class App extends Component {
             />
 
             <Route exact path="/internalServerError" component={InternalServerError} />
+            <Route exact path="/error/404" component={NotFound} />
+            <Route exact path="/error/:code" component={InternalServerError} />
             <Route component={NotFound} />
           </Switch>
         </Container>
