@@ -81,8 +81,8 @@ const PrintHeaderRow = FlexContainerRow.extend`
 
 const genderOptions = [
   { key: '0', value: '' },
-  { key: '1', value: 'Male' },
-  { key: '2', value: 'Female' },
+  { key: '1', value: 'male' },
+  { key: '2', value: 'female' },
   { key: '3', value: 'Prefer not to say' },
 ];
 
