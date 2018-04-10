@@ -43,13 +43,13 @@ export default class ForgotPassword extends React.Component {
           this.setState({ errors: { email: error.response.data.error } });
 
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.history.push('/error/500');
+          this.props.history.push('/error/500');
 
         } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.history.push('/error/404');
+          this.props.history.push('/error/404');
 
         } else {
-          this.history.push('/error/unknown');
+          this.props.history.push('/error/unknown');
 
         }
       });

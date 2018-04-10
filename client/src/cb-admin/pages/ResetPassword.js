@@ -46,13 +46,13 @@ export default class ResetPassword extends React.Component {
           this.setState({ errors: { password: error.response.data.error } });
 
         } else if (errorStatusEquals(error, 500)) {
-          this.history.push('/error/500');
+          this.props.history.push('/error/500');
 
         } else if (errorStatusEquals(error, 404)) {
-          this.history.push('/error/404');
+          this.props.history.push('/error/404');
 
         } else {
-          this.history.push('/error/unknown');
+          this.props.history.push('/error/unknown');
 
         }
       });
