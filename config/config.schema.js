@@ -6,6 +6,7 @@
 const Joi = require('joi');
 
 module.exports = {
+  root: Joi.string().min(1).required(),
   env: Joi.string().only('dev', 'test', 'prod'),
   web: Joi.object({
     host: Joi.string().min(1),
