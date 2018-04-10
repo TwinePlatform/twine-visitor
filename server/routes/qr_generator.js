@@ -3,10 +3,10 @@ const userRegister = require('../database/queries/user_register');
 const Joi = require('joi');
 const { validate } = require('../shared/middleware');
 const qrcodemaker = require('../functions/qrcodemaker');
-const hash = require('../functions/hash');
 const sendQrCode = require('../functions/qr_send');
 const userCheckExists = require('../database/queries/user_check_exists');
 const Boom = require('boom');
+const { hmac } = require('../shared/util/crypto');
 
 const schema = {
   body: {
@@ -42,15 +42,16 @@ router.post('/', validate(schema), async (req, res, next) => {
     formEmailContact,
     formSmsContact,
   } = req.body;
-  const hashString = hash(secret, req.body);
-  const name = formSender.toLowerCase();
 
   try {
-
+    const name = formSender.toLowerCase();
     const exists = await userCheckExists(pgClient, name, formEmail);
     if (exists) {
       return next(Boom.conflict('User already registered'));
     }
+
+    const payload = formSender.concat(formEmail).concat(formGender).concat(formYear);
+    const hashString = hmac(secret, payload);
 
     await userRegister(
       pgClient,
@@ -64,7 +65,7 @@ router.post('/', validate(schema), async (req, res, next) => {
       formEmailContact,
       formSmsContact
     );
-    await sendQrCode(pmClient, formEmail, formSender, hashString, req.auth.cb_logo);    
+    await sendQrCode(pmClient, formEmail, formSender, hashString, req.auth.cb_logo);
     const qr = await qrcodemaker(hashString);
     return res.send({ qr, cb_logo: req.auth.cb_logo });
   } catch (error) {

@@ -1,11 +1,9 @@
 const express = require('express');
 const Joi = require('joi');
+const bcrypt = require('bcrypt');
 const Boom = require('boom');
 const jwt = require('jsonwebtoken');
-const hashCB = require('../functions/cbhash');
-const cbLogin = require('../database/queries/cb/cb_login');
 const { validate } = require('../shared/middleware');
-
 
 const router = express.Router();
 const schemas = {
@@ -18,14 +16,16 @@ const schemas = {
 router.post('/', validate(schemas), async (req, res, next) => {
   const { password } = req.body;
   const pgClient = req.app.get('client:psql');
-  const secret = req.app.get('cfg').session.hmac_secret;
   const cbAdminJwtSecret = req.app.get('cfg').session.cb_admin_jwt_secret;
-  const hashedPassword = hashCB(secret, password);
 
   try {
-    const exists = await cbLogin(pgClient, req.auth.cb_email, hashedPassword);
+    const result = await pgClient.query('SELECT hash_pwd FROM cbusiness WHERE email=$1', [req.auth.cb_email]);
+    if (!result.rowCount) {
+      return next(Boom.unauthorized('Unrecognised user'));
+    }
 
-    if (! exists) {
+    const matches = await bcrypt.compare(password, result.rows[0].hash_pwd);
+    if (! matches) {
       return next(Boom.unauthorized('Incorrect password'));
     }
 

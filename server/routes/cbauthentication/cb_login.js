@@ -2,8 +2,7 @@ const router = require('express').Router();
 const Joi = require('joi');
 const Boom = require('boom');
 const jwt = require('jsonwebtoken');
-const hashCB = require('../../functions/cbhash');
-const cbLogin = require('../../database/queries/cb/cb_login');
+const bcrypt = require('bcrypt');
 const { validate } = require('../../shared/middleware');
 
 
@@ -18,15 +17,16 @@ const schemas = {
 router.post('/', validate(schemas), async (req, res, next) => {
   const { email, password } = req.body;
   const pgClient = req.app.get('client:psql');
-  const secret = req.app.get('cfg').session.hmac_secret;
   const standardJwtSecret = req.app.get('cfg').session.standard_jwt_secret;
 
-  const passwordHash = hashCB(secret, password);
-
   try {
-    const exists = await cbLogin(pgClient, email, passwordHash);
+    const result = await pgClient.query('SELECT hash_pwd FROM cbusiness WHERE email=$1', [email]);
+    if (!result.rowCount) {
+      return next(Boom.unauthorized('Credentials not recognised'));
+    }
 
-    if (! exists) {
+    const matches = await bcrypt.compare(password, result.rows[0].hash_pwd);
+    if (!matches) {
       return next(Boom.unauthorized('Credentials not recognised'));
     }
 
