@@ -58,8 +58,8 @@ All non-successful responses should return appropriate status codes in the range
 
 ## Accept and Content-Type Headers
 Clients should set the `Accept` header in order to indicate what content-type(s) they expect as a response. If no `Accept` header is set, the API will default to a `application/json` content-type. The API will set the `Content-Type` header accurately to reflect the response format. The two response formats that should be supported are:
-* JSON
-* XLS (via XML)
+* JSON (MIME type: `application/json`)
+* CSV (MIME type: `text/csv`)
 
 ## Authentication and Authorization
 Clients are authenticated on the API via a JWT, which is passed through the `Authorization` header. Permissions are role-based, not fine-grain. The roles a client has are identified by the JWT signature. There are four roles, listed below.

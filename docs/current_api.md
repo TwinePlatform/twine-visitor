@@ -59,8 +59,8 @@ All non-successful responses should return appropriate status codes in the range
 
 ### Accept and Content-Type Headers
 Clients should set the `Accept` header in order to indicate what content-type(s) they expect as a response. If no `Accept` header is set, the API will default to a `application/json` content-type. The API will set the `Content-Type` header accurately to reflect the response format. The two response formats that should be supported are:
-* JSON
-* XLS (via XML)
+* JSON (MIME type: `application/json`)
+* CSV (MIME type: `text/csv`)
 
 ### Route Summary
 | Path | Headers | Request Body | Response Body | Replaces |
