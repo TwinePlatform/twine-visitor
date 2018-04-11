@@ -14,10 +14,7 @@ import { Visitors } from '../../api';
 import { colors } from '../../shared/style_guide';
 
 const circShift = (xs, n) => xs.slice(-n).concat(xs.slice(0, -n));
-const repeat = (xs, n) =>
-  (xs.length >= n
-    ? xs.slice(0, n)
-    : repeat(xs.concat(xs), n));
+const repeat = (xs, n) => (xs.length >= n ? xs.slice(0, n) : repeat(xs.concat(xs), n));
 
 const PieChart = styled(Pie)``;
 
@@ -89,7 +86,10 @@ const csvHeaders = [
 
 const columns = Object.values(keyMap).filter(Boolean);
 
-const range = (start, end) => Array(+end - +start + 1).fill().map((_, idx) => +start + idx); //eslint-disable-line
+const range = (start, end) =>
+  Array((+end) - (+start + 1))
+    .fill()
+    .map((_, idx) => +start + idx); //eslint-disable-line
 
 export default class VisitsDataPage extends React.Component {
   constructor(props) {
@@ -119,7 +119,13 @@ export default class VisitsDataPage extends React.Component {
         this.props.updateAdminToken(resVisitors.headers.authorization);
 
         const visits = resVisitors.data.result;
-        const [visitsNumbers, genderNumbers, activitiesNumbers, ageGroups, activities] = resStats.data.result; //eslint-disable-line
+        const [
+          visitsNumbers,
+          genderNumbers,
+          activitiesNumbers,
+          ageGroups,
+          activities,
+        ] = resStats.data.result; //eslint-disable-line
 
         this.setState({
           visits: visitsNumbers,
@@ -135,7 +141,7 @@ export default class VisitsDataPage extends React.Component {
       .catch(() => this.setState({ errors: { general: 'Unknown error' } }));
   }
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value }, this.update)
+  onChange = e => this.setState({ [e.target.name]: e.target.value }, this.update);
 
   getActivitiesForChart = (activities) => {
     const activitiesData = {
@@ -143,11 +149,10 @@ export default class VisitsDataPage extends React.Component {
       datasets: [
         {
           data: activities.map(el => el.count),
-          backgroundColor: repeat([
-            colors.highlight_primary,
-            colors.highlight_secondary,
-            colors.light,
-          ], activities.length),
+          backgroundColor: repeat(
+            [colors.highlight_primary, colors.highlight_secondary, colors.light],
+            activities.length,
+          ),
         },
       ],
     };
@@ -160,11 +165,7 @@ export default class VisitsDataPage extends React.Component {
       datasets: [
         {
           data: genders.map(el => el.count),
-          backgroundColor: [
-            colors.highlight_primary,
-            colors.highlight_secondary,
-            colors.light,
-          ],
+          backgroundColor: [colors.highlight_primary, colors.highlight_secondary, colors.light],
         },
       ],
     };
@@ -179,10 +180,14 @@ export default class VisitsDataPage extends React.Component {
     const dN = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const dayName = circShift(dN, -dN.indexOf(today));
 
-    const initObj = dayName.reduce((acc, d) => { acc[d] = 0; return acc; }, {});
+    const initObj = dayName.reduce((acc, d) => {
+      acc[d] = 0;
+      return acc;
+    }, {});
     const visitCount = visits
       .map(v => v.date)
-      .slice().sort()
+      .slice()
+      .sort()
       .map(d => moment(d))
       .filter(m => m.isAfter(lastWeek))
       .reduce((acc, m) => {
@@ -190,7 +195,6 @@ export default class VisitsDataPage extends React.Component {
         acc[day]++; //eslint-disable-line
         return acc;
       }, initObj);
-
 
     return {
       labels: dayName,
@@ -218,11 +222,10 @@ export default class VisitsDataPage extends React.Component {
       datasets: [
         {
           data: ageGroups.map(el => el.agecount),
-          backgroundColor: repeat([
-            colors.highlight_primary,
-            colors.highlight_secondary,
-            colors.light,
-          ], ageGroups.length),
+          backgroundColor: repeat(
+            [colors.highlight_primary, colors.highlight_secondary, colors.light],
+            ageGroups.length,
+          ),
         },
       ],
     };
@@ -230,7 +233,6 @@ export default class VisitsDataPage extends React.Component {
   };
 
   update = () => {
-
     const { ageFilter, activityFilter, genderFilter, visitsList } = this.state;
     let yearRange = [];
 
@@ -260,23 +262,30 @@ export default class VisitsDataPage extends React.Component {
         return res.data.result;
       })
       .then((res) => {
-        this.setState(
-          {
-            users: res[0],
-            ageGroups: this.getAgeGroupsForChart(res[1]),
-            activitiesGroups: this.getActivitiesForChart(res[2]),
-            genderNumbers: this.getGendersForChart(res[3]),
-          },
-        );
+        this.setState({
+          users: res[0],
+          ageGroups: this.getAgeGroupsForChart(res[1]),
+          activitiesGroups: this.getActivitiesForChart(res[2]),
+          genderNumbers: this.getGendersForChart(res[3]),
+        });
       })
       .catch(() => {
         this.setState({ errors: { general: 'Unknown error' } });
       });
-  }
+  };
 
   render() {
     const { errors, filteredVisitsList } = this.state;
-    const activityOptions = [''].concat(this.state.activities).map((a, i) => ({ key: `${i}`, value: a }));
+    const activityOptions = ['']
+      .concat(this.state.activities)
+      .map((a, i) => ({ key: `${i}`, value: a }));
+
+    const csvFilename = `VisitsData${
+      this.state.activityFilter ? `-${this.state.activityFilter}` : ''
+    }${this.state.genderFilter ? `-${this.state.genderFilter}` : ''}${
+      this.state.ageFilter ? `-${this.state.ageFilter}` : ''
+    }.csv`;
+
     return (
       <FlexContainerCol expand>
         <Nav>
@@ -325,46 +334,39 @@ export default class VisitsDataPage extends React.Component {
           </FlexItem>
           <FlexItem>
             <Paragraph>Visitors by gender</Paragraph>
-            <PieChart
-              data={this.state.genderNumbers}
-            />
+            <PieChart data={this.state.genderNumbers} />
           </FlexItem>
           <FlexItem>
             <Paragraph>Visitors by age</Paragraph>
-            <PieChart
-              data={this.state.ageGroups}
-            />
+            <PieChart data={this.state.ageGroups} />
           </FlexItem>
           <FlexItem>
             <Paragraph>Reason for visiting</Paragraph>
-            <PieChart
-              data={this.state.activitiesGroups}
-            />
+            <PieChart data={this.state.activitiesGroups} />
           </FlexItem>
         </Row>
         <Row>
           <TranslucentTable
             headAlign="left"
             columns={columns}
-            rows={
-              filteredVisitsList
-                .map(visit => ({
-                  ...visit,
-                  visit_date: moment(visit.visit_date).format('DD-MM-YY HH:mm'),
-                }))
-                .map(visit => ({
-                  key: visit.visit_id,
-                  data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [visit])[0]),
-                }))
-            }
+            rows={filteredVisitsList
+              .map(visit => ({
+                ...visit,
+                visit_date: moment(visit.visit_date).format('DD-MM-YY HH:mm'),
+              }))
+              .map(visit => ({
+                key: visit.visit_id,
+                data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [visit])[0]),
+              }))}
           />
         </Row>
-        <CSVLink headers={csvHeaders} data={this.state.visitsList}> Download Me</CSVLink>
+        <CSVLink headers={csvHeaders} data={this.state.filteredVisitsList} filename={csvFilename}>
+          Download Me
+        </CSVLink>
       </FlexContainerCol>
     );
   }
 }
-
 
 VisitsDataPage.propTypes = {
   auth: PropTypes.string.isRequired,

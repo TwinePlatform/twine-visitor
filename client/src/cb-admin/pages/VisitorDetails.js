@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { filter, project, invertObj } from 'ramda';
+import moment from 'moment';
+import { CSVLink } from 'react-csv';
+import { filter, invertObj, project, contains } from 'ramda';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Link } from '../../shared/components/text/base';
 import { Form as Fm } from '../../shared/components/form/base';
@@ -73,6 +75,15 @@ const ageOptions = [
   { key: '5', value: '70+' },
 ];
 
+const csvHeaders = [
+  { label: 'Visitor ID', key: 'id' },
+  { label: 'Name', key: 'name' },
+  { label: 'Gender', key: 'gender' },
+  { label: 'Year of Birth', key: 'yob' },
+  { label: 'Email Opt-In', key: 'email_consent' },
+  { label: 'Sms Opt-In', key: 'sms_consent' },
+];
+
 export default class VisitorDetailsPage extends React.Component {
   constructor(props) {
     super(props);
@@ -120,9 +131,14 @@ export default class VisitorDetailsPage extends React.Component {
   render() {
     const { errors } = this.state;
 
+    const csvFilename = `VisitorData${this.state.ageFilter ? `-${this.state.ageFilter}` : ''}${this.state.genderFilter ? `-${this.state.genderFilter}` : ''}${this.state.sort ? `-SortBy:${this.state.sort}` : ''}.csv`;
+
     return (
       <FlexContainerCol expand>
         <Nav>
+          <CSVLink headers={csvHeaders} data={this.state.displayUsers} filename={csvFilename}>
+          Download Me
+          </CSVLink>
           <HyperLink to="/admin"> Back to dashboard </HyperLink>
           <Heading flex={2}>Visitor details</Heading>
           <FlexItem />
