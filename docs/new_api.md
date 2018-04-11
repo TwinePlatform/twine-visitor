@@ -65,7 +65,7 @@ Clients should set the `Accept` header in order to indicate what content-type(s)
 Clients are authenticated on the API via a JWT, which is passed through the `Authorization` header. Permissions are role-based, not fine-grain. The roles a client has are identified by the JWT signature. There are four roles, listed below.
 
 * `NULL`: Un-authenticated user
-* `CB`: Community business user
+* `CB_STD`: Community business user
 * `CB_ADMIN`: Community business user with elevated admin permissions
 * `TWINE_ADMIN`: Twine platform admin user
 
@@ -73,7 +73,7 @@ The `CB_ADMIN` permission level is a short-lived authorization with broader righ
 
 ## Activities
 ### `GET    /api/activities/`
-#### CB
+#### CB_STD
 ##### Response
 ```
 [{
@@ -90,7 +90,7 @@ The `CB_ADMIN` permission level is a short-lived authorization with broader righ
 }]
 ```
 
-#### CB_ADMIN & TWINE_ADMIN
+#### CB_ADMIN | TWINE_ADMIN
 ##### Response
 ```
 [{
@@ -143,7 +143,7 @@ The `CB_ADMIN` permission level is a short-lived authorization with broader righ
 ```
 
 ### `GET    /api/activities/:id`
-#### CB
+#### CB_STD
 ##### Response
 ```
 {
@@ -160,7 +160,7 @@ The `CB_ADMIN` permission level is a short-lived authorization with broader righ
 }
 ```
 
-#### CB_ADMIN & TWINE_ADMIN
+#### CB_ADMIN | TWINE_ADMIN
 ##### Response
 ```
 {
@@ -255,7 +255,7 @@ null
 #### Note
 The path parameter `id` may be replaced with `me` to refer to the `id` of the community business which is making the request
 
-#### CB
+#### CB_STD
 ##### Response
 ```
 {
@@ -399,7 +399,7 @@ null
 ```
 
 ### `POST   /api/cbs/escalate`
-#### CB
+#### CB_STD
 ##### Request
 ```
 {
@@ -525,7 +525,7 @@ null
 ```
 
 ### `POST   /api/visitors/:id/visits`
-#### CB
+#### CB_STD
 ##### Request
 ```
 {
