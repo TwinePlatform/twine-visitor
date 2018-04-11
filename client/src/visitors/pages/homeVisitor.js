@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { PrimaryButtonNoFill, SecondaryButton } from '../../shared/components/form/base';
 import { Heading, Heading2, Link as HyperLink } from '../../shared/components/text/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
-import confused from '../../assets/icons/faces/confused.svg';
-import happy from '../../assets/icons/faces/happy.svg';
-import sad from '../../assets/icons/faces/sad.svg';
+import confused from '../../shared/assets/icons/faces/confused.svg';
+import happy from '../../shared/assets/icons/faces/happy.svg';
+import sad from '../../shared/assets/icons/faces/sad.svg';
 
 const StyledNav = styled.nav`
   display: flex;
