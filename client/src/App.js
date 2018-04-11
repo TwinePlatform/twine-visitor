@@ -4,22 +4,23 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import AdminRoute from './AdminRoute';
 
-import redirectAfterTimeout from './components/hoc/redirect_after_timeout';
+import redirectAfterTimeout from './shared/components/hoc/redirect_after_timeout';
 import adminLoginCheck from './shared/components/hoc/admin_login_check';
 
-import Main from './components/visitors/main';
-import QRCode from './components/visitors/qrcode';
-import QrError from './components/visitors/qrerror';
-import Thanks from './components/visitors/thanks';
-import HomeVisitor from './components/visitors/homeVisitor';
-import ThankYouFeedback from './components/visitors/thank_you_feedback';
+import Main from './visitors/pages/main';
+import QRCode from './visitors/pages/qrcode';
+import QrError from './visitors/pages/qrerror';
+import Thanks from './visitors/pages/thanks';
+import HomeVisitor from './visitors/pages/homeVisitor';
+import ThankYouFeedback from './visitors/pages/thank_you_feedback';
 
-import NotFound from './components/NotFound';
-import InternalServerError from './components/InternalServerError';
+import NotFound from './shared/components/NotFound';
+import InternalServerError from './shared/components/InternalServerError';
 
 import Dots from './shared/components/Dots';
 import Container from './shared/components/Container';
 import HomePage from './shared/pages/Home';
+
 import Login from './cb-admin/pages/Login';
 import CbSignupPage from './cb-admin/pages/Signup';
 import ConfirmPassword from './cb-admin/pages/ConfirmPassword';

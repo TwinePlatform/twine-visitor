@@ -97,7 +97,7 @@ module.exports = (QRcodeBase64Url, image) =>
     } else {
       const columns = [
         {
-          image: `${__dirname}/../public/qrcodelogo.png`,
+          image: `${__dirname}/../../client/src/assets/images/qrcodelogo.png`,
           width: 38,
           height: 129.5,
           margin: [0, 10, 0, 0],

@@ -11,7 +11,7 @@ import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import DetailsTable from '../components/DetailsTable';
 import QrBox from '../components/QrBox';
 import { CbAdmin, Visitors } from '../../api';
-import p2cLogo from '../../qrcodelogo.png';
+import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 
 
 const Nav = styled.nav`
