@@ -2,45 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
-import { CSVLink } from 'react-csv';
-import { rgba } from 'polished';
 import { filter, invertObj, project, contains } from 'ramda';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Link } from '../../shared/components/text/base';
-import { Form as Fm } from '../../shared/components/form/base';
+import { Form as Fm, ExportButton } from '../../shared/components/form/base';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import TranslucentTable from '../components/TranslucentTable';
-import { Visitors, ErrorUtils } from '../../api';
-import { colors, fonts } from '../../shared/style_guide';
-
-const ExportButton = styled(CSVLink)`
-  background-color: ${colors.highlight_primary}; /* Fallback */
-  background: linear-gradient(
-    0,
-    ${rgba(colors.highlight_primary, 0.75)} 0%,
-    ${colors.highlight_primary} 100%
-  );
-  &:hover {
-    background: linear-gradient(
-      0,
-      ${rgba(colors.hover_primary, 0.75)} 0%,
-      ${colors.hover_primary} 100%
-    );
-  }
-  border: none;
-  border-radius: 0.15em;
-  outline: none;
-  box-shadow: none;
-  font: ${fonts.base};
-  font-size: 0.9em;
-  color: ${colors.dark};
-  height: 2em;
-  font-weight: ${fonts.weight.heavy};
-  text-decoration: none;
-  text-align: center;
-  line-height: 2em;
-  flex: ${props => props.flex || '1'};
-`;
+import { Visitors } from '../../api';
 
 const Nav = styled.nav`
   display: flex;
