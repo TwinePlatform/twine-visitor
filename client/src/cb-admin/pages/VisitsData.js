@@ -4,15 +4,13 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { filter, project, contains } from 'ramda';
 import { Bar, Pie } from 'react-chartjs-2';
-import { CSVLink } from 'react-csv';
-import { rgba } from 'polished';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
-import { Form as F, FormSection as FS } from '../../shared/components/form/base';
+import { Form as F, FormSection as FS, ExportButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import TranslucentTable from '../components/TranslucentTable';
 import { Visitors } from '../../api';
-import { colors, fonts } from '../../shared/style_guide';
+import { colors } from '../../shared/style_guide';
 
 const circShift = (xs, n) => xs.slice(-n).concat(xs.slice(0, -n));
 const repeat = (xs, n) => (xs.length >= n ? xs.slice(0, n) : repeat(xs.concat(xs), n));
@@ -20,35 +18,6 @@ const repeat = (xs, n) => (xs.length >= n ? xs.slice(0, n) : repeat(xs.concat(xs
 const PieChart = styled(Pie)``;
 
 const BarChart = styled(Bar)``;
-
-const ExportButton = styled(CSVLink)`
-  background-color: ${colors.highlight_primary}; /* Fallback */
-  background: linear-gradient(
-    0,
-    ${rgba(colors.highlight_primary, 0.75)} 0%,
-    ${colors.highlight_primary} 100%
-  );
-  &:hover {
-    background: linear-gradient(
-      0,
-      ${rgba(colors.hover_primary, 0.75)} 0%,
-      ${colors.hover_primary} 100%
-    );
-  }
-  border: none;
-  border-radius: 0.15em;
-  outline: none;
-  box-shadow: none;
-  font: ${fonts.base};
-  font-size: 0.9em;
-  color: ${colors.dark};
-  height: 2em;
-  font-weight: ${fonts.weight.heavy};
-  text-decoration: none;
-  text-align: center;
-  line-height: 2em;
-  flex: ${props => props.flex || '1'};
-`;
 
 const Nav = styled.nav`
   display: flex;
@@ -106,12 +75,12 @@ const keyMap = {
 };
 
 const csvHeaders = [
-  { label: 'Activity', key: 'activity' },
-  { label: 'Gender', key: 'gender' },
-  { label: 'Visit Date', key: 'visit_date' },
   { label: 'Visit ID', key: 'visit_id' },
   { label: 'Visitor ID', key: 'visitor_id' },
+  { label: 'Gender', key: 'gender' },
   { label: 'Year of Birth', key: 'yob' },
+  { label: 'Activity', key: 'activity' },
+  { label: 'Visit Date', key: 'visit_date' },
 ];
 
 const columns = Object.values(keyMap).filter(Boolean);
