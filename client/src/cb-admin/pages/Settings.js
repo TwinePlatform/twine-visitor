@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import { assocPath, compose, pick, prop, filter } from 'ramda';
+import { CSVLink } from 'react-csv';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Paragraph as P, Heading, Link } from '../../shared/components/text/base';
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
@@ -11,8 +12,7 @@ import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import DetailsTable from '../components/DetailsTable';
 import Dropzone from '../components/Dropzone';
 import Logo from '../components/Logo';
-import { CbAdmin, Cloudinary } from '../../api';
-
+import { CbAdmin, Cloudinary, Visitors } from '../../api';
 
 const sectors = [
   { key: '0', value: '' },
@@ -73,6 +73,25 @@ const payloadFromState = compose(
   prop('form'),
 );
 
+const csvHeadersUsers = [
+  { label: 'Visitor ID', key: 'id' },
+  { label: 'Name', key: 'name' },
+  { label: 'Gender', key: 'gender' },
+  { label: 'Year of Birth', key: 'yob' },
+  { label: 'Email', key: 'email' },
+  { label: 'Email Opt-In', key: 'email_consent' },
+  { label: 'Sms Opt-In', key: 'sms_consent' },
+  { label: 'Date of Registration', key: 'registered_at' },
+];
+
+const csvHeadersVisits = [
+  { label: 'Visit ID', key: 'visit_id' },
+  { label: 'Visitor Name', key: 'visitor_name' },
+  { label: 'Gender', key: 'gender' },
+  { label: 'Year of Birth', key: 'yob' },
+  { label: 'Activity', key: 'activity' },
+  { label: 'Visit Date', key: 'visit_date' },
+];
 
 const setDzMsgSuccess = assocPath(['dropzoneMsg'], 'Your image was successfully uploaded, click save');
 const updateStateAfterImgUpload = url => state =>
@@ -94,6 +113,8 @@ export default class SettingsPage extends React.Component {
       errors: {},
       form: {},
       dropzoneMsg: undefined,
+      users: [],
+      visits: [],
     };
   }
 
@@ -102,6 +123,37 @@ export default class SettingsPage extends React.Component {
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
         this.updateStateFromApi(res.data.result);
+      })
+      .catch((error) => {
+        if (error.status === 500) {
+          this.props.history.push('/internalServerError');
+        } else if (error.message === 'No admin token') {
+          this.props.history.push('/admin/login');
+        } else {
+          this.props.history.push('/admin/login');
+        }
+      });
+
+    Visitors.get(this.props.auth)
+      .then((res) => {
+        this.props.updateAdminToken(res.headers.authorization);
+
+        this.setState({ users: res.data.result });
+      })
+      .catch((error) => {
+        if (error.status === 500) {
+          this.props.history.push('/internalServerError');
+        } else if (error.message === 'No admin token') {
+          this.props.history.push('/admin/login');
+        } else {
+          this.props.history.push('/admin/login');
+        }
+      });
+
+    CbAdmin.export(this.props.auth)
+      .then((res) => {
+        this.props.updateAdminToken(res.headers.authorization);
+        this.setState({ visits: res.data.result });
       })
       .catch((error) => {
         if (error.status === 500) {
@@ -160,10 +212,17 @@ export default class SettingsPage extends React.Component {
     ];
 
     return (
+
       <FlexContainerCol>
         <Nav>
           <HyperLink to="/admin"> Back to dashboard </HyperLink>
           <Heading flex={2}>{rest.orgName}</Heading>
+          <CSVLink headers={csvHeadersVisits} data={this.state.visits} download={'VisitsData.csv'}>
+            EXPORT VISITS AS CSV
+          </CSVLink>
+          <CSVLink headers={csvHeadersUsers} data={this.state.users} download={'UserData.csv'}>
+            EXPORT USERS AS CSV
+          </CSVLink>
           <FlexItem />
         </Nav>
         <Row>
