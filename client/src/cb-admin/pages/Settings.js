@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import { assocPath, compose, pick, prop, filter } from 'ramda';
-import { CSVLink } from 'react-csv';
+import csv from 'fast-csv';
+import JSZip from 'jszip';
+import FileSaver from 'file-saver';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Paragraph as P, Heading, Link } from '../../shared/components/text/base';
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
@@ -73,30 +75,12 @@ const payloadFromState = compose(
   prop('form'),
 );
 
-const csvHeadersUsers = [
-  { label: 'Visitor ID', key: 'id' },
-  { label: 'Name', key: 'name' },
-  { label: 'Gender', key: 'gender' },
-  { label: 'Year of Birth', key: 'yob' },
-  { label: 'Email', key: 'email' },
-  { label: 'Email Opt-In', key: 'email_consent' },
-  { label: 'Sms Opt-In', key: 'sms_consent' },
-  { label: 'Date of Registration', key: 'registered_at' },
-];
-
-const csvHeadersVisits = [
-  { label: 'Visit ID', key: 'visit_id' },
-  { label: 'Visitor Name', key: 'visitor_name' },
-  { label: 'Gender', key: 'gender' },
-  { label: 'Year of Birth', key: 'yob' },
-  { label: 'Activity', key: 'activity' },
-  { label: 'Visit Date', key: 'visit_date' },
-];
-
-const setDzMsgSuccess = assocPath(['dropzoneMsg'], 'Your image was successfully uploaded, click save');
+const setDzMsgSuccess = assocPath(
+  ['dropzoneMsg'],
+  'Your image was successfully uploaded, click save',
+);
 const updateStateAfterImgUpload = url => state =>
   compose(setDzMsgSuccess, assocPath(['form', 'logoUrl'], url))(state);
-
 
 export default class SettingsPage extends React.Component {
   constructor(props) {
@@ -115,6 +99,8 @@ export default class SettingsPage extends React.Component {
       dropzoneMsg: undefined,
       users: [],
       visits: [],
+      visitsString: 'This is visitsString!',
+      usersString: 'This is usersString!',
     };
   }
 
@@ -137,8 +123,20 @@ export default class SettingsPage extends React.Component {
     Visitors.get(this.props.auth)
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
-
         this.setState({ users: res.data.result });
+        this.state.users.unshift({
+          id: 'ID',
+          name: 'Full Name',
+          gender: 'Gender',
+          yob: 'Year of Birth',
+          email: 'Email',
+          registered_at: 'Date Registered',
+          email_consent: 'Email Opt-In',
+          sms_consent: 'SMS Opt-In',
+        });
+        csv.writeToString(this.state.users, (err, data) => {
+          this.setState({ usersString: data });
+        });
       })
       .catch((error) => {
         if (error.status === 500) {
@@ -154,6 +152,17 @@ export default class SettingsPage extends React.Component {
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
         this.setState({ visits: res.data.result });
+        this.state.visits.unshift({
+          visit_id: 'Visit ID',
+          visitor_name: 'Full Name',
+          gender: 'Gender',
+          yob: 'Year of Birth',
+          activity: 'Activity',
+          visit_date: 'Visit Date',
+        });
+        csv.writeToString(this.state.visits, (err, data) => {
+          this.setState({ visitsString: data });
+        });
       })
       .catch((error) => {
         if (error.status === 500) {
@@ -170,9 +179,9 @@ export default class SettingsPage extends React.Component {
     Cloudinary.upload(files[0])
       .then(res => this.setState(updateStateAfterImgUpload(res.data.secure_url)))
       .catch(error => this.setState(assocPath(['errors', 'logoUrl'], error.message)));
-  }
+  };
 
-  onChange = e => this.setState(assocPath(['form', e.target.name], e.target.value))
+  onChange = e => this.setState(assocPath(['form', e.target.name], e.target.value));
 
   onSubmit = (e) => {
     e.preventDefault();
@@ -185,7 +194,7 @@ export default class SettingsPage extends React.Component {
       .catch((error) => {
         this.setState({ errors: error });
       });
-  }
+  };
 
   updateStateFromApi = (data) => {
     this.setState({
@@ -199,7 +208,17 @@ export default class SettingsPage extends React.Component {
       errors: {},
       dropzoneMsg: undefined,
     });
-  }
+  };
+
+  createZip = () => {
+    const zip = JSZip();
+
+    zip.file('App Data/VisitsData.csv', this.state.visitsString);
+    zip.file('App Data/UsersData.csv', this.state.usersString);
+    zip.generateAsync({ type: 'blob' }).then((blob) => {
+      FileSaver.saveAs(blob, 'AppData.zip');
+    });
+  };
 
   render() {
     const { errors, ...rest } = this.state;
@@ -212,17 +231,11 @@ export default class SettingsPage extends React.Component {
     ];
 
     return (
-
       <FlexContainerCol>
         <Nav>
           <HyperLink to="/admin"> Back to dashboard </HyperLink>
           <Heading flex={2}>{rest.orgName}</Heading>
-          <CSVLink headers={csvHeadersVisits} data={this.state.visits} download={'VisitsData.csv'}>
-            EXPORT VISITS AS CSV
-          </CSVLink>
-          <CSVLink headers={csvHeadersUsers} data={this.state.users} download={'UserData.csv'}>
-            EXPORT USERS AS CSV
-          </CSVLink>
+          <Button onClick={this.createZip}>Download CSV</Button>
           <FlexItem />
         </Nav>
         <Row>
