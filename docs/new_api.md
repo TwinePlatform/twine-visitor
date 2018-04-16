@@ -28,8 +28,8 @@ In addition, the following query parameters should be standard:
 * `fields`: Comma separated list of fields in the response body to return. For example, `GET /visitors?fields=name,gender` returns only the `name` and `gender` field in the response body, instead of the entire object.
 * `sort`: Single field by which to sort results
 * `order`: Order by which to sort field specified by `sort`. One of `asc` or `desc`
-* `since`: ISO86001 date string (with timezone?) specifying the **earliest** time from which results should be returned. This is not always meaningful for every endpoint, and is therefore ignored in those cases.
-* `until`: ISO86001 date string (with timezone?) specifying the **latest** time from which results should be returned. This is not always meaningful for every endpoint, and is therefore ignored in those cases.
+* `since`: ISO86001 date string specifying the **earliest** time from which results should be returned. This is not always meaningful for every endpoint, and is therefore ignored in those cases.
+* `until`: ISO86001 date string specifying the **latest** time from which results should be returned. This is not always meaningful for every endpoint, and is therefore ignored in those cases.
 
 Note: Specifying the query via the request body is preferred where possible. Query parameters are mostly intended for use by `GET` requests.
 
