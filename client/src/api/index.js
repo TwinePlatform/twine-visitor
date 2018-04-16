@@ -38,15 +38,12 @@ export const Activities = {
 
 export const Visitors = {
   get: (tkn, query) => {
-    console.log(query);
-
     if (!query) {
       return axios.get(
         '/api/users/all',
         { headers: { Authorization: tkn } },
       );
     } else if (query.page) {
-      console.log(query.page);
       return axios.get(
         '/api/users/all'
         , { params: {
