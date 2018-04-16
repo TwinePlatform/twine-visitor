@@ -147,7 +147,7 @@ test('Tests insertActivity inserts an activity', async t => {
   t.end();
 });
 
-test.only('Tests updateActivity updates an activity', async t => {
+test('Tests updateActivity updates an activity', async t => {
   await refreshDB();
 
   const client = new pg.Client(config.psql);
