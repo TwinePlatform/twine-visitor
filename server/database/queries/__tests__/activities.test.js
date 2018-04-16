@@ -1,7 +1,10 @@
 const test = require('tape');
 const pg = require('pg');
 const { getConfig } = require('../../../../config');
-const { refresh: refreshDB, empty: emptyDB } = require('../../../../db/scripts');
+const {
+  refresh: refreshDB,
+  empty: emptyDB,
+} = require('../../../../db/scripts');
 const activities = require('../activities');
 const activitiesForToday = require('../activities_today');
 const deleteActivity = require('../activity_delete');
@@ -144,61 +147,55 @@ test('Tests insertActivity inserts an activity', async t => {
   t.end();
 });
 
-test('Tests updateActivity updates an activity', async t => {
+test.only('Tests updateActivity updates an activity', async t => {
   await refreshDB();
 
   const client = new pg.Client(config.psql);
   await client.connect();
 
   const activitiesPreUpdate = await activities(client, 1);
-  await updateActivity(client, 1, 1, {
-    monday: true,
-    tuesday: true,
-    wednesday: true,
-    thursday: true,
-    friday: true,
-    saturday: true,
-    sunday: true,
-  });
+  await updateActivity(
+    client,
+    {
+      monday: true,
+      tuesday: true,
+      wednesday: true,
+      thursday: true,
+      friday: true,
+      saturday: true,
+      sunday: true,
+    },
+    { where: { id: 1, cb_id: 1 } }
+  );
   const activitiesPostUpdate = await activities(client, 1);
 
   t.notDeepEqual(activitiesPreUpdate, activitiesPostUpdate, 'Updated activity');
 
   try {
-    await updateActivity(
-      client,
-      null,
-      null,
-      {
-        monday: true,
-        tuesday: true,
-        wednesday: true,
-        thursday: true,
-        friday: true,
-        saturday: true,
-        sunday: true,
-      }
-    );
+    await updateActivity(client, {
+      monday: true,
+      tuesday: true,
+      wednesday: true,
+      thursday: true,
+      friday: true,
+      saturday: true,
+      sunday: true,
+    });
     t.fail('Worked with bad inputs');
   } catch (e) {
     t.pass('Bad values rejected');
   }
 
   try {
-    await updateActivity(
-      client,
-      1,
-      1,
-      {
-        monday: 'blah',
-        tuesday: true,
-        wednesday: true,
-        thursday: true,
-        friday: true,
-        saturday: true,
-        sunday: true,
-      }
-    );
+    await updateActivity(client, {
+      monday: 'blah',
+      tuesday: true,
+      wednesday: true,
+      thursday: true,
+      friday: true,
+      saturday: true,
+      sunday: true,
+    });
     t.fail('Worked with bad inputs');
   } catch (e) {
     t.pass('Bad values rejected');
