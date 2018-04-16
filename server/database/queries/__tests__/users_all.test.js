@@ -13,7 +13,7 @@ test('DB Query | users_all', async tape => {
   tape.test('users_all | existing cb id', async t => {
     try {
       await refreshDB();
-      const actual = await getUserList(client, 1);
+      const actual = await getUserList(client, { where: { cb_id: 1 } });
 
       const expected = [
         {
@@ -63,7 +63,7 @@ test('DB Query | users_all', async tape => {
     try {
       await refreshDB();
 
-      const actual = await getUserList(client, 707);
+      const actual = await getUserList(client, { where: { id: 707 } });
       t.deepEquals(
         actual,
         [],

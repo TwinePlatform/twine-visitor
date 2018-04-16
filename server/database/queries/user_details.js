@@ -1,7 +1,7 @@
 const { selectQuery } = require('../../shared/models/query_builder');
 
 
-const getUserDetails = async (dbConnection, cbId, userId) => {
+const getUserDetails = async (dbConnection, options) => {
   const query = selectQuery(
     'users',
     [
@@ -17,7 +17,7 @@ const getUserDetails = async (dbConnection, cbId, userId) => {
       'is_email_contact_consent_granted AS email_consent',
       'is_sms_contact_consent_granted AS sms_consent',
     ],
-    { cb_id: cbId, id: userId }
+    options 
   );
 
   const result = await dbConnection.query(query);

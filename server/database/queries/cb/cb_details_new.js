@@ -10,13 +10,21 @@ const putNewCBDetails = async (
   email,
   uploadedFileCloudinaryUrl
 ) => {
-  const values = filter(Boolean, { org_name: orgName, genre, email, uploadedFileCloudinaryUrl });
+  const values = filter(Boolean, {
+    org_name: orgName,
+    genre,
+    email,
+    uploadedFileCloudinaryUrl,
+  });
 
   if (Object.keys(values).length === 0) {
     return getCbDetails(dbConnection, id);
   }
 
-  const query = updateQuery('cbusiness', values, { id }, 'id, org_name, genre, email, uploadedFileCloudinaryUrl, date');
+  const query = updateQuery('cbusiness', values, {
+    where: { id },
+    returning: 'id, org_name, genre, email, uploadedFileCloudinaryUrl, date',
+  });
 
   const res = await dbConnection.query(query);
 
