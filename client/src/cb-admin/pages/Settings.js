@@ -69,6 +69,10 @@ const Button = PrimaryButton.extend`
   height: 3em;
 `;
 
+const ExportButton = Button.extend`
+margin-top: 1em;
+`;
+
 const payloadFromState = compose(
   filter(Boolean),
   pick(['orgName', 'sector', 'email', 'region', 'logoUrl']),
@@ -235,7 +239,6 @@ export default class SettingsPage extends React.Component {
         <Nav>
           <HyperLink to="/admin"> Back to dashboard </HyperLink>
           <Heading flex={2}>{rest.orgName}</Heading>
-          <Button onClick={this.createZip}>Download CSV</Button>
           <FlexItem />
         </Nav>
         <Row>
@@ -279,6 +282,7 @@ export default class SettingsPage extends React.Component {
                 onDrop={this.onImageDrop}
               />
               <Button type="submit">SAVE</Button>
+              <ExportButton onClick={this.createZip}>Download all data as CSV</ExportButton>
             </FlexItem>
           </Form>
         </FlexContainerRow>

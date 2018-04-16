@@ -30,7 +30,7 @@
 | `POST /cb/feedback` | `Authorization: std_token` | ` { query: { feedbackScore }` | `[ { result: { id, cb_id, feedback_score, feedback_date } } ]`|
 | `GET  /cb/feedback` | `Authorization: cb_admin_token` | ` { since: date || null, until: date || null }` | `[ { result: { [feedback_score: num, count: num] } } ]`|
 | `GET  /users/cb-name` | `Authorization: std_token` | | `[ { result: {cbOrgName, cbLogoUrl} } ]`|
-
+| `POST  '/cb/export'` | `Authorization: cb_admin_token` | | `[ { result: { users: [{ visit_id, gender, yob, visitor_name, visit_date, activity }] }} ]` |
 
 
 ## New API
