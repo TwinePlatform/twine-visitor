@@ -38,10 +38,24 @@ export const Activities = {
 
 export const Visitors = {
   get: (tkn, query) => {
+    console.log(query);
+
     if (!query) {
       return axios.get(
         '/api/users/all',
         { headers: { Authorization: tkn } },
+      );
+    } else if (query.page) {
+      console.log(query.page);
+      return axios.get(
+        '/api/users/all'
+        , { params: {
+          page: query.page,
+          sort: query.sort,
+          sex: query.genderFilter,
+          age: query.ageFilter,
+        },
+        headers: { Authorization: tkn } },
       );
     } else if (query.filter || query.sort) {
       return axios.post(

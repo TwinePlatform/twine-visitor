@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import moment from 'moment';
-import { filter, invertObj, project, contains } from 'ramda';
+// import moment from 'moment';
+import { filter, project, invertObj } from 'ramda';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Link } from '../../shared/components/text/base';
 import { Form as Fm } from '../../shared/components/form/base';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import TranslucentTable from '../components/TranslucentTable';
-import { Visitors } from '../../api';
+import { Visitors, ErrorUtils } from '../../api';
 
 const Nav = styled.nav`
   display: flex;
@@ -52,8 +52,6 @@ const keyMap = {
 
 const colToState = invertObj(keyMap);
 
-const range = (start, end) => Array(end - start + 1).fill().map((_, idx) => start + idx); //eslint-disable-line
-
 const columns = Object.values(keyMap).filter(Boolean);
 
 const sortOptions = [{ key: '0', value: '' }].concat(columns.map((col, i) => ({ key: `${i + 1}`, value: col })));
@@ -62,7 +60,7 @@ const genderOptions = [
   { key: '0', value: '' },
   { key: '1', value: 'male' },
   { key: '2', value: 'female' },
-  { key: '3', value: 'Prefer not to say' },
+  { key: '3', value: 'prefer not to say' },
 ];
 
 const ageOptions = [
@@ -80,50 +78,42 @@ export default class VisitorDetailsPage extends React.Component {
 
     this.state = {
       users: [],
-      displayUsers: [],
       sort: '',
       genderFilter: '',
       ageFilter: '',
       errors: {},
+      page: 1,
     };
   }
 
   componentDidMount() {
-    const cbAdminToken = this.props.auth;
-
-    Visitors.get(cbAdminToken)
-      .then((res) => {
-        this.props.updateAdminToken(res.headers.authorization);
-
-        this.setState({ users: res.data.result, displayUsers: res.data.result });
-      })
-      .catch(error => console.log(error));
+    this.update();
   }
+
 
   onChange = e =>
     this.setState({ [e.target.name]: e.target.value }, this.update)
 
   update = () => {
-    const { sort, genderFilter, ageFilter, users } = this.state;
+    const { page, genderFilter, ageFilter } = this.state;
+    const sort = colToState[this.state.sort];
+    const cbAdminToken = this.props.auth;
 
-    let yearRange = [];
-    if (ageFilter) {
-      const year = moment().year();
-      const ages = ageFilter.split(/[-+]/)
-        .filter(Boolean)
-        .map(el => (Number(el)))
-        .concat([113]);
+    Visitors.get(cbAdminToken, { page, genderFilter, ageFilter, sort })
+      .then((res) => {
+        this.props.updateAdminToken(res.headers.authorization);
 
-      const ageRange = range(ages[0], ages[1]);
-      yearRange = ageRange.map(el => year - el);
-    }
-
-    const newOrder = [...users]
-      .sort((a, b) => (sort ? a[colToState[sort]] > b[colToState[sort]] : a))
-      .filter(el => (genderFilter ? el.gender === genderFilter.toLowerCase() : el))
-      .filter(el => (ageFilter ? contains(el.yob, yearRange) : el));
-
-    this.setState({ displayUsers: newOrder });
+        this.setState({ users: res.data.result });
+      })
+      .catch((error) => {
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/internalServerError');
+        } else {
+          this.setState({ errors: { general: 'Could not update activity' } });
+        }
+      });
   }
 
   render() {
@@ -171,7 +161,7 @@ export default class VisitorDetailsPage extends React.Component {
           <TranslucentTable
             headAlign="left"
             columns={columns}
-            rows={this.state.displayUsers.map(v => ({
+            rows={this.state.users.map(v => ({
               key: `${v.id}`,
               onClick: () => this.props.history.push(`/cb/visitors/${v.id}`),
               data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [v])[0]),
