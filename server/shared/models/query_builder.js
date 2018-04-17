@@ -29,6 +29,28 @@ const { curry, pipe } = require('ramda');
  * @param   {QueryObject} queryObj
  * @returns {QueryObject}
  */
+
+const addInnerJoinClause = curry(({ innerJoin }, queryObj) => {
+  if (innerJoin) {
+    const innerJoinClause = `${Object.keys(innerJoin)
+      .map(k => `INNER JOIN ${k} ON ${innerJoin[k][0]}=${innerJoin[k][1]}`)
+      .join(' ')}`;
+
+    return {
+      text: `${queryObj.text} ${innerJoinClause}`,
+      values: [...queryObj.values],
+    };
+  }
+  return queryObj;
+});
+
+/**
+ * Dependant on options adds where clause and values to query object
+ * @param   {Options}
+ * @param   {QueryObject}
+ * @returns {QueryObject}
+ */
+
 const addWhereClause = curry((options, queryObj) => {
   const valuesOffset = queryObj.values.length;
 
@@ -129,6 +151,7 @@ const selectQuery = (table, columns, options) => {
   const queryObject = { text: base, values: [] };
 
   const queryPipe = pipe(
+    addInnerJoinClause(options),
     addWhereClause(options),
     addBetweenClause(options),
     addSortClause(options),
