@@ -75,6 +75,17 @@ test('Query Builder', suite => {
       },
     },
     {
+      name: 'single column, one inner join',
+      table: 'fruit',
+      columns: ['fruit_name'],
+      options: { innerJoin: { tree: ['fruit.id', 'tree.fruit_id'] } },
+      expected: {
+        text:
+          'SELECT fruit_name FROM fruit INNER JOIN tree ON fruit.id=tree.fruit_id',
+        values: [],
+      },
+    },
+    {
       name: 'multi column pagination',
       table: 'beaches',
       columns: ['id', 'name', 'sand_type', 'life_guards'],
@@ -85,6 +96,22 @@ test('Query Builder', suite => {
         text:
           'SELECT COUNT(*) OVER() AS full_count, id, name, sand_type, life_guards FROM beaches LIMIT 10 OFFSET $1',
         values: [30],
+      },
+    },
+    {
+      name: 'single column, two inner join',
+      table: 'fruit',
+      columns: ['fruit_name'],
+      options: {
+        innerJoin: {
+          tree: ['fruit.id', 'tree.fruit_id'],
+          seed: ['tree.seed_id', 'seed.id'],
+        },
+      },
+      expected: {
+        text:
+          'SELECT fruit_name FROM fruit INNER JOIN tree ON fruit.id=tree.fruit_id INNER JOIN seed ON tree.seed_id=seed.id',
+        values: [],
       },
     },
   ].forEach(({ name, table, columns, options, expected }) => {
