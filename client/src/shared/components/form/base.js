@@ -3,38 +3,7 @@
  */
 import styled from 'styled-components';
 import { rgba } from 'polished';
-import { CSVLink } from 'react-csv';
 import { colors, fonts } from '../../style_guide';
-
-
-export const ExportButton = styled(CSVLink)`
-  background-color: ${colors.highlight_primary}; /* Fallback */
-  background: linear-gradient(
-    0,
-    ${rgba(colors.highlight_primary, 0.75)} 0%,
-    ${colors.highlight_primary} 100%
-  );
-  &:hover {
-    background: linear-gradient(
-      0,
-      ${rgba(colors.hover_primary, 0.75)} 0%,
-      ${colors.hover_primary} 100%
-    );
-  }
-  border: none;
-  border-radius: 0.15em;
-  outline: none;
-  box-shadow: none;
-  font: ${fonts.base};
-  font-size: 0.9em;
-  color: ${colors.dark};
-  height: 2em;
-  font-weight: ${fonts.weight.heavy};
-  text-decoration: none;
-  text-align: center;
-  line-height: 2em;
-  flex: ${props => props.flex || '1'};
-`;
 
 export const Input = styled.input`
   width: 90%;
