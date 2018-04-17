@@ -5,11 +5,12 @@
  * Merged into environment-specific configurations
  */
 const path = require('path');
+const { DEVELOPMENT } = require('./environments');
 
 
 module.exports = {
   root: path.resolve(__dirname, '..'),
-  env: 'dev',
+  env: DEVELOPMENT,
   web: {
     host: 'localhost',
     port: 1000,

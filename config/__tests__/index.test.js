@@ -1,11 +1,11 @@
 const test = require('tape');
 const fs = require('fs');
 const path = require('path');
-const { readConfig, validateConfig } = require('..');
+const { readConfig, validateConfig, DEVELOPMENT, TESTING, PRODUCTION } = require('..');
 
 
-test('Config | readConfig | dev | undefined path', (t) => {
-  const config = readConfig('dev');
+test(`Config | readConfig | ${DEVELOPMENT} | undefined path`, (t) => {
+  const config = readConfig(DEVELOPMENT);
 
   t.deepEqual(
     config.web,
@@ -15,8 +15,8 @@ test('Config | readConfig | dev | undefined path', (t) => {
   t.end();
 });
 
-test('Config | readConfig | test | undefined path', (t) => {
-  const config = readConfig('test');
+test(`Config | readConfig | ${TESTING} | undefined path`, (t) => {
+  const config = readConfig(TESTING);
 
   t.deepEqual(
     config.web,
@@ -26,8 +26,8 @@ test('Config | readConfig | test | undefined path', (t) => {
   t.end();
 });
 
-test('Config | readConfig | prod | undefined path', (t) => {
-  const config = readConfig('prod');
+test(`Config | readConfig | ${PRODUCTION} | undefined path`, (t) => {
+  const config = readConfig(PRODUCTION);
 
   t.deepEqual(
     config.web,
@@ -37,12 +37,12 @@ test('Config | readConfig | prod | undefined path', (t) => {
   t.end();
 });
 
-test('Config | readConfig | dev | defined path', (t) => {
+test(`Config | readConfig | ${DEVELOPMENT} | defined path`, (t) => {
   const fpath = path.join(__dirname, 'foo.json');
 
   fs.writeFileSync(fpath, JSON.stringify({ web: { port: 1000 } }));
 
-  const config = readConfig('dev', fpath);
+  const config = readConfig(DEVELOPMENT, fpath);
 
   t.deepEqual(
     config.web,
@@ -55,11 +55,11 @@ test('Config | readConfig | dev | defined path', (t) => {
   t.end();
 });
 
-test('Config | readConfig | dev | without SSL', (t) => {
+test(`Config | readConfig | ${DEVELOPMENT} | without SSL`, (t) => {
   const temp = process.env.DATABASE_URL_DEV;
   process.env.DATABASE_URL_DEV = temp.replace('ssl=true', '');
 
-  const config = readConfig('dev');
+  const config = readConfig(DEVELOPMENT);
 
   t.deepEqual(config.psql.ssl, false, 'SSL connection should be disabled');
 
@@ -67,11 +67,11 @@ test('Config | readConfig | dev | without SSL', (t) => {
   t.end();
 });
 
-test('Config | readConfig | dev | with SSL', (t) => {
+test(`Config | readConfig | ${DEVELOPMENT} | with SSL`, (t) => {
   const temp = process.env.DATABASE_URL_DEV;
   process.env.DATABASE_URL_DEV = `${temp.replace(/\?.*/, '')}?ssl=true`;
 
-  const config = readConfig('dev');
+  const config = readConfig(DEVELOPMENT);
 
   t.deepEqual(config.psql.ssl, true, 'SSL connection should be enabled');
 
@@ -81,7 +81,7 @@ test('Config | readConfig | dev | with SSL', (t) => {
 
 test('Config | validateConfig | valid config', (t) => {
   const cfg = {
-    env: 'dev',
+    env: DEVELOPMENT,
     web: {
       host: 'localhost',
       port: 1000,
@@ -111,7 +111,7 @@ test('Config | validateConfig | valid config', (t) => {
 
 test('Config | validateConfig | invalid config', (t) => {
   const cfg = {
-    env: 'dev',
+    env: DEVELOPMENT,
     web: {
       host: 'localhost',
       port: 1000,
