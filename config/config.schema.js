@@ -4,10 +4,11 @@
  * Specifies the required shape and content of the configuration object.
  */
 const Joi = require('joi');
+const { DEVELOPMENT, TESTING, PRODUCTION } = require('./environments');
 
 module.exports = {
   root: Joi.string().min(1).required(),
-  env: Joi.string().only('dev', 'test', 'prod'),
+  env: Joi.string().only(DEVELOPMENT, TESTING, PRODUCTION),
   web: Joi.object({
     host: Joi.string().min(1),
     port: Joi.number().min(0).max(65535).required(),

@@ -11,6 +11,7 @@ const Joi = require('joi');
 const { mergeDeepRight } = require('ramda');
 const schema = require('./config.schema');
 const defaults = require('./config.defaults');
+const { DEVELOPMENT, TESTING, PRODUCTION } = require('./environments');
 
 
 /**
@@ -40,25 +41,25 @@ const parseDbUrl = (str) => {
  * in the various supported deployment environments
  */
 const nodeEnvs = {
-  dev: (cfg) =>
+  [DEVELOPMENT]: (cfg) =>
     mergeDeepRight(cfg, {
-      env: 'dev',
+      env: DEVELOPMENT,
       web: { port: 4000 },
       psql: parseDbUrl(process.env.DATABASE_URL_DEV),
       email: { postmark_key: process.env.POSTMARK_KEY_DEV },
     }),
 
-  test: (cfg) =>
+  [TESTING]: (cfg) =>
     mergeDeepRight(cfg, {
-      env: 'test',
+      env: TESTING,
       web: { port: 4001 },
       psql: parseDbUrl(process.env.DATABASE_URL_TEST),
       email: { postmark_key: process.env.POSTMARK_KEY_TEST },
     }),
 
-  prod: (cfg) =>
+  [PRODUCTION]: (cfg) =>
     mergeDeepRight(cfg, {
-      env: 'prod',
+      env: PRODUCTION,
       web: { port: process.env.PORT || 4002 },
       psql: parseDbUrl(process.env.DATABASE_URL || process.env.DATABASE_URL_PROD),
       email: { postmark_key: process.env.POSTMARK_KEY_PROD },
@@ -76,7 +77,7 @@ const nodeEnvs = {
  * @param   {String} [path]    Path from which to read optional config file
  * @returns {Object}           Fully merged configuration object
  */
-const readConfig = (env = 'dev', path) => {
+const readConfig = (env = DEVELOPMENT, path) => {
   const config = path
     ? JSON.parse(fs.readFileSync(path, 'utf8'))
     : {};
@@ -114,4 +115,7 @@ module.exports = {
   readConfig,
   validateConfig,
   getConfig,
+  DEVELOPMENT,
+  TESTING,
+  PRODUCTION,
 };

@@ -4,6 +4,7 @@
  * To be mounted on the root app
  */
 const Boom = require('boom');
+const { PRODUCTION } = require('../../../config');
 
 // catch 404 and forward to error handler
 exports.notFound = (req, res, next) => {
@@ -13,10 +14,10 @@ exports.notFound = (req, res, next) => {
 };
 
 // error handler
-// prettier-ignore
-exports.errorHandler = (err, req, res, next) => { // eslint-disable-line 
+exports.errorHandler = (err, req, res, next) => { // eslint-disable-line
+  const { env } = req.app.get('cfg');
 
-  if (req.app.get('env') === 'development') {
+  if (env !== PRODUCTION) {
     console.error(err);
   }
 
