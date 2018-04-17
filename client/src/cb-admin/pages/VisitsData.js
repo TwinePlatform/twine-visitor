@@ -5,7 +5,8 @@ import moment from 'moment';
 import { filter, project, contains } from 'ramda';
 import { Bar, Pie } from 'react-chartjs-2';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
-import { Form as F, FormSection as FS, ExportButton } from '../../shared/components/form/base';
+import { Form as F, FormSection as FS } from '../../shared/components/form/base';
+import ExportButton from '../../shared/components/form/ExportButton';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import TranslucentTable from '../components/TranslucentTable';
@@ -279,24 +280,17 @@ export default class VisitsDataPage extends React.Component {
       .concat(this.state.activities)
       .map((a, i) => ({ key: `${i}`, value: a }));
 
-    const csvFilename = `VisitsData${
-      this.state.activityFilter ? `-${this.state.activityFilter}` : ''
-    }${this.state.genderFilter ? `-${this.state.genderFilter}` : ''}${
-      this.state.ageFilter ? `-${this.state.ageFilter}` : ''
-    }.csv`;
-
     return (
       <FlexContainerCol expand>
         <Nav>
           <HyperLink to="/admin"> Back to dashboard </HyperLink>
           <Heading flex={2}>Visits data</Heading>
           <ExportButton
-            headers={csvHeaders}
-            data={this.state.filteredVisitsList}
-            download={csvFilename}
-          >
-            EXPORT AS CSV
-          </ExportButton>
+            csvHeaders={csvHeaders}
+            visitsData={this.state.filteredVisitsList}
+            visits
+            state={this.state}
+          />
           <FlexItem />
         </Nav>
         <Row flex={2}>

@@ -5,8 +5,9 @@ import moment from 'moment';
 import { filter, invertObj, project, contains } from 'ramda';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Link } from '../../shared/components/text/base';
-import { Form as Fm, ExportButton } from '../../shared/components/form/base';
+import { Form as Fm } from '../../shared/components/form/base';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
+import ExportButton from '../../shared/components/form/ExportButton';
 import TranslucentTable from '../components/TranslucentTable';
 import { Visitors } from '../../api';
 
@@ -147,18 +148,17 @@ export default class VisitorDetailsPage extends React.Component {
   render() {
     const { errors } = this.state;
 
-    const csvFilename = `VisitorData${this.state.ageFilter ? `-${this.state.ageFilter}` : ''}${
-      this.state.genderFilter ? `-${this.state.genderFilter}` : ''
-    }${this.state.sort ? `-SortBy:${this.state.sort}` : ''}.csv`;
-
     return (
       <FlexContainerCol expand>
         <Nav>
           <HyperLink to="/admin"> Back to dashboard </HyperLink>
           <Heading flex={2}>Visitor details</Heading>
-          <ExportButton headers={csvHeaders} data={this.state.displayUsers} download={csvFilename}>
-            EXPORT AS CSV
-          </ExportButton>
+          <ExportButton
+            csvHeaders={csvHeaders}
+            visitsData={this.state.displayUsers}
+            visits={false}
+            state={this.state}
+          />
           <FlexItem />
         </Nav>
         <Row>
