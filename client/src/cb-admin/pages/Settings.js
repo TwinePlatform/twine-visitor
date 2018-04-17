@@ -70,7 +70,7 @@ const Button = PrimaryButton.extend`
 `;
 
 const ExportButton = Button.extend`
-margin-top: 1em;
+width: 50%
 `;
 
 const payloadFromState = compose(
@@ -103,8 +103,8 @@ export default class SettingsPage extends React.Component {
       dropzoneMsg: undefined,
       users: [],
       visits: [],
-      visitsString: 'This is visitsString!',
-      usersString: 'This is usersString!',
+      visitsString: 'HelloVisits',
+      usersString: 'HelloUsers',
     };
   }
 
@@ -113,60 +113,6 @@ export default class SettingsPage extends React.Component {
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
         this.updateStateFromApi(res.data.result);
-      })
-      .catch((error) => {
-        if (error.status === 500) {
-          this.props.history.push('/internalServerError');
-        } else if (error.message === 'No admin token') {
-          this.props.history.push('/admin/login');
-        } else {
-          this.props.history.push('/admin/login');
-        }
-      });
-
-    Visitors.get(this.props.auth)
-      .then((res) => {
-        this.props.updateAdminToken(res.headers.authorization);
-        this.setState({ users: res.data.result });
-        this.state.users.unshift({
-          id: 'ID',
-          name: 'Full Name',
-          gender: 'Gender',
-          yob: 'Year of Birth',
-          email: 'Email',
-          registered_at: 'Date Registered',
-          email_consent: 'Email Opt-In',
-          sms_consent: 'SMS Opt-In',
-        });
-        csv.writeToString(this.state.users, (err, data) => {
-          this.setState({ usersString: data });
-        });
-      })
-      .catch((error) => {
-        if (error.status === 500) {
-          this.props.history.push('/internalServerError');
-        } else if (error.message === 'No admin token') {
-          this.props.history.push('/admin/login');
-        } else {
-          this.props.history.push('/admin/login');
-        }
-      });
-
-    CbAdmin.export(this.props.auth)
-      .then((res) => {
-        this.props.updateAdminToken(res.headers.authorization);
-        this.setState({ visits: res.data.result });
-        this.state.visits.unshift({
-          visit_id: 'Visit ID',
-          visitor_name: 'Full Name',
-          gender: 'Gender',
-          yob: 'Year of Birth',
-          activity: 'Activity',
-          visit_date: 'Visit Date',
-        });
-        csv.writeToString(this.state.visits, (err, data) => {
-          this.setState({ visitsString: data });
-        });
       })
       .catch((error) => {
         if (error.status === 500) {
@@ -214,14 +160,79 @@ export default class SettingsPage extends React.Component {
     });
   };
 
-  createZip = () => {
+  createZip = async () => {
     const zip = JSZip();
 
-    zip.file('App Data/VisitsData.csv', this.state.visitsString);
-    zip.file('App Data/UsersData.csv', this.state.usersString);
-    zip.generateAsync({ type: 'blob' }).then((blob) => {
-      FileSaver.saveAs(blob, 'AppData.zip');
-    });
+    try {
+      await Visitors.get(this.props.auth)
+        .then((res) => {
+          this.props.updateAdminToken(res.headers.authorization);
+          this.setState({ users: res.data.result });
+        }).then(() => {
+          const usersArray = this.state.users;
+          usersArray.unshift({
+            id: 'ID',
+            name: 'Full Name',
+            gender: 'Gender',
+            yob: 'Year of Birth',
+            email: 'Email',
+            registered_at: 'Date Registered',
+            email_consent: 'Email Opt-In',
+            sms_consent: 'SMS Opt-In',
+          });
+          this.setState({ users: usersArray });
+        })
+        .catch((error) => {
+          if (error.status === 500) {
+            this.props.history.push('/internalServerError');
+          } else if (error.message === 'No admin token') {
+            this.props.history.push('/admin/login');
+          } else {
+            this.props.history.push('/admin/login');
+          }
+        });
+
+      await CbAdmin.export(this.props.auth)
+        .then((res) => {
+          this.setState({ visits: res.data.result });
+        }).then(() => {
+          const visitsArray = this.state.visits;
+          visitsArray.unshift({
+            visit_id: 'Visit ID',
+            visitor_name: 'Full Name',
+            gender: 'Gender',
+            yob: 'Year of Birth',
+            activity: 'Activity',
+            visit_date: 'Visit Date',
+          });
+          this.setState({ visits: visitsArray });
+        })
+        .catch((error) => {
+          if (error.status === 500) {
+            this.props.history.push('/internalServerError');
+          } else if (error.message === 'No admin token') {
+            this.props.history.push('/admin/login');
+          } else {
+            this.props.history.push('/admin/login');
+          }
+        });
+
+      await csv.writeToString(this.state.users, (err, data) => {
+        this.setState({ usersString: data });
+      });
+
+      await csv.writeToString(this.state.visits, (err, data) => {
+        this.setState({ visitsString: data });
+      });
+
+      await zip.file('App Data/UsersData.csv', this.state.usersString);
+      await zip.file('App Data/VisitsData.csv', this.state.visitsString);
+      await zip.generateAsync({ type: 'blob' }).then((blob) => {
+        FileSaver.saveAs(blob, 'AppData.zip');
+      });
+    } catch (error) {
+      return error;
+    }
   };
 
   render() {
@@ -274,6 +285,7 @@ export default class SettingsPage extends React.Component {
                 type="email"
                 error={errors.email}
               />
+              <ExportButton onClick={this.createZip}>Download data as CSV</ExportButton>
             </FlexItem>
             <FlexItem flex={4}>
               <Dropzone
@@ -282,7 +294,6 @@ export default class SettingsPage extends React.Component {
                 onDrop={this.onImageDrop}
               />
               <Button type="submit">SAVE</Button>
-              <ExportButton onClick={this.createZip}>Download all data as CSV</ExportButton>
             </FlexItem>
           </Form>
         </FlexContainerRow>
