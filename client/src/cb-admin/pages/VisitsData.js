@@ -285,12 +285,6 @@ export default class VisitsDataPage extends React.Component {
         <Nav>
           <HyperLink to="/admin"> Back to dashboard </HyperLink>
           <Heading flex={2}>Visits data</Heading>
-          <ExportButton
-            csvHeaders={csvHeaders}
-            visitsData={this.state.filteredVisitsList}
-            visits
-            state={this.state}
-          />
           <FlexItem />
         </Nav>
         <Row flex={2}>
@@ -347,6 +341,14 @@ export default class VisitsDataPage extends React.Component {
         </Row>
         <Row>
           <TranslucentTable
+            exportComponent={
+              <ExportButton
+                csvHeaders={csvHeaders}
+                visitsData={this.state.filteredVisitsList}
+                visits
+                state={this.state}
+              />
+            }
             headAlign="left"
             columns={columns}
             rows={filteredVisitsList

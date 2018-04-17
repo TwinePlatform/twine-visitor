@@ -54,7 +54,7 @@ const keyMap = {
 const colToState = invertObj(keyMap);
 
 const range = (start, end) =>
-  Array((end - start) + 1)
+  Array(end - (start + 1))
     .fill()
     .map((_, idx) => start + idx); //eslint-disable-line
 
@@ -153,12 +153,6 @@ export default class VisitorDetailsPage extends React.Component {
         <Nav>
           <HyperLink to="/admin"> Back to dashboard </HyperLink>
           <Heading flex={2}>Visitor details</Heading>
-          <ExportButton
-            csvHeaders={csvHeaders}
-            visitsData={this.state.displayUsers}
-            visits={false}
-            state={this.state}
-          />
           <FlexItem />
         </Nav>
         <Row>
@@ -194,6 +188,14 @@ export default class VisitorDetailsPage extends React.Component {
         </Row>
         <FlexContainerRow>
           <TranslucentTable
+            exportComponent={
+              <ExportButton
+                csvHeaders={csvHeaders}
+                visitsData={this.state.displayUsers}
+                visits={false}
+                state={this.state}
+              />
+            }
             headAlign="left"
             columns={columns}
             rows={this.state.users.map(v => ({
