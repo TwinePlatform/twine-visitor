@@ -43,7 +43,7 @@ const TableColHeading = styled.th`
 `;
 
 
-const TranslucentTable = ({ caption, columns, rows, headAlign }) => (
+const TranslucentTable = ({ caption, columns, rows, headAlign, exportComponent }) => (
   <TableContainer>
     <Table>
       {
@@ -72,11 +72,13 @@ const TranslucentTable = ({ caption, columns, rows, headAlign }) => (
         }
       </TableBody>
     </Table>
+    {exportComponent}
   </TableContainer>
 );
 
 
 TranslucentTable.propTypes = {
+  exportComponent: PropTypes.component,
   caption: PropTypes.node,
   columns: PropTypes.arrayOf(PropTypes.string),
   rows: PropTypes.arrayOf(
@@ -88,6 +90,7 @@ TranslucentTable.propTypes = {
 };
 
 TranslucentTable.defaultProps = {
+  exportComponent: null,
   caption: null,
   columns: [],
   rows: [],

@@ -8,7 +8,6 @@ import { CSVLink } from 'react-csv';
 import { rgba } from 'polished';
 import { colors, fonts } from '../../style_guide';
 
-
 const Button = styled(CSVLink)`
   background-color: ${colors.highlight_primary}; /* Fallback */
   background: linear-gradient(
@@ -34,19 +33,19 @@ const Button = styled(CSVLink)`
   font-weight: ${fonts.weight.heavy};
   text-decoration: none;
   text-align: center;
-  line-height: 2em;
+  line-height: 4em;
   flex: ${props => props.flex || '1'};
+  padding: 0.2em;
+  padding-left: 1em;
+  padding-right 1em;
 `;
-
 
 const ExportButton = (props) => {
   const { csvHeaders, visitsData, visits, state } = props;
 
-  const csvVisitsFilename = `VisitsData${
-    state.activityFilter ? `-${state.activityFilter}` : ''
-  }${state.genderFilter ? `-${state.genderFilter}` : ''}${
-    state.ageFilter ? `-${state.ageFilter}` : ''
-  }.csv`;
+  const csvVisitsFilename = `VisitsData${state.activityFilter ? `-${state.activityFilter}` : ''}${
+    state.genderFilter ? `-${state.genderFilter}` : ''
+  }${state.ageFilter ? `-${state.ageFilter}` : ''}.csv`;
 
   const csvUsersFilename = `VisitorData${state.ageFilter ? `-${state.ageFilter}` : ''}${
     state.genderFilter ? `-${state.genderFilter}` : ''
@@ -56,17 +55,12 @@ const ExportButton = (props) => {
 
   return (
     <div>
-      <Button
-        headers={csvHeaders}
-        data={visitsData}
-        download={csvFilename}
-      >
-            EXPORT AS CSV
+      <Button headers={csvHeaders} data={visitsData} download={csvFilename}>
+        EXPORT AS CSV
       </Button>
     </div>
   );
 };
-
 
 ExportButton.propTypes = {
   csvHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -75,6 +69,4 @@ ExportButton.propTypes = {
   state: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-export default styled(ExportButton)`
-  margin-bottom: 1em;
-`;
+export default styled(ExportButton)``;
