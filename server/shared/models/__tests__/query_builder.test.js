@@ -83,7 +83,7 @@ test('Query Builder', suite => {
       },
       expected: {
         text:
-          'SELECT id, name, sand_type, life_guards FROM beaches LIMIT 10 OFFSET $1',
+          'SELECT COUNT(*) OVER() AS full_count, id, name, sand_type, life_guards FROM beaches LIMIT 10 OFFSET $1',
         values: [30],
       },
     },

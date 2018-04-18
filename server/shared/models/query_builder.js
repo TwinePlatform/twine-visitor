@@ -121,8 +121,11 @@ const addReturning = curry((options, queryObj) => {
  * @returns {QueryObject} queryObject
  */
 const selectQuery = (table, columns, options) => {
-  options.pagination && [`COUNT(*) OVER() AS full_count`].concat(columns); //eslint-disable-line
-  const base = `SELECT ${columns.join(', ')} FROM ${table}`;
+  const cols = (options.pagination
+    ? ['COUNT(*) OVER() AS full_count']
+    : []
+  ).concat(columns);
+  const base = `SELECT ${cols.join(', ')} FROM ${table}`;
   const queryObject = { text: base, values: [] };
 
   const queryPipe = pipe(
