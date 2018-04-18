@@ -57,8 +57,8 @@ const addBetweenClause = curry((options, queryObj) => {
   if (options.between) {
     const betweenClause = `${
       options.between.column
-    } BETWEEN  $${valuesOffset} AND $${valuesOffset + 1}`;
-    const joiner = options.where ? ` AND ` : ` WHERE `;
+    } BETWEEN $${valuesOffset} AND $${valuesOffset + 1}`;
+    const joiner = options.where ? `AND` : `WHERE`;
     return {
       text: `${queryObj.text} ${joiner} ${betweenClause}`,
       values: [...queryObj.values, ...options.between.values],
