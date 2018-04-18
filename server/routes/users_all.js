@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { pickBy, identity, pipe, omit, assoc } = require('ramda');
+const { filter, identity, pipe, omit, assoc } = require('ramda');
 const moment = require('moment');
 const usersAll = require('../database/queries/users_all');
 const Joi = require('joi');
@@ -34,17 +34,17 @@ const ageRange = ageString =>
     .reverse();
 
 const removeProperties = omit(['sort', 'offset', 'age']);
-const removeEmpty = pickBy(identity);
+const removeEmpty = filter(identity);
 
 router.get('/', validate(schema), async (req, res, next) => {
   try {
     const query = req.query;
 
     const addCbId = assoc('cb_id', req.auth.cb_id);
-    const queryPipe = pipe(removeProperties, removeEmpty, addCbId);
+    const createWhereObj = pipe(removeProperties, removeEmpty, addCbId);
 
     const options = {
-      where: queryPipe(query),
+      where: createWhereObj(query),
       between: query.age
         ? { column: 'yearofbirth', values: ageRange(query.age) }
         : null,
