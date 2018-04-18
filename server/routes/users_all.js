@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { pickBy, identity, pipe, dissoc, assoc } = require('ramda');
+const { pickBy, identity, pipe, omit, assoc } = require('ramda');
 const moment = require('moment');
 const usersAll = require('../database/queries/users_all');
 const Joi = require('joi');
@@ -7,8 +7,9 @@ const { validate } = require('../shared/middleware');
 
 const schema = {
   query: {
-    page: Joi.number()
+    offset: Joi.number()
       .integer()
+      .min(0)
       .required(),
     sort: Joi.any().valid(
       '',
@@ -32,29 +33,23 @@ const ageRange = ageString =>
     .map(x => moment().year() - x)
     .reverse();
 
+const removeProperties = omit(['sort', 'offset', 'age']);
+const removeEmpty = pickBy(identity);
+
 router.get('/', validate(schema), async (req, res, next) => {
   try {
-    const removeSort = dissoc('sort');
-    const removePage = dissoc('page');
-    const removeAge = dissoc('age');
-    const removeEmpty = pickBy(identity);
-    const addCbId = assoc('cb_id', req.auth.cb_id);
-
     const query = req.query;
-    const queryPipe = pipe(
-      removeSort,
-      removePage,
-      removeAge,
-      removeEmpty,
-      addCbId
-    );
+
+    const addCbId = assoc('cb_id', req.auth.cb_id);
+    const queryPipe = pipe(removeProperties, removeEmpty, addCbId);
+
     const options = {
       where: queryPipe(query),
       between: query.age
         ? { column: 'yearofbirth', values: ageRange(query.age) }
         : null,
       sort: query.sort ? query.sort : null,
-      pagination: { offset: query.page },
+      pagination: { offset: query.offset },
     };
 
     const result = await usersAll(req.app.get('client:psql'), options);
