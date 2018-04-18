@@ -53,7 +53,9 @@ const colToState = invertObj(keyMap);
 
 const columns = Object.values(keyMap).filter(Boolean);
 
-const sortOptions = [{ key: '0', value: '' }].concat(columns.map((col, i) => ({ key: `${i + 1}`, value: col })));
+const sortOptions = [{ key: '0', value: '' }].concat(
+  columns.map((col, i) => ({ key: `${i + 1}`, value: col })),
+);
 
 const genderOptions = [
   { key: '0', value: '' },
@@ -89,16 +91,16 @@ export default class VisitorDetailsPage extends React.Component {
     this.update();
   }
 
-
-  onChange = e =>
-    this.setState({ [e.target.name]: e.target.value }, this.update)
+  onChange = e => this.setState({ [e.target.name]: e.target.value }, this.update);
 
   update = () => {
-    const { page, genderFilter, ageFilter } = this.state;
+    const { page, genderFilter, ageFilter, limit = 10 } = this.state;
     const sort = colToState[this.state.sort];
     const cbAdminToken = this.props.auth;
 
-    Visitors.get(cbAdminToken, { page, genderFilter, ageFilter, sort })
+    const offset = page * limit - limit; //eslint-disable-line
+
+    Visitors.get(cbAdminToken, { offset, genderFilter, ageFilter, sort, visitors: true })
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
 
@@ -113,7 +115,7 @@ export default class VisitorDetailsPage extends React.Component {
           this.setState({ errors: { general: 'Could not update activity' } });
         }
       });
-  }
+  };
 
   render() {
     const { errors } = this.state;

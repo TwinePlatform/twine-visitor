@@ -10,7 +10,7 @@ const { curry, pipe } = require('ramda');
  * pg queryObject
  * @typedef {Object} QueryObject
  * @property {String} text - sql query
- * @property {String[]} values - parameterised values
+ * @property {Any[]} values - parameterised values
  */
 
 /**
@@ -25,17 +25,16 @@ const { curry, pipe } = require('ramda');
 
 /**
  * Dependant on options adds where clause and values to query object
- * @param   {Options}
- * @param   {QueryObject}
+ * @param   {Options} options options object
+ * @param   {QueryObject} queryObj
  * @returns {QueryObject}
  */
-
 const addWhereClause = curry((options, queryObj) => {
-  const parameter = queryObj.values.length;
+  const valuesOffset = queryObj.values.length;
 
   if (options.where) {
     const whereClause = `${Object.keys(options.where)
-      .map((k, i) => `${k}=$${i + 1 + parameter}`)
+      .map((k, i) => `${k}=$${i + 1 + valuesOffset}`)
       .join(' AND ')}`;
 
     return {
@@ -48,18 +47,17 @@ const addWhereClause = curry((options, queryObj) => {
 
 /**
  * Dependant on options adds between clause and values to query object
- * @param   {Options}
- * @param   {QueryObject}
+ * @param   {Options} options options object
+ * @param   {QueryObject} queryObj
  * @returns {QueryObject}
  */
-
 const addBetweenClause = curry((options, queryObj) => {
-  const parameter = queryObj.values.length + 1;
+  const valuesOffset = queryObj.values.length + 1;
 
   if (options.between) {
     const betweenClause = `${
       options.between.column
-    } BETWEEN  $${parameter} AND $${parameter + 1}`;
+    } BETWEEN  $${valuesOffset} AND $${valuesOffset + 1}`;
     const joiner = options.where ? ` AND ` : ` WHERE `;
     return {
       text: `${queryObj.text} ${joiner} ${betweenClause}`,
@@ -71,11 +69,10 @@ const addBetweenClause = curry((options, queryObj) => {
 
 /**
  * Dependant on options adds sort clause to query object
- * @param   {Options}
- * @param   {QueryObject}
+ * @param   {Options} options options object
+ * @param   {QueryObject} queryObj
  * @returns {QueryObject}
  */
-
 const addSortClause = curry((options, queryObj) => {
   if (options.sort) {
     return {
@@ -88,20 +85,18 @@ const addSortClause = curry((options, queryObj) => {
 
 /**
  * Dependant on options adds pagination clause and values to query object
- * @param   {Options}
- * @param   {QueryObject}
+ * @param   {Options} options options object
+ * @param   {QueryObject} queryObj
  * @returns {QueryObject}
  */
-
 const addPagination = curry((options, queryObj) => {
-  const parameter = queryObj.values.length + 1;
+  const valuesOffset = queryObj.values.length + 1;
 
   if (options.pagination) {
-    const offset =
-      options.pagination.offset === 1 ? 0 : options.pagination.offset * 10 - 10;
+    const { offset } = options.pagination;
 
     return {
-      text: `${queryObj.text} LIMIT 10 OFFSET $${parameter}`,
+      text: `${queryObj.text} LIMIT 10 OFFSET $${valuesOffset}`,
       values: [...queryObj.values, offset],
     };
   }
@@ -126,8 +121,8 @@ const addReturning = curry((options, queryObj) => {
  * @returns {QueryObject} queryObject
  */
 const selectQuery = (table, columns, options) => {
-  const prefix = options.pagination ? `COUNT(*) OVER() AS full_count, ` : ``;
-  const base = `SELECT ${prefix}${columns.join(', ')} FROM ${table}`;
+  options.pagination && [`COUNT(*) OVER() AS full_count`].concat(columns); //eslint-disable-line
+  const base = `SELECT ${columns.join(', ')} FROM ${table}`;
   const queryObject = { text: base, values: [] };
 
   const queryPipe = pipe(
@@ -147,7 +142,6 @@ const selectQuery = (table, columns, options) => {
  * @param   {String} [returning=''] Returning clause, raw
  * @returns {Query}                 { text: String, values: Array }
  */
-
 const insertQuery = (table, values, returning = '') => {
   const base = `INSERT INTO ${table}`;
   const keys = Object.keys(values);
