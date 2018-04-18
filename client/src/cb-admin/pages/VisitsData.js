@@ -345,8 +345,7 @@ export default class VisitsDataPage extends React.Component {
               <ExportButton
                 csvHeaders={csvHeaders}
                 visitsData={this.state.filteredVisitsList}
-                visits
-                state={this.state}
+                filenameSuffixes={this.state}
               />
             }
             headAlign="left"

@@ -192,8 +192,7 @@ export default class VisitorDetailsPage extends React.Component {
               <ExportButton
                 csvHeaders={csvHeaders}
                 visitsData={this.state.displayUsers}
-                visits={false}
-                state={this.state}
+                filenameSuffixes={this.state}
               />
             }
             headAlign="left"
