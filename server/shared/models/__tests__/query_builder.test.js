@@ -37,6 +37,56 @@ test('Query Builder', suite => {
         values: [1, 'wobble', 'jiggle'],
       },
     },
+    {
+      name: 'multi column, one between',
+      table: 'trees',
+      columns: ['id', 'name', 'height'],
+      options: { between: { column: 'height', values: [10, 30] } },
+      expected: {
+        text:
+          'SELECT id, name, height FROM trees WHERE height BETWEEN $1 AND $2',
+        values: [10, 30],
+      },
+    },
+    {
+      name: 'multi column, one where, one between',
+      table: 'trees',
+      columns: ['id', 'name', 'height'],
+      options: {
+        where: { forest_id: 3 },
+        between: { column: 'height', values: [10, 30] },
+      },
+      expected: {
+        text:
+          'SELECT id, name, height FROM trees WHERE forest_id=$1 AND height BETWEEN $2 AND $3',
+        values: [3, 10, 30],
+      },
+    },
+    {
+      name: 'multi column sort',
+      table: 'bugs',
+      columns: ['id', 'name', 'legs'],
+      options: {
+        sort: 'name',
+      },
+      expected: {
+        text: 'SELECT id, name, legs FROM bugs ORDER BY name',
+        values: [],
+      },
+    },
+    {
+      name: 'multi column pagination',
+      table: 'beaches',
+      columns: ['id', 'name', 'sand_type', 'life_guards'],
+      options: {
+        pagination: { offset: 30 },
+      },
+      expected: {
+        text:
+          'SELECT id, name, sand_type, life_guards FROM beaches LIMIT 10 OFFSET $1',
+        values: [30],
+      },
+    },
   ].forEach(({ name, table, columns, options, expected }) => {
     suite.test(`selectQuery | ${name}`, t => {
       const args = [table, columns].concat(options || {});
