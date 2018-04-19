@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const visitsAllExport = require('../database/queries/visits_all_export');
+const visitsAllExport = require('../database/queries/visitors_all');
 
 router.post('/', (req, res, next) => {
   visitsAllExport(req.app.get('client:psql'), req.auth.cb_id)

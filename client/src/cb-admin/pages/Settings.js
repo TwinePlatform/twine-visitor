@@ -194,7 +194,15 @@ export default class SettingsPage extends React.Component {
 
       await CbAdmin.export(this.props.auth)
         .then((res) => {
-          this.setState({ visits: res.data.result });
+          const visitsRes = res.data.result.map(a => ({
+            visit_id: a.visit_id,
+            visitor_name: a.visitor_name,
+            gender: a.gender,
+            yob: a.yob,
+            activity: a.activity,
+            visit_date: a.visit_date,
+          }));
+          this.setState({ visits: visitsRes });
         }).then(() => {
           const visitsArray = this.state.visits;
           visitsArray.unshift({
