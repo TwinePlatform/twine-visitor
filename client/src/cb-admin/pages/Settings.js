@@ -70,7 +70,7 @@ const Button = PrimaryButton.extend`
 `;
 
 const ExportButton = Button.extend`
-width: 50%
+  width: 50%;
 `;
 
 const payloadFromState = compose(
@@ -160,87 +160,88 @@ export default class SettingsPage extends React.Component {
     });
   };
 
-  createZip = async () => {
+  createZip = () => {
     const zip = JSZip();
 
-    try {
-      await Visitors.get(this.props.auth)
-        .then((res) => {
-          this.props.updateAdminToken(res.headers.authorization);
-          this.setState({ users: res.data.result });
-        }).then(() => {
-          const usersArray = this.state.users;
-          usersArray.unshift({
-            id: 'ID',
-            name: 'Full Name',
-            gender: 'Gender',
-            yob: 'Year of Birth',
-            email: 'Email',
-            registered_at: 'Date Registered',
-            email_consent: 'Email Opt-In',
-            sms_consent: 'SMS Opt-In',
-          });
-          this.setState({ users: usersArray });
-        })
-        .catch((error) => {
-          if (error.status === 500) {
-            this.props.history.push('/internalServerError');
-          } else if (error.message === 'No admin token') {
-            this.props.history.push('/admin/login');
-          } else {
-            this.props.history.push('/admin/login');
-          }
+    Visitors.get(this.props.auth)
+      .then((res) => {
+        this.props.updateAdminToken(res.headers.authorization);
+        this.setState({ users: res.data.result });
+      })
+      .then(() => {
+        const usersArray = this.state.users;
+        usersArray.unshift({
+          id: 'ID',
+          name: 'Full Name',
+          gender: 'Gender',
+          yob: 'Year of Birth',
+          email: 'Email',
+          registered_at: 'Date Registered',
+          email_consent: 'Email Opt-In',
+          sms_consent: 'SMS Opt-In',
         });
-
-      await CbAdmin.export(this.props.auth)
-        .then((res) => {
-          const visitsRes = res.data.result.map(a => ({
-            visit_id: a.visit_id,
-            visitor_name: a.visitor_name,
-            gender: a.gender,
-            yob: a.yob,
-            activity: a.activity,
-            visit_date: a.visit_date,
-          }));
-          this.setState({ visits: visitsRes });
-        }).then(() => {
-          const visitsArray = this.state.visits;
-          visitsArray.unshift({
-            visit_id: 'Visit ID',
-            visitor_name: 'Full Name',
-            gender: 'Gender',
-            yob: 'Year of Birth',
-            activity: 'Activity',
-            visit_date: 'Visit Date',
-          });
-          this.setState({ visits: visitsArray });
-        })
-        .catch((error) => {
-          if (error.status === 500) {
-            this.props.history.push('/internalServerError');
-          } else if (error.message === 'No admin token') {
-            this.props.history.push('/admin/login');
-          } else {
-            this.props.history.push('/admin/login');
-          }
+        this.setState({ users: usersArray });
+      })
+      .then(() => {
+        csv.writeToString(this.state.users, (err, data) => {
+          this.setState({ usersString: data });
         });
-
-      await csv.writeToString(this.state.users, (err, data) => {
-        this.setState({ usersString: data });
+      })
+      .catch((error) => {
+        if (error.status === 500) {
+          this.props.history.push('/internalServerError');
+        } else if (error.message === 'No admin token') {
+          this.props.history.push('/admin/login');
+        } else {
+          this.props.history.push('/admin/login');
+        }
       });
 
-      await csv.writeToString(this.state.visits, (err, data) => {
-        this.setState({ visitsString: data });
+    CbAdmin.export(this.props.auth)
+      .then((res) => {
+        const visitsRes = res.data.result.map(a => ({
+          visit_id: a.visit_id,
+          visitor_name: a.visitor_name,
+          gender: a.gender,
+          yob: a.yob,
+          activity: a.activity,
+          visit_date: a.visit_date,
+        }));
+        this.setState({ visits: visitsRes });
+      })
+      .then(() => {
+        const visitsArray = this.state.visits;
+        visitsArray.unshift({
+          visit_id: 'Visit ID',
+          visitor_name: 'Full Name',
+          gender: 'Gender',
+          yob: 'Year of Birth',
+          activity: 'Activity',
+          visit_date: 'Visit Date',
+        });
+        this.setState({ visits: visitsArray });
+      })
+      .then(() => {
+        csv.writeToString(this.state.visits, (err, data) => {
+          this.setState({ visitsString: data });
+        });
+      })
+      .then(() => {
+        zip.file('App Data/UsersData.csv', this.state.usersString);
+        zip.file('App Data/VisitsData.csv', this.state.visitsString);
+        zip.generateAsync({ type: 'blob' }).then((blob) => {
+          FileSaver.saveAs(blob, 'AppData.zip');
+        });
+      })
+      .catch((error) => {
+        if (error.status === 500) {
+          this.props.history.push('/internalServerError');
+        } else if (error.message === 'No admin token') {
+          this.props.history.push('/admin/login');
+        } else {
+          this.props.history.push('/admin/login');
+        }
       });
-
-      await zip.file('App Data/UsersData.csv', this.state.usersString);
-      await zip.file('App Data/VisitsData.csv', this.state.visitsString);
-      await zip.generateAsync({ type: 'blob' }).then((blob) => {
-        FileSaver.saveAs(blob, 'AppData.zip');
-      });
-    } catch (error) {
-      return error;
-    }
   };
 
   render() {
