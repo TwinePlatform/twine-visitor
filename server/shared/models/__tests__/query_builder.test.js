@@ -4,10 +4,9 @@ const { selectQuery, insertQuery, updateQuery } = require('../query_builder');
 test('Query Builder', suite => {
   [
     {
-      name: 'two columns, no where',
+      name: 'two columns, no options',
       table: 'foo',
       columns: ['bar', 'qux'],
-      options: null,
       expected: { text: 'SELECT bar, qux FROM foo', values: [] },
     },
     {

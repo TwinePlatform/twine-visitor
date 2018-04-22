@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const { filter, identity, pipe, omit, assoc } = require('ramda');
-const moment = require('moment');
 const usersAll = require('../database/queries/users_all');
 const Joi = require('joi');
 const { validate } = require('../shared/middleware');
+const { ageRange, renameKeys } = require('../shared/util/helpers');
 
 const schema = {
   query: {
@@ -20,17 +20,10 @@ const schema = {
       'email_consent',
       'sms_consent'
     ),
-    sex: Joi.any().valid('', 'male', 'female', 'prefer not to say'),
-    age: Joi.any().valid('', '0-17', '18-35', '35-50', '51-69', '70+'),
+    gender: Joi.any().valid('', 'male', 'female', 'prefer not to say'),
+    age: Joi.any().valid('', '0-17', '18-34', '35-50', '51-69', '70+'),
   },
 };
-
-const ageRange = ageString =>
-  ageString
-    .replace('+', '')
-    .split('-')
-    .map(x => moment().year() - x)
-    .reverse();
 
 const removeProperties = omit(['sort', 'offset', 'age']);
 const removeEmpty = filter(identity);
@@ -40,7 +33,12 @@ router.get('/', validate(schema), async (req, res, next) => {
     const query = req.query;
 
     const addCbId = assoc('cb_id', req.auth.cb_id);
-    const createWhereObj = pipe(removeProperties, removeEmpty, addCbId);
+    const createWhereObj = pipe(
+      renameKeys({ gender: 'sex' }),
+      removeProperties,
+      removeEmpty,
+      addCbId
+    );
 
     const options = {
       where: createWhereObj(query),

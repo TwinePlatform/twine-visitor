@@ -1,10 +1,54 @@
 const router = require('express').Router();
+const { filter, identity, pipe, omit, assoc } = require('ramda');
+const Joi = require('joi');
+const { validate } = require('../shared/middleware');
 const visitorsAll = require('../database/queries/visitors_all');
+const { ageRange, renameKeys } = require('../shared/util/helpers');
 
-router.post('/', (req, res, next) => {
-  visitorsAll(req.app.get('client:psql'), req.auth.cb_id)
-    .then(users => res.send({ result: users }))
-    .catch(next);
+const schema = {
+  query: {
+    offset: Joi.number()
+      .integer()
+      .min(0)
+      .required(),
+    gender: Joi.any().valid('', 'male', 'female', 'prefer not to say'),
+    age: Joi.any().valid('', '0-17', '18-34', '35-50', '51-69', '70+'),
+    activity: Joi.string().allow(''),
+  },
+};
+
+const removeProperties = omit(['offset', 'age']);
+const removeEmpty = filter(identity);
+
+router.get('/', validate(schema), async (req, res, next) => {
+  try {
+    const { query } = req;
+    const addCbId = assoc('activities.cb_id', req.auth.cb_id);
+
+    const createWhereObj = pipe(
+      renameKeys({ activity: 'activities.name', gender: 'sex' }),
+      removeProperties,
+      removeEmpty,
+      addCbId
+    );
+
+    const options = {
+      innerJoin: {
+        visits: ['users.id', 'visits.usersid'],
+        activities: ['visits.activitiesid', 'activities.id'],
+      },
+      where: createWhereObj(query),
+      between: query.age
+        ? { column: 'yearofbirth', values: ageRange(query.age) }
+        : null,
+      pagination: { offset: query.offset },
+      sort: 'visit_date DESC',
+    };
+    const result = await visitorsAll(req.app.get('client:psql'), options);
+    res.send({ result });
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;
