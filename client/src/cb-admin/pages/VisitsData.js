@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
-import { filter, project, contains } from 'ramda';
+import { filter, project } from 'ramda';
 import { Bar, Pie } from 'react-chartjs-2';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { Form as F, FormSection as FS } from '../../shared/components/form/base';
@@ -10,7 +10,7 @@ import ExportButton from '../../shared/components/form/ExportButton';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import TranslucentTable from '../components/TranslucentTable';
-import { Visitors } from '../../api';
+import { Visitors, ErrorUtils } from '../../api';
 import { colors } from '../../shared/style_guide';
 
 const circShift = (xs, n) => xs.slice(-n).concat(xs.slice(0, -n));
@@ -54,7 +54,7 @@ const genderOptions = [
   { key: '0', value: '' },
   { key: '1', value: 'male' },
   { key: '2', value: 'female' },
-  { key: '3', value: 'Prefer not to say' },
+  { key: '3', value: 'prefer not to say' },
 ];
 
 const ageOptions = [
@@ -63,7 +63,7 @@ const ageOptions = [
   { key: '2', value: '18-34' },
   { key: '3', value: '35-50' },
   { key: '4', value: '51-69' },
-  { key: '5', value: '70-more' },
+  { key: '5', value: '70+' },
 ];
 
 const keyMap = {
@@ -86,23 +86,19 @@ const csvHeaders = [
 
 const columns = Object.values(keyMap).filter(Boolean);
 
-const range = (start, end) =>
-  Array(+end - (+start + 1))
-    .fill()
-    .map((_, idx) => +start + idx); //eslint-disable-line
-
 export default class VisitsDataPage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      page: 1,
       visitsList: [],
-      filteredVisitsList: [],
       activities: [],
-      filters: {},
+      genderFilter: '',
+      ageFilter: '',
+      activityFilter: '',
       orderBy: '',
       genderNumbers: { datasets: [], labels: [] },
-      visits: { datasets: [], labels: [] },
       visitNumbers: { datasets: [], labels: [] },
       ageGroups: { datasets: [], labels: [] },
       activitiesGroups: { datasets: [], labels: [] },
@@ -118,14 +114,7 @@ export default class VisitsDataPage extends React.Component {
       .then(([resVisitors, resStats]) => {
         this.props.updateAdminToken(resVisitors.headers.authorization);
 
-        const visits = resVisitors.data.result.map(a => ({
-          visit_id: a.visit_id,
-          visitor_id: a.visitor_id,
-          gender: a.gender,
-          yob: a.yob,
-          activity: a.activity,
-          visit_date: a.visit_date,
-        }));
+        const visits = resVisitors.data.result;
 
         const [
           visitsNumbers,
@@ -136,17 +125,23 @@ export default class VisitsDataPage extends React.Component {
         ] = resStats.data.result;
 
         this.setState({
-          visits: visitsNumbers,
           visitNumbers: this.getVisitsWeek(visitsNumbers),
           genderNumbers: this.getGendersForChart(genderNumbers),
           activitiesGroups: this.getActivitiesForChart(activitiesNumbers),
           ageGroups: this.getAgeGroupsForChart(ageGroups),
           activities: activities.map(activity => activity.name),
           visitsList: visits,
-          filteredVisitsList: visits,
         });
       })
-      .catch(() => this.setState({ errors: { general: 'Unknown error' } }));
+      .catch((error) => {
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/internalServerError');
+        } else {
+          this.setState({ errors: { general: 'Could not update activity' } });
+        }
+      });
   }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value }, this.update);
@@ -241,49 +236,51 @@ export default class VisitsDataPage extends React.Component {
   };
 
   update = () => {
-    const { ageFilter, activityFilter, genderFilter, visitsList } = this.state;
-    let yearRange = [];
-
-    if (ageFilter) {
-      const year = moment().year();
-      const ages = ageFilter.split('-').map(el => (el === 'more' ? 113 : el));
-      const ageRange = range(ages[0], ages[1]);
-      yearRange = ageRange.map(el => year - el);
-    }
-    const newFilteredVisitsList = visitsList
-      .filter(el => (genderFilter ? el.gender === genderFilter.toLowerCase() : el))
-      .filter(el => (activityFilter ? el.activity === activityFilter : el))
-      .filter(el => (ageFilter ? contains(el.yob, yearRange) : el));
-
-    this.setState({ filteredVisitsList: newFilteredVisitsList });
-
-    Visitors.getStatistics(this.props.auth, {
+    const { genderFilter, ageFilter, activityFilter, page, limit = 10 } = this.state;
+    const offset = page * limit - limit; // eslint-disable-line
+    const pVisitors = Visitors.get(this.props.auth, {
+      withVisits: true,
+      offset,
+      genderFilter,
+      ageFilter,
+      activityFilter,
+    });
+    const pStats = Visitors.getStatistics(this.props.auth, {
       filter: [
         this.state.genderFilter && `gender@${this.state.genderFilter.toLowerCase()}`,
         this.state.ageFilter && `age@${this.state.ageFilter}`,
         this.state.activityFilter && `activity@${this.state.activityFilter}`,
       ].filter(Boolean),
       sort: { [this.state.orderBy]: 'asc' },
-    })
-      .then((res) => {
-        this.props.updateAdminToken(res.headers.authorization);
-        return res.data.result;
-      })
-      .then((res) => {
+    });
+
+    Promise.all([pVisitors, pStats])
+      .then(([resVisitors, resStats]) => {
+        this.props.updateAdminToken(resVisitors.headers.authorization);
+
+        const visits = resVisitors.data.result;
+        const stats = resStats.data.result; //res[0] no longer used
+
         this.setState({
-          users: res[0],
-          ageGroups: this.getAgeGroupsForChart(res[1]),
-          activitiesGroups: this.getActivitiesForChart(res[2]),
-          genderNumbers: this.getGendersForChart(res[3]),
+          ageGroups: this.getAgeGroupsForChart(stats[1]),
+          activitiesGroups: this.getActivitiesForChart(stats[2]),
+          genderNumbers: this.getGendersForChart(stats[3]),
+          visitsList: visits,
         });
       })
-      .catch(() => {
-        this.setState({ errors: { general: 'Unknown error' } });
+      .catch((error) => {
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/internalServerError');
+        } else {
+          this.setState({ errors: { general: 'Could not update activity' } });
+        }
       });
   };
 
   render() {
-    const { errors, filteredVisitsList } = this.state;
+    const { errors, visitsList } = this.state;
     const activityOptions = ['']
       .concat(this.state.activities)
       .map((a, i) => ({ key: `${i}`, value: a }));
@@ -357,7 +354,7 @@ export default class VisitsDataPage extends React.Component {
             }
             headAlign="left"
             columns={columns}
-            rows={filteredVisitsList
+            rows={visitsList
               .map(visit => ({
                 ...visit,
                 visit_date: moment(visit.visit_date).format('DD-MM-YY HH:mm'),
@@ -376,4 +373,5 @@ export default class VisitsDataPage extends React.Component {
 VisitsDataPage.propTypes = {
   auth: PropTypes.string.isRequired,
   updateAdminToken: PropTypes.func.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

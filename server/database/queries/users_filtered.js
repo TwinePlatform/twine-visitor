@@ -11,7 +11,7 @@ WHERE users.cb_id = $1 ${filterBy} ) users ${orderBy}`;
 const getValidatedFilters = filterArray => {
   const validFilterTypes = {
     gender: ['male', 'female', 'prefer not to say'],
-    age: ['0-17', '18-34', '35-50', '51-69', '70-more'],
+    age: ['0-17', '18-34', '35-50', '51-69', '70+'],
   };
 
   return filterArray.reduce((acc, el) => {
@@ -53,7 +53,7 @@ const buildAgeQuery = ageQuery =>
           const [low, high] = ageRange.split('-').map(num => Number(num));
           const edgeCaseQuery = {
             '0-17': `(users.yearofbirth > ${getDate(high)})`,
-            '70-more': `(users.yearofbirth <= ${getDate(low)})`,
+            '70+': `(users.yearofbirth <= ${getDate(70)})`,
           }[ageRange];
 
           return (
@@ -162,7 +162,11 @@ const genderNumbersQuery = filterBy => `WITH filteredUsers AS
 
   GROUP BY filteredUsers.sex`;
 
-const getUsersFilteredBy = (dbConnection, cb_id, { filterBy = [], orderBy = '' } = {}) => {
+const getUsersFilteredBy = (
+  dbConnection,
+  cb_id,
+  { filterBy = [], orderBy = '' } = {}
+) => {
   if (!cb_id)
     return Promise.reject(new Error('No Community Business ID supplied'));
   const [filterQueries, values] = combineQueries(filterBy);

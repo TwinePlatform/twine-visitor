@@ -14,7 +14,13 @@ test('DB Query | visitors_all', async tape => {
     try {
       await refreshDB();
 
-      const actual = await getAllUsersQuery(client, 3);
+      const actual = await getAllUsersQuery(client, {
+        where: { 'activities.cb_id': 3 },
+        innerJoin: {
+          visits: ['users.id', 'visits.usersid'],
+          activities: ['visits.activitiesid', 'activities.id'],
+        },
+      });
       const expected = [
         {
           visit_id: 65,

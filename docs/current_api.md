@@ -20,7 +20,7 @@
 | `POST /users/filtered` | `Authorization: cb_admin_token` | `{ filterBy, orderBy }` | `{ users: [[{id, fullName, sex, yearofbirth, email, date}], [{ ageCount, ageGroups }], [{ name, count }], [{ sex, count }]] }` |
 | `POST /visit/check` | `Authorization: std_token` | `{ formSender, formEmail, formPhone, formGender, formYear }` | `String` or `Bool` |
 | `POST /visit/add` | `Authorization: std_token` | `{ hash, activity }` | `String` |
-| `POST /visitors/all` | `Authorization: cb_admin_token` | | `{ users: [{ id, sex, yearofbirth, name, date }] }` |
+| `GET /visitors/all` | `Authorization: cb_admin_token` | | `{ users: [{ id, sex, yearofbirth, name, date }] }` |
 | `POST /visitors/filtered` | `Authorization: cb_admin_token` | `{ filterBy: [], orderBy: String }` | `{ users: [{ id, sex, yearofbirth, name, date }] }` |
 | `GET  /activities/all` | `Authorization: cb_admin_token` | | `{ activities: [{ id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday }] }` |
 | `GET  /activities/today` | `Authorization: std_token` | | `{ activities: [{ id, name }] }` |

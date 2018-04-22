@@ -31,7 +31,7 @@ export const Visitors = {
         params: {
           offset: query.offset,
           sort: query.sort,
-          sex: query.genderFilter,
+          gender: query.genderFilter,
           age: query.ageFilter,
         },
         headers: { Authorization: tkn },
@@ -74,7 +74,15 @@ export const Visitors = {
         { headers: { Authorization: tkn } },
       );
     } else if (query.withVisits) {
-      return axios.post('/api/visitors/all', {}, { headers: { Authorization: tkn } });
+      return axios.get('/api/visitors/all', {
+        params: {
+          offset: query.offset || 0,
+          gender: query.genderFilter,
+          age: query.ageFilter,
+          activity: query.activityFilter,
+        },
+        headers: { Authorization: tkn },
+      });
     }
 
     return Promise.reject(new Error('Invalid query parameters'));

@@ -68,7 +68,7 @@ const genderOptions = [
 const ageOptions = [
   { key: '0', value: '' },
   { key: '1', value: '0-17' },
-  { key: '2', value: '18-35' },
+  { key: '2', value: '18-34' },
   { key: '3', value: '35-50' },
   { key: '4', value: '51-69' },
   { key: '5', value: '70+' },
