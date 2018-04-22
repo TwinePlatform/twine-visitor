@@ -5,7 +5,6 @@
  */
 const Boom = require('boom');
 
-
 // catch 404 and forward to error handler
 exports.notFound = (req, res, next) => {
   const err = new Error('Not Found');
@@ -14,8 +13,10 @@ exports.notFound = (req, res, next) => {
 };
 
 // error handler
-exports.errorHandler = (err, req, res, next) => { // eslint-disable-line
-  if (process.env.NODE_ENV === 'dev') {
+// prettier-ignore
+exports.errorHandler = (err, req, res, next) => { // eslint-disable-line 
+
+  if (req.app.get('env') === 'development') {
     console.error(err);
   }
 
