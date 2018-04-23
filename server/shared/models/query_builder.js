@@ -1,35 +1,30 @@
 const { curry, pipe } = require('ramda');
 
 /*
- * Query builder utilities
- *
- * Functions to build simple SELECT/INSERT/UPDATE queries
- */
+  Query builder utilities
 
-/**
- * pg queryObject
- * @typedef {Object} QueryObject
- * @property {String} text - sql query
- * @property {Any[]} values - parameterised values
- */
+  Functions to build SELECT/INSERT/UPDATE queries dynamically
 
-/**
- * options
- * @typedef {Object} Options
- * @property {Object} where - { [column_name]: string }
- * @property {Object} between - { column: string, values: string [] }
- * @property {String} sort - column name to sort by
- * @property {Object} pagination - { offset: int }
- * @property {String} returning
- */
+  Complex queries including INNER JOIN, WHERE, BETWEEN, SORT, OFFSET and RETURNING clauses can be 
+  constructed by specifying options, as defined by the `Options` type definition below.
 
-/**
- * Dependant on options adds where clause and values to query object
- * @param   {Options} options options object
- * @param   {QueryObject} queryObj
- * @returns {QueryObject}
- */
+  SqlQuery = 
+    {
+      text: String,
+      values: [ a ]
+    }
 
+  Options = 
+    {
+      where: { <column-name>: <value> },
+      between: { column: String, values: [ Int ] },
+      sort: String,
+      pagination: { offset: Int },
+      returning: String
+    }
+*/
+
+// addInnerJoinClause :: Options -> SqlQuery -> SqlQuery
 const addInnerJoinClause = curry(({ innerJoin }, queryObj) => {
   if (innerJoin) {
     const innerJoinClause = `${Object.keys(innerJoin)
@@ -44,13 +39,7 @@ const addInnerJoinClause = curry(({ innerJoin }, queryObj) => {
   return queryObj;
 });
 
-/**
- * Dependant on options adds where clause and values to query object
- * @param   {Options}
- * @param   {QueryObject}
- * @returns {QueryObject}
- */
-
+// addWhereClause :: Options -> SqlQuery -> SqlQuery
 const addWhereClause = curry((options, queryObj) => {
   const valuesOffset = queryObj.values.length;
 
@@ -67,12 +56,7 @@ const addWhereClause = curry((options, queryObj) => {
   return queryObj;
 });
 
-/**
- * Dependant on options adds between clause and values to query object
- * @param   {Options} options options object
- * @param   {QueryObject} queryObj
- * @returns {QueryObject}
- */
+// addBetweenClause :: Options -> SqlQuery -> SqlQuery
 const addBetweenClause = curry((options, queryObj) => {
   const valuesOffset = queryObj.values.length + 1;
 
@@ -89,12 +73,7 @@ const addBetweenClause = curry((options, queryObj) => {
   return queryObj;
 });
 
-/**
- * Dependant on options adds sort clause to query object
- * @param   {Options} options options object
- * @param   {QueryObject} queryObj
- * @returns {QueryObject}
- */
+// addSortClause :: Options -> SqlQuery -> SqlQuery
 const addSortClause = curry((options, queryObj) => {
   if (options.sort) {
     return {
@@ -105,13 +84,8 @@ const addSortClause = curry((options, queryObj) => {
   return queryObj;
 });
 
-/**
- * Dependant on options adds pagination clause and values to query object
- * @param   {Options} options options object
- * @param   {QueryObject} queryObj
- * @returns {QueryObject}
- */
-const addPagination = curry((options, queryObj) => {
+// addPaginationClause :: Options -> SqlQuery -> SqlQuery
+const addPaginationClause = curry((options, queryObj) => {
   const valuesOffset = queryObj.values.length + 1;
 
   if (options.pagination) {
@@ -125,6 +99,7 @@ const addPagination = curry((options, queryObj) => {
   return queryObj;
 });
 
+// addReturningClause :: Options -> SqlQuery -> SqlQuery
 const addReturning = curry((options, queryObj) => {
   if (options.returning) {
     return {
@@ -135,13 +110,7 @@ const addReturning = curry((options, queryObj) => {
   return queryObj;
 });
 
-/**
- * Generates SELECT query object with `text` and `value` fields
- * @param   {String}   table      Table name
- * @param   {String[]} columns    Columns to select
- * @param   {Options}  options    options object
- * @returns {QueryObject} queryObject
- */
+// selectQuery:: ( String, [ String ], Options ) -> SqlQuery
 const selectQuery = (table, columns, options) => {
   const cols = (options.pagination
     ? ['COUNT(*) OVER() AS full_count']
@@ -155,19 +124,13 @@ const selectQuery = (table, columns, options) => {
     addWhereClause(options),
     addBetweenClause(options),
     addSortClause(options),
-    addPagination(options)
+    addPaginationClause(options)
   );
 
   return queryPipe(queryObject);
 };
 
-/**
- * Generates INSERT query object with `text` and `value` fields
- * @param   {String} table          Table name
- * @param   {Object} values         { column-name: value-to-insert }
- * @param   {String} [returning=''] Returning clause, raw
- * @returns {Query}                 { text: String, values: Array }
- */
+// insertQuery :: ( String, { <column-name>: <value> }, String ) -> SqlQuery
 const insertQuery = (table, values, returning = '') => {
   const base = `INSERT INTO ${table}`;
   const keys = Object.keys(values);
@@ -181,13 +144,7 @@ const insertQuery = (table, values, returning = '') => {
   };
 };
 
-/**
- * Generates UPDATE query object with `text` and `value` fields
- * @param   {String} table          Table name
- * @param   {Object} values         { column-name: value-to-insert }
- * @param   {Option} options        options object
- * @returns {QueryObject}           { text: String, values: Array }
- */
+// updateQuery :: ( String, { <column-name>: <value> }, Options ) -> SqlQuery
 const updateQuery = (table, values, options) => {
   const base = `UPDATE ${table} SET`;
   const keys = Object.keys(values);
