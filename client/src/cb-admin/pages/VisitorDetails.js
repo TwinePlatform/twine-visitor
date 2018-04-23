@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import moment from 'moment';
-import { filter, invertObj, project, contains } from 'ramda';
+import { filter, invertObj, project } from 'ramda';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Link } from '../../shared/components/text/base';
 import { Form as Fm } from '../../shared/components/form/base';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import ExportButton from '../../shared/components/form/ExportButton';
 import TranslucentTable from '../components/TranslucentTable';
-import { Visitors } from '../../api';
+import { Visitors, ErrorUtils } from '../../api';
 
 const Nav = styled.nav`
   display: flex;
@@ -52,11 +51,6 @@ const keyMap = {
 };
 
 const colToState = invertObj(keyMap);
-
-const range = (start, end) =>
-  Array(end - (start + 1))
-    .fill()
-    .map((_, idx) => start + idx); //eslint-disable-line
 
 const columns = Object.values(keyMap).filter(Boolean);
 
@@ -110,7 +104,7 @@ export default class VisitorDetailsPage extends React.Component {
   onChange = e => this.setState({ [e.target.name]: e.target.value }, this.update);
 
   update = () => {
-    const { page, users, genderFilter, ageFilter, limit = 10 } = this.state;
+    const { page, genderFilter, ageFilter, limit = 10 } = this.state;
     const sort = colToState[this.state.sort];
     const cbAdminToken = this.props.auth;
 
@@ -122,27 +116,15 @@ export default class VisitorDetailsPage extends React.Component {
 
         this.setState({ users: res.data.result });
       })
-      .catch(error => console.log(error));
-
-    let yearRange = [];
-    if (ageFilter) {
-      const year = moment().year();
-      const ages = ageFilter
-        .split(/[-+]/)
-        .filter(Boolean)
-        .map(el => Number(el))
-        .concat([113]);
-
-      const ageRange = range(ages[0], ages[1]);
-      yearRange = ageRange.map(el => year - el);
-    }
-
-    const newOrder = [...users]
-      .sort((a, b) => (sort ? a[colToState[sort]] > b[colToState[sort]] : a))
-      .filter(el => (genderFilter ? el.gender === genderFilter.toLowerCase() : el))
-      .filter(el => (ageFilter ? contains(el.yob, yearRange) : el));
-
-    this.setState({ displayUsers: newOrder });
+      .catch((error) => {
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/internalServerError');
+        } else {
+          this.setState({ errors: { general: 'Could not update activity' } });
+        }
+      });
   };
 
   render() {
@@ -191,7 +173,7 @@ export default class VisitorDetailsPage extends React.Component {
             exportComponent={
               <ExportButton
                 csvHeaders={csvHeaders}
-                visitsData={this.state.displayUsers}
+                visitsData={this.state.users}
                 filenameSuffixes={this.state}
               />
             }
