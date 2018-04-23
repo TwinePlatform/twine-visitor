@@ -383,7 +383,7 @@ export default class VisitsDataPage extends React.Component {
         </Row>
         <Row flex={3}>
           <FlexItem>
-            <Paragraph>Visitor numbers</Paragraph>
+            <Paragraph>Visitor numbers in last week</Paragraph>
             <BarChart
               data={this.state.visitNumbers}
               options={{ responsive: true, maintainAspectRatio: false, legend: { display: false } }}
