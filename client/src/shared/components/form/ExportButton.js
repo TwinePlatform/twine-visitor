@@ -43,19 +43,23 @@ const Button = styled(CSVLink)`
 const ExportButton = (props) => {
   const { csvHeaders, visitsData, filenameSuffixes } = props;
 
-  const csvVisitsFilename = `VisitsData${filenameSuffixes.activityFilter ? `-${filenameSuffixes.activityFilter}` : ''}${
-    filenameSuffixes.genderFilter ? `-${filenameSuffixes.genderFilter}` : ''
-  }${filenameSuffixes.ageFilter ? `-${filenameSuffixes.ageFilter}` : ''}.csv`;
+  const csvVisitsFilename = `VisitsData${
+    filenameSuffixes.activityFilter ? `-${filenameSuffixes.activityFilter}` : ''
+  }${filenameSuffixes.genderFilter ? `-${filenameSuffixes.genderFilter}` : ''}${
+    filenameSuffixes.ageFilter ? `-${filenameSuffixes.ageFilter}` : ''
+  }.csv`;
 
-  const csvUsersFilename = `VisitorData${filenameSuffixes.ageFilter ? `-${filenameSuffixes.ageFilter}` : ''}${
-    filenameSuffixes.genderFilter ? `-${filenameSuffixes.genderFilter}` : ''
-  }${filenameSuffixes.sort ? `-SortBy:${filenameSuffixes.sort}` : ''}.csv`;
+  const csvUsersFilename = `VisitorData${
+    filenameSuffixes.ageFilter ? `-${filenameSuffixes.ageFilter}` : ''
+  }${filenameSuffixes.genderFilter ? `-${filenameSuffixes.genderFilter}` : ''}${
+    filenameSuffixes.sort ? `-SortBy:${filenameSuffixes.sort}` : ''
+  }.csv`;
 
   const csvFilename = filenameSuffixes.sort ? csvUsersFilename : csvVisitsFilename;
 
   return (
     <Button headers={csvHeaders} data={visitsData} download={csvFilename}>
-        EXPORT AS CSV
+      EXPORT AS CSV
     </Button>
   );
 };

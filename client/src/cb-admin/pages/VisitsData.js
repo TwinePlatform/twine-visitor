@@ -125,7 +125,7 @@ export default class VisitsDataPage extends React.Component {
           activitiesNumbers,
           ageGroups,
           activities,
-        ] = resStats.data.result; //eslint-disable-line
+        ] = resStats.data.result;
 
         this.setState({
           visits: visitsNumbers,
