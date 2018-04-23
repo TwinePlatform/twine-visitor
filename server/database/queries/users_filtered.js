@@ -52,14 +52,14 @@ const buildAgeQuery = ageQuery =>
         .map(ageRange => {
           const [low, high] = ageRange.split('-').map(num => Number(num));
           const edgeCaseQuery = {
-            '0-17': `(users.yearofbirth > ${getDate(high)})`,
+            '0-17': `(users.yearofbirth >= ${getDate(high)})`,
             '70+': `(users.yearofbirth <= ${getDate(70)})`,
           }[ageRange];
 
           return (
             edgeCaseQuery ||
-            `(users.yearofbirth <= ${getDate(low - 1)}
-            AND users.yearofbirth > ${getDate(high)})`
+            `(users.yearofbirth <= ${getDate(low)}
+            AND users.yearofbirth >= ${getDate(high)})`
           );
         })
         .join(' OR ')
@@ -125,17 +125,17 @@ const visitorsByAge = filterBy => `WITH filteredUsers AS
   WHERE users.cb_id = $1 ${filterBy}
 ),
 groupage AS (SELECT CASE
-  WHEN filteredUsers.yearofbirth > ${getDate(17)} THEN '0-17'
-  WHEN filteredUsers.yearofbirth > ${getDate(
+  WHEN filteredUsers.yearofbirth >= ${getDate(17)} THEN '0-17'
+  WHEN filteredUsers.yearofbirth >= ${getDate(
     34
-  )} AND filteredUsers.yearofbirth <= ${getDate(17)} THEN '18-34'
-  WHEN filteredUsers.yearofbirth > ${getDate(
+  )} AND filteredUsers.yearofbirth <= ${getDate(18)} THEN '18-34'
+  WHEN filteredUsers.yearofbirth >= ${getDate(
     50
-  )} AND filteredUsers.yearofbirth <= ${getDate(34)} THEN '35-50'
-  WHEN filteredUsers.yearofbirth > ${getDate(
+  )} AND filteredUsers.yearofbirth <= ${getDate(35)} THEN '35-50'
+  WHEN filteredUsers.yearofbirth >= ${getDate(
     69
-  )} AND filteredUsers.yearofbirth <= ${getDate(50)} THEN '51-69'
-  WHEN filteredUsers.yearofbirth <= ${getDate(69)} THEN '70+'
+  )} AND filteredUsers.yearofbirth <= ${getDate(51)} THEN '51-69'
+  WHEN filteredUsers.yearofbirth <= ${getDate(70)} THEN '70+'
   END AS ageGroups
   FROM filteredUsers
 )
