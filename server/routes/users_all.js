@@ -9,8 +9,7 @@ const schema = {
   query: {
     offset: Joi.number()
       .integer()
-      .min(0)
-      .required(),
+      .min(0),
     sort: Joi.any().valid(
       '',
       'id',
