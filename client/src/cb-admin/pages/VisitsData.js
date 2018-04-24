@@ -137,9 +137,9 @@ export default class VisitsDataPage extends React.Component {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
           this.props.history.push('/admin/login');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/internalServerError');
+          this.props.history.push('/error/500');
         } else {
-          this.setState({ errors: { general: 'Could not update activity' } });
+          this.setState({ errors: { general: 'Could not fetch visits data' } });
         }
       });
   }
@@ -272,9 +272,9 @@ export default class VisitsDataPage extends React.Component {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
           this.props.history.push('/admin/login');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/internalServerError');
+          this.props.history.push('/error/500');
         } else {
-          this.setState({ errors: { general: 'Could not update activity' } });
+          this.setState({ errors: { general: 'Could not fetch visits data' } });
         }
       });
   };

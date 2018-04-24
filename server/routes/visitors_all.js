@@ -19,6 +19,7 @@ const schema = {
 
 const removeProperties = omit(['offset', 'age']);
 const removeEmpty = filter(identity);
+const renameActivityAndGender = renameKeys({ activity: 'activities.name', gender: 'sex' });
 
 router.get('/', validate(schema), async (req, res, next) => {
   try {
@@ -26,7 +27,7 @@ router.get('/', validate(schema), async (req, res, next) => {
     const addCbId = assoc('activities.cb_id', req.auth.cb_id);
 
     const createWhereObj = pipe(
-      renameKeys({ activity: 'activities.name', gender: 'sex' }),
+      renameActivityAndGender,
       removeProperties,
       removeEmpty,
       addCbId
