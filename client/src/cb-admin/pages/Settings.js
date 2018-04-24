@@ -103,8 +103,8 @@ export default class SettingsPage extends React.Component {
       dropzoneMsg: undefined,
       users: [],
       visits: [],
-      visitsString: 'HelloVisits',
-      usersString: 'HelloUsers',
+      visitsString: '',
+      usersString: '',
     };
   }
 
@@ -160,46 +160,27 @@ export default class SettingsPage extends React.Component {
     });
   };
 
-  createZip = () => {
-    const zip = JSZip();
-
-    Visitors.get(this.props.auth)
-      .then((res) => {
-        this.props.updateAdminToken(res.headers.authorization);
-        this.setState({ users: res.data.result });
-      })
-      .then(() => {
-        const usersArray = this.state.users;
-        usersArray.unshift({
-          id: 'ID',
-          name: 'Full Name',
-          gender: 'Gender',
-          yob: 'Year of Birth',
-          email: 'Email',
-          registered_at: 'Date Registered',
-          email_consent: 'Email Opt-In',
-          sms_consent: 'SMS Opt-In',
-        });
-        this.setState({ users: usersArray });
-      })
-      .then(() => {
-        csv.writeToString(this.state.users, (err, data) => {
-          this.setState({ usersString: data });
-        });
-      })
-      .catch((error) => {
-        if (error.status === 500) {
-          this.props.history.push('/internalServerError');
-        } else if (error.message === 'No admin token') {
-          this.props.history.push('/admin/login');
+  createCSVString = arrayCSV =>
+    new Promise((resolve, reject) => {
+      csv.writeToString(arrayCSV, (err, data) => {
+        if (err) {
+          reject(err);
         } else {
-          this.props.history.push('/admin/login');
+          resolve(data);
         }
       });
+    });
 
-    CbAdmin.export(this.props.auth)
-      .then((res) => {
-        const visitsRes = res.data.result.map(a => ({
+  createZip = () => {
+    const zip = JSZip();
+    const pUsers = Visitors.get(this.props.auth);
+    const pVisitors = CbAdmin.export(this.props.auth);
+
+    Promise.all([pUsers, pVisitors])
+      .then(([resUsers, resVisitors]) => {
+        this.props.updateAdminToken(resUsers.headers.authorization);
+
+        const visitsRes = resVisitors.data.result.map(a => ({
           visit_id: a.visit_id,
           visitor_name: a.visitor_name,
           gender: a.gender,
@@ -207,30 +188,40 @@ export default class SettingsPage extends React.Component {
           activity: a.activity,
           visit_date: a.visit_date,
         }));
-        this.setState({ visits: visitsRes });
-      })
-      .then(() => {
-        const visitsArray = this.state.visits;
-        visitsArray.unshift({
-          visit_id: 'Visit ID',
-          visitor_name: 'Full Name',
-          gender: 'Gender',
-          yob: 'Year of Birth',
-          activity: 'Activity',
-          visit_date: 'Visit Date',
-        });
-        this.setState({ visits: visitsArray });
-      })
-      .then(() => {
-        csv.writeToString(this.state.visits, (err, data) => {
-          this.setState({ visitsString: data });
-        });
-      })
-      .then(() => {
-        zip.file('App Data/UsersData.csv', this.state.usersString);
-        zip.file('App Data/VisitsData.csv', this.state.visitsString);
-        zip.generateAsync({ type: 'blob' }).then((blob) => {
-          FileSaver.saveAs(blob, 'AppData.zip');
+
+        const usersArrayHeaders = [
+          {
+            id: 'ID',
+            name: 'Full Name',
+            gender: 'Gender',
+            yob: 'Year of Birth',
+            email: 'Email',
+            registered_at: 'Date Registered',
+            email_consent: 'Email Opt-In',
+            sms_consent: 'SMS Opt-In',
+          },
+        ].concat(resUsers.data.result);
+
+        const visitsArrayHeaders = [
+          {
+            visit_id: 'Visit ID',
+            visitor_name: 'Full Name',
+            gender: 'Gender',
+            yob: 'Year of Birth',
+            activity: 'Activity',
+            visit_date: 'Visit Date',
+          },
+        ].concat(visitsRes);
+
+        Promise.all([
+          this.createCSVString(usersArrayHeaders),
+          this.createCSVString(visitsArrayHeaders),
+        ]).then((array) => {
+          zip.file('App Data/UsersData.csv', array[0]);
+          zip.file('App Data/VisitsData.csv', array[1]);
+          zip.generateAsync({ type: 'blob' }).then((blob) => {
+            FileSaver.saveAs(blob, 'AppData.zip');
+          });
         });
       })
       .catch((error) => {
