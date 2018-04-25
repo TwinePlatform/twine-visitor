@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { assocPath, compose, pick, prop, filter } from 'ramda';
 import csv from 'fast-csv';
-import JSZip from 'jszip';
-import FileSaver from 'file-saver';
+import jsZip from 'jszip';
+import fileSaver from 'file-saver';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Paragraph as P, Heading, Link } from '../../shared/components/text/base';
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
@@ -172,7 +172,7 @@ export default class SettingsPage extends React.Component {
     });
 
   createZip = () => {
-    const zip = JSZip();
+    const zip = jsZip();
     const pUsers = Visitors.get(this.props.auth);
     const pVisitors = CbAdmin.export(this.props.auth);
 
@@ -220,7 +220,7 @@ export default class SettingsPage extends React.Component {
           zip.file('App Data/UsersData.csv', array[0]);
           zip.file('App Data/VisitsData.csv', array[1]);
           zip.generateAsync({ type: 'blob' }).then((blob) => {
-            FileSaver.saveAs(blob, 'AppData.zip');
+            fileSaver.saveAs(blob, 'AppData.zip');
           });
         });
       })
