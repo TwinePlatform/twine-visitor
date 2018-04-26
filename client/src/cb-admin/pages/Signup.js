@@ -10,7 +10,9 @@ import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 import {
-  PASSWORD_CONFIRMATION_DOESNT_MATCH, PASSWORD_NOT_STRONG, ORG_NAME_INVALID,
+  PASSWORD_CONFIRMATION_DOESNT_MATCH,
+  PASSWORD_NOT_STRONG,
+  ORG_NAME_INVALID,
 } from '../constants/error_text';
 
 const categories = [
@@ -55,7 +57,6 @@ const SubmitButton = styled(PrimaryButton)`
   height: 4em;
   width: 90%;
 `;
-
 
 const CbAdminSignup = ({ errors, onChange, onSubmit }) => (
   <FlexContainerCol>
@@ -121,13 +122,12 @@ const CbAdminSignup = ({ errors, onChange, onSubmit }) => (
 
       <FormSection flexOrder={4}>
         <Paragraph>
-          Already a subscriber? <Link to="/logincb">Login</Link>
+          Already a subscriber? <Link to="/cb/login">Login</Link>
         </Paragraph>
       </FormSection>
     </Form>
   </FlexContainerCol>
 );
-
 
 CbAdminSignup.propTypes = {
   errors: PropTypes.object.isRequired, // eslint-disable-line
@@ -135,14 +135,14 @@ CbAdminSignup.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
-
 const submitHandler = state => CbAdmin.create(payloadFromState(state));
 
 const forwarding = {
   200: '/cb/login?ref=signup',
   401: '/cb/login?ref=unauth',
   404: '/error/404',
-  409: self => self.setState({ errors: { email: 'CB using this email has already been registered' } }),
+  409: self =>
+    self.setState({ errors: { email: 'CB using this email has already been registered' } }),
   500: '/error/500',
   other: '/error/unknown',
 };
