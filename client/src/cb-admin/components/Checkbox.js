@@ -9,7 +9,6 @@ const Control = styled.div`
   & input {
     z-index: -1;
     opacity: 0;
-    position: absolute;
   }
 
   & input + label:before {
@@ -20,7 +19,6 @@ const Control = styled.div`
     border-radius: 50%;
     border: 0.1em solid ${colors.light};
     background: transparent;
-    position: relative;
   }
 
   & input:checked + label:before {
