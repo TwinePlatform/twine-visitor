@@ -39,8 +39,8 @@ export default class ConfirmPassword extends React.Component {
         this.props.updateAdminToken(data.result.token);
         this.props.history.push('/admin');
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        this.setState({ errors: { password: 'Wrong password' } });
       });
   };
 
