@@ -66,11 +66,6 @@ const postFeedback = (feedbackScore, props) => {
   }).then(() => props.history.push('/thankyou'));
 };
 
-const logout = props => () => {
-  localStorage.removeItem('token');
-  props.updateLoggedIn();
-};
-
 export default props => (
   <div>
     <FlexContainerCol justify="space-around">
@@ -81,11 +76,7 @@ export default props => (
         <FlexItem flex="2">
           <Heading>Welcome Visitor</Heading>
         </FlexItem>
-        <FlexItem textRight>
-          <HyperLink to="/cb/login" onClick={logout(props)}>
-            Logout
-          </HyperLink>
-        </FlexItem>
+        <FlexItem />
       </StyledNav>
       <StyledSection>
         <FlexLink to="/visitor/login">
