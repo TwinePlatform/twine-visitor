@@ -1,14 +1,16 @@
 const PdfPrinter = require('pdfmake');
 const axios = require('axios');
+const path = require('path');
 
 const encode64 = async (url) => {
-  const result = await axios.get(url);
-  return Buffer.from(result.data).toString('base64');
+  const isJpeg = [".jpg", ".jpeg"].some(s => url.endsWith(s));
+  const pngUrl = isJpeg ? url.replace(/\.(jpg|jpeg)$/, '.png') : url;
+  const result = await axios.get(pngUrl, { responseType: 'arraybuffer' });
+  return Buffer.from(result.data, 'binary').toString('base64');
 };
 
 const getPdf = (
   QRcodeBase64Url,
-  image,
   columns,
   textMargin,
   textAlignment,
@@ -61,9 +63,7 @@ const getPdf = (
     resolve(Buffer.concat(chunks).toString('base64'));
   });
 
-  doc.on('error', () => {
-    reject('Error building doc');
-  });
+  doc.on('error', reject);
   doc.end();
 };
 
@@ -71,10 +71,10 @@ module.exports = (QRcodeBase64Url, image) =>
   new Promise((resolve, reject) => {
     if (image) {
       encode64(image)
-        .then(image => {
+        .then(encodedImage => {
           const columns = [
             {
-              image: `data:image/png;base64, ${image}`,
+              image: `data:image/png;base64,${encodedImage}`,
               margin: [5, 5, 0, 0],
               fit: [100, 100],
             },
@@ -86,7 +86,6 @@ module.exports = (QRcodeBase64Url, image) =>
           ];
           getPdf(
             QRcodeBase64Url,
-            image,
             columns,
             [0, 10, 10, 0],
             'center',
@@ -98,7 +97,7 @@ module.exports = (QRcodeBase64Url, image) =>
     } else {
       const columns = [
         {
-          image: `${__dirname}/../../client/src/assets/images/qrcodelogo.png`,
+          image: path.resolve(__dirname, '..', '..', 'client', 'src', 'shared', 'assets', 'images', 'qrcodelogo.png'),
           width: 38,
           height: 129.5,
           margin: [0, 10, 0, 0],
@@ -111,7 +110,6 @@ module.exports = (QRcodeBase64Url, image) =>
       ];
       getPdf(
         QRcodeBase64Url,
-        undefined,
         columns,
         [0, -10, 10, 0],
         'right',
