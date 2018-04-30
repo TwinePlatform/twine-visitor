@@ -13,6 +13,15 @@ import QrBox from '../components/QrBox';
 import { CbAdmin, Visitors } from '../../api';
 import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 
+const generateYearsArray = (startYear, currentYear) =>
+  Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
+
+const years = [{ key: '', value: '' }].concat(
+  generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear()).map(y => ({
+    key: y,
+    value: y,
+  })),
+);
 
 const Nav = styled.nav`
   display: flex;
@@ -78,7 +87,6 @@ const PrintHeaderRow = FlexContainerRow.extend`
   align-items: center;
 `;
 
-
 const genderOptions = [
   { key: '0', value: '' },
   { key: '1', value: 'male' },
@@ -86,13 +94,11 @@ const genderOptions = [
   { key: '3', value: 'Prefer not to say' },
 ];
 
-
 const payloadFromState = compose(
   filter(Boolean),
   pick(['name', 'gender', 'email', 'yob', 'phoneNumber']),
   prop('form'),
 );
-
 
 export default class VisitorProfile extends React.Component {
   constructor(props) {
@@ -128,17 +134,17 @@ export default class VisitorProfile extends React.Component {
         this.props.history.push('/admin/login');
       });
 
-    CbAdmin.get(this.props.auth)
-      .then(res =>
-        this.setState({
-          cbOrgName: res.data.result.org_name,
-          cbLogoUrl: res.data.result.uploadedfilecloudinaryurl,
-        }));
+    CbAdmin.get(this.props.auth).then(res =>
+      this.setState({
+        cbOrgName: res.data.result.org_name,
+        cbLogoUrl: res.data.result.uploadedfilecloudinaryurl,
+      }),
+    );
   }
 
   onClickPrint = () => {
     window.print();
-  }
+  };
 
   onClickResend = () => {
     Visitors.email(this.props.auth, { id: this.state.id })
@@ -147,11 +153,9 @@ export default class VisitorProfile extends React.Component {
         // TODO: incomplete error handling
         console.log(error);
       });
-  }
+  };
 
-  onChange = e =>
-    this.setState(assocPath(['form', e.target.name], e.target.value))
-
+  onChange = e => this.setState(assocPath(['form', e.target.name], e.target.value));
 
   onSubmit = (e) => {
     e.preventDefault();
@@ -164,7 +168,7 @@ export default class VisitorProfile extends React.Component {
       .catch((error) => {
         this.setState({ errors: error });
       });
-  }
+  };
 
   updateStateFromApi = (data) => {
     this.setState({
@@ -179,23 +183,21 @@ export default class VisitorProfile extends React.Component {
       form: {},
       errors: {},
     });
-  }
+  };
 
   renderPrinterFriendly(state) { // eslint-disable-line class-methods-use-this
     return (
       <PrintContainer>
         <PrintHeaderRow>
-          {
-            state.cbLogoUrl
-              ? <CbLogo src={state.cbLogoUrl} alt="Business logo" />
-              : <CbLogo src={p2cLogo} alt="Power to change logo" />
-          }
+          {state.cbLogoUrl ? (
+            <CbLogo src={state.cbLogoUrl} alt="Business logo" />
+          ) : (
+            <CbLogo src={p2cLogo} alt="Power to change logo" />
+          )}
           <Heading flex={9}>{state.cbOrgName} QR code</Heading>
         </PrintHeaderRow>
         <QrCodePrint src={state.qrCodeUrl} alt="QR code" />
-        <Paragraph>
-          Please bring this QR code with you next time
-        </Paragraph>
+        <Paragraph>Please bring this QR code with you next time</Paragraph>
       </PrintContainer>
     );
   }
@@ -253,11 +255,11 @@ export default class VisitorProfile extends React.Component {
               <Button type="submit">SAVE</Button>
             </FlexItem>
             <FlexItem flex={4}>
-              <LabelledInput
+              <LabelledSelect
                 id="visitor-yob"
                 label="Year of birth"
                 name="yob"
-                type="text"
+                options={years}
                 error={errors.yob}
               />
               <LabelledSelect
@@ -277,17 +279,12 @@ export default class VisitorProfile extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {
-          this.renderPrinterFriendly(this.state)
-        }
-        {
-          this.renderMain(this.state)
-        }
+        {this.renderPrinterFriendly(this.state)}
+        {this.renderMain(this.state)}
       </React.Fragment>
     );
   }
 }
-
 
 VisitorProfile.propTypes = {
   auth: PropTypes.string.isRequired,
