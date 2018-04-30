@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const encode64 = async (url) => {
   const result = await axios.get(url);
-  return result.data.toString('base64');
+  return Buffer.from(result.data).toString('base64');
 };
 
 const getPdf = (
