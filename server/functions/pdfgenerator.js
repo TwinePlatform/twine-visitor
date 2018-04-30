@@ -1,8 +1,10 @@
 const PdfPrinter = require('pdfmake');
-const base64 = require('node-base64-image');
-const { promisify } = require('util');
+const axios = require('axios');
 
-const encode64 = promisify(base64.encode);
+const encode64 = async (url) => {
+  const result = await axios.get(url);
+  return result.data.toString('base64');
+};
 
 const getPdf = (
   QRcodeBase64Url,
@@ -67,9 +69,8 @@ const getPdf = (
 
 module.exports = (QRcodeBase64Url, image) =>
   new Promise((resolve, reject) => {
-    console.log('image', image);
     if (image) {
-      encode64(image, { string: true })
+      encode64(image)
         .then(image => {
           const columns = [
             {
