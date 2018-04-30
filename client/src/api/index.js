@@ -76,7 +76,8 @@ export const Visitors = {
     } else if (query.withVisits) {
       return axios.get('/api/visitors/all', {
         params: {
-          offset: query.offset || 0,
+          pagination: query.pagination || null,
+          offset: query.offset || null,
           gender: query.genderFilter,
           age: query.ageFilter,
           activity: query.activityFilter,
@@ -169,17 +170,14 @@ export const CbAdmin = {
       { headers: { Authorization: tkn } },
     ),
 
-  __DEPRECATED_get: tkn => axios.get( // eslint-disable-line
-    '/api/users/cb-name',
-    { headers: { Authorization: tkn } },
-  ),
-
-  export: tkn =>
-    axios.post(
-      '/api/cb/export',
-      {},
+  __DEPRECATED_get: tkn =>
+    axios.get(
+      // eslint-disable-line
+      '/api/users/cb-name',
       { headers: { Authorization: tkn } },
     ),
+
+  export: tkn => axios.post('/api/cb/export', {}, { headers: { Authorization: tkn } }),
 
   create: ({ orgName, category, email, password, passwordConfirm }) =>
     axios.post('/api/cb/register', {

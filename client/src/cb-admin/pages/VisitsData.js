@@ -2,16 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
-import { filter, project } from 'ramda';
+import { filter, project, pick, evolve, assoc, pipe, prepend } from 'ramda';
 import { Bar, Pie } from 'react-chartjs-2';
+import csv from 'fast-csv';
+import { saveAs } from 'file-saver';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
-import { Form as F, FormSection as FS } from '../../shared/components/form/base';
-import ExportButton from '../../shared/components/form/ExportButton';
+import { Form as F, FormSection as FS, PrimaryButton } from '../../shared/components/form/base';
+// import ExportButton from '../../shared/components/form/ExportButton';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
+import { colors, fonts } from '../../shared/style_guide';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import TranslucentTable from '../components/TranslucentTable';
 import { Visitors, ErrorUtils } from '../../api';
-import { colors } from '../../shared/style_guide';
 
 const circShift = (xs, n) => xs.slice(-n).concat(xs.slice(0, -n));
 const repeat = (xs, n) => (xs.length >= n ? xs.slice(0, n) : repeat(xs.concat(xs), n));
@@ -50,6 +52,17 @@ const HyperLink = Link.extend`
   flex: ${props => props.flex || '1'};
 `;
 
+const ExportButton = PrimaryButton.extend`
+  color: ${colors.dark};
+  font-size: 0.9em;
+  font-weight: ${fonts.weight.heavy};
+  text-align: center;
+  letter-spacing: 0;
+  flex: ${props => props.flex || '1'};
+  margin-top: 1rem;
+  padding: 0.3rem 1rem;
+`;
+
 const genderOptions = [
   { key: '0', value: '' },
   { key: '1', value: 'male' },
@@ -75,14 +88,14 @@ const keyMap = {
   visit_date: 'Date of visit',
 };
 
-const csvHeaders = [
-  { label: 'Visit ID', key: 'visit_id' },
-  { label: 'Visitor ID', key: 'visitor_id' },
-  { label: 'Gender', key: 'gender' },
-  { label: 'Year of Birth', key: 'yob' },
-  { label: 'Activity', key: 'activity' },
-  { label: 'Visit Date', key: 'visit_date' },
-];
+// const csvHeaders = [
+//   { label: 'Visit ID', key: 'visit_id' },
+//   { label: 'Visitor ID', key: 'visitor_id' },
+//   { label: 'Gender', key: 'gender' },
+//   { label: 'Year of Birth', key: 'yob' },
+//   { label: 'Activity', key: 'activity' },
+//   { label: 'Visit Date', key: 'visit_date' },
+// ];
 
 const columns = Object.values(keyMap).filter(Boolean);
 
@@ -107,7 +120,7 @@ export default class VisitsDataPage extends React.Component {
   }
 
   componentDidMount() {
-    const pVisitors = Visitors.get(this.props.auth, { withVisits: true });
+    const pVisitors = Visitors.get(this.props.auth, { withVisits: true, pagination: true });
     const pStats = Visitors.getStatistics(this.props.auth);
 
     Promise.all([pVisitors, pStats])
@@ -235,11 +248,52 @@ export default class VisitsDataPage extends React.Component {
     return ageData;
   };
 
+  getDataForCsv = () => {
+    Visitors.get(this.props.auth, { withVisits: true })
+      .then((res) => {
+        const csvData = res.data.result.map(x =>
+          pipe(
+            pick(['visit_id', 'visitor_name', 'gender', 'yob', 'activity', 'visit_date']),
+            assoc('visit_time', moment(x.visit_date).format('HH:MM')),
+            evolve({ visit_date: y => moment(y).format('DD-MM-YYYY') }),
+          )(x),
+        );
+        const withHeaders = prepend(
+          {
+            visit_id: 'Visit ID',
+            visitor_name: 'Full Name',
+            gender: 'Gender',
+            yob: 'Year of Birth',
+            activity: 'Activity',
+            visit_date: 'Visit Date',
+            visit_time: 'Visit Time',
+          },
+          csvData,
+        );
+
+        csv.writeToString(withHeaders, (err, data) => {
+          if (err) throw new Error(err);
+          const csvFile = new File([data], 'Visits Data.csv', { type: 'text/plain;charset=utf-8' });
+          saveAs(csvFile);
+        });
+      })
+      .catch((error) => {
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
+        } else {
+          this.setState({ errors: { general: 'Could not create CSV' } });
+        }
+      });
+  };
+
   update = () => {
     const { genderFilter, ageFilter, activityFilter, page, limit = 10 } = this.state;
     const offset = page * limit - limit; // eslint-disable-line
     const pVisitors = Visitors.get(this.props.auth, {
       withVisits: true,
+      pagination: true,
       offset,
       genderFilter,
       ageFilter,
@@ -259,7 +313,7 @@ export default class VisitsDataPage extends React.Component {
         this.props.updateAdminToken(resVisitors.headers.authorization);
 
         const visits = resVisitors.data.result;
-        const stats = resStats.data.result; //res[0] no longer used
+        const stats = resStats.data.result; // res[0] no longer used
 
         this.setState({
           ageGroups: this.getAgeGroupsForChart(stats[1]),
@@ -346,11 +400,7 @@ export default class VisitsDataPage extends React.Component {
         <Row>
           <TranslucentTable
             exportComponent={
-              <ExportButton
-                csvHeaders={csvHeaders}
-                visitsData={this.state.filteredVisitsList}
-                filenameSuffixes={this.state}
-              />
+              <ExportButton onClick={this.getDataForCsv}>EXPORT AS CSV</ExportButton>
             }
             headAlign="left"
             columns={columns}
