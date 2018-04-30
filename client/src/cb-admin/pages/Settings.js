@@ -14,7 +14,7 @@ import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import DetailsTable from '../components/DetailsTable';
 import Dropzone from '../components/Dropzone';
 import Logo from '../components/Logo';
-import { CbAdmin, Cloudinary, Visitors } from '../../api';
+import { CbAdmin, Cloudinary, Visitors, ErrorUtils } from '../../api';
 
 const sectors = [
   { key: '0', value: '' },
@@ -174,13 +174,13 @@ export default class SettingsPage extends React.Component {
   createZip = () => {
     const zip = jsZip();
     const pUsers = Visitors.get(this.props.auth);
-    const pVisitors = CbAdmin.export(this.props.auth);
+    const pVisits = Visitors.get(this.props.auth, { withVisits: true });
 
-    Promise.all([pUsers, pVisitors])
-      .then(([resUsers, resVisitors]) => {
+    Promise.all([pUsers, pVisits])
+      .then(([resUsers, resVisits]) => {
         this.props.updateAdminToken(resUsers.headers.authorization);
 
-        const visitsRes = resVisitors.data.result.map(a => ({
+        const visitsRes = resVisits.data.result.map(a => ({
           visit_id: a.visit_id,
           visitor_name: a.visitor_name,
           gender: a.gender,
@@ -225,12 +225,12 @@ export default class SettingsPage extends React.Component {
         });
       })
       .catch((error) => {
-        if (error.status === 500) {
-          this.props.history.push('/internalServerError');
-        } else if (error.message === 'No admin token') {
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
           this.props.history.push('/admin/login');
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
         } else {
-          this.props.history.push('/admin/login');
+          this.setState({ errors: { general: 'Could not fetch visitors data' } });
         }
       });
   };

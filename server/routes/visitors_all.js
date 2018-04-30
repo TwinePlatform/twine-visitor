@@ -7,19 +7,22 @@ const { ageRange, renameKeys } = require('../shared/util/helpers');
 
 const schema = {
   query: {
+    pagination: Joi.bool(),
     offset: Joi.number()
       .integer()
-      .min(0)
-      .required(),
+      .min(0),
     gender: Joi.any().valid('', 'male', 'female', 'prefer not to say'),
     age: Joi.any().valid('', '0-17', '18-34', '35-50', '51-69', '70+'),
     activity: Joi.string().allow(''),
   },
 };
 
-const removeProperties = omit(['offset', 'age']);
+const removeProperties = omit(['offset', 'age', 'pagination']);
 const removeEmpty = filter(identity);
-const renameActivityAndGender = renameKeys({ activity: 'activities.name', gender: 'sex' });
+const renameActivityAndGender = renameKeys({
+  activity: 'activities.name',
+  gender: 'sex',
+});
 
 router.get('/', validate(schema), async (req, res, next) => {
   try {
@@ -42,9 +45,11 @@ router.get('/', validate(schema), async (req, res, next) => {
       between: query.age
         ? { column: 'yearofbirth', values: ageRange(query.age) }
         : null,
-      pagination: { offset: query.offset },
+      pagination: query.pagination ? { offset: query.offset || 0 } : null,
       sort: 'visit_date DESC',
     };
+    console.log(options);
+
     const result = await visitorsAll(req.app.get('client:psql'), options);
     res.send({ result });
   } catch (error) {
