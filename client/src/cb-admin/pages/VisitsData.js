@@ -88,15 +88,6 @@ const keyMap = {
   visit_date: 'Date of visit',
 };
 
-// const csvHeaders = [
-//   { label: 'Visit ID', key: 'visit_id' },
-//   { label: 'Visitor ID', key: 'visitor_id' },
-//   { label: 'Gender', key: 'gender' },
-//   { label: 'Year of Birth', key: 'yob' },
-//   { label: 'Activity', key: 'activity' },
-//   { label: 'Visit Date', key: 'visit_date' },
-// ];
-
 const columns = Object.values(keyMap).filter(Boolean);
 
 export default class VisitsDataPage extends React.Component {
@@ -273,7 +264,7 @@ export default class VisitsDataPage extends React.Component {
 
         csv.writeToString(withHeaders, (err, data) => {
           if (err) throw new Error(err);
-          const csvFile = new File([data], 'Visits Data.csv', { type: 'text/plain;charset=utf-8' });
+          const csvFile = new File([data], 'visits_data.csv', { type: 'text/plain;charset=utf-8' });
           saveAs(csvFile);
         });
       })

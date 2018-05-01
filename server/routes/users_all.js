@@ -7,6 +7,7 @@ const { ageRange, renameKeys } = require('../shared/util/helpers');
 
 const schema = {
   query: {
+    pagination: Joi.bool(),
     offset: Joi.number()
       .integer()
       .min(0),
@@ -25,8 +26,9 @@ const schema = {
   },
 };
 
-const removeProperties = omit(['sort', 'offset', 'age']);
+const removeProperties = omit(['sort', 'offset', 'age', 'pagination']);
 const removeEmpty = filter(identity);
+const renameGender = renameKeys({ gender: 'sex' });
 
 router.get('/', validate(schema), async (req, res, next) => {
   try {
@@ -34,7 +36,7 @@ router.get('/', validate(schema), async (req, res, next) => {
 
     const addCbId = assoc('cb_id', req.auth.cb_id);
     const createWhereObj = pipe(
-      renameKeys({ gender: 'sex' }),
+      renameGender,
       removeProperties,
       removeEmpty,
       addCbId
@@ -46,7 +48,7 @@ router.get('/', validate(schema), async (req, res, next) => {
         ? { column: 'yearofbirth', values: ageRange(query.age) }
         : null,
       sort: query.sort ? query.sort : null,
-      pagination: { offset: query.offset },
+      pagination: query.pagination ? { offset: query.offset } : null,
     };
 
     const result = await usersAll(req.app.get('client:psql'), options);
