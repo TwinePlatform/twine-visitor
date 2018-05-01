@@ -29,6 +29,7 @@ export const Visitors = {
     } else if (query.visitors) {
       return axios.get('/api/users/all', {
         params: {
+          pagination: query.pagination || null,
           offset: query.offset,
           sort: query.sort,
           gender: query.genderFilter,
