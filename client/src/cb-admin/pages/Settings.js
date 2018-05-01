@@ -248,7 +248,7 @@ export default class SettingsPage extends React.Component {
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
         } else {
-          this.setState({ errors: { general: 'Could not fetch visitors data' } });
+          this.setState({ errors: { general: 'Could not create CSV' } });
         }
       });
   };
