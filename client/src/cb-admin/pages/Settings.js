@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
-import { assocPath, compose, pick, prop, filter } from 'ramda';
+import { assocPath, compose, pick, prop, filter, pipe, assoc, evolve, prepend } from 'ramda';
 import csv from 'fast-csv';
 import jsZip from 'jszip';
 import fileSaver from 'file-saver';
@@ -180,29 +180,45 @@ export default class SettingsPage extends React.Component {
       .then(([resUsers, resVisits]) => {
         this.props.updateAdminToken(resUsers.headers.authorization);
 
-        const visitsRes = resVisits.data.result.map(a => ({
-          visit_id: a.visit_id,
-          visitor_name: a.visitor_name,
-          gender: a.gender,
-          yob: a.yob,
-          activity: a.activity,
-          visit_date: a.visit_date,
-        }));
-
-        const usersArrayHeaders = [
+        const usersCsvData = resUsers.data.result.map(x =>
+          pipe(
+            pick([
+              'id',
+              'name',
+              'gender',
+              'yob',
+              'email',
+              'registered_at',
+              'email_consent',
+              'sms_consent',
+            ]),
+            assoc('registered_time', moment(x.registered_at).format('HH:MM')),
+            evolve({ registered_at: y => moment(y).format('DD-MM-YYYY') }),
+          )(x),
+        );
+        const usersWithHeaders = prepend(
           {
-            id: 'ID',
+            id: 'User ID',
             name: 'Full Name',
             gender: 'Gender',
             yob: 'Year of Birth',
             email: 'Email',
-            registered_at: 'Date Registered',
-            email_consent: 'Email Opt-In',
-            sms_consent: 'SMS Opt-In',
+            registered_at: 'Register Date',
+            registered_time: 'Register Time',
+            email_consent: 'Email Opt-in',
+            sms_consent: 'Sms Opt-in',
           },
-        ].concat(resUsers.data.result);
+          usersCsvData,
+        );
 
-        const visitsArrayHeaders = [
+        const visitsCsvData = resVisits.data.result.map(x =>
+          pipe(
+            pick(['visit_id', 'visitor_name', 'gender', 'yob', 'activity', 'visit_date']),
+            assoc('visit_time', moment(x.visit_date).format('HH:MM')),
+            evolve({ visit_date: y => moment(y).format('DD-MM-YYYY') }),
+          )(x),
+        );
+        const visitsWithHeaders = prepend(
           {
             visit_id: 'Visit ID',
             visitor_name: 'Full Name',
@@ -210,15 +226,17 @@ export default class SettingsPage extends React.Component {
             yob: 'Year of Birth',
             activity: 'Activity',
             visit_date: 'Visit Date',
+            visit_time: 'Visit Time',
           },
-        ].concat(visitsRes);
+          visitsCsvData,
+        );
 
         Promise.all([
-          this.createCSVString(usersArrayHeaders),
-          this.createCSVString(visitsArrayHeaders),
+          this.createCSVString(usersWithHeaders),
+          this.createCSVString(visitsWithHeaders),
         ]).then((array) => {
-          zip.file('App Data/UsersData.csv', array[0]);
-          zip.file('App Data/VisitsData.csv', array[1]);
+          zip.file('App Data/users_data.csv', array[0]);
+          zip.file('App Data/visits_data.csv', array[1]);
           zip.generateAsync({ type: 'blob' }).then((blob) => {
             fileSaver.saveAs(blob, 'AppData.zip');
           });

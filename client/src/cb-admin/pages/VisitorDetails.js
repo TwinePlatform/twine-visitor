@@ -142,10 +142,13 @@ export default class VisitorDetailsPage extends React.Component {
           },
           csvData,
         );
-        csv.writeToString(withHeaders, (err, data) => {
-          if (err) throw new Error(err);
-          const csvFile = new File([data], 'user_data.csv', { type: 'text/plain;charset=utf-8' });
-          saveAs(csvFile);
+        return new Promise((resolve, reject) => {
+          csv.writeToString(withHeaders, (err, data) => {
+            if (err) return reject(err);
+            const csvFile = new File([data], 'user_data.csv', { type: 'text/plain;charset=utf-8' });
+            saveAs(csvFile);
+            resolve();
+          });
         });
       })
       .catch((error) => {
