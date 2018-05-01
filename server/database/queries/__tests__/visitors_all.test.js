@@ -41,7 +41,11 @@ test('DB Query | visitors_all', async tape => {
           visit_date: new Date('Sat Apr 29 2017 22:03:17 GMT+0000 (UTC)'),
         },
       ];
-      t.deepEquals(actual, expected, 'getAllUsers returns inner join magic');
+      t.deepEquals(
+        actual.sort((a, b) => a.visit_id - b.visit_id),
+        expected.sort((a, b) => a.visit_id - b.visit_id),
+        'getAllUsers returns inner join magic'
+      );
       t.end();
     } catch (error) {
       t.end(error);
