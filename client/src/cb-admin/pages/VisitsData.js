@@ -267,7 +267,7 @@ export default class VisitsDataPage extends React.Component {
             if (err) return reject(err);
             const csvFile = new File([data], 'visits_data.csv', { type: 'text/plain;charset=utf-8' });
             saveAs(csvFile);
-            resolve();
+            return resolve();
           });
         });
       })
