@@ -1,11 +1,13 @@
 # Architecture
 
-This documents the desired architecture for this project. This was initially discussed in [this issue](https://github.com/TwinePlatform/DataPower/issues/212).
+This documents the desired architecture for this project. This was initially discussed in [this issue](https://github.com/TwinePlatform/twine-visitor/issues/212).
 
 ### General
+
 The general principle is to arrange both applications with a kind of hub-and-spoke structure where each feature is a spoke, and the server and core application logic serves as the hub. There should ideally be no horizontal dependencies between features, each feature should only rely on the generic functionality provided by the hub. This should be reflected in the directory structure; if a feature directory is deleted, all other features should keep working.
 
 ### Root
+
 ```
 ./
 |- config       Project configuration
@@ -20,6 +22,7 @@ The general principle is to arrange both applications with a kind of hub-and-spo
 ```
 
 ### Client
+
 ```
 ./client
 |- assets             Raw assets (img, external or pre-compiled js/css, etc.)
@@ -50,6 +53,7 @@ The general principle is to arrange both applications with a kind of hub-and-spo
 ```
 
 ### Server
+
 ```
 ./server
 |- cb-admin            All code related to cb-admin features
@@ -70,7 +74,9 @@ The general principle is to arrange both applications with a kind of hub-and-spo
 ```
 
 ### Tests
+
 Adhere to the `jest` convention of having a `__tests__` directory colocated with all files under-test. For example:
+
 ```
 ./foo
 |- __tests__

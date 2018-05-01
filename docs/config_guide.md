@@ -9,7 +9,7 @@ Default configuration variables are stored in `config.defaults.js`.
 To create a project configuration, create the `config.env` in the `config` directory. Populate it with `=`-separated key-value pairs. Ensure at least the following parameters are provided:
 
 ```sh
-# Used as a HMAC key to hash passwords (must change, see https://github.com/TwinePlatform/DataPower/issues/213)
+# Used as a HMAC key to hash passwords (must change, see https://github.com/TwinePlatform/twine-visitor/issues/213)
 HMAC_SECRET=...
 
 # Used to sign JWTs for session authentication
@@ -27,7 +27,7 @@ DATABASE_URL_TEST=...
 # NOTE: Use "POSTMARK_API_TEST" as the API key in the "test" environment, this will prevent sending
 #       emails when not in production. You may want a real API key in the "dev" environment to allow
 #       manual testing
-#       See https://github.com/TwinePlatform/DataPower/issues/240
+#       See https://github.com/TwinePlatform/twine-visitor/issues/240
 POSTMARK_KEY_DEV=...
 POSTMARK_KEY_TEST=...
 POSTMARK_KEY_PROD=...

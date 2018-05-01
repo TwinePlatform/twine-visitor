@@ -1,5 +1,5 @@
 {
-  "name": "datapower",
+  "name": "twine-visitor",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FAC-11/DataPower.git"
+    "url": "git+https://github.com/TwinePlatform/twine-visitor.git"
   },
   "engines": {
     "node": ">=8.4"
@@ -42,9 +42,9 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/FAC-11/DataPower/issues"
+    "url": "https://github.com/TwinePlatform/twine-visitor/issues"
   },
-  "homepage": "https://github.com/FAC-11/DataPower#readme",
+  "homepage": "https://github.com/TwinePlatform/twine-visitor#readme",
   "devDependencies": {
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^15.1.0",
