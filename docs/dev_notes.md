@@ -5,7 +5,8 @@
 1. [Database Time Zones](#database-time-zones)
 2. [Flexbox and Absolute Positioned Children](#flexbox-and-absolute-positioned-children)
 3. [PdfMake an Image Content Types](#pdfmake-and-image-content-types)
-4. [Cleaning up resources in React Components](#cleaning-up-resources-in-react-components)
+4. [NODE_ENV performance implications](#NODE-ENV-performance-implications)
+5. [Cleaning up resources in React Components](#cleaning-up-resources-in-react-components)
 
 ## Database Time Zones
 All `date` data types in schema are set as `TIMESTAMP WITH TIME ZONE`, with entries being added as UTC in the following format `2017-05-15 12:24:56+00`. Without `TIME ZONE` added node servers will convert `date` data into js time objects in local time.
@@ -16,6 +17,9 @@ All `date` data types in schema are set as `TIMESTAMP WITH TIME ZONE`, with entr
 ## PdfMake and Image Content Types
 * Invalid PNG filters: https://github.com/bpampuch/pdfmake/issues/879
 * Correctly base-64 encoding axios responses: https://github.com/axios/axios/issues/513
+
+## NODE_ENV performance implications
+* https://dynatrace.com/news/blog/the-drastic-effects-of-omitting-node_env-in-your-express-js-applications
 
 ## Cleaning up resources in React Components
 Be careful to clean up after yourself! Temporary resources instantiated or used in a component should be deleted or cleaned up in the `componentWillUnmount` hook to prevent memory leaks and obscure errors.
