@@ -171,15 +171,6 @@ export const CbAdmin = {
       { headers: { Authorization: tkn } },
     ),
 
-  __DEPRECATED_get: tkn =>
-    axios.get(
-      // eslint-disable-line
-      '/api/users/cb-name',
-      { headers: { Authorization: tkn } },
-    ),
-
-  export: tkn => axios.post('/api/cb/export', {}, { headers: { Authorization: tkn } }),
-
   create: ({ orgName, category, email, password, passwordConfirm }) =>
     axios.post('/api/cb/register', {
       orgName,

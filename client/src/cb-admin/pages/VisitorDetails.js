@@ -147,7 +147,7 @@ export default class VisitorDetailsPage extends React.Component {
             if (err) return reject(err);
             const csvFile = new File([data], 'user_data.csv', { type: 'text/plain;charset=utf-8' });
             saveAs(csvFile);
-            resolve();
+            return resolve();
           });
         });
       })
