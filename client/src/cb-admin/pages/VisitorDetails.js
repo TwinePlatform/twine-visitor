@@ -9,7 +9,6 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 import { Heading, Link } from '../../shared/components/text/base';
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
-// import ExportButton from '../../shared/components/form/ExportButton';
 import { colors, fonts } from '../../shared/style_guide';
 import TranslucentTable from '../components/TranslucentTable';
 import { Visitors, ErrorUtils } from '../../api';
