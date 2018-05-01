@@ -26,7 +26,6 @@ module.exports = {
   },
   email: {
     postmark_key: null,
-    twine_email: process.env.CB_EMAIL,
   },
   session: {
     standard_jwt_secret: process.env.STANDARD_JWT_SECRET,

@@ -30,7 +30,6 @@ module.exports = {
   }),
   email: Joi.object({
     postmark_key: Joi.string().required(),
-    twine_email: Joi.string().email().required(),
   }),
   session: Joi.object({
     standard_jwt_secret: Joi.string().min(20).required(),
