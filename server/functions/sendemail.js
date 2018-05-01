@@ -1,9 +1,9 @@
-module.exports = (client, email, name, pdf) => {
+module.exports = (client, visitorEmail, cbEmail, name, pdf) => {
   const messages = [
     {
       From: 'visitorapp@powertochange.org.uk',
       TemplateId: 3843402,
-      To: email,
+      To: visitorEmail,
       TemplateModel: {
         name,
       },
@@ -18,9 +18,9 @@ module.exports = (client, email, name, pdf) => {
     {
       From: 'visitorapp@powertochange.org.uk',
       TemplateId: 3853062,
-      To: process.env.CB_EMAIL,
+      To: cbEmail,
       TemplateModel: {
-        email,
+        email: visitorEmail,
         name,
       },
       Attachments: [
