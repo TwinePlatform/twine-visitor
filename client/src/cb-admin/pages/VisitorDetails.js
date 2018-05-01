@@ -109,7 +109,12 @@ export default class VisitorDetailsPage extends React.Component {
   onChange = e => this.setState({ [e.target.name]: e.target.value }, this.update);
 
   getDataForCsv = () => {
-    Visitors.get(this.props.auth, { visitors: true })
+    const { genderFilter, ageFilter } = this.state;
+    Visitors.get(this.props.auth, {
+      visitors: true,
+      genderFilter,
+      ageFilter,
+    })
       .then((res) => {
         const csvData = res.data.result.map(x =>
           pipe(
@@ -141,10 +146,16 @@ export default class VisitorDetailsPage extends React.Component {
           },
           csvData,
         );
+
+        const filterOptions = [genderFilter, ageFilter].filter(Boolean).join('-');
+        const fileNameFilters = filterOptions ? `-${filterOptions}` : '';
+
         return new Promise((resolve, reject) => {
           csv.writeToString(withHeaders, (err, data) => {
             if (err) return reject(err);
-            const csvFile = new File([data], 'user_data.csv', { type: 'text/plain;charset=utf-8' });
+            const csvFile = new File([data], `user_data${fileNameFilters}.csv`, {
+              type: 'text/plain;charset=utf-8',
+            });
             saveAs(csvFile);
             return resolve();
           });
