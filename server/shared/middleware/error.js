@@ -4,7 +4,7 @@
  * To be mounted on the root app
  */
 const Boom = require('boom');
-const { PRODUCTION } = require('../../../config');
+const { PRODUCTION, DEVELOPMENT } = require('../../../config');
 
 // catch 404 and forward to error handler
 exports.notFound = (req, res, next) => {
@@ -15,9 +15,7 @@ exports.notFound = (req, res, next) => {
 
 // error handler
 exports.errorHandler = (err, req, res, next) => { // eslint-disable-line
-  const { env } = req.app.get('cfg');
-
-  if (env !== PRODUCTION) {
+  if (req.app.get('env') !== PRODUCTION) {
     console.error(err);
   }
 
@@ -32,7 +30,7 @@ exports.errorHandler = (err, req, res, next) => { // eslint-disable-line
   }
   // set locals, only providing error in development
   const message = err.message;
-  const error = req.app.get('env') === 'development' ? err : {};
+  const error = req.app.get('env') === DEVELOPMENT ? err : {};
 
   // render the error page
   res.status(err.status || 500).send({ error, message });
