@@ -3,6 +3,7 @@
  */
 const Joi = require('joi');
 const { pick } = require('ramda');
+const { DEVELOPMENT } = require('../../../config');
 
 /**
  * Middleware generator to be used in route definitions together
@@ -74,7 +75,9 @@ exports.validationError = (error, req, res, next) => {
       return acc;
     }, {});
 
-  if (req.app.get('env') === 'development') console.error(error);
+  if (req.app.get('env') === DEVELOPMENT) {
+    console.error(error);
+  }
 
   return res.status(400).send({
     result: null,
