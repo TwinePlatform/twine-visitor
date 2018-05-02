@@ -27,7 +27,7 @@ const renameActivityAndGender = renameKeys({
 router.get('/', validate(schema), async (req, res, next) => {
   try {
     const { query } = req;
-    const addCbId = assoc('activities.cb_id', req.auth.cb_id);
+    const addCbId = assoc('users.cb_id', req.auth.cb_id);
 
     const createWhereObj = pipe(
       renameActivityAndGender,
@@ -46,7 +46,7 @@ router.get('/', validate(schema), async (req, res, next) => {
         ? { column: 'yearofbirth', values: ageRange(query.age) }
         : null,
       pagination: query.pagination ? { offset: query.offset || 0 } : null,
-      sort: 'visit_date DESC',
+      sort: 'visit_date ASC',
     };
 
     const result = await visitorsAll(req.app.get('client:psql'), options);
