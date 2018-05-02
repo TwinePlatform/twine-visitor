@@ -6,10 +6,10 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const postmark = require('postmark');
 const pg = require('pg');
+const enforce = require('express-sslify');
 const { notFound, errorHandler, validationError } = require('./shared/middleware');
 
-
-module.exports = (cfg) => {
+module.exports = cfg => {
   // Non-global import required because of client-connections
   // that are created in module scope of routes
   const apiRoutes = require('./router'); // eslint-disable-line global-require
@@ -23,6 +23,7 @@ module.exports = (cfg) => {
   app.set('client:postmark', postmarkClient);
   app.set('client:psql', psqlPool);
 
+  app.use(enforce.HTTPS({ trustProtoHeader: true }));
   app.use(favicon(path.join(cfg.root, 'client', 'public', 'favicon.ico')));
   app.use(logger(cfg.env));
   app.use(bodyParser.json());
