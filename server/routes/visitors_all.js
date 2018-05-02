@@ -48,7 +48,6 @@ router.get('/', validate(schema), async (req, res, next) => {
       pagination: query.pagination ? { offset: query.offset || 0 } : null,
       sort: 'visit_date DESC',
     };
-    console.log(options);
 
     const result = await visitorsAll(req.app.get('client:psql'), options);
     res.send({ result });

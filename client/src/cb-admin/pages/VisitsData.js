@@ -271,15 +271,15 @@ export default class VisitsDataPage extends React.Component {
         const filterOptions = [genderFilter, ageFilter, activityFilter].filter(Boolean).join('-');
         const fileNameFilters = filterOptions ? `-${filterOptions}` : '';
 
-        return new Promise((resolve, reject) => {
-          csv.writeToString(withHeaders, (err, data) => {
-            if (err) return reject(err);
-            const csvFile = new File([data], `visits_data${fileNameFilters}.csv`, {
+        csv.writeToString(withHeaders, (err, data) => {
+          if (err) {
+            this.setState({ errors: { general: 'Could not create CSV' } });
+          } else {
+            const csvFile = new File([data], `user_data${fileNameFilters}.csv`, {
               type: 'text/plain;charset=utf-8',
             });
             saveAs(csvFile);
-            return resolve();
-          });
+          }
         });
       })
       .catch((error) => {
