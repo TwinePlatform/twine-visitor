@@ -11,6 +11,7 @@ import { Paragraph as P, Heading, Link } from '../../shared/components/text/base
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
+import { colors } from '../../shared/style_guide';
 import DetailsTable from '../components/DetailsTable';
 import Dropzone from '../components/Dropzone';
 import Logo from '../components/Logo';
@@ -71,6 +72,14 @@ const Button = PrimaryButton.extend`
 
 const ExportButton = Button.extend`
   width: 50%;
+`;
+
+const ErrorMessage = P.extend`
+  color: ${colors.error};
+  display: inline-block;
+  height: 3em;
+  width: 50%;
+  padding: 1rem;
 `;
 
 const payloadFromState = compose(
@@ -304,6 +313,7 @@ export default class SettingsPage extends React.Component {
                 error={errors.email}
               />
               <ExportButton onClick={this.createZip}>Download data as CSV</ExportButton>
+              <ErrorMessage>{this.state.errors.general}</ErrorMessage>
             </FlexItem>
             <FlexItem flex={4}>
               <Dropzone
