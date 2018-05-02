@@ -50,7 +50,7 @@ test('POST /api/user/name-from-scan | non-viable hash ', async t => {
     .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
-      t.equal(res.body.fullname, 'Bad hash');
+      t.deepEqual(res.body, { result: null, error: 'Invalid hash' });
       dbConnection.end(t.end);
     });
 });
@@ -70,11 +70,11 @@ test('POST /api/user/name-from-scan | user/hash not registered ', async t => {
     .post('/api/user/name-from-scan')
     .set('authorization', token)
     .send(failPayload)
-    .expect(400)
+    .expect(401)
     .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
-      t.equal(res.body.fullname, 'there is no registered user');
+      t.deepEqual(res.body, { result: null, error: "No user found" });
       dbConnection.end(t.end);
     });
 });
