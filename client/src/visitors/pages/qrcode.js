@@ -52,8 +52,9 @@ const SnakeContainerRow = FlexContainerRow.extend`
   width: 100%;
   justify-content: space-between;
   &:nth-child(2n) {
-  flex-direction: row-reverse;
-  `;
+    flex-direction: row-reverse;
+  }
+`;
 
 const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
 
@@ -62,16 +63,16 @@ export default class QRCode extends Component {
     super();
 
     this.state = {
-      login: 1,
+      hasScanned: false,
       username: '',
-      qrcode: '',
+      hash: '',
       activity: 'not selected',
       activities: [],
     };
 
-    this.handleVideo = this.handleVideo.bind(this);
     this.changeActivity = this.changeActivity.bind(this);
 
+    this.scanner = null;
     this.previewDiv = null;
 
     this.previewRef = (element) => {
@@ -80,22 +81,37 @@ export default class QRCode extends Component {
   }
 
   componentDidMount() {
-    if (this.state.login === 1) {
-      this.instascan()
-        .then((content) => {
-          this.handleVideo();
-          return Visitors.get(localStorage.getItem('token'), { hash: content });
-        })
-        .then((res) => {
-          this.setState({
-            username: res.data.fullname,
-            hash: res.data.hash,
+    this.scanner = this.scanner || new Instascan.Scanner({ video: this.previewDiv, scanPeriod: 5 });
+
+    Instascan.Camera.getCameras()
+      .then((cameras) => {
+        if (cameras.length < 1) {
+          throw new Error('No accessible cameras');
+        }
+        this.scanner.start(cameras[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+        this.props.history.push('/visitor/qrerror');
+      });
+
+    if (!this.state.hasScanned) {
+      this.scanner.addListener('scan', (content) => {
+        this.scanner.stop();
+
+        Visitors.get(localStorage.getItem('token'), { hash: content })
+          .then((res) => {
+            this.setState({
+              username: res.data.fullname,
+              hash: res.data.hash,
+              hasScanned: true,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            this.props.history.push('/visitor/qrerror');
           });
-        })
-        .catch((error) => {
-          console.log('ERROR HAPPENING AT INSTASCAN', error);
-          this.props.history.push('/visitor/qrerror');
-        });
+      });
     }
 
     Activities.get(localStorage.getItem('token'), { weekday: 'today' })
@@ -108,54 +124,14 @@ export default class QRCode extends Component {
       });
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if (nextState.username === 'there is no registered user') {
-      this.props.history.push('/visitor/qrerror');
+  componentWillUnmount() {
+    if (this.scanner) {
+      this.scanner.stop()
+        .then(() => {
+          this.scanner = null;
+        });
     }
   }
-  instascan = () => new Promise((resolve, reject) => {
-
-    const scanner = new Instascan.Scanner({
-      video: this.previewDiv,
-      scanPeriod: 5,
-    });
-
-    scanner.addListener('scan', (content) => {
-      if (this.previewDiv) {
-        scanner
-          .stop()
-          .then(() => {
-            resolve(content);
-          })
-          .catch(() => {
-            reject('failure stopping scanner');
-          });
-      } else {
-        reject('ADD LISTENER FAILED');
-      }
-    });
-
-    Instascan.Camera.getCameras()
-      .then((cameras) => {
-        if (cameras.length > 0) {
-          scanner.start(cameras[0]);
-        } else {
-          reject('ERROR HAPPENING AT getCameras');
-        }
-      })
-      .catch(reject);
-  })
-
-  handleVideo = () => this.setState({ login: this.state.login + 1 });
-
-  headers = new Headers({
-    Authorization: localStorage.getItem('token'),
-  });
-
-  headersPost = new Headers({
-    Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
-  });
 
   changeActivity = (newActivity) => {
     this.setState({ activity: newActivity });
@@ -172,7 +148,7 @@ export default class QRCode extends Component {
   };
 
   render() {
-    if (this.state.login === 1) {
+    if (!this.state.hasScanned) {
       return (
         <Fragment>
           <StyledNav>
