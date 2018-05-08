@@ -11,6 +11,7 @@ import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { colors, fonts } from '../../shared/style_guide';
 import TranslucentTable from '../components/TranslucentTable';
+import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
 import { Visitors, ErrorUtils } from '../../api';
 
 const Nav = styled.nav`
@@ -94,16 +95,12 @@ export default class VisitorDetailsPage extends React.Component {
 
     this.state = {
       users: [],
+      full_count: 0,
       sort: '',
       genderFilter: '',
       ageFilter: '',
       errors: {},
-      page: 1,
     };
-  }
-
-  componentDidMount() {
-    this.update();
   }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value }, this.update);
@@ -172,12 +169,10 @@ export default class VisitorDetailsPage extends React.Component {
       });
   };
 
-  update = () => {
-    const { page, genderFilter, ageFilter, limit = 10 } = this.state;
+  update = (offset = 0) => {
+    const { genderFilter, ageFilter } = this.state;
     const sort = colToState[this.state.sort];
     const cbAdminToken = this.props.auth;
-
-    const offset = page * limit - limit; //eslint-disable-line
 
     Visitors.get(cbAdminToken, {
       offset,
@@ -189,8 +184,7 @@ export default class VisitorDetailsPage extends React.Component {
     })
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
-
-        this.setState({ users: res.data.result });
+        this.setState({ users: res.data.result, full_count: res.data.meta.full_count });
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
@@ -245,18 +239,25 @@ export default class VisitorDetailsPage extends React.Component {
           </Form>
         </Row>
         <FlexContainerRow>
-          <TranslucentTable
-            exportComponent={
-              <ExportButton onClick={this.getDataForCsv}>EXPORT AS CSV</ExportButton>
-            }
-            headAlign="left"
-            columns={columns}
-            rows={this.state.users.map(v => ({
-              key: `${v.id}`,
-              onClick: () => this.props.history.push(`/cb/visitors/${v.id}`),
-              data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [v])[0]),
-            }))}
-          />
+          <PaginatedTableWrapper
+            loadRows={this.update}
+            rowCount={this.state.full_count}
+          >
+            <TranslucentTable
+              exportComponent={
+                <ExportButton onClick={this.getDataForCsv}>EXPORT AS CSV</ExportButton>
+              }
+              headAlign="left"
+              columns={columns}
+              rows={
+                this.state.users.map(v => ({
+                  key: `${v.id}`,
+                  onClick: () => this.props.history.push(`/cb/visitors/${v.id}`),
+                  data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [v])[0]),
+                }))}
+              loadRows={this.loadRows}
+            />
+          </PaginatedTableWrapper>
         </FlexContainerRow>
       </FlexContainerCol>
     );
