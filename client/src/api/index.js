@@ -34,6 +34,8 @@ export const Visitors = {
           sort: query.sort,
           gender: query.genderFilter,
           age: query.ageFilter,
+          is_sms_contact_consent_granted: query.smsFilter,
+          is_email_contact_consent_granted: query.emailFilter,
         },
         headers: { Authorization: tkn },
       });

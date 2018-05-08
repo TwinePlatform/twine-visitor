@@ -23,6 +23,8 @@ const schema = {
     ),
     gender: Joi.any().valid('', 'male', 'female', 'prefer not to say'),
     age: Joi.any().valid('', '0-17', '18-34', '35-50', '51-69', '70+'),
+    is_sms_contact_consent_granted: Joi.bool(),
+    is_email_contact_consent_granted: Joi.bool(),
   },
 };
 
@@ -35,21 +37,21 @@ router.get('/', validate(schema), async (req, res, next) => {
     const query = req.query;
 
     const addCbId = assoc('cb_id', req.auth.cb_id);
-    const createWhereObj = pipe(
-      renameGender,
-      removeProperties,
-      removeEmpty,
-      addCbId
-    );
+    const createWhereObj = pipe(renameGender, removeProperties, removeEmpty, addCbId);
 
     const options = {
       where: createWhereObj(query),
-      between: query.age
-        ? { column: 'yearofbirth', values: ageRange(query.age) }
-        : null,
+      between: query.age ? { column: 'yearofbirth', values: ageRange(query.age) } : null,
       sort: query.sort ? query.sort : null,
       pagination: query.pagination ? { offset: query.offset } : null,
     };
+
+    if (query.sms) {
+      assoc('is_sms_contact_consent_granted', true, options.where);
+    }
+    if (query.email) {
+      assoc('is_email_contact_consent_granted', true, options.where);
+    }
 
     const result = await usersAll(req.app.get('client:psql'), options);
     res.send({ result });
