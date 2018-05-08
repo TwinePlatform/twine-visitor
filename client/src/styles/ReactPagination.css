@@ -1,0 +1,38 @@
+.rpg-container {
+  list-style: none;
+  padding: 0;
+  margin: 2em 0 0 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.rpg-break,
+.rpg-page,
+.rpg-previous,
+.rpg-next {
+  text-align: center;
+}
+
+.rpg-break {
+  background-color: transparent;
+}
+
+.rpg-pageLink,
+.rpg-previousLink,
+.rpg-nextLink {
+  padding: 0.5em 1.5em;
+  border: rgba(253, 189, 45);
+  background-color: rgba(253, 189, 45, 0.2);
+  color: rgb(102, 102, 102);
+  border-radius: 0.1em;
+}
+
+.rpg-active .rpg-pageLink {
+  background-color: rgba(253, 189, 45, 0.6);
+}
+
+.rpg-disabled .rpg-previousLink,
+.rpg-disabled .rpg-nextLink {
+  background-color: transparent;
+}

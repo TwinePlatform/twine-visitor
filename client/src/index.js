@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import 'normalize.css';
 import './styles/index.css';
 import './styles/DatePicker.css';
+import './styles/ReactPagination.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
