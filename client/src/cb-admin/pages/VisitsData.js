@@ -12,6 +12,7 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 import { colors, fonts } from '../../shared/style_guide';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import TranslucentTable from '../components/TranslucentTable';
+import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
 import { Visitors, ErrorUtils } from '../../api';
 
 const circShift = (xs, n) => xs.slice(-n).concat(xs.slice(0, -n));
@@ -94,7 +95,7 @@ export default class VisitsDataPage extends React.Component {
     super(props);
 
     this.state = {
-      page: 1,
+      full_count: 0,
       visitsList: [],
       activities: [],
       genderFilter: '',
@@ -134,6 +135,7 @@ export default class VisitsDataPage extends React.Component {
           ageGroups: this.getAgeGroupsForChart(ageGroups),
           activities: activities.map(activity => activity.name),
           visitsList: visits,
+          full_count: resVisitors.data.meta.full_count,
         });
       })
       .catch((error) => {
@@ -293,9 +295,8 @@ export default class VisitsDataPage extends React.Component {
       });
   };
 
-  update = () => {
-    const { genderFilter, ageFilter, activityFilter, page, limit = 10 } = this.state;
-    const offset = page * limit - limit; // eslint-disable-line
+  update = (offset = 0) => {
+    const { genderFilter, ageFilter, activityFilter } = this.state;
     const pVisitors = Visitors.get(this.props.auth, {
       withVisits: true,
       pagination: true,
@@ -325,6 +326,7 @@ export default class VisitsDataPage extends React.Component {
           activitiesGroups: this.getActivitiesForChart(stats[2]),
           genderNumbers: this.getGendersForChart(stats[3]),
           visitsList: visits,
+          full_count: resVisitors.data.meta.full_count,
         });
       })
       .catch((error) => {
@@ -403,22 +405,27 @@ export default class VisitsDataPage extends React.Component {
           </FlexItem>
         </Row>
         <Row>
-          <TranslucentTable
-            exportComponent={
-              <ExportButton onClick={this.getDataForCsv}>EXPORT AS CSV</ExportButton>
-            }
-            headAlign="left"
-            columns={columns}
-            rows={visitsList
-              .map(visit => ({
-                ...visit,
-                visit_date: moment(visit.visit_date).format('DD-MM-YY HH:mm'),
-              }))
-              .map(visit => ({
-                key: visit.visit_id,
-                data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [visit])[0]),
-              }))}
-          />
+          <PaginatedTableWrapper
+            rowCount={this.state.full_count}
+            loadRows={this.update}
+          >
+            <TranslucentTable
+              exportComponent={
+                <ExportButton onClick={this.getDataForCsv}>EXPORT AS CSV</ExportButton>
+              }
+              headAlign="left"
+              columns={columns}
+              rows={visitsList
+                .map(visit => ({
+                  ...visit,
+                  visit_date: moment(visit.visit_date).format('DD-MM-YY HH:mm'),
+                }))
+                .map(visit => ({
+                  key: visit.visit_id,
+                  data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [visit])[0]),
+                }))}
+            />
+          </PaginatedTableWrapper>
         </Row>
       </FlexContainerCol>
     );
