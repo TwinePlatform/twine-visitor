@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Paginate from 'react-paginate';
+import styled from 'styled-components';
+
+const FullWidthWrapper = styled.div`
+  width: 100%;
+`;
 
 
 export default class PaginatedTableWrapper extends React.Component {
@@ -47,7 +52,7 @@ export default class PaginatedTableWrapper extends React.Component {
     const Table = React.Children.only(this.props.children);
 
     return (
-      <div>
+      <FullWidthWrapper>
         {
           Table
         }
@@ -70,7 +75,7 @@ export default class PaginatedTableWrapper extends React.Component {
           nextLinkClassName="rpg-nextLink"
           disabledClassName="rpg-disabled"
         />
-      </div>
+      </FullWidthWrapper>
     );
   }
 }
