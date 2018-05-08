@@ -9,7 +9,6 @@ import { CbAdmin } from '../../api';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { Heading, Link, Paragraph } from '../../shared/components/text/base';
 import { colors } from '../../shared/style_guide';
-import '../../DatePicker.css';
 
 const FeedbackPrimaryButton = PrimaryButton.extend`
   width: auto;
