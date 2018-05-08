@@ -6,7 +6,7 @@ import moment from 'moment';
 import csv from 'fast-csv';
 import { saveAs } from 'file-saver';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
-import { Heading, Link } from '../../shared/components/text/base';
+import { Heading, Link, Paragraph } from '../../shared/components/text/base';
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { colors, fonts } from '../../shared/style_guide';
@@ -53,6 +53,10 @@ const ExportButton = PrimaryButton.extend`
   flex: ${props => props.flex || '1'};
   margin-top: 1rem;
   padding: 0.3rem 1rem;
+`;
+
+const ErrorText = Paragraph.extend `
+  color: red;
 `;
 
 const keyMap = {
@@ -237,6 +241,9 @@ export default class VisitorDetailsPage extends React.Component {
               />
             </FormSection>
           </Form>
+        </Row>
+        <Row>
+          { errors.general && <ErrorText>{errors.general}</ErrorText> }
         </Row>
         <FlexContainerRow>
           <PaginatedTableWrapper
