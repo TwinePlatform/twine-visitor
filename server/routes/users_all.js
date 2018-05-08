@@ -52,7 +52,10 @@ router.get('/', validate(schema), async (req, res, next) => {
     };
 
     const result = await usersAll(req.app.get('client:psql'), options);
-    res.send({ result });
+    const full_count = +(result[0] || {}).full_count || 0;
+    const data = result.map(omit('full_count'));
+
+    res.send({ result: data, meta: { full_count } });
   } catch (error) {
     next(error);
   }

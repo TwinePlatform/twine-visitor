@@ -78,7 +78,7 @@ const TranslucentTable = ({ caption, columns, rows, headAlign, exportComponent }
 
 
 TranslucentTable.propTypes = {
-  exportComponent: PropTypes.component,
+  exportComponent: PropTypes.element,
   caption: PropTypes.node,
   columns: PropTypes.arrayOf(PropTypes.string),
   rows: PropTypes.arrayOf(
