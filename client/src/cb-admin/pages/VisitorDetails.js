@@ -7,7 +7,7 @@ import csv from 'fast-csv';
 import { saveAs } from 'file-saver';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Link } from '../../shared/components/text/base';
-import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
+import { Form as Fm, PrimaryButton, Label } from '../../shared/components/form/base';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { colors, fonts } from '../../shared/style_guide';
 import TranslucentTable from '../components/TranslucentTable';
@@ -55,9 +55,17 @@ const ExportButton = PrimaryButton.extend`
   padding: 0.3rem 1rem;
 `;
 
-// const FilterCheckbox = StyledLabelledCheckbox.extend`
-//   padding-left: 0%;
-// `;
+const CheckboxDiv = styled.div`
+  padding-top: 4%;
+  padding-left: 40%;
+  margin-bottom: 5%;
+`;
+
+const StyledLabel = Label.extend`
+  margin-top: -10%;
+  margin-bottom: 5%;
+  text-align: center;
+`;
 
 const keyMap = {
   id: 'Visitor ID',
@@ -263,14 +271,16 @@ export default class VisitorDetailsPage extends React.Component {
               />
             </FormSection>
             <FormSection>
-              <StyledLabelledCheckbox name="smsFilter" id="smsFilterInput" label="SMS Opt-in" />
+              <StyledLabel>SMS Opt-in</StyledLabel>
+              <CheckboxDiv>
+                <StyledLabelledCheckbox name="smsFilter" id="smsFilterInput" />
+              </CheckboxDiv>
             </FormSection>
             <FormSection>
-              <StyledLabelledCheckbox
-                name="emailFilter"
-                id="emailFilterInput"
-                label="Email Opt-in"
-              />
+              <StyledLabel>Email Opt-in</StyledLabel>
+              <CheckboxDiv>
+                <StyledLabelledCheckbox name="emailFilter" id="emailFilterInput" />
+              </CheckboxDiv>
             </FormSection>
           </Form>
         </Row>

@@ -6,8 +6,6 @@ import { Label } from './base';
 
 const CheckboxDiv = styled.div`
   cursor: pointer;
-  margin-bottom: 0.5em;
-  padding-left: 40%;
   & input {
     z-index: -1;
     opacity: 0;
@@ -34,7 +32,7 @@ const Input = styled.input``;
 const Checkbox = ({ id, onChange, label, ...props }) => (
   <CheckboxDiv>
     <Input id={id} type="checkbox" onChange={onChange} {...props} />
-    <Label htmlFor={id}>{label}</Label>
+    <Label htmlFor={id}> {label}</Label>
   </CheckboxDiv>
 );
 
