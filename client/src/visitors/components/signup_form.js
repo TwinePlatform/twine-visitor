@@ -42,7 +42,12 @@ const TitleParagraph = Paragraph.extend`
 `;
 
 const PrivacySection = FormSection.extend`
-margin-top: 2em;
+  margin-top: 2em;
+`;
+
+const CheckboxDiv = styled.div`
+  margin-bottom: 0.5em;
+  padding-left: 40%;
 `;
 
 const genders = [
@@ -58,11 +63,40 @@ const signupForm = props => (
     <Form className="SignupForm" onChange={props.handleChange} onSubmit={props.createVisitor}>
       <FormSection flexOrder={1}>
         <div>
-          <LabelledInput label="Full Name" name="fullname" option="fullname" error={props.errors.formSender && VISITOR_NAME_INVALID} required />
-          <LabelledInput label="Email Address" name="email" option="email" error={props.errors.formEmail} required />
-          <LabelledInput label="Phone Number (optional)" name="phone" option="phone" error={props.errors.formPhone} />
-          <LabelledSelect name="gender" label="Gender" options={genders} error={props.errors.formGender} required />
-          <LabelledSelect name="year" label="Year of Birth" options={props.years} error={props.errors.formYear} required />
+          <LabelledInput
+            label="Full Name"
+            name="fullname"
+            option="fullname"
+            error={props.errors.formSender && VISITOR_NAME_INVALID}
+            required
+          />
+          <LabelledInput
+            label="Email Address"
+            name="email"
+            option="email"
+            error={props.errors.formEmail}
+            required
+          />
+          <LabelledInput
+            label="Phone Number (optional)"
+            name="phone"
+            option="phone"
+            error={props.errors.formPhone}
+          />
+          <LabelledSelect
+            name="gender"
+            label="Gender"
+            options={genders}
+            error={props.errors.formGender}
+            required
+          />
+          <LabelledSelect
+            name="year"
+            label="Year of Birth"
+            options={props.years}
+            error={props.errors.formYear}
+            required
+          />
         </div>
       </FormSection>
       <FormSection flexOrder={2}>
@@ -75,14 +109,18 @@ const signupForm = props => (
           <br />
           However, from time to time we would like to contact you with details of other offers we
           provide. If you consent to us contacting you by email, please tick to agree:
-          <StyledLabelledCheckbox name="emailContact" id="emailCheckboxInput" />
+          <CheckboxDiv>
+            <StyledLabelledCheckbox name="emailContact" id="emailCheckboxInput" />
+          </CheckboxDiv>
         </CenteredParagraph>
         <CenteredParagraph>
           <br />
           <br />
           We would like to send you surveys in order to improve our work via SMS. If you agree to us
           using your personal data for that purpose, please tick to agree:
-          <StyledLabelledCheckbox name="smsContact" id="smsCheckboxInput" />
+          <CheckboxDiv>
+            <StyledLabelledCheckbox name="smsContact" id="smsCheckboxInput" />
+          </CheckboxDiv>
         </CenteredParagraph>
       </FormSection>
 
@@ -92,7 +130,7 @@ const signupForm = props => (
 
       <PrivacySection flexOrder={4}>
         <PrivacyLink href="http://www.twine-together.com/privacy-policy/">
-      Data Protection Policy
+          Data Protection Policy
         </PrivacyLink>
       </PrivacySection>
     </Form>

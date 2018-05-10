@@ -7,11 +7,12 @@ import csv from 'fast-csv';
 import { saveAs } from 'file-saver';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Heading, Link } from '../../shared/components/text/base';
-import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
+import { Form as Fm, PrimaryButton, Label } from '../../shared/components/form/base';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { colors, fonts } from '../../shared/style_guide';
 import TranslucentTable from '../components/TranslucentTable';
 import { Visitors, ErrorUtils } from '../../api';
+import StyledLabelledCheckbox from '../../shared/components/form/StyledLabelledCheckbox';
 
 const Nav = styled.nav`
   display: flex;
@@ -52,6 +53,18 @@ const ExportButton = PrimaryButton.extend`
   flex: ${props => props.flex || '1'};
   margin-top: 1rem;
   padding: 0.3rem 1rem;
+`;
+
+const CheckboxDiv = styled.div`
+  padding-top: 4%;
+  padding-left: 40%;
+  margin-bottom: 5%;
+`;
+
+const StyledLabel = Label.extend`
+  margin-top: -10%;
+  margin-bottom: 5%;
+  text-align: center;
 `;
 
 const keyMap = {
@@ -97,6 +110,8 @@ export default class VisitorDetailsPage extends React.Component {
       sort: '',
       genderFilter: '',
       ageFilter: '',
+      smsFilter: false,
+      emailFilter: false,
       errors: {},
       page: 1,
     };
@@ -106,14 +121,25 @@ export default class VisitorDetailsPage extends React.Component {
     this.update();
   }
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value }, this.update);
+  onChange = (e) => {
+    switch (e.target.type) {
+      case 'checkbox':
+        this.setState({ [e.target.name]: e.target.checked }, this.update);
+        break;
+      default:
+        this.setState({ [e.target.name]: e.target.value }, this.update);
+        break;
+    }
+  };
 
   getDataForCsv = () => {
-    const { genderFilter, ageFilter } = this.state;
+    const { genderFilter, ageFilter, smsFilter, emailFilter } = this.state;
     Visitors.get(this.props.auth, {
       visitors: true,
       genderFilter,
       ageFilter,
+      smsFilter,
+      emailFilter,
     })
       .then((res) => {
         const csvData = res.data.result.map(x =>
@@ -173,7 +199,7 @@ export default class VisitorDetailsPage extends React.Component {
   };
 
   update = () => {
-    const { page, genderFilter, ageFilter, limit = 10 } = this.state;
+    const { page, genderFilter, ageFilter, smsFilter, emailFilter, limit = 10 } = this.state;
     const sort = colToState[this.state.sort];
     const cbAdminToken = this.props.auth;
 
@@ -183,6 +209,8 @@ export default class VisitorDetailsPage extends React.Component {
       offset,
       genderFilter,
       ageFilter,
+      smsFilter,
+      emailFilter,
       sort,
       visitors: true,
       pagination: true,
@@ -241,6 +269,18 @@ export default class VisitorDetailsPage extends React.Component {
                 options={ageOptions}
                 error={errors.sort}
               />
+            </FormSection>
+            <FormSection>
+              <StyledLabel>SMS Opt-in</StyledLabel>
+              <CheckboxDiv>
+                <StyledLabelledCheckbox name="smsFilter" id="smsFilterInput" />
+              </CheckboxDiv>
+            </FormSection>
+            <FormSection>
+              <StyledLabel>Email Opt-in</StyledLabel>
+              <CheckboxDiv>
+                <StyledLabelledCheckbox name="emailFilter" id="emailFilterInput" />
+              </CheckboxDiv>
             </FormSection>
           </Form>
         </Row>

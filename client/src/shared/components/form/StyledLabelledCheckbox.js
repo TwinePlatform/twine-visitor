@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { colors } from '../../style_guide';
+import { Label } from './base';
 
 const CheckboxDiv = styled.div`
   cursor: pointer;
-  margin-bottom: 0.5em;
-  padding-left: 40%;
   & input {
     z-index: -1;
     opacity: 0;
@@ -29,22 +28,23 @@ const CheckboxDiv = styled.div`
   }
 `;
 const Input = styled.input``;
-const Label = styled.label``;
 
-const Checkbox = ({ id, onChange, ...props }) => (
+const Checkbox = ({ id, onChange, label, ...props }) => (
   <CheckboxDiv>
     <Input id={id} type="checkbox" onChange={onChange} {...props} />
-    <Label htmlFor={id} />
+    <Label htmlFor={id}> {label}</Label>
   </CheckboxDiv>
 );
 
 Checkbox.propTypes = {
   id: PropTypes.string.isRequired,
   onChange: PropTypes.func,
+  label: PropTypes.string,
 };
 
 Checkbox.defaultProps = {
   onChange: () => {},
+  label: '',
 };
 
 export default Checkbox;
