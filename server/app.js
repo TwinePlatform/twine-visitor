@@ -6,7 +6,9 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const postmark = require('postmark');
 const pg = require('pg');
+const enforce = require('express-sslify');
 const { notFound, errorHandler, validationError } = require('./shared/middleware');
+const { PRODUCTION } = require('../config/environments');
 
 
 module.exports = (cfg) => {
@@ -23,6 +25,9 @@ module.exports = (cfg) => {
   app.set('client:postmark', postmarkClient);
   app.set('client:psql', psqlPool);
 
+  if (cfg.env === PRODUCTION) {
+    app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  };
   app.use(favicon(path.join(cfg.root, 'client', 'public', 'favicon.ico')));
   app.use(logger(cfg.env));
   app.use(bodyParser.json());
