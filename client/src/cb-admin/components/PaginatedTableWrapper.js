@@ -13,10 +13,7 @@ export default class PaginatedTableWrapper extends React.Component {
     rowCount: PropTypes.number.isRequired, // eslint-disable-line
     loadRows: PropTypes.func.isRequired,
     rowsPerPage: PropTypes.number,
-    children: PropTypes.oneOfType([
-      PropTypes.element,
-      PropTypes.arrayOf(PropTypes.element),
-    ]).isRequired,
+    children: PropTypes.element.isRequired,
   }
 
   static defaultProps = {
