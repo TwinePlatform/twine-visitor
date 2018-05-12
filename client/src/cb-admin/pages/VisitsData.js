@@ -95,7 +95,7 @@ export default class VisitsDataPage extends React.Component {
     super(props);
 
     this.state = {
-      full_count: 0,
+      fullCount: 0,
       visitsList: [],
       activities: [],
       genderFilter: '',
@@ -135,7 +135,7 @@ export default class VisitsDataPage extends React.Component {
           ageGroups: this.getAgeGroupsForChart(ageGroups),
           activities: activities.map(activity => activity.name),
           visitsList: visits,
-          full_count: resVisitors.data.meta.full_count,
+          fullCount: resVisitors.data.meta.full_count,
         });
       })
       .catch((error) => {
@@ -326,7 +326,7 @@ export default class VisitsDataPage extends React.Component {
           activitiesGroups: this.getActivitiesForChart(stats[2]),
           genderNumbers: this.getGendersForChart(stats[3]),
           visitsList: visits,
-          full_count: resVisitors.data.meta.full_count,
+          fullCount: resVisitors.data.meta.full_count,
         });
       })
       .catch((error) => {
@@ -406,7 +406,7 @@ export default class VisitsDataPage extends React.Component {
         </Row>
         <Row>
           <PaginatedTableWrapper
-            rowCount={this.state.full_count}
+            rowCount={this.state.fullCount}
             loadRows={this.update}
           >
             <TranslucentTable
