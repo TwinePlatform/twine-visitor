@@ -50,10 +50,10 @@ router.get('/', validate(schema), async (req, res, next) => {
     };
 
     const result = await visitorsAll(req.app.get('client:psql'), options);
-    const full_count = +(result[0] || {}).full_count || 0;
+    const fullCount = +(result[0] || {}).full_count || 0;
     const data = result.map(omit('full_count'));
 
-    res.send({ result: data, meta: { full_count } });
+    res.send({ result: data, meta: { full_count: fullCount } });
   } catch (error) {
     next(error);
   }

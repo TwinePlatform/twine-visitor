@@ -99,7 +99,7 @@ export default class VisitorDetailsPage extends React.Component {
 
     this.state = {
       users: [],
-      full_count: 0,
+      fullCount: 0,
       sort: '',
       genderFilter: '',
       ageFilter: '',
@@ -188,7 +188,7 @@ export default class VisitorDetailsPage extends React.Component {
     })
       .then((res) => {
         this.props.updateAdminToken(res.headers.authorization);
-        this.setState({ users: res.data.result, full_count: res.data.meta.full_count });
+        this.setState({ users: res.data.result, fullCount: res.data.meta.full_count });
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
@@ -248,7 +248,7 @@ export default class VisitorDetailsPage extends React.Component {
         <FlexContainerRow>
           <PaginatedTableWrapper
             loadRows={this.update}
-            rowCount={this.state.full_count}
+            rowCount={this.state.fullCount}
           >
             <TranslucentTable
               exportComponent={
