@@ -4,7 +4,8 @@
  * To be mounted on the root app
  */
 const Boom = require('boom');
-const { PRODUCTION, DEVELOPMENT } = require('../../../config');
+const errorLogger = require('../util/error_logger');
+const { DEVELOPMENT } = require('../../../config');
 
 // catch 404 and forward to error handler
 exports.notFound = (req, res, next) => {
@@ -15,9 +16,7 @@ exports.notFound = (req, res, next) => {
 
 // error handler
 exports.errorHandler = (err, req, res, next) => { // eslint-disable-line
-  if (req.app.get('env') !== PRODUCTION) {
-    console.error(err);
-  }
+  errorLogger(err);
 
   if (Boom.isBoom(err)) {
     const { statusCode, message } = err.output.payload;

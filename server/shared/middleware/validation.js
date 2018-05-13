@@ -3,7 +3,7 @@
  */
 const Joi = require('joi');
 const { pick } = require('ramda');
-const { DEVELOPMENT } = require('../../../config');
+const errorLogger = require('../util/error_logger');
 
 /**
  * Middleware generator to be used in route definitions together
@@ -65,6 +65,8 @@ exports.validationError = (error, req, res, next) => {
     return next(error);
   }
 
+  errorLogger(error);
+
   const validation = error.details
     .map(pick(['message', 'context']))
     .reduce((acc, { context, message }) => {
@@ -74,10 +76,6 @@ exports.validationError = (error, req, res, next) => {
       acc[key] = (acc[key] ? acc[key] : []).concat(msg);
       return acc;
     }, {});
-
-  if (req.app.get('env') === DEVELOPMENT) {
-    console.error(error);
-  }
 
   return res.status(400).send({
     result: null,

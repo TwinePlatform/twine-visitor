@@ -29,7 +29,7 @@ module.exports = (cfg) => {
     app.use(enforce.HTTPS({ trustProtoHeader: true }));
   };
   app.use(favicon(path.join(cfg.root, 'client', 'public', 'favicon.ico')));
-  app.use(logger(cfg.env));
+  app.use(logger('dev'));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cookieParser());
