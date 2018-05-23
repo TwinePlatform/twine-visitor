@@ -1,12 +1,12 @@
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
-const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const postmark = require('postmark');
 const pg = require('pg');
 const enforce = require('express-sslify');
+const logger = require('./logger');
 const { notFound, errorHandler, validationError } = require('./shared/middleware');
 const { PRODUCTION } = require('../config/environments');
 
@@ -29,7 +29,7 @@ module.exports = (cfg) => {
     app.use(enforce.HTTPS({ trustProtoHeader: true }));
   };
   app.use(favicon(path.join(cfg.root, 'client', 'public', 'favicon.ico')));
-  app.use(logger('dev'));
+  app.use(logger);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cookieParser());
