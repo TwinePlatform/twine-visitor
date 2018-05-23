@@ -10,7 +10,7 @@ const arg = process.argv[2];
 
 const config = validateConfig(readConfig(env, arg));
 
-console.log(`Attempting to start app in "${env}" environment`);
+console.log(`Attempting to start app in "${config.env}" environment`);
 console.log('Using the following configuration');
 console.log(util.inspect(config, { depth: 3 }));
 
