@@ -3,6 +3,7 @@
  */
 const Joi = require('joi');
 const { pick } = require('ramda');
+const { TESTING } = require('../../../config');
 
 /**
  * Middleware generator to be used in route definitions together
@@ -64,7 +65,9 @@ exports.validationError = (error, req, res, next) => {
     return next(error);
   }
 
-  console.error(error);
+  if (req.app.get('cfg').env !== TESTING) {
+    console.error(error);
+  }
 
   const validation = error.details
     .map(pick(['message', 'context']))
