@@ -1,3 +1,12 @@
+/*
+ * Visitor Signup Form
+ *
+ * Note: This component requires a UUID prop to be passed from its parent.
+ * This is used to create unique field names in order to prevent browser autocomplete
+ * displaying past results.
+ *
+ * See https://github.com/TwinePlatform/twine-visitor/issues/423
+ */
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -52,17 +61,47 @@ const genders = [
   { key: '4', value: 'prefer not to say' },
 ];
 
+
 const signupForm = props => (
   <FlexContainerCol>
     <CenteredHeading>Please tell us about yourself</CenteredHeading>
     <Form className="SignupForm" onChange={props.handleChange} onSubmit={props.createVisitor}>
       <FormSection flexOrder={1}>
         <div>
-          <LabelledInput label="Full Name" name="fullname" option="fullname" error={props.errors.formSender && VISITOR_NAME_INVALID} required />
-          <LabelledInput label="Email Address" name="email" option="email" error={props.errors.formEmail} required />
-          <LabelledInput label="Phone Number (optional)" name="phone" option="phone" error={props.errors.formPhone} />
-          <LabelledSelect name="gender" label="Gender" options={genders} error={props.errors.formGender} required />
-          <LabelledSelect name="year" label="Year of Birth" options={props.years} error={props.errors.formYear} required />
+          <LabelledInput
+            label="Full Name"
+            name={`fullname$${props.uuid}`}
+            type="text"
+            error={props.errors.formSender && VISITOR_NAME_INVALID}
+            required
+          />
+          <LabelledInput
+            label="Email Address"
+            name={`email$${props.uuid}`}
+            type="email"
+            error={props.errors.formEmail}
+            required
+          />
+          <LabelledInput
+            label="Phone Number (optional)"
+            name={`phone$${props.uuid}`}
+            type="text"
+            error={props.errors.formPhone}
+          />
+          <LabelledSelect
+            name="gender"
+            label="Gender"
+            options={genders}
+            error={props.errors.formGender}
+            required
+          />
+          <LabelledSelect
+            name="year"
+            label="Year of Birth"
+            options={props.years}
+            error={props.errors.formYear}
+            required
+          />
         </div>
       </FormSection>
       <FormSection flexOrder={2}>
@@ -105,6 +144,7 @@ signupForm.propTypes = {
   errors: PropTypes.arrayOf(PropTypes.object).isRequired,
   cbOrgName: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
+  uuid: PropTypes.string.isRequired, // See header comment
 };
 
 export default signupForm;

@@ -110,6 +110,7 @@ export default class Main extends Component {
       cbLogoUrl: '',
       isPrinting: false,
       cbOrgName: '',
+      formAutocompleteUUID: '', // See header comment in visitors/components/signup_form
     };
   }
 
@@ -119,6 +120,7 @@ export default class Main extends Component {
         this.setState({
           cbOrgName: res.data.result.cbOrgName,
           cbLogoUrl: res.data.result.cbLogoUrl,
+          formAutocompleteUUID: Date.now().toString(),
         }),
       );
   }
@@ -132,12 +134,18 @@ export default class Main extends Component {
   }
 
   handleChange = (e) => {
+    // TODO: This is necessary because the fix for the autocomplete
+    // in visitor/components/signup_form leaks into its parent component.
+    // In order to fix this, the form needs to be a stateful component
+    // with a consistent interface with its parent.
+    // See https://github.com/TwinePlatform/twine-visitor/issues/425
+    const name = e.target.name.split('$')[0];
     switch (e.target.type) {
       case 'checkbox':
-        this.setState({ [e.target.name]: e.target.checked });
+        this.setState({ [name]: e.target.checked });
         break;
       default:
-        this.setState({ [e.target.name]: e.target.value });
+        this.setState({ [name]: e.target.value });
         break;
     }
   };
@@ -215,6 +223,7 @@ export default class Main extends Component {
       </NotPrint>
     );
   }
+
   render() {
     const { errors, cbOrgName } = this.state;
 
@@ -228,6 +237,7 @@ export default class Main extends Component {
               years={years}
               createVisitor={this.createVisitor}
               cbOrgName={cbOrgName}
+              uuid={this.state.formAutocompleteUUID}
             />
           </Route>
 
