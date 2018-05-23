@@ -1,7 +1,8 @@
 const morgan = require('morgan');
 const chalk = require('chalk');
+const { pathOr } = require('ramda');
 
-morgan.token('cb-name', (req) => req.auth.cb_name);
+morgan.token('cb-name', pathOr(null, ['auth', 'cb_name']));
 morgan.token('req-body', (req) => JSON.stringify(req.body));
 
 const getColor = (status) =>
