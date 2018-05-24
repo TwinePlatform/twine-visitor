@@ -1,9 +1,15 @@
 const morgan = require('morgan');
 const chalk = require('chalk');
-const { pathOr } = require('ramda');
+const { pathOr, pick, omit, compose } = require('ramda');
+
+const tokenizeRequestBody = compose(
+  JSON.stringify,
+  omit(['password', 'passwordConfirm', 'hash']),
+  pick('body'),
+);
 
 morgan.token('cb-name', pathOr(null, ['auth', 'cb_name']));
-morgan.token('req-body', (req) => JSON.stringify(req.body));
+morgan.token('req-body', tokenizeRequestBody);
 
 const getColor = (status) =>
   status >= 500         // eslint-disable-line no-nested-ternary
