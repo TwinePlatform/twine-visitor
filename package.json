@@ -29,7 +29,8 @@
     "url": "git+https://github.com/TwinePlatform/twine-visitor.git"
   },
   "engines": {
-    "node": ">=8.4"
+    "node": "10.x",
+    "npm": "6.0.x"
   },
   "contributors": [
     "James Inglis <jinglis12@gmail.com>",
@@ -63,7 +64,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-eslint": "^8.2.3",
-    "bcrypt": "^2.0.0",
+    "bcrypt": "^2.0.1",
     "body-parser": "^1.17.2",
     "boom": "^7.2.0",
     "chalk": "^2.4.1",
