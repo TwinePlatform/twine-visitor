@@ -1,4 +1,4 @@
-module.exports = (client, visitorEmail, cbEmail, name, pdf) => {
+module.exports = (client, visitorEmail, cbEmail, name, organisation, pdf) => {
   const messages = [
     {
       From: 'visitorapp@powertochange.org.uk',
@@ -6,6 +6,7 @@ module.exports = (client, visitorEmail, cbEmail, name, pdf) => {
       To: visitorEmail,
       TemplateModel: {
         name,
+        organisation,
       },
       Attachments: [
         {
