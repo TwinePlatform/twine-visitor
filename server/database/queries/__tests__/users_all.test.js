@@ -6,11 +6,11 @@ const getUserList = require('../users_all');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('DB Query | users_all', async tape => {
+test('DB Query | users_all', async (tape) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  tape.test('users_all | existing cb id', async t => {
+  tape.test('users_all | existing cb id', async (t) => {
     try {
       await refreshDB();
       const actual = await getUserList(client, { where: { cb_id: 1 } });
@@ -59,7 +59,7 @@ test('DB Query | users_all', async tape => {
     }
   });
 
-  tape.test('users_all | non-existing cb id', async t => {
+  tape.test('users_all | non-existing cb id', async (t) => {
     try {
       await refreshDB();
 
@@ -75,5 +75,5 @@ test('DB Query | users_all', async tape => {
     }
   });
 
-  tape.test('users_all | Teardown', t => client.end(t.end));
+  tape.test('users_all | Teardown', (t) => client.end(t.end));
 });

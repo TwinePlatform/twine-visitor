@@ -21,7 +21,7 @@ tape('PDF Generator', (suite) => {
       const imgURL = `${URL}/foo`;
 
       api
-        .get("/foo")
+        .get('/foo')
         .reply(200, img);
 
       const qrCode = await qrGen('foobarfakestring');
@@ -36,12 +36,12 @@ tape('PDF Generator', (suite) => {
     }
   });
 
-  suite.test("Successful generation with default", async t => {
+  suite.test('Successful generation with default', async (t) => {
     try {
-      const qrCode = await qrGen("foobarfakestring");
+      const qrCode = await qrGen('foobarfakestring');
       const result = await pdfGen(qrCode);
 
-      t.equal(typeof result, "string");
+      t.equal(typeof result, 'string');
       t.end();
     } catch (error) {
       t.end(error);

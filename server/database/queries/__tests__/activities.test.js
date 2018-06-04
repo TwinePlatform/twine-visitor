@@ -13,7 +13,7 @@ const updateActivity = require('../activity_update');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('Tests activities responds with the correct data', async t => {
+test('Tests activities responds with the correct data', async (t) => {
   await refreshDB();
 
   const client = new pg.Client(config.psql);
@@ -45,7 +45,7 @@ test('Tests activities responds with the correct data', async t => {
   t.end();
 });
 
-test('Tests activitiesForToday responds with activities by day', async t => {
+test('Tests activitiesForToday responds with activities by day', async (t) => {
   await refreshDB();
 
   const client = new pg.Client(config.psql);
@@ -76,7 +76,7 @@ test('Tests activitiesForToday responds with activities by day', async t => {
   t.end();
 });
 
-test('Tests deleteActivity deletes an activity', async t => {
+test('Tests deleteActivity deletes an activity', async (t) => {
   await refreshDB();
 
   const client = new pg.Client(config.psql);
@@ -103,7 +103,7 @@ test('Tests deleteActivity deletes an activity', async t => {
   t.end();
 });
 
-test('Tests insertActivity inserts an activity', async t => {
+test('Tests insertActivity inserts an activity', async (t) => {
   await refreshDB();
 
   const client = new pg.Client(config.psql);
@@ -147,7 +147,7 @@ test('Tests insertActivity inserts an activity', async t => {
   t.end();
 });
 
-test('Tests updateActivity updates an activity', async t => {
+test('Tests updateActivity updates an activity', async (t) => {
   await refreshDB();
 
   const client = new pg.Client(config.psql);

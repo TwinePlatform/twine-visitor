@@ -4,7 +4,7 @@ const query = (filterBy, orderBy) =>
   INNER JOIN activities ON visits.activitiesid = activities.id
   WHERE activities.cb_id = $1 ${filterBy} ${orderBy}`;
 
-const getValidatedFilters = filterArray => {
+const getValidatedFilters = (filterArray) => {
   const validFilterTypes = {
     gender: ['male', 'female', 'prefer_not_to_say'],
     age: ['0-17', '18-34', '35-50', '51-69', '70-more'],
@@ -25,7 +25,7 @@ const getValidatedFilters = filterArray => {
   }, {});
 };
 
-const buildGenderQuery = genderQueries => {
+const buildGenderQuery = (genderQueries) => {
   const validQueries = {
     male: "users.sex = 'male'",
     female: "users.sex = 'female'",
@@ -33,35 +33,35 @@ const buildGenderQuery = genderQueries => {
   };
 
   return genderQueries
-    ? genderQueries.map(gender => validQueries[gender]).join(' OR ')
+    ? genderQueries.map((gender) => validQueries[gender]).join(' OR ')
     : '';
 };
 
-const getDate = age => {
+const getDate = (age) => {
   const today = new Date();
   return today.getFullYear() - age;
 };
 
-const buildAgeQuery = ageQuery =>
-  ageQuery
+const buildAgeQuery = (ageQuery) =>
+  (ageQuery
     ? ageQuery
-        .map(ageRange => {
-          const [low, high] = ageRange.split('-').map(num => Number(num));
-          const edgeCaseQuery = {
-            '0-17': `(users.yearofbirth > ${getDate(high)})`,
-            '70-more': `(users.yearofbirth <= ${getDate(low)})`,
-          }[ageRange];
+      .map((ageRange) => {
+        const [low, high] = ageRange.split('-').map((num) => Number(num));
+        const edgeCaseQuery = {
+          '0-17': `(users.yearofbirth > ${getDate(high)})`,
+          '70-more': `(users.yearofbirth <= ${getDate(low)})`,
+        }[ageRange];
 
-          return (
-            edgeCaseQuery ||
-            `(users.yearofbirth <= ${getDate(low - 1)}
+        return (
+          edgeCaseQuery ||
+          `(users.yearofbirth <= ${getDate(low - 1)}
             AND users.yearofbirth > ${getDate(high)})`
-          );
-        })
-        .join(' OR ')
-    : '';
+        );
+      })
+      .join(' OR ')
+    : '');
 
-const buildActivityQueries = validFilters => {
+const buildActivityQueries = (validFilters) => {
   if (!validFilters) return ['', []];
 
   const [queries, values] = validFilters.reduce(
@@ -79,23 +79,23 @@ const buildActivityQueries = validFilters => {
   return [queries.join(' OR '), values];
 };
 
-const buildFilterQueries = validFilters => {
+const buildFilterQueries = (validFilters) => {
   const genderQuery = buildGenderQuery(validFilters.gender);
   const ageQuery = buildAgeQuery(validFilters.age);
 
   const [activQuery, activValue] = buildActivityQueries(validFilters.activity);
 
   const combinedQueries = [genderQuery, ageQuery, activQuery]
-    .map(query => (query ? `AND (${query}) ` : ''))
+    .map((query) => (query ? `AND (${query}) ` : ''))
     .join('');
 
   return [combinedQueries, activValue];
 };
 
-const combineQueries = filterBy =>
+const combineQueries = (filterBy) =>
   buildFilterQueries(getValidatedFilters(filterBy));
 
-const getSortQuery = orderBy => {
+const getSortQuery = (orderBy) => {
   if (!orderBy || typeof orderBy !== 'string') return '';
 
   const field = {
@@ -115,7 +115,7 @@ const getVisitsFilteredBy = (dbConnection, cbId, { filterBy = [], orderBy = '' }
 
   const myQuery = query(filterQueries, getSortQuery(orderBy));
 
-  return dbConnection.query(myQuery, combinedValues).then(res => res.rows);
+  return dbConnection.query(myQuery, combinedValues).then((res) => res.rows);
 };
 
 module.exports = getVisitsFilteredBy;

@@ -1,8 +1,8 @@
 const { selectQuery } = require('../../shared/models/query_builder');
 
-const getUserList = (dbConnection, options) => 
+const getUserList = (dbConnection, options) =>
 
-    dbConnection.query(
+  dbConnection.query(
     selectQuery(
       'users',
       [
@@ -15,10 +15,10 @@ const getUserList = (dbConnection, options) =>
         'is_email_contact_consent_granted AS email_consent',
         'is_sms_contact_consent_granted AS sms_consent',
       ],
-      options 
+      options
     )
   )
-    .then(res => res.rows)
+    .then((res) => res.rows)
 
-;
+  ;
 module.exports = getUserList;

@@ -6,11 +6,11 @@ const twineAdmin = require('../twine-admin');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('Db Query | twineAdmin ', async tape => {
+test('Db Query | twineAdmin ', async (tape) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  tape.test('twineAdmin.getAllCbsNames | success', async t => {
+  tape.test('twineAdmin.getAllCbsNames | success', async (t) => {
     try {
       await refreshDB();
       const actual = await twineAdmin.getAllCbsNames(client);
@@ -26,5 +26,5 @@ test('Db Query | twineAdmin ', async tape => {
     }
   });
 
-  tape.test('twineAdmin | teardown', t => client.end(t.end));
+  tape.test('twineAdmin | teardown', (t) => client.end(t.end));
 });

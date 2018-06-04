@@ -12,7 +12,7 @@ router.post('/', (req, res, next) => {
     },
     returning: '*',
   })
-    .then(data => res.send({ result: data }))
+    .then((data) => res.send({ result: data }))
     .catch(next);
 });
 

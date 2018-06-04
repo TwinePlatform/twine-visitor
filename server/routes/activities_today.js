@@ -18,7 +18,7 @@ router.get('/', (req, res, next) => {
   const pgClient = req.app.get('client:psql');
 
   activitiesForToday(pgClient, req.auth.cb_id, today)
-    .then(activities => res.send({ activities }))
+    .then((activities) => res.send({ activities }))
     .catch(next);
 });
 

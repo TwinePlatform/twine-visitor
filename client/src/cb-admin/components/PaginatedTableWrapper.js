@@ -20,7 +20,7 @@ export default class PaginatedTableWrapper extends React.Component {
     rowsPerPage: 10,
   }
 
-  static getDerivedStateFromProps(nextProps) {
+  static getDerivedStateFromProps(nextProps) { // eslint-disable-line
     return { totalPages: Math.ceil(nextProps.rowCount / nextProps.rowsPerPage) };
   }
 

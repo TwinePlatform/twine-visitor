@@ -18,7 +18,7 @@ const FlexItem = styled.div`
   flex: ${props => props.flex || '1'};
 `;
 
-const ButtonOne = styled(DotButton)`
+const ButtonOne = styled(DotButton) `
   width: 14em;
   height: 12em;
 `;
@@ -52,7 +52,7 @@ export default class Dashboard extends React.Component {
     CbAdmin.get(this.props.auth)
       .then(res => this.setState({ orgName: res.data.result.org_name }))
       .catch((error) => {
-        console.log(error);
+        console.log(error); // eslint-disable-line
         this.props.history.push('/cb/login');
       });
   }

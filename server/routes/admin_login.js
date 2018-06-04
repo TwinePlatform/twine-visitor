@@ -25,7 +25,7 @@ router.post('/', validate(schemas), async (req, res, next) => {
     }
 
     const matches = await bcrypt.compare(password, result.rows[0].hash_pwd);
-    if (! matches) {
+    if (!matches) {
       return next(Boom.unauthorized('Incorrect password'));
     }
 

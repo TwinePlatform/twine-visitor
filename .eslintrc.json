@@ -1,9 +1,21 @@
 {
-  "extends": ["airbnb", "prettier"],
+  "extends": [
+    "airbnb"
+  ],
   "rules": {
-    "semi": ["error", "always"],
+    "semi": [
+      "error",
+      "always"
+    ],
     "padded-blocks": "off",
-    "comma-dangle": ["error", "always-multiline"],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "arrow-parens": [
+      "error",
+      "always"
+    ],
     "consistent-return": 0,
     "no-shadow": 0,
     "no-prototype-builtins": 0,

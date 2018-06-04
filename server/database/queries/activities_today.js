@@ -1,4 +1,4 @@
-const query = day => `SELECT id, name FROM activities
+const query = (day) => `SELECT id, name FROM activities
                       WHERE ${day}=true AND deleted=false AND cb_id=$1`;
 
 const activitiesForToday = (dbConnection, cbId, day) => {
@@ -12,12 +12,11 @@ const activitiesForToday = (dbConnection, cbId, day) => {
     sunday: query('sunday'),
   }[day];
 
-  if (!dayQuery || !cbId)
-    return Promise.reject(new Error('Incorrect arguments'));
+  if (!dayQuery || !cbId) { return Promise.reject(new Error('Incorrect arguments')); }
 
   return dbConnection
     .query(dayQuery, [cbId])
-    .then(res => res.rows);
+    .then((res) => res.rows);
 };
 
 module.exports = activitiesForToday;

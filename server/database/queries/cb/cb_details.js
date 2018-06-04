@@ -7,7 +7,7 @@ const getCBDetails = (dbConnection, cbId) =>
   new Promise((resolve, reject) => {
     dbConnection
       .query(getCBDetailsQuery, [cbId])
-      .then(res => resolve(res.rows[0] || null))
+      .then((res) => resolve(res.rows[0] || null))
       .catch(reject);
   });
 

@@ -6,11 +6,11 @@ const insertVisit = require('../visit_insert');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('DB Query | visit_insert', async tape => {
+test('DB Query | visit_insert', async (tape) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  tape.test('visit_insert | success case', async t => {
+  tape.test('visit_insert | success case', async (t) => {
     try {
       await refreshDB();
       const oldCount = await client.query(
@@ -39,7 +39,7 @@ test('DB Query | visit_insert', async tape => {
     }
   });
 
-  tape.test('visit_insert | missing data', async t => {
+  tape.test('visit_insert | missing data', async (t) => {
     try {
       await refreshDB();
       const actual = await await insertVisit(client);
@@ -55,5 +55,5 @@ test('DB Query | visit_insert', async tape => {
     }
   });
 
-  tape.test('visit_insert | Teardown', t => client.end(t.end));
+  tape.test('visit_insert | Teardown', (t) => client.end(t.end));
 });

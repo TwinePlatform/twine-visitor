@@ -6,7 +6,7 @@ const { getConfig } = require('../../../config');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('POST /api/admin/login | password match database hash', t => {
+test('POST /api/admin/login | password match database hash', (t) => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
   const secret = app.get('cfg').session.standard_jwt_secret;
@@ -35,7 +35,7 @@ test('POST /api/admin/login | password match database hash', t => {
     });
 });
 
-test('POST /api/admin/login | no password match for database hash', t => {
+test('POST /api/admin/login | no password match for database hash', (t) => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
   const secret = app.get('cfg').session.standard_jwt_secret;

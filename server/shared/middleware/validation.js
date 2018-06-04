@@ -24,7 +24,7 @@ const { TESTING } = require('../../../config');
  * @param   {Object}     [schemas.options] Joi validation options to be merged w/ defaults
  * @returns {Middleware}                   Middleware to be added to the stack
  */
-exports.validate = schemas => (req, res, next) => {
+exports.validate = (schemas) => (req, res, next) => {
   const config = req.app.get('cfg');
   const opts = { ...config.validation.options, ...schemas.options };
 

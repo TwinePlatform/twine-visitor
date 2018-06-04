@@ -5,7 +5,7 @@ const getCBAlreadyExists = (dbConnection, email) =>
     if (!email) return reject(new Error('No email supplied to query'));
     dbConnection
       .query(checkCB, [email])
-      .then(res => {
+      .then((res) => {
         resolve(res.rows[0].exists);
       })
       .catch(reject);

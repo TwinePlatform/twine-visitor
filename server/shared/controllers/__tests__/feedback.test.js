@@ -6,11 +6,11 @@ const { getConfig } = require('../../../../config');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('GET /api/cb/feedback', tape => {
+test('GET /api/cb/feedback', (tape) => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
 
-  tape.test('GET /api/cb/feedback | successful query with null params', t => {
+  tape.test('GET /api/cb/feedback | successful query with null params', (t) => {
     const cbAdminJwtSecret = app.get('cfg').session.cb_admin_jwt_secret;
     const token = jwt.sign(
       { email: 'findmyfroggy@frogfinders.com' },
@@ -34,7 +34,7 @@ test('GET /api/cb/feedback', tape => {
       });
   });
 
-  tape.test('GET /api/cb/feedback | successful query with date', t => {
+  tape.test('GET /api/cb/feedback | successful query with date', (t) => {
     const cbAdminJwtSecret = app.get('cfg').session.cb_admin_jwt_secret;
     const token = jwt.sign(
       { email: 'findmyfroggy@frogfinders.com' },
@@ -58,7 +58,7 @@ test('GET /api/cb/feedback', tape => {
       });
   });
 
-  tape.test('GET /api/cb/feedback | bad query', t => {
+  tape.test('GET /api/cb/feedback | bad query', (t) => {
     const cbAdminJwtSecret = app.get('cfg').session.cb_admin_jwt_secret;
     const token = jwt.sign(
       { email: 'findmyfroggy@frogfinders.com' },
@@ -85,14 +85,14 @@ test('GET /api/cb/feedback', tape => {
         t.end();
       });
   });
-  tape.test('GET /api/cb/feedback | teardown', t => dbConnection.end(t.end));
+  tape.test('GET /api/cb/feedback | teardown', (t) => dbConnection.end(t.end));
 });
 
-test('POST /api/cb/feedback', tape => {
+test('POST /api/cb/feedback', (tape) => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
 
-  tape.test('POST /api/cb/feedback | successful payload', t => {
+  tape.test('POST /api/cb/feedback | successful payload', (t) => {
     const secret = app.get('cfg').session.standard_jwt_secret;
     const token = jwt.sign({ email: 'findmyfroggy@frogfinders.com' }, secret);
     const successPayload = {
@@ -112,7 +112,7 @@ test('POST /api/cb/feedback', tape => {
       });
   });
 
-  tape.test('POST /api/cb/feedback | bad payload', t => {
+  tape.test('POST /api/cb/feedback | bad payload', (t) => {
     const secret = app.get('cfg').session.standard_jwt_secret;
     const token = jwt.sign({ email: 'findmyfroggy@frogfinders.com' }, secret);
     const badPayload = { query: { feedbackScore: 'lol' } };
@@ -133,5 +133,5 @@ test('POST /api/cb/feedback', tape => {
         t.end();
       });
   });
-  tape.test('POST /api/cb/feedback | teardown', t => dbConnection.end(t.end));
+  tape.test('POST /api/cb/feedback | teardown', (t) => dbConnection.end(t.end));
 });

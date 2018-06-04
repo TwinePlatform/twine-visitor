@@ -44,9 +44,8 @@ test('Visitors DB queries', async (tape) => {
 
       t.end();
     } catch (e) {
-      console.log(e);
       t.fail('Failed to filter by gender');
-      t.end();
+      t.end(e);
     }
   });
 
@@ -83,9 +82,8 @@ test('Visitors DB queries', async (tape) => {
       t.equals(filterAll.length, 63, 'Filters with all age cases');
       t.end();
     } catch (e) {
-      console.log(e);
       t.fail('Failed to filter by age');
-      t.end();
+      t.end(e);
     }
   });
 
@@ -112,9 +110,8 @@ test('Visitors DB queries', async (tape) => {
       t.equals(noSqlInjection.length, 0, "Doesn't allow sql inputs");
       t.end();
     } catch (e) {
-      console.log(e);
       t.fail('Failed to filter by activity');
-      t.end();
+      t.end(e);
     }
   });
 
@@ -129,9 +126,8 @@ test('Visitors DB queries', async (tape) => {
       t.equals(mixedFilters.length, 2, 'Filters with mixed filter types');
       t.end();
     } catch (e) {
-      console.log(e);
       t.fail('Failed to filter with multiple filters types');
-      t.end();
+      t.end(e);
     }
   });
 
@@ -147,9 +143,8 @@ test('Visitors DB queries', async (tape) => {
       t.equal(badValue.length, 63, 'Works for filters without an @');
       t.end();
     } catch (e) {
-      console.log(e);
       t.fail('Failed with bad values');
-      t.end();
+      t.end(e);
     }
   });
 
@@ -186,9 +181,8 @@ test('Visitors DB queries', async (tape) => {
 
       t.end();
     } catch (e) {
-      console.log(e);
       t.fail('Failed to sort');
-      t.end();
+      t.end(e);
     }
   });
 

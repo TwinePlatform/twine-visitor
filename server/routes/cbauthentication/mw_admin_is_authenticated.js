@@ -12,7 +12,7 @@ const adminIsAuthenticated = (req, res, next) => {
     }
 
     getCBFromEmail(pgClient, payload.email)
-      .then(cb => {
+      .then((cb) => {
         const token = jwt.sign(
           { email: payload.email, admin: true },
           cbAdminJwtSecret,

@@ -5,7 +5,7 @@ const { getConfig } = require('../../../../config');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('Validation Middleware', tape => {
+test('Validation Middleware', (tape) => {
   [
     {
       name: 'Successful validation | request body',
@@ -132,8 +132,8 @@ test('Validation Middleware', tape => {
           ),
       ],
     },
-  ].forEach(fixture => {
-    tape.test(`validate | ${fixture.name}`, t => {
+  ].forEach((fixture) => {
+    tape.test(`validate | ${fixture.name}`, (t) => {
       const middleware = validate(fixture.schema);
       const res = {};
       const req = {
@@ -143,8 +143,8 @@ test('Validation Middleware', tape => {
         body: fixture.body,
       };
 
-      middleware(req, res, error => {
-        fixture.assertions.forEach(assertion => {
+      middleware(req, res, (error) => {
+        fixture.assertions.forEach((assertion) => {
           assertion(req, res, error, t);
         });
         t.end();
@@ -152,21 +152,21 @@ test('Validation Middleware', tape => {
     });
   });
 
-  tape.test('validationError | Non-joi error', t => {
+  tape.test('validationError | Non-joi error', (t) => {
     const req = {};
     const error = new Error('not a Joi error');
     const res = {
-      status: () => {},
-      send: () => {},
+      status: () => { },
+      send: () => { },
     };
 
-    validationError(error, req, res, err => {
+    validationError(error, req, res, (err) => {
       t.equals(error, err, 'Non-Joi error passed onto next error-middleware');
       t.end();
     });
   });
 
-  tape.test('validationError | Joi error', t => {
+  tape.test('validationError | Joi error', (t) => {
     const details = [
       { message: 'foo', context: { key: 'foo' } },
       { message: 'boo', context: { key: 'foo' } },
@@ -176,11 +176,11 @@ test('Validation Middleware', tape => {
     const req = { app };
     const error = { isJoi: true, details };
     const res = {
-      status: code => {
+      status: (code) => {
         t.equal(code, 400, 'Set Bad Request status code');
         return res;
       },
-      send: payload => {
+      send: (payload) => {
         t.deepEquals(
           payload,
           {

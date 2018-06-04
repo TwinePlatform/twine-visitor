@@ -17,7 +17,7 @@ const getUserDetails = async (dbConnection, options) => {
       'is_email_contact_consent_granted AS email_consent',
       'is_sms_contact_consent_granted AS sms_consent',
     ],
-    options 
+    options
   );
 
   const result = await dbConnection.query(query);

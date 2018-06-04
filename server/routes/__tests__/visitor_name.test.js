@@ -7,7 +7,7 @@ const { refresh: refreshDB } = require('../../../db/scripts');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('POST /api/user/name-from-scan | viable & registered hash', async t => {
+test('POST /api/user/name-from-scan | viable & registered hash', async (t) => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
   const secret = app.get('cfg').session.standard_jwt_secret;
@@ -31,7 +31,7 @@ test('POST /api/user/name-from-scan | viable & registered hash', async t => {
     });
 });
 
-test('POST /api/user/name-from-scan | non-viable hash ', async t => {
+test('POST /api/user/name-from-scan | non-viable hash ', async (t) => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
   const secret = app.get('cfg').session.standard_jwt_secret;
@@ -55,7 +55,7 @@ test('POST /api/user/name-from-scan | non-viable hash ', async t => {
     });
 });
 
-test('POST /api/user/name-from-scan | user/hash not registered ', async t => {
+test('POST /api/user/name-from-scan | user/hash not registered ', async (t) => {
   const app = createApp(config);
   const dbConnection = app.get('client:psql');
   const secret = app.get('cfg').session.standard_jwt_secret;
@@ -74,7 +74,7 @@ test('POST /api/user/name-from-scan | user/hash not registered ', async t => {
     .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
-      t.deepEqual(res.body, { result: null, error: "No user found" });
+      t.deepEqual(res.body, { result: null, error: 'No user found' });
       dbConnection.end(t.end);
     });
 });

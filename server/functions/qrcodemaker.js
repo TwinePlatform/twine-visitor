@@ -1,6 +1,6 @@
 const QrCode = require('qrcode');
 
-module.exports = string =>
+module.exports = (string) =>
   new Promise((resolve, reject) => {
     QrCode.toDataURL(
       string,
