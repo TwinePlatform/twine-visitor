@@ -6,7 +6,7 @@ router.post('/', (req, res, next) => {
     filterBy: req.body.filterBy,
     orderBy: req.body.orderBy,
   })
-    .then(users => res.send({ result: users }))
+    .then((users) => res.send({ result: users }))
     .catch(next);
 });
 

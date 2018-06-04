@@ -19,7 +19,7 @@ const getAllVisitors = (dbConnection, options) => {
         options
       )
     )
-    .then(res => res.rows);
+    .then((res) => res.rows);
 };
 
 module.exports = getAllVisitors;

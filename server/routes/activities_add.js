@@ -16,7 +16,7 @@ router.post('/', validate(schema), async (req, res, next) => {
   const pgClient = req.app.get('client:psql');
   try {
     const exists = await activityCheckExists(pgClient, activityToAdd, req.auth.cb_id);
-    
+
     if (exists) {
       return next(Boom.conflict('Activity already exists'));
     }

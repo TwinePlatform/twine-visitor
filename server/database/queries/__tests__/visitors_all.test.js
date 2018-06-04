@@ -6,11 +6,11 @@ const getAllUsersQuery = require('../visitors_all');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('DB Query | visitors_all', async tape => {
+test('DB Query | visitors_all', async (tape) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  tape.test('visitors_all | success case', async t => {
+  tape.test('visitors_all | success case', async (t) => {
     try {
       await refreshDB();
 
@@ -52,7 +52,7 @@ test('DB Query | visitors_all', async tape => {
     }
   });
 
-  tape.test('visitors_all | missing data', async t => {
+  tape.test('visitors_all | missing data', async (t) => {
     try {
       await refreshDB();
 
@@ -69,5 +69,5 @@ test('DB Query | visitors_all', async tape => {
     }
   });
 
-  tape.test('visitors_all | Teardown', t => client.end(t.end));
+  tape.test('visitors_all | Teardown', (t) => client.end(t.end));
 });

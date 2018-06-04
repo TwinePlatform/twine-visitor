@@ -6,11 +6,11 @@ const cbAdmin = require('../../../shared/models/cb_admin');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('Db Query | cbAdmin ', async tape => {
+test('Db Query | cbAdmin ', async (tape) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  tape.test('cbAdmin.getFeedback | existing cb_id', async t => {
+  tape.test('cbAdmin.getFeedback | existing cb_id', async (t) => {
     try {
       await refreshDB();
 
@@ -58,7 +58,7 @@ test('Db Query | cbAdmin ', async tape => {
     }
   });
 
-  tape.test('cbAdmin.getFeedback | non-existing cb_id', async t => {
+  tape.test('cbAdmin.getFeedback | non-existing cb_id', async (t) => {
     try {
       await refreshDB();
       const actual = await cbAdmin.getFeedback(client, 22);
@@ -74,7 +74,7 @@ test('Db Query | cbAdmin ', async tape => {
     }
   });
 
-  tape.test('cbAdmin.insertFeedback | correct values', async t => {
+  tape.test('cbAdmin.insertFeedback | correct values', async (t) => {
     try {
       await refreshDB();
       const actual = await cbAdmin.insertFeedback(client, {
@@ -98,7 +98,7 @@ test('Db Query | cbAdmin ', async tape => {
     }
   });
 
-  tape.test('cbAdmin.insertFeedback | incorrect values', async t => {
+  tape.test('cbAdmin.insertFeedback | incorrect values', async (t) => {
     try {
       await refreshDB();
       await cbAdmin.insertFeedback(client, {
@@ -114,5 +114,5 @@ test('Db Query | cbAdmin ', async tape => {
     }
   });
 
-  tape.test('cbAdmin | teardown', t => client.end(t.end));
+  tape.test('cbAdmin | teardown', (t) => client.end(t.end));
 });

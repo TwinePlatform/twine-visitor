@@ -11,9 +11,9 @@ const { hmac } = require('../shared/util/crypto');
 const schema = {
   body: {
     formSender: Joi.string()
-    .regex(/[^\w\s\d]+/, { name: 'alphanumeric', invert: true })
-    .min(1)
-    .required(),
+      .regex(/[^\w\s\d]+/, { name: 'alphanumeric', invert: true })
+      .min(1)
+      .required(),
     formPhone: Joi.string().allow(''),
     formGender: Joi.string().required(),
     formYear: Joi.number()
@@ -65,7 +65,15 @@ router.post('/', validate(schema), async (req, res, next) => {
       formEmailContact,
       formSmsContact
     );
-    await sendQrCode(pmClient, formEmail, req.auth.cb_email, formSender, hashString, req.auth.cb_name, req.auth.cb_logo);
+
+    await sendQrCode(
+      pmClient,
+      formEmail,
+      req.auth.cb_email,
+      formSender, hashString,
+      req.auth.cb_name,
+      req.auth.cb_logo
+    );
     const qr = await qrcodemaker(hashString);
     return res.send({ qr, cb_logo: req.auth.cb_logo });
   } catch (error) {

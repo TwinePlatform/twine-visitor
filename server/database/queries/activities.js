@@ -2,10 +2,9 @@ const getActivitiesQuery =
   'SELECT id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday FROM activities WHERE cb_id=$1 AND deleted=false';
 
 const activities = (dbConnection, cbId) => {
-  if (!cbId)
-    return Promise.reject(new Error('No Community Business ID supplied'));
+  if (!cbId) { return Promise.reject(new Error('No Community Business ID supplied')); }
 
-  return dbConnection.query(getActivitiesQuery, [cbId]).then(res => res.rows);
+  return dbConnection.query(getActivitiesQuery, [cbId]).then((res) => res.rows);
 };
 
 module.exports = activities;

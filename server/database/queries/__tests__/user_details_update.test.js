@@ -6,11 +6,11 @@ const putNewUserDetails = require('../user_details_update');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('DB Query | user_details_update', async tape => {
+test('DB Query | user_details_update', async (tape) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  tape.test('user_details_update | update existing user', async t => {
+  tape.test('user_details_update | update existing user', async (t) => {
     try {
       await refreshDB();
 
@@ -58,7 +58,7 @@ test('DB Query | user_details_update', async tape => {
 
   tape.test(
     'user_details_update | update existing user, undefined consent',
-    async t => {
+    async (t) => {
       try {
         await refreshDB();
 
@@ -103,7 +103,7 @@ test('DB Query | user_details_update', async tape => {
     }
   );
 
-  tape.test('user_details_update | update non-existing user', async t => {
+  tape.test('user_details_update | update non-existing user', async (t) => {
     try {
       await refreshDB();
 
@@ -125,5 +125,5 @@ test('DB Query | user_details_update', async tape => {
     }
   });
 
-  tape.test('user_details_update | Teardown', t => client.end(t.end));
+  tape.test('user_details_update | Teardown', (t) => client.end(t.end));
 });

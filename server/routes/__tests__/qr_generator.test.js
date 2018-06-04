@@ -6,7 +6,7 @@ const { getConfig } = require('../../../config');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('POST /api/qr/generator | Correct payload', t => {
+test('POST /api/qr/generator | Correct payload', (t) => {
   const app = createApp(config);
   const secret = app.get('cfg').session.standard_jwt_secret;
 
@@ -34,7 +34,7 @@ test('POST /api/qr/generator | Correct payload', t => {
     });
 });
 
-test('POST /api/qr/generator | Missing info in payload', t => {
+test('POST /api/qr/generator | Missing info in payload', (t) => {
   const app = createApp(config);
   const secret = app.get('cfg').session.standard_jwt_secret;
 

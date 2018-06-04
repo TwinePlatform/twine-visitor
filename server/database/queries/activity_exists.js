@@ -4,6 +4,6 @@ const checkActivityQuery =
 const activityCheckExists = (dbConnection, activity, cbId) =>
   dbConnection
     .query(checkActivityQuery, [activity, cbId])
-    .then(res => res.rows[0].exists);
+    .then((res) => res.rows[0].exists);
 
 module.exports = activityCheckExists;

@@ -6,11 +6,11 @@ const getHash = require('../user_check_hash');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('DB Query | user_check_hash', async tape => {
+test('DB Query | user_check_hash', async (tape) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  tape.test('user_check_hash | existing hash', async t => {
+  tape.test('user_check_hash | existing hash', async (t) => {
     try {
       await refreshDB();
       const actual = await getHash(
@@ -34,7 +34,7 @@ test('DB Query | user_check_hash', async tape => {
     }
   });
 
-  tape.test('user_check_hash | non-existing hash', async t => {
+  tape.test('user_check_hash | non-existing hash', async (t) => {
     try {
       await refreshDB();
       await getHash(client);
@@ -44,5 +44,5 @@ test('DB Query | user_check_hash', async tape => {
     }
   });
 
-  tape.test('user_check_hash | Teardown', t => client.end(t.end));
+  tape.test('user_check_hash | Teardown', (t) => client.end(t.end));
 });

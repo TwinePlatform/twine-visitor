@@ -5,16 +5,16 @@ const { curry, pipe } = require('ramda');
 
   Functions to build SELECT/INSERT/UPDATE queries dynamically
 
-  Complex queries including INNER JOIN, WHERE, BETWEEN, SORT, OFFSET and RETURNING clauses can be 
+  Complex queries including INNER JOIN, WHERE, BETWEEN, SORT, OFFSET and RETURNING clauses can be
   constructed by specifying options, as defined by the `Options` type definition below.
 
-  SqlQuery = 
+  SqlQuery =
     {
       text: String,
       values: [ a ]
     }
 
-  Options = 
+  Options =
     {
       where: { <column-name>: <value> },
       between: { column: String, values: [ Int ] },
@@ -28,7 +28,7 @@ const { curry, pipe } = require('ramda');
 const addInnerJoinClause = curry(({ innerJoin }, queryObj) => {
   if (innerJoin) {
     const innerJoinClause = `${Object.keys(innerJoin)
-      .map(k => `INNER JOIN ${k} ON ${innerJoin[k][0]}=${innerJoin[k][1]}`)
+      .map((k) => `INNER JOIN ${k} ON ${innerJoin[k][0]}=${innerJoin[k][1]}`)
       .join(' ')}`;
 
     return {
@@ -64,7 +64,7 @@ const addBetweenClause = curry((options, queryObj) => {
     const betweenClause = `${
       options.between.column
     } BETWEEN $${valuesOffset} AND $${valuesOffset + 1}`;
-    const joiner = options.where ? `AND` : `WHERE`;
+    const joiner = options.where ? 'AND' : 'WHERE';
     return {
       text: `${queryObj.text} ${joiner} ${betweenClause}`,
       values: [...queryObj.values, ...options.between.values],

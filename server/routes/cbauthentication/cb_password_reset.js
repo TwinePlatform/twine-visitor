@@ -25,7 +25,7 @@ router.post('/', validate(schemas), async (req, res, next) => {
   try {
     const exists = await cbCheckExists(pgClient, email);
 
-    if (! exists) {
+    if (!exists) {
       return next(Boom.unauthorized('Email not recognised'));
     }
 

@@ -4,6 +4,6 @@ const checkFullname =
 const userCheckExists = (dbConnection, fullname, email) =>
   dbConnection
     .query(checkFullname, [fullname, email])
-    .then(res => res.rows[0].exists);
+    .then((res) => res.rows[0].exists);
 
 module.exports = userCheckExists;

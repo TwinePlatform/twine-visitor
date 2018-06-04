@@ -9,7 +9,7 @@ router.post('/', (req, res, next) => {
       orderBy: req.body.orderBy,
     }
   )
-    .then(users => res.send({ users }))
+    .then((users) => res.send({ users }))
     .catch(next);
 });
 

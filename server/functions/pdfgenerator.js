@@ -3,7 +3,7 @@ const axios = require('axios');
 const path = require('path');
 
 const encode64 = async (url) => {
-  const isJpeg = [".jpg", ".jpeg"].some(s => url.endsWith(s));
+  const isJpeg = ['.jpg', '.jpeg'].some((s) => url.endsWith(s));
   const pngUrl = isJpeg ? url.replace(/\.(jpg|jpeg)$/, '.png') : url;
   const result = await axios.get(pngUrl, { responseType: 'arraybuffer' });
   return Buffer.from(result.data, 'binary').toString('base64');
@@ -55,7 +55,7 @@ const getPdf = (
 
   const chunks = [];
 
-  doc.on('data', chunk => {
+  doc.on('data', (chunk) => {
     chunks.push(chunk);
   });
 
@@ -71,7 +71,7 @@ module.exports = (QRcodeBase64Url, image) =>
   new Promise((resolve, reject) => {
     if (image) {
       encode64(image)
-        .then(encodedImage => {
+        .then((encodedImage) => {
           const columns = [
             {
               image: `data:image/png;base64,${encodedImage}`,

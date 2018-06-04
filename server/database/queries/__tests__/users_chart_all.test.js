@@ -6,11 +6,11 @@ const genderNumbers = require('../users_chart_all');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('DB Query | users_chart_all', async tape => {
+test('DB Query | users_chart_all', async (tape) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  tape.test('users_chart_all | existing cb', async t => {
+  tape.test('users_chart_all | existing cb', async (t) => {
     try {
       await refreshDB();
 
@@ -145,7 +145,7 @@ test('DB Query | users_chart_all', async tape => {
     }
   });
 
-  tape.test('users_chart_all | non-existing cb', async t => {
+  tape.test('users_chart_all | non-existing cb', async (t) => {
     try {
       await refreshDB();
 
@@ -163,7 +163,7 @@ test('DB Query | users_chart_all', async tape => {
     }
   });
 
-  tape.test('users_chart_all | no cb arg', async t => {
+  tape.test('users_chart_all | no cb arg', async (t) => {
     try {
       await refreshDB();
       await genderNumbers(client);
@@ -176,5 +176,5 @@ test('DB Query | users_chart_all', async tape => {
     }
   });
 
-  tape.test('users_chart_all | Teardown', t => client.end(t.end));
+  tape.test('users_chart_all | Teardown', (t) => client.end(t.end));
 });

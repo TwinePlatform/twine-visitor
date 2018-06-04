@@ -2,11 +2,11 @@ const moment = require('moment');
 const { assoc, curry, reduce, keys } = require('ramda');
 
 // ageString :: String -> [ Int ]
-const ageRange = ageString =>
+const ageRange = (ageString) =>
   ageString
     .replace('+', '')
     .split('-')
-    .map(x => moment().year() - x)
+    .map((x) => moment().year() - x)
     .reverse();
 
 // renameKeys :: {a: b} -> {a: *} -> {b: *}

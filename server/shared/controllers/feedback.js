@@ -40,7 +40,7 @@ router.get(
 
     cbAdmin
       .getFeedback(pgPool, dbQuery)
-      .then(data => res.send({ result: data }))
+      .then((data) => res.send({ result: data }))
       .catch(next);
   }
 );
@@ -51,7 +51,7 @@ router.post('/', mwIsAuthenticated, validate(postSchema), (req, res, next) => {
 
   cbAdmin
     .insertFeedback(pgPool, { cbId: req.auth.cb_id, feedbackScore })
-    .then(data => res.send({ result: data }))
+    .then((data) => res.send({ result: data }))
     .catch(next);
 });
 

@@ -6,11 +6,11 @@ const putUserData = require('../user_register');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('DB Query | user_register', async tape => {
+test('DB Query | user_register', async (tape) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  tape.test('user_register | adds complete user data', async t => {
+  tape.test('user_register | adds complete user data', async (t) => {
     try {
       await refreshDB();
 
@@ -38,7 +38,7 @@ test('DB Query | user_register', async tape => {
     }
   });
 
-  tape.test('user_register | fails on incomplete data', async t => {
+  tape.test('user_register | fails on incomplete data', async (t) => {
     try {
       await refreshDB();
 
@@ -56,5 +56,5 @@ test('DB Query | user_register', async tape => {
     }
   });
 
-  tape.test('user_register | Teardown', t => client.end(t.end));
+  tape.test('user_register | Teardown', (t) => client.end(t.end));
 });

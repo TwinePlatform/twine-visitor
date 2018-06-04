@@ -13,8 +13,8 @@ router.post('/', (req, res, next) => {
 
   getHash(pgClient, hashToCheck)
     .then(
-      fullname => res.send(fullname),
-      err => next(Boom.unauthorized(err.message))
+      (fullname) => res.send(fullname),
+      (err) => next(Boom.unauthorized(err.message))
     )
     .catch(next);
 });

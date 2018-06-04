@@ -12,14 +12,14 @@ morgan.token('cb-name', pathOr(null, ['auth', 'cb_name']));
 morgan.token('req-body', tokenizeRequestBody);
 
 const getColor = (status) =>
-  status >= 500         // eslint-disable-line no-nested-ternary
+  (status >= 500 // eslint-disable-line no-nested-ternary
     ? 'red'
-    : status >= 400     // eslint-disable-line no-nested-ternary
+    : status >= 400 // eslint-disable-line no-nested-ternary
       ? 'yellow'
-      : status >= 300   // eslint-disable-line no-nested-ternary
+      : status >= 300 // eslint-disable-line no-nested-ternary
         ? 'cyan'
-        : 'green'
-;
+        : 'green')
+  ;
 
 
 module.exports = morgan(

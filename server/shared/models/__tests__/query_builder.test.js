@@ -1,7 +1,7 @@
 const test = require('tape');
 const { selectQuery, insertQuery, updateQuery } = require('../query_builder');
 
-test('Query Builder', suite => {
+test('Query Builder', (suite) => {
   [
     {
       name: 'two columns, no options',
@@ -114,7 +114,7 @@ test('Query Builder', suite => {
       },
     },
   ].forEach(({ name, table, columns, options, expected }) => {
-    suite.test(`selectQuery | ${name}`, t => {
+    suite.test(`selectQuery | ${name}`, (t) => {
       const args = [table, columns].concat(options || {});
       const query = selectQuery(...args);
 
@@ -145,7 +145,7 @@ test('Query Builder', suite => {
       },
     },
   ].forEach(({ name, table, values, returning, expected }) => {
-    suite.test(`insertQuery | ${name}`, t => {
+    suite.test(`insertQuery | ${name}`, (t) => {
       const args = [table, values].concat(returning || []);
       const query = insertQuery(...args);
 
@@ -186,7 +186,7 @@ test('Query Builder', suite => {
       },
     },
   ].forEach(({ name, table, values, options, expected }) => {
-    suite.test(`updateQuery | ${name}`, t => {
+    suite.test(`updateQuery | ${name}`, (t) => {
       const args = [table, values].concat(options || {});
       const query = updateQuery(...args);
 

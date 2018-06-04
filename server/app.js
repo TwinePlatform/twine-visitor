@@ -27,7 +27,7 @@ module.exports = (cfg) => {
 
   if (cfg.env === PRODUCTION) {
     app.use(enforce.HTTPS({ trustProtoHeader: true }));
-  };
+  }
   app.use(favicon(path.join(cfg.root, 'client', 'public', 'favicon.ico')));
   app.use(logger);
   app.use(bodyParser.json());

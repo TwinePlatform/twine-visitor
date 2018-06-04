@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', (req, res, next) => {
   getGenderNumbers(req.app.get('client:psql'), req.auth.cb_id)
-    .then(numbers => res.send({ result: numbers }))
+    .then((numbers) => res.send({ result: numbers }))
     .catch(next);
 });
 

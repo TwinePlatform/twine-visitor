@@ -12,7 +12,7 @@ const isAuthenticated = (req, res, next) => {
     }
 
     cbFromEmail(pgClient, payload.email)
-      .then(cb => {
+      .then((cb) => {
         req.auth = req.auth || {};
         req.auth.cb_email = payload.email;
         req.auth.cb_id = cb.id;

@@ -6,11 +6,11 @@ const getUserDetails = require('../user_details');
 
 const config = getConfig(process.env.NODE_ENV);
 
-test('DB Query | user_details', async tape => {
+test('DB Query | user_details', async (tape) => {
   const client = new pg.Client(config.psql);
   await client.connect();
 
-  tape.test('user_details | existing user', async t => {
+  tape.test('user_details | existing user', async (t) => {
     try {
       await refreshDB();
 
@@ -42,7 +42,7 @@ test('DB Query | user_details', async tape => {
     }
   });
 
-  tape.test('user_details | non-existing user', async t => {
+  tape.test('user_details | non-existing user', async (t) => {
     try {
       await refreshDB();
 
@@ -61,5 +61,5 @@ test('DB Query | user_details', async tape => {
     }
   });
 
-  tape.test('user_details | Teardown', t => client.end(t.end));
+  tape.test('user_details | Teardown', (t) => client.end(t.end));
 });
