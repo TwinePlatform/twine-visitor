@@ -7,6 +7,10 @@
       "error",
       "always"
     ],
+    "brace-style": [
+      "error",
+      "1tbs"
+    ],
     "padded-blocks": "off",
     "comma-dangle": [
       "error",
