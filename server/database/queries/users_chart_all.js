@@ -29,7 +29,9 @@ const getVisitorsByAge = `WITH groupage AS (SELECT CASE
   GROUP BY ageGroups`;
 
 const genderNumbers = (dbConnection, cbId) => {
-  if (!cbId) { return Promise.reject(new Error('No Community Business ID supplied')); }
+  if (!cbId) {
+    return Promise.reject(new Error('No Community Business ID supplied'));
+  }
 
   return Promise.all([
     dbConnection.query(getVisitsNumbersQuery, [cbId]),

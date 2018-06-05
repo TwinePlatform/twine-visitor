@@ -18,7 +18,7 @@ const FlexItem = styled.div`
   flex: ${props => props.flex || '1'};
 `;
 
-const ButtonOne = styled(DotButton) `
+const ButtonOne = styled(DotButton)`
   width: 14em;
   height: 12em;
 `;

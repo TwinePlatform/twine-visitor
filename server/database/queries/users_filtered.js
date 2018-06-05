@@ -167,7 +167,9 @@ const getUsersFilteredBy = (
   cb_id,
   { filterBy = [], orderBy = '' } = {}
 ) => {
-  if (!cb_id) { return Promise.reject(new Error('No Community Business ID supplied')); }
+  if (!cb_id) {
+    return Promise.reject(new Error('No Community Business ID supplied'));
+  }
   const [filterQueries, values] = combineQueries(filterBy);
   const combinedValues = [cb_id, ...values];
 
