@@ -9,20 +9,20 @@ Current status of backups
 ```
 heroku pg:backups --app [app-name]
 ```
-❗️ If any any point the heroku is upgraded from hobby to production tier, backups will need to be rescheduled.
+❗️ If at any point heroku is upgraded from hobby to production tier, backups will need to be rescheduled.
 
 Change backup schedule
 ```
 heroku pg:backups:schedule DATABASE_URL --at '[time] [TZ format]' --app [app-name]
 ```
 ## Local Test Restore
-A test restore can either be done locally or on a staging pipeline to check the integrety of the backup. _Be careful not to restore to the production database as it will be wiped during the process_ 😨.
+A test restore can either be done locally or on a staging pipeline to check the integrety of the backup. Be careful not to restore to the production database as it will be wiped during the process 😨.
 
 Download backup
 ```
 heroku pg:backups:download [backup-name] --app [app-name]
 ```
-_NB: this will download the backup to your current directory. If a `lastest.dump` file already exists, it will append a sequential version number eg `latest.dump.5`_
+_NB:_ this will download the backup to your current directory. If a `lastest.dump` file already exists, it will append a sequential version number eg `latest.dump.5`
 
 Create a local database
 ```
