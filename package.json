@@ -22,7 +22,8 @@
     "psql.empty": "node ./db/scripts/index.js empty",
     "psql.populate": "node ./db/scripts/index.js populate",
     "psql.migrate": "node ./db/scripts/index.js migrate",
-    "psql.refresh": "node ./db/scripts/index.js refresh"
+    "psql.refresh": "node ./db/scripts/index.js refresh",
+    "reporting": "node ./reporting/index.js"
   },
   "repository": {
     "type": "git",
