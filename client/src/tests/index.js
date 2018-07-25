@@ -1,3 +1,3 @@
-import renderWithRouter from './render_with_router'
+import renderWithRouter from './render_with_router';
 
-export { renderWithRouter }
+export default renderWithRouter;

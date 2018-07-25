@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { render } from 'react-testing-library';
+import { render } from 'react-testing-library'; /*eslint-disable-line */
 
 export default ({
   route = '/',
@@ -9,14 +9,14 @@ export default ({
   ...props
 } = {}) => (Component) => {
   const componentWithRouter =
-    <Router history={history}>
+    (<Router history={history}>
       <Component history={history} {...props} />
-    </Router>
+    </Router>);
   return {
     ...render(componentWithRouter),
     // adding `history` to the returned utilities to allow us
     // to reference it in our tests (just try to avoid using
     // this to test implementation details).
     history,
-  }
-}
+  };
+};
