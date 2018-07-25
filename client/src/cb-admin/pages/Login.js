@@ -9,20 +9,19 @@ import LabelledInput from '../../shared/components/form/LabelledInput';
 import { fonts } from '../../shared/style_guide';
 
 
-const SubmitButton = styled(PrimaryButton) `
+const SubmitButton = styled(PrimaryButton)`
   height: 4em;
   width: 90%;
 `;
 
-const CenteredParagraph = styled(Paragraph) `
+const CenteredParagraph = styled(Paragraph)`
   text-align: center;
   margin: 2em 0;
 `;
 
-const LightLink = styled(Link) `
+const LightLink = styled(Link)`
   font-weight: ${fonts.weight.base};
 `;
-
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -40,11 +39,12 @@ export default class Login extends React.Component {
 
     CbAdmin.login({ email: this.state.email, password: this.state.password })
       .then((res) => {
-        localStorage.setItem('token', res.data.result.token);
+        if (process.env.NODE_ENV !== 'test') localStorage.setItem('token', res.data.result.token);
         this.props.setLoggedIn();
         this.props.history.push('/');
       })
       .catch((error) => {
+
         if (ErrorUtils.errorStatusEquals(error, 400)) {
           this.setState({ errors: ErrorUtils.getValidationErrors(error) });
 
@@ -52,7 +52,7 @@ export default class Login extends React.Component {
           this.setState({ errors: { email: error.response.data.error } });
 
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
+          this.props.history.push('/internalServerError');
 
         } else if (ErrorUtils.errorStatusEquals(error, 404)) {
           this.props.history.push('/error/404');
