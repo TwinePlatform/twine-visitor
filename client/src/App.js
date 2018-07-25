@@ -56,73 +56,149 @@ class App extends Component {
     });
 
   render() {
-    const { loggedIn, adminToken } = this.state
+    const { loggedIn, adminToken } = this.state;
     return (
       <Dots>
         <Container>
           <Switch>
-            <PrivateRoute auth={loggedIn} updateLoggedIn={this.updateLoggedIn}
-              exact path="/" component={HomePage} />
+            <PrivateRoute
+              auth={loggedIn}
+              updateLoggedIn={this.updateLoggedIn}
+              exact
+              path="/"
+              component={HomePage}
+            />
 
             <Route exact path="/cb/register" component={CbSignupPage} />
             <Route exact path="/cb/password/reset/:token" component={ResetPassword} />
             <Route exact path="/cb/password/forgot" component={ForgotPassword} />
-            <Route exact path="/cb/login" render={props => (loggedIn
-              ? (<Redirect to="/" />)
-              : (<Login setLoggedIn={this.updateLoggedIn} {...props} />)
-            )}
+            <Route
+              exact
+              path="/cb/login"
+              render={props => (loggedIn
+                ? (<Redirect to="/" />)
+                : (<Login setLoggedIn={this.updateLoggedIn} {...props} />)
+              )}
             />
 
-            <PrivateRoute auth={loggedIn}
-              exact path="/visitor" component={HomeVisitor} />
+            <PrivateRoute
+              auth={loggedIn}
+              exact
+              path="/visitor"
+              component={HomeVisitor}
+            />
 
-            <PrivateRoute auth={loggedIn}
-              exact path="/thankyou" component={redirectAfterTimeout('/visitor', 5000)(ThankYouFeedback)} />
+            <PrivateRoute
+              auth={loggedIn}
+              exact
+              path="/thankyou"
+              component={redirectAfterTimeout('/visitor', 5000)(ThankYouFeedback)}
+            />
 
-            <PrivateRoute auth={loggedIn}
-              exact path="/visitor/signup" component={Main} />
+            <PrivateRoute
+              auth={loggedIn}
+              exact
+              path="/visitor/signup"
+              component={Main}
+            />
 
-            <PrivateRoute auth={loggedIn}
-              exact path="/visitor/signup/*" component={Main} />
+            <PrivateRoute
+              auth={loggedIn}
+              exact
+              path="/visitor/signup/*"
+              component={Main}
+            />
 
-            <PrivateRoute auth={loggedIn}
-              exact path="/visitor/login" component={QRCode} />
+            <PrivateRoute
+              auth={loggedIn}
+              exact
+              path="/visitor/login"
+              component={QRCode}
+            />
 
-            <PrivateRoute auth={loggedIn}
-              exact path="/visitor/qrerror" component={QrError} />
+            <PrivateRoute
+              auth={loggedIn}
+              exact
+              path="/visitor/qrerror"
+              component={QrError}
+            />
 
-            <PrivateRoute auth={loggedIn}
-              exact path="/visitor/end" component={redirectAfterTimeout('/visitor', 5000)(Thanks)} />
+            <PrivateRoute
+              auth={loggedIn}
+              exact
+              path="/visitor/end"
+              component={redirectAfterTimeout('/visitor', 5000)(Thanks)}
+            />
 
-            <PrivateRoute auth={loggedIn} updateAdminToken={this.updateAdminToken}
-              exact path="/admin/login" component={ConfirmPassword} />
+            <PrivateRoute
+              auth={loggedIn}
+              updateAdminToken={this.updateAdminToken}
+              exact
+              path="/admin/login"
+              component={ConfirmPassword}
+            />
 
             <AdminRoute
-              auth={adminToken} updateAdminToken={this.updateAdminToken} updateLoggedIn={this.updateLoggedIn}
-              exact path="/admin" component={CbAdminDashboard} />
-
-            <AdminRoute auth={adminToken} updateAdminToken={this.updateAdminToken}
-              exact path="/cb/activities" component={CbAdminActivitiesPage} />
-
-            <AdminRoute
-              auth={adminToken} updateAdminToken={this.updateAdminToken} updateLoggedIn={this.updateLoggedIn}
-              exact path="/cb/visitors" component={CbAdminVisitorDetailsPage} />
+              auth={adminToken}
+              updateAdminToken={this.updateAdminToken}
+              updateLoggedIn={this.updateLoggedIn}
+              exact
+              path="/admin"
+              component={CbAdminDashboard}
+            />
 
             <AdminRoute
-              auth={adminToken} updateAdminToken={this.updateAdminToken} updateLoggedIn={this.updateLoggedIn}
-              exact path="/cb/visits" component={CbAdminVisitsDataPage} />
+              auth={adminToken}
+              updateAdminToken={this.updateAdminToken}
+              exact
+              path="/cb/activities"
+              component={CbAdminActivitiesPage}
+            />
 
             <AdminRoute
-              auth={adminToken} updateAdminToken={this.updateAdminToken} updateLoggedIn={this.updateLoggedIn}
-              exact path="/cb/visitors/:id" component={CbAdminVisitorPage} />
+              auth={adminToken}
+              updateAdminToken={this.updateAdminToken}
+              updateLoggedIn={this.updateLoggedIn}
+              exact
+              path="/cb/visitors"
+              component={CbAdminVisitorDetailsPage}
+            />
 
             <AdminRoute
-              auth={adminToken} updateAdminToken={this.updateAdminToken} updateLoggedIn={this.updateLoggedIn}
-              exact path="/cb/settings" component={CbAdminSettingsPage} />
+              auth={adminToken}
+              updateAdminToken={this.updateAdminToken}
+              updateLoggedIn={this.updateLoggedIn}
+              exact
+              path="/cb/visits"
+              component={CbAdminVisitsDataPage}
+            />
 
             <AdminRoute
-              auth={adminToken} updateAdminToken={this.updateAdminToken} updateLoggedIn={this.updateLoggedIn}
-              exact path="/cb/feedback" component={adminLoginCheck(CbAdminFeedbackPage)} />
+              auth={adminToken}
+              updateAdminToken={this.updateAdminToken}
+              updateLoggedIn={this.updateLoggedIn}
+              exact
+              path="/cb/visitors/:id"
+              component={CbAdminVisitorPage}
+            />
+
+            <AdminRoute
+              auth={adminToken}
+              updateAdminToken={this.updateAdminToken}
+              updateLoggedIn={this.updateLoggedIn}
+              exact
+              path="/cb/settings"
+              component={CbAdminSettingsPage}
+            />
+
+            <AdminRoute
+              auth={adminToken}
+              updateAdminToken={this.updateAdminToken}
+              updateLoggedIn={this.updateLoggedIn}
+              exact
+              path="/cb/feedback"
+              component={adminLoginCheck(CbAdminFeedbackPage)}
+            />
 
             <Route exact path="/internalServerError" component={InternalServerError} />
             <Route exact path="/error/404" component={NotFound} />
