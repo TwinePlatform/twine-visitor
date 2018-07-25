@@ -55,7 +55,7 @@ export const Option = styled.option`
 `;
 
 export const Label = styled.label`
-  display: block;
+  display: ${props => (props.display || 'block')};
   width: 100%;
   margin-bottom: 0.2em;
   color: ${colors.dark};
