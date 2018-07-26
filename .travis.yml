@@ -28,8 +28,9 @@ script:
   - npm run build.client
   - npm run cover
   - npm run cover.report.ci
-  - codecov
   - npm run test:client
+  - npm run cover:client
+  - codecov
 
 notifications:
   email:
