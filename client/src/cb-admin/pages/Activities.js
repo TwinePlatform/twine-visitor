@@ -166,7 +166,7 @@ export default class ActivitiesPage extends React.Component {
         this.setState(assocPath(['errors', 'view'], false));
       },
 
-    )
+      )
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
           this.props.history.push('/admin/login');
@@ -197,7 +197,7 @@ export default class ActivitiesPage extends React.Component {
         }
       },
 
-    );
+      );
   }
 
   render() {

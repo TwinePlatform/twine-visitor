@@ -20,7 +20,7 @@ const LabelledInput = (props) => {
   return (
     <div>
       <div>
-        <Label htmlFor={id} display='inline'>
+        <Label htmlFor={id} display="inline">
           {[
             label,
             error ? ': ' : '',
