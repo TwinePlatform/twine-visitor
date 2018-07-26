@@ -39,7 +39,7 @@ export default class Login extends React.Component {
 
     CbAdmin.login({ email: this.state.email, password: this.state.password })
       .then((res) => {
-        if (process.env.NODE_ENV !== 'test') localStorage.setItem('token', res.data.result.token);
+        if (process && process.env.NODE_ENV !== 'test') localStorage.setItem('token', res.data.result.token);
         this.props.setLoggedIn();
         this.props.history.push('/');
       })
