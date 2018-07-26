@@ -19,11 +19,11 @@ describe('Login Component', () => {
       .reply(401, { result: null, error: 'Credentials not recognised' });
 
     const { getByText, getByLabelText } = renderWithRouter({ setLoggedIn: () => { } })(Login);
-    const email = getByLabelText('Email')
-    const password = getByLabelText('Password')
+    const email = getByLabelText('Email');
+    const password = getByLabelText('Password');
     const submit = getByText('LOGIN');
     email.value = '123@hi.com';
-    password.value = 'lolLOL123'
+    password.value = 'lolLOL123';
     fireEvent.change(email);
     fireEvent.change(password);
     fireEvent.click(submit);
@@ -40,11 +40,11 @@ describe('Login Component', () => {
     const { getByText, history, getByLabelText } =
       renderWithRouter({ setLoggedIn: () => { }, route: '/cb/login' })(Login);
 
-    const email = getByLabelText('Email')
-    const password = getByLabelText('Password')
+    const email = getByLabelText('Email');
+    const password = getByLabelText('Password');
     const submit = getByText('LOGIN');
     email.value = 'findmyfroggy@frogfinders.com';
-    password.value = 'Funnyfingers11!'
+    password.value = 'Funnyfingers11!';
     fireEvent.change(email);
     fireEvent.change(password);
     fireEvent.click(submit);

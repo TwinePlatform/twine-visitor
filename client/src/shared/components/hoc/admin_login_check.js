@@ -58,8 +58,8 @@ const adminLoginCheck = (Child) => {
       return this.state.auth === requestStates.SUCCESS ? (
         <Child removeAdmin={this.removeAdmin} {...this.props} />
       ) : (
-          <div> CHECKING ADMIN... </div>
-        );
+        <div> CHECKING ADMIN... </div>
+      );
     }
   }
 
