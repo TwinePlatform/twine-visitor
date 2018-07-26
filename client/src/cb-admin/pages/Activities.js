@@ -121,7 +121,7 @@ export default class ActivitiesPage extends React.Component {
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
         } else {
-          this.setState({ errors: { general: 'Could not update activity', view: true } });
+          this.setState({ errors: { general: 'Could not get activity data', view: true } });
         }
       });
   }
@@ -195,9 +195,7 @@ export default class ActivitiesPage extends React.Component {
         } else {
           this.setState({ errors: { general: 'Could not delete activity' }, view: true });
         }
-      },
-
-      );
+      });
   }
 
   render() {
@@ -269,6 +267,7 @@ export default class ActivitiesPage extends React.Component {
                                   <Checkbox
                                     id={`${activity.id}-${k}`}
                                     name={`${activity.id}-${k}`}
+                                    alt={`${activity.name} ${k} update button`}
                                     checked={activity[k]}
                                     onChange={() => this.toggleCheckbox(activity.id, k)}
                                   />
