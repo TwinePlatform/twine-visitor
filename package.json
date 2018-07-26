@@ -14,6 +14,7 @@
     "test:client": "cd client && CI=true npm t",
     "start.client": "cd client && npm run start",
     "cover": "nyc npm test",
+    "cover:client": "cd client && CI=true npm t -- --coverage",
     "cover.report": "nyc report --reporter=html",
     "cover.report.ci": "nyc report --reporter=text-lcov > coverage.lcov",
     "lint": "eslint .",
