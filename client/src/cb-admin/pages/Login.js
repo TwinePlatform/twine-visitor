@@ -44,7 +44,6 @@ export default class Login extends React.Component {
         this.props.history.push('/');
       })
       .catch((error) => {
-
         if (ErrorUtils.errorStatusEquals(error, 400)) {
           this.setState({ errors: ErrorUtils.getValidationErrors(error) });
 
@@ -52,7 +51,7 @@ export default class Login extends React.Component {
           this.setState({ errors: { email: error.response.data.error } });
 
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/internalServerError');
+          this.props.history.push('/error/500');
 
         } else if (ErrorUtils.errorStatusEquals(error, 404)) {
           this.props.history.push('/error/404');
