@@ -10,7 +10,7 @@ import { colors } from '../../style_guide';
 
 const ErrorText = styled.span`
   color: ${colors.error};
-  display: inline;
+  display: ${props => (props.show ? 'inline' : 'none')};
 `;
 
 
@@ -19,13 +19,15 @@ const LabelledInput = (props) => {
 
   return (
     <div>
-      <Label htmlFor={id} display={'inline'}>
-        {[
-          label,
-          error ? ': ' : '',
-        ]}
-      </Label>
-      <ErrorText key={1} show={error} data-testid="error">{error}</ErrorText>
+      <div>
+        <Label htmlFor={id} display='inline'>
+          {[
+            label,
+            error ? ': ' : '',
+          ]}
+        </Label>
+        <ErrorText key={1} show={error}>{error}</ErrorText>
+      </div>
       <Input id={id} {...rest} />
     </div>
   );
