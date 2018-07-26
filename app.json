@@ -1,0 +1,31 @@
+{
+  "name": "twine-visitor",
+  "scripts": {},
+  "env": {
+    "CB_ADMIN_JWT_SECRET": {
+      "required": true
+    },
+    "HMAC_SECRET": {
+      "required": true
+    },
+    "POSTMARK_KEY_PROD": {
+      "required": true
+    },
+    "STANDARD_JWT_SECRET": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
