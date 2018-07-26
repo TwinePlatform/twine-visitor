@@ -20,6 +20,8 @@ describe('Login Component', () => {
   afterEach(cleanup);
 
   test(':: incorrect user details returns 401 and displays error message', async () => {
+    expect.assertions(1);
+
     mock.onPost('/api/cb/login')
       .reply(401, { result: null, error: 'Credentials not recognised' });
 
@@ -38,6 +40,8 @@ describe('Login Component', () => {
   });
 
   test(':: correct user details returns 200 and redirects to homepage', async () => {
+    expect.assertions(1);
+
     mock.onPost('/api/cb/login')
       .reply(200, {});
 
@@ -53,9 +57,7 @@ describe('Login Component', () => {
     fireEvent.change(password);
     fireEvent.click(submit);
 
-    await wait(() => {
-      expect(history.location.pathname).toEqual('/');
-    });
+    await wait(() => expect(history.location.pathname).toEqual('/'));
   });
 });
 
