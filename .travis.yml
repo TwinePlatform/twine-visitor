@@ -29,6 +29,7 @@ script:
   - npm run cover
   - npm run cover.report.ci
   - codecov
+  - npm run test:client
 
 notifications:
   email:
