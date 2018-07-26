@@ -38,7 +38,7 @@ const adminLoginCheck = (Child) => {
           if (error.message === 'REQUEST_CANCELLED') return;
 
           if (error.message === 500) {
-            this.props.history.push('/internalServerError');
+            this.props.history.push('/error/500');
           } else if (error.message === 'No admin token') {
             this.props.history.push('/admin/login');
           } else {
@@ -58,8 +58,8 @@ const adminLoginCheck = (Child) => {
       return this.state.auth === requestStates.SUCCESS ? (
         <Child removeAdmin={this.removeAdmin} {...this.props} />
       ) : (
-        <div> CHECKING ADMIN... </div>
-      );
+          <div> CHECKING ADMIN... </div>
+        );
     }
   }
 

@@ -125,7 +125,7 @@ export default class SettingsPage extends React.Component {
       })
       .catch((error) => {
         if (error.status === 500) {
-          this.props.history.push('/internalServerError');
+          this.props.history.push('/error/500');
         } else if (error.message === 'No admin token') {
           this.props.history.push('/admin/login');
         } else {
