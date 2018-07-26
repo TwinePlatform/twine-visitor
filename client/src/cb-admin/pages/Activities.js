@@ -119,7 +119,7 @@ export default class ActivitiesPage extends React.Component {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
           this.props.history.push('/admin/login');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/internalServerError');
+          this.props.history.push('/error/500');
         } else {
           this.setState({ errors: { general: 'Could not update activity', view: true } });
         }
@@ -166,7 +166,7 @@ export default class ActivitiesPage extends React.Component {
         this.setState(assocPath(['errors', 'view'], false));
       },
 
-      )
+    )
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
           this.props.history.push('/admin/login');
@@ -197,7 +197,7 @@ export default class ActivitiesPage extends React.Component {
         }
       },
 
-      );
+    );
   }
 
   render() {
