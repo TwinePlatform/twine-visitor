@@ -29,19 +29,21 @@ const Input = styled.input``;
 const Label = styled.label``;
 
 
-const Checkbox = ({ id, onChange, ...props }) => (
+const Checkbox = ({ id, alt, onChange, ...props }) => (
   <Control>
-    <Input id={id} type="checkbox" onChange={onChange} {...props} />
+    <Input id={id} type="checkbox" alt={alt} onChange={onChange} {...props} />
     <Label htmlFor={id} />
   </Control>
 );
 
 Checkbox.propTypes = {
   id: PropTypes.string.isRequired,
+  alt: PropTypes.string,
   onChange: PropTypes.func,
 };
 
 Checkbox.defaultProps = {
+  alt: '',
   onChange: () => {},
 };
 
