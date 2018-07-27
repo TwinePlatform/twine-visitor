@@ -1,5 +1,6 @@
 const test = require('tape');
 const Joi = require('joi');
+const { omit } = require('ramda');
 const { validate, validationError } = require('../validation');
 const { getConfig } = require('../../../../config');
 
@@ -185,7 +186,7 @@ test('Validation Middleware', (tape) => {
           payload,
           {
             result: null,
-            error,
+            error: omit(['details', '_object'], error),
             validation: { foo: ['foo', 'boo'], bar: ['bar'] },
           },
           'Send validation errors back in payload'
