@@ -2,7 +2,7 @@
  * Validation related middlewares
  */
 const Joi = require('joi');
-const { pick } = require('ramda');
+const { pick, omit } = require('ramda');
 const { TESTING } = require('../../../config');
 
 /**
@@ -81,7 +81,7 @@ exports.validationError = (error, req, res, next) => {
 
   return res.status(400).send({
     result: null,
-    error,
+    error: omit(['details', '_object'], error),
     validation,
   });
 };
