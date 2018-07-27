@@ -11,10 +11,15 @@ import Login from '../Login';
 
 
 describe('Login Component', () => {
+  let mock;
+
+  beforeAll(() => {
+    mock = new MockAdapter(axios);
+  });
+
   afterEach(cleanup);
 
   test(':: incorrect user details returns 401 and displays error message', async () => {
-    const mock = new MockAdapter(axios);
     mock.onPost('/api/cb/login')
       .reply(401, { result: null, error: 'Credentials not recognised' });
 
@@ -33,7 +38,6 @@ describe('Login Component', () => {
   });
 
   test(':: correct user details returns 200 and redirects to homepage', async () => {
-    const mock = new MockAdapter(axios);
     mock.onPost('/api/cb/login')
       .reply(200, {});
 
