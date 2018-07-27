@@ -81,7 +81,7 @@ const lastCallStates = {
   DATERANGEPICKER: 'DATERANGEPICKER',
 };
 
-export default class FeedbackPage extends Component {
+export default class Feedback extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -185,7 +185,7 @@ export default class FeedbackPage extends Component {
   }
 }
 
-FeedbackPage.propTypes = {
+Feedback.propTypes = {
   auth: PropTypes.string.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };
