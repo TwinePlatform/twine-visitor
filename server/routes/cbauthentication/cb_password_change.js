@@ -15,12 +15,13 @@ const schemas = {
     password: Joi.string()
       .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, 'strong_pwd')
       .required()
-      .options({ language: { string: { regex: { base: 'is too weak' } } } }),
+      .options({ language: { string: { regex: { name: 'is too weak' } } } }),
 
     passwordConfirm: Joi.string()
       .only(Joi.ref('password'))
       .required()
-      .options({ language: { string: { allowOnly: 'must match password' } } }),
+      .options({ language: {
+        any: { allowOnly: 'must match password' } } }),
   },
 };
 
