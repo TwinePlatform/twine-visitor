@@ -51,8 +51,7 @@ export default class Dashboard extends React.Component {
   componentDidMount() {
     CbAdmin.get(this.props.auth)
       .then(res => this.setState({ orgName: res.data.result.org_name }))
-      .catch((error) => {
-        console.log(error); // eslint-disable-line
+      .catch(() => {
         this.props.history.push('/cb/login');
       });
   }
