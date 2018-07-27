@@ -27,7 +27,7 @@ import ConfirmPassword from './cb-admin/pages/ConfirmPassword';
 import ForgotPassword from './cb-admin/pages/ForgotPassword';
 import ResetPassword from './cb-admin/pages/ResetPassword';
 import CbAdminDashboard from './cb-admin/pages/Dashboard';
-import CbAdminFeedbackPage from './cb-admin/pages/FeedbackPage';
+import CbAdminFeedback from './cb-admin/pages/Feedback';
 import CbAdminSettingsPage from './cb-admin/pages/Settings';
 import CbAdminVisitorPage from './cb-admin/pages/Visitor';
 import CbAdminVisitorDetailsPage from './cb-admin/pages/VisitorDetails';
@@ -197,7 +197,7 @@ class App extends Component {
               updateLoggedIn={this.updateLoggedIn}
               exact
               path="/cb/feedback"
-              component={adminLoginCheck(CbAdminFeedbackPage)}
+              component={adminLoginCheck(CbAdminFeedback)}
             />
 
             <Route exact path="/error/404" component={NotFound} />
