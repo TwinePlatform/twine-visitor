@@ -2,16 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { pick, pathOr, equals } from 'ramda';
-import { CbAdmin } from '../../api';
+import { CbAdmin, ErrorUtils } from '../../api';
 import { Heading } from '../../shared/components/text/base';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 
-
 const payloadFromState = pick(['password', 'passwordConfirm']);
 const getErrorStatus = pathOr(null, ['response', 'status']);
-const getValidationErrors = pathOr('Unknown error', ['response', 'data', 'validation']);
 const errorStatusEquals = (error, status) => equals(getErrorStatus(error), status);
 
 
@@ -40,7 +38,7 @@ export default class ResetPassword extends React.Component {
       .then(() => this.props.history.push('/cb/login?ref=pwd_reset'))
       .catch((error) => {
         if (errorStatusEquals(error, 400)) {
-          this.setState({ errors: getValidationErrors(error) });
+          this.setState({ errors: ErrorUtils.getValidationErrors(error) });
 
         } else if (errorStatusEquals(error, 401)) {
           this.setState({ errors: { password: error.response.data.error } });
@@ -82,7 +80,7 @@ export default class ResetPassword extends React.Component {
               error={errors.passwordConfirm}
               required
             />
-            <SubmitButton type="submit">Submit</SubmitButton>
+            <SubmitButton type="submit">SUBMIT</SubmitButton>
           </FormSection>
         </Form>
       </FlexContainerCol>
