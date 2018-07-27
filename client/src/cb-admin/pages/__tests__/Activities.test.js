@@ -15,79 +15,81 @@ import Activities from '../Activities';
 describe('Activities Component', () => {
   let mock;
 
-  beforeAll(() => {
-    mock = new MockAdapter(axios);
-    mock.onGet('/api/activities/all')
-      .reply(200, { result: [
-        { id: 8,
-          name: 'French Lessons',
-          monday: false,
-          tuesday: true,
-          wednesday: true,
-          thursday: true,
-          friday: true,
-          saturday: false,
-          sunday: false,
-        },
-        { id: 7,
-          name: 'Yoga',
-          monday: false,
-          tuesday: false,
-          wednesday: true,
-          thursday: true,
-          friday: true,
-          saturday: false,
-          sunday: false,
-        },
-        { id: 13,
-          name: 'Skating',
+  if (!process.env.LIVE_API) {
+    beforeAll(() => {
+      mock = new MockAdapter(axios);
+      mock.onGet('/api/activities/all')
+        .reply(200, { result: [
+          { id: 8,
+            name: 'French Lessons',
+            monday: false,
+            tuesday: true,
+            wednesday: true,
+            thursday: true,
+            friday: true,
+            saturday: false,
+            sunday: false,
+          },
+          { id: 7,
+            name: 'Yoga',
+            monday: false,
+            tuesday: false,
+            wednesday: true,
+            thursday: true,
+            friday: true,
+            saturday: false,
+            sunday: false,
+          },
+          { id: 13,
+            name: 'Skating',
+            monday: false,
+            tuesday: false,
+            wednesday: false,
+            thursday: true,
+            friday: true,
+            saturday: false,
+            sunday: false,
+          }] },
+        { authorization: 'authstring' });
+
+      mock.onPost('/api/activity/add')
+        .reply(200, { result: {
+          id: 14,
+          name: 'Cycling',
+          cb_id: 4,
+          deleted: false,
           monday: false,
           tuesday: false,
           wednesday: false,
-          thursday: true,
-          friday: true,
+          thursday: false,
+          friday: false,
           saturday: false,
           sunday: false,
-        }] },
-      { authorization: 'authstring' });
-
-    mock.onPost('/api/activity/add')
-      .reply(200, { result: {
-        id: 14,
-        name: 'Cycling',
-        cb_id: 4,
-        deleted: false,
-        monday: false,
-        tuesday: false,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: false,
-        sunday: false,
-        date: '2018-07-27T00:15:16.510Z' } },
-      { authorization: 'authstring' });
-
-    mock.onPost('/api/activity/update')
-      .reply(200,
-        { result: {
-          id: 8,
-          name: 'French Lessons',
-          cb_id: 4,
-          deleted: false,
-          monday: true,
-          tuesday: true,
-          wednesday: true,
-          thursday: true,
-          friday: true,
-          saturday: false,
-          sunday: false,
-          date: '2017-12-22T17:24:57.000Z',
-        } },
+          date: '2018-07-27T00:15:16.510Z' } },
         { authorization: 'authstring' });
 
-    mock.onPost('/api/activity/delete')
-      .reply(200, { result: null }, { authorization: 'authstring' });
-  });
+      mock.onPost('/api/activity/update')
+        .reply(200,
+          { result: {
+            id: 8,
+            name: 'French Lessons',
+            cb_id: 4,
+            deleted: false,
+            monday: true,
+            tuesday: true,
+            wednesday: true,
+            thursday: true,
+            friday: true,
+            saturday: false,
+            sunday: false,
+            date: '2017-12-22T17:24:57.000Z',
+          } },
+          { authorization: 'authstring' });
+
+      mock.onPost('/api/activity/delete')
+        .reply(200, { result: null }, { authorization: 'authstring' });
+    });
+  }
 
   afterEach(cleanup);
 

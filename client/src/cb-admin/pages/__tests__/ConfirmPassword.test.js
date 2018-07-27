@@ -14,17 +14,21 @@ import ConfirmPassword from '../ConfirmPassword';
 describe('ConfirmPassword Component', () => {
   let mock;
 
-  beforeAll(() => {
-    mock = new MockAdapter(axios);
-  });
+  if (!process.env.LIVE_API) {
+    beforeAll(() => {
+      mock = new MockAdapter(axios);
+    });
+  }
 
   afterEach(cleanup);
 
   test(':: incorrect password responds 401 and displays error message', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/admin/login')
-      .reply(401, { result: null, error: 'Incorrect password' }, { authorization: 'authstring' });
+    if (!process.env.LIVE_API) {
+      mock.onPost('/api/admin/login')
+        .reply(401, { result: null, error: 'Incorrect password' }, { authorization: 'authstring' });
+    }
 
     const { getByText, getByLabelText } =
         renderWithRouter({ updateAdminToken: () => { } })(ConfirmPassword);
@@ -41,8 +45,10 @@ describe('ConfirmPassword Component', () => {
   test(':: incorrect password responds 401 and displays error message', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/admin/login')
-      .reply(200, { result: { token: 'authstring' } });
+    if (!process.env.LIVE_API) {
+      mock.onPost('/api/admin/login')
+        .reply(200, { result: { token: 'authstring' } });
+    }
 
     const { getByText, getByLabelText, history } =
         renderWithRouter({ updateAdminToken: () => { } })(ConfirmPassword);
@@ -55,5 +61,4 @@ describe('ConfirmPassword Component', () => {
     await wait(() => history.length === 2);
     expect(history.location.pathname).toEqual('/admin');
   });
-
 });

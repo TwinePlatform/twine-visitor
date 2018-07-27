@@ -13,17 +13,21 @@ import Login from '../Login';
 describe('Login Component', () => {
   let mock;
 
-  beforeAll(() => {
-    mock = new MockAdapter(axios);
-  });
+  if (!process.env.LIVE_API) {
+    beforeAll(() => {
+      mock = new MockAdapter(axios);
+    });
+  }
 
   afterEach(cleanup);
 
   test(':: incorrect user details returns 401 and displays error message', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/cb/login')
-      .reply(401, { result: null, error: 'Credentials not recognised' });
+    if (!process.env.LIVE_API) {
+      mock.onPost('/api/cb/login')
+        .reply(401, { result: null, error: 'Credentials not recognised' });
+    }
 
     const { getByText, getByLabelText } = renderWithRouter({ setLoggedIn: () => { } })(Login);
     const email = getByLabelText('Email');
@@ -42,8 +46,10 @@ describe('Login Component', () => {
   test(':: correct user details returns 200 and redirects to homepage', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/cb/login')
-      .reply(200, {});
+    if (!process.env.LIVE_API) {
+      mock.onPost('/api/cb/login')
+        .reply(200, {});
+    }
 
     const { getByText, history, getByLabelText } =
       renderWithRouter({ setLoggedIn: () => { }, route: '/cb/login' })(Login);
