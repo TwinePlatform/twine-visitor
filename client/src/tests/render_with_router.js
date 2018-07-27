@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { render } from 'react-testing-library'; /*eslint-disable-line */
+import { render } from 'react-testing-library'; //eslint-disable-line
 
 export default ({
   route = '/',
