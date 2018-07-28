@@ -31,7 +31,9 @@ export default class ConfirmPassword extends React.Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-    const stdToken = localStorage.getItem('token');
+    const stdToken = (process && process.env.NODE_ENV !== 'test')
+      ? localStorage.getItem('token')
+      : 'teststring';
 
     CbAdmin.upgradePermissions(stdToken, { password: this.state.password })
       .then(res => res.data)
