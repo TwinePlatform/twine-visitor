@@ -84,7 +84,8 @@ TranslucentTable.propTypes = {
   rows: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
+      data: PropTypes.arrayOf(PropTypes.oneOfType(
+        [PropTypes.string, PropTypes.number, PropTypes.bool])),
     })),
   headAlign: PropTypes.oneOf(['left', 'center', 'right']),
 };
