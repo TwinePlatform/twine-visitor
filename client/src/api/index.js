@@ -171,11 +171,12 @@ export const CbAdmin = {
       { headers: { Authorization: tkn } },
     ),
 
-  create: ({ orgName, category, email, password, passwordConfirm }) =>
+  create: ({ orgName, category, email, password, passwordConfirm, region }) =>
     axios.post('/api/cb/register', {
       orgName,
       email,
       category,
+      region,
       password,
       passwordConfirm,
     }),
