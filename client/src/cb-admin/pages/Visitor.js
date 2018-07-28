@@ -18,8 +18,8 @@ const generateYearsArray = (startYear, currentYear) =>
 
 const years = [{ key: '', value: '' }].concat(
   generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear()).map(y => ({
-    key: y,
-    value: y,
+    key: y.toString(),
+    value: y.toString(),
   })),
 );
 
