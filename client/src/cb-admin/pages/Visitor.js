@@ -10,7 +10,7 @@ import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import DetailsTable from '../components/DetailsTable';
 import QrBox from '../components/QrBox';
-import { CbAdmin, Visitors } from '../../api';
+import { CbAdmin, Visitors, ErrorUtils } from '../../api';
 import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 
 const generateYearsArray = (startYear, currentYear) =>
@@ -129,17 +129,34 @@ export default class VisitorProfile extends React.Component {
         this.updateStateFromApi(res.data.result);
       })
       .catch((error) => {
-        // TODO: Error handling incomplete
-        console.log(error);
-        this.props.history.push('/admin/login');
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
+        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+          this.props.history.push('/error/404');
+        } else {
+          this.props.history.push('/error/unknown');
+        }
       });
 
-    CbAdmin.get(this.props.auth).then(res =>
-      this.setState({
-        cbOrgName: res.data.result.org_name,
-        cbLogoUrl: res.data.result.uploadedfilecloudinaryurl,
-      }),
-    );
+    CbAdmin.get(this.props.auth)
+      .then(res =>
+        this.setState({
+          cbOrgName: res.data.result.org_name,
+          cbLogoUrl: res.data.result.uploadedfilecloudinaryurl,
+        }))
+      .catch((error) => {
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
+        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+          this.props.history.push('/error/404');
+        } else {
+          this.props.history.push('/error/unknown');
+        }
+      });
   }
 
   onClickPrint = () => {
@@ -150,8 +167,15 @@ export default class VisitorProfile extends React.Component {
     Visitors.email(this.props.auth, { id: this.state.id })
       .then(() => this.setState({ hasResent: true }))
       .catch((error) => {
-        // TODO: incomplete error handling
-        console.log(error);
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
+        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+          this.props.history.push('/error/404');
+        } else {
+          this.props.history.push('/error/unknown');
+        }
       });
   };
 
@@ -189,11 +213,9 @@ export default class VisitorProfile extends React.Component {
     return (
       <PrintContainer>
         <PrintHeaderRow>
-          {state.cbLogoUrl ? (
-            <CbLogo src={state.cbLogoUrl} alt="Business logo" />
-          ) : (
-            <CbLogo src={p2cLogo} alt="Power to change logo" />
-          )}
+          {state.cbLogoUrl
+            ? (<CbLogo src={state.cbLogoUrl} alt="Business logo" />)
+            : (<CbLogo src={p2cLogo} alt="Power to change logo" />)}
           <Heading flex={9}>{state.cbOrgName} QR code</Heading>
         </PrintHeaderRow>
         <QrCodePrint src={state.qrCodeUrl} alt="QR code" />
