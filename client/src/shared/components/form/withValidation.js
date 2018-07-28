@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { any, assoc, compose, equals, head, map, pathOr } from 'ramda';
+import { any, compose, equals, head, map, pathOr } from 'ramda';
 import { toCancellable } from '../../../util';
 
 const getErrorStatus = pathOr(null, ['response', 'status']);
@@ -35,16 +35,12 @@ export default (submitHandler, forwarding = {}) => (Child) => {
 
     onSubmit = (e) => {
       e.preventDefault();
-
-      const formData = new FormData(e.target);
-      const data = Array.from(formData.entries())
-        .reduce((acc, [key, value]) => assoc(key, value, acc), {});
-
-      this.submission = toCancellable(submitHandler(data));
+      this.submission = toCancellable(submitHandler(this.state));
 
       this.submission
         .then(() => this.props.history.push(forwarding[200]))
         .catch((error) => {
+
           if (errorStatusIn([400], error)) {
             const errors = pickFirstValidationErrors(error);
             this.setState({ errors });
