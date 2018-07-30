@@ -15,8 +15,8 @@ test('Db Query | twineAdmin ', async (tape) => {
       await refreshDB();
       const actual = await twineAdmin.getAllCbsNames(client);
       const expected = [
-        { org_name: 'Dog & Fish' },
-        { org_name: 'alina industries' },
+        { org_name: 'Umbrella Corporation' },
+        { org_name: 'Wayne Enterprise' },
         { org_name: 'Frog Finders' },
       ];
       t.deepEquals(actual, expected, 'Query returns an array of all cb names');

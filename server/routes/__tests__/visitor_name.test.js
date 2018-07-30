@@ -13,7 +13,7 @@ test('POST /api/user/name-from-scan | viable & registered hash', async (t) => {
   const secret = app.get('cfg').session.standard_jwt_secret;
 
   await refreshDB();
-  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
+  const token = jwt.sign({ email: 'jvalentine@umbrella.corp' }, secret);
 
   const successPayload = {
     hash: '9fb59d630d2fb12f7478c56c5f1b2fff20e0dd7c9d3a260eee7308a8eb6cd955',
@@ -37,7 +37,7 @@ test('POST /api/user/name-from-scan | non-viable hash ', async (t) => {
   const secret = app.get('cfg').session.standard_jwt_secret;
 
   await refreshDB();
-  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
+  const token = jwt.sign({ email: 'jvalentine@umbrella.corp' }, secret);
 
   const failPayload = {
     hash: 'Im fairly sure, though not positive, that this is not a hash',
@@ -61,7 +61,7 @@ test('POST /api/user/name-from-scan | user/hash not registered ', async (t) => {
   const secret = app.get('cfg').session.standard_jwt_secret;
 
   await refreshDB();
-  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
+  const token = jwt.sign({ email: 'jvalentine@umbrella.corp' }, secret);
 
   const failPayload = {
     hash: '5e6188b3f09e0d58acfbe4171284dd10b69ea8a78189f7bb8c7d6fa983557492',

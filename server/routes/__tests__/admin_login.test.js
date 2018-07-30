@@ -11,7 +11,7 @@ test('POST /api/admin/login | password match database hash', (t) => {
   const dbConnection = app.get('client:psql');
   const secret = app.get('cfg').session.standard_jwt_secret;
 
-  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
+  const token = jwt.sign({ email: 'jvalentine@umbrella.corp' }, secret);
 
   const successPayload = {
     password: 'Sallydog7&',
@@ -24,11 +24,12 @@ test('POST /api/admin/login | password match database hash', (t) => {
     .expect(200)
     .expect('Content-Type', /json/)
     .end((err, res) => {
+
       t.notOk(err, err || 'Passes supertest expect criteria');
 
       const tokenPayload = jwt.decode(res.body.result.token);
 
-      t.deepEqual(tokenPayload.email, 'jinglis12@googlemail.com');
+      t.deepEqual(tokenPayload.email, 'jvalentine@umbrella.corp');
       t.equal(tokenPayload.admin, true);
 
       dbConnection.end(t.end);
@@ -40,7 +41,7 @@ test('POST /api/admin/login | no password match for database hash', (t) => {
   const dbConnection = app.get('client:psql');
   const secret = app.get('cfg').session.standard_jwt_secret;
 
-  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
+  const token = jwt.sign({ email: 'jvalentine@umbrella.corp' }, secret);
 
   const failurePayload = {
     password: 'Zenith',
