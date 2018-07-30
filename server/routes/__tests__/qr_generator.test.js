@@ -10,7 +10,7 @@ test('POST /api/qr/generator | Correct payload', (t) => {
   const app = createApp(config);
   const secret = app.get('cfg').session.standard_jwt_secret;
 
-  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
+  const token = jwt.sign({ email: 'jvalentine@umbrella.corp' }, secret);
 
   const payload = {
     formSender: 'Dorothy Vaughan',
@@ -38,7 +38,7 @@ test('POST /api/qr/generator | Missing info in payload', (t) => {
   const app = createApp(config);
   const secret = app.get('cfg').session.standard_jwt_secret;
 
-  const token = jwt.sign({ email: 'jinglis12@googlemail.com' }, secret);
+  const token = jwt.sign({ email: 'jvalentine@umbrella.corp' }, secret);
 
   const payload = {
     formSender: 'Mary Jackson',
