@@ -16,6 +16,7 @@ test('POST /api/cb/register | viable & registered CB', async (t) => {
     orgName: 'Slack Jawed and Dopamine',
     email: 'jinglis12@googlemail.com',
     category: 'Housing',
+    region: 'Wales',
     password: 'Chickens5*',
     passwordConfirm: 'Chickens5*',
   };
@@ -42,6 +43,7 @@ test('POST /api/cb/register | viable & non-registered CB', async (t) => {
     orgName: 'Slack Jawed and Dopamine',
     email: 'email@emails.com',
     category: 'Housing',
+    region: 'Wales',
     password: 'Chickens5*',
     passwordConfirm: 'Chickens5*',
   };
@@ -67,6 +69,7 @@ test('POST /api/cb/register | no input', async (t) => {
     orgName: 'Slack Jawed and Dopamine',
     email: 'email@emails.com',
     category: '',
+    region: '',
     password: '',
     passwordConfirm: '',
   };
@@ -81,6 +84,7 @@ test('POST /api/cb/register | no input', async (t) => {
         res.body.validation,
         {
           category: ['is not allowed to be empty'],
+          region: ['is not allowed to be empty'],
           password: ['is not allowed to be empty', 'with value "" fails to match the strong_pwd pattern'],
         }
       );
@@ -98,6 +102,7 @@ test('POST /api/cb/register | invalid email', async (t) => {
     orgName: 'Slack Jawed and Dopamine',
     email: 'jinglis12dshauidhiua.com',
     category: 'Housing',
+    region: 'Wales',
     password: 'Chickens5*',
     passwordConfirm: 'Chickens5*',
   };
@@ -128,6 +133,7 @@ test('POST /api/cb/register | invalid name', async (t) => {
     orgName: '1337 H4xx0R**^&&^$$(*',
     email: 'jinglis12@googlemail.com',
     category: 'Housing',
+    region: 'Wales',
     password: 'Chickens5*',
     passwordConfirm: 'Chickens5*',
   };
@@ -158,6 +164,7 @@ test('POST /api/cb/register | invalid email and name', async (t) => {
     orgName: '!"£$%^&*(',
     email: 'jinglglemail.com',
     category: 'Housing',
+    region: 'Wales',
     password: 'Chickens5*',
     passwordConfirm: 'Chickens5*',
   };
@@ -189,6 +196,7 @@ test('POST /api/cb/register | weak password', async (t) => {
     orgName: 'Slack Jawed and Dopamine',
     email: 'jinglis12@googlemail.com',
     category: 'Housing',
+    region: 'Wales',
     password: 'password',
     passwordConfirm: 'password',
   };
@@ -219,6 +227,7 @@ test('POST /api/cb/register | password dont match', async (t) => {
     orgName: 'Slack Jawed and Dopamine',
     email: 'jinglis12@googlemail.com',
     category: 'Housing',
+    region: 'Wales',
     password: 'Chickens5*',
     passwordConfirm: 'Turkeys5*',
   };
