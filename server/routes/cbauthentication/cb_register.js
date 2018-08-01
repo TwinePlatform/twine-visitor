@@ -22,6 +22,9 @@ const schemas = {
     category: Joi.string()
       .required(),
 
+    region: Joi.string()
+      .required(),
+
     password: Joi.string()
       .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, 'strong_pwd')
       .required()
