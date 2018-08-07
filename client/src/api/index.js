@@ -1,8 +1,13 @@
 /*
- *
+ * Twine API interface
  */
 import axios from 'axios';
 import { map, head, pathOr, equals, compose } from 'ramda';
+import { getConfig } from '../../../config';
+
+process.env.NODE_ENV = 'testing';
+const config = getConfig(process.env.NODE_ENV);
+const API_HOST = config.client.api_host_domain;
 
 export const Activities = {
   get: (tkn, { weekday = 'all' } = {}) =>
@@ -95,17 +100,17 @@ export const Visitors = {
     { name, gender, yob, email, phoneNumber, emailContactConsent, smsContactConsent },
   ) =>
     axios.post(
-      '/api/qr/generator',
+      `${API_HOST}/api/v1/users/register/visitor`,
       {
-        formSender: name,
-        formGender: gender,
-        formYear: yob,
-        formEmail: email,
-        formPhone: phoneNumber,
-        formEmailContact: emailContactConsent,
-        formSmsContact: smsContactConsent,
+        name,
+        gender,
+        birthYear: yob,
+        email,
+        phoneNumber,
+        emailConsent: emailContactConsent,
+        smsConsent: smsContactConsent,
       },
-      { headers: { Authorization: tkn } },
+      { headers: { Authorization: `Bearer ${tkn}` } },
     ),
 
   update: (

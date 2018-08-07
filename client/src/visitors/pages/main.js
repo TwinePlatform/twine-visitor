@@ -9,14 +9,16 @@ import { CbAdmin, Visitors, ErrorUtils } from '../../api';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
+import storage from '../../shared/storage';
+
 
 const generateYearsArray = (startYear, currentYear) =>
   Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
 
 const years = [{ key: '', value: '' }].concat(
   generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear()).map(y => ({
-    key: y,
-    value: y,
+    key: String(y),
+    value: String(y),
   })),
 );
 
@@ -107,15 +109,15 @@ export default class Main extends Component {
       users: [],
       url: '',
       errors: {},
-      cbLogoUrl: '',
       isPrinting: false,
       cbOrgName: '',
+      cbLogoUrl: '',
       formAutocompleteUUID: '', // See header comment in visitors/components/signup_form
     };
   }
 
   componentDidMount() {
-    CbAdmin.__DEPRECATED_get(localStorage.getItem('token')) // eslint-disable-line
+    CbAdmin.__DEPRECATED_get(storage.get('token')) // eslint-disable-line
       .then(res =>
         this.setState({
           cbOrgName: res.data.result.cbOrgName,
@@ -153,7 +155,7 @@ export default class Main extends Component {
   createVisitor = (e) => {
     e.preventDefault();
 
-    Visitors.create(localStorage.getItem('token'), {
+    Visitors.create(storage.get('token'), {
       name: this.state.fullname,
       gender: this.state.gender,
       yob: this.state.year,
@@ -163,7 +165,7 @@ export default class Main extends Component {
       smsContactConsent: this.state.smsContact,
     })
       .then((res) => {
-        this.setState({ url: res.data.qr, cb_logo: res.data.cb_logo });
+        this.setState({ url: res.data.qrCode });
         this.props.history.push('/visitor/signup/thankyou');
       })
       .catch((error) => {
