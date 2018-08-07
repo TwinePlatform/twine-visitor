@@ -211,7 +211,7 @@ export const CbAdmin = {
     }),
 
   login: ({ email, password }) =>
-    axios.post('/api/cb/login', {
+    axios.post('/api/v1/users/login/admin', {
       email,
       password,
     }),

@@ -39,7 +39,7 @@ export default class Login extends React.Component {
 
     CbAdmin.login({ email: this.state.email, password: this.state.password })
       .then((res) => {
-        localStorage.setItem('token', res.data.result.token);
+        localStorage.setItem('token', res.data.token);
         this.props.setLoggedIn();
         this.props.history.push('/');
       })
@@ -48,7 +48,7 @@ export default class Login extends React.Component {
           this.setState({ errors: ErrorUtils.getValidationErrors(error) });
 
         } else if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.setState({ errors: { email: error.response.data.error } });
+          this.setState({ errors: { email: error.response.data.error.message } });
 
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
