@@ -39,4 +39,7 @@ module.exports = {
       stripUnknown: false,
     },
   },
+  client: {
+    api_host_domain: process.env.API_HOST_DOMAIN,
+  },
 };

@@ -40,4 +40,7 @@ module.exports = {
   validation: Joi.object({
     options: Joi.object(),
   }),
+  client: Joi.object({
+    api_host_domain: Joi.string().uri().required(),
+  }),
 };
