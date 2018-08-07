@@ -3,7 +3,7 @@
  *
  * Exports functions used to generate a single normalised configuration object
  */
-require('env2')('./config/config.env');
+require('env2')(`${__dirname}/config.env`);
 
 const fs = require('fs');
 const url = require('url');
