@@ -69,6 +69,7 @@ const signupForm = props => (
       <FormSection flexOrder={1}>
         <div>
           <LabelledInput
+            id="visitor-signup-fullname"
             label="Full Name"
             name={`fullname$${props.uuid}`}
             type="text"
@@ -76,6 +77,7 @@ const signupForm = props => (
             required
           />
           <LabelledInput
+            id="visitor-signup-email"
             label="Email Address"
             name={`email$${props.uuid}`}
             type="email"
@@ -83,21 +85,24 @@ const signupForm = props => (
             required
           />
           <LabelledInput
+            id="visitor-signup-phonenumber"
             label="Phone Number (optional)"
             name={`phone$${props.uuid}`}
             type="text"
             error={props.errors.formPhone}
           />
           <LabelledSelect
-            name="gender"
+            id="visitor-signup-gender"
             label="Gender"
+            name="gender"
             options={genders}
             error={props.errors.formGender}
             required
           />
           <LabelledSelect
-            name="year"
+            id="visitor-signup-birthyear"
             label="Year of Birth"
+            name="year"
             options={props.years}
             error={props.errors.formYear}
             required
@@ -114,7 +119,7 @@ const signupForm = props => (
           <br />
           However, from time to time we would like to contact you with details of other offers we
           provide. If you consent to us contacting you by email, please tick to agree:
-          <StyledLabelledCheckbox name="emailContact" id="emailCheckboxInput" />
+          <StyledLabelledCheckbox name="emailContact" id="emailCheckboxInput" data-testid="emailConsent" />
         </CenteredParagraph>
         <CenteredParagraph>
           <br />
@@ -131,7 +136,7 @@ const signupForm = props => (
 
       <PrivacySection flexOrder={4}>
         <PrivacyLink href="http://www.twine-together.com/privacy-policy/">
-      Data Protection Policy
+          Data Protection Policy
         </PrivacyLink>
       </PrivacySection>
     </Form>
@@ -140,8 +145,8 @@ const signupForm = props => (
 
 signupForm.propTypes = {
   createVisitor: PropTypes.func.isRequired,
-  years: PropTypes.arrayOf(PropTypes.number).isRequired,
-  errors: PropTypes.arrayOf(PropTypes.object).isRequired,
+  years: PropTypes.arrayOf(PropTypes.object).isRequired,
+  errors: PropTypes.object.isRequired, // eslint-disable-line
   cbOrgName: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
   uuid: PropTypes.string.isRequired, // See header comment
