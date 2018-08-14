@@ -9,7 +9,6 @@ import { CbAdmin, Visitors, ErrorUtils } from '../../api';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
-import storage from '../../shared/storage';
 
 
 const generateYearsArray = (startYear, currentYear) =>
@@ -117,7 +116,7 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
-    CbAdmin.__DEPRECATED_get(storage.get('token')) // eslint-disable-line
+    CbAdmin.__DEPRECATED_get(localStorage.getItem('token')) // eslint-disable-line
       .then(res =>
         this.setState({
           cbOrgName: res.data.result.cbOrgName,
@@ -155,7 +154,7 @@ export default class Main extends Component {
   createVisitor = (e) => {
     e.preventDefault();
 
-    Visitors.create(storage.get('token'), {
+    Visitors.create(localStorage.getItem('token'), {
       name: this.state.fullname,
       gender: this.state.gender,
       yob: this.state.year,
