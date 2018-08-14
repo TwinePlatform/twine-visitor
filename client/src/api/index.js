@@ -3,11 +3,11 @@
  */
 import axios from 'axios';
 import { map, head, pathOr, equals, compose } from 'ramda';
-import { getConfig } from '../../../config';
 
-process.env.NODE_ENV = 'testing';
-const config = getConfig(process.env.NODE_ENV);
-const API_HOST = config.client.api_host_domain;
+require('env2')(`${__dirname}/../../../config/config.env`);
+
+const API_HOST = process.env.API_HOST_DOMAIN;
+
 
 export const Activities = {
   get: (tkn, { weekday = 'all' } = {}) =>

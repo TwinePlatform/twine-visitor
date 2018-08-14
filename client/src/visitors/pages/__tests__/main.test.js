@@ -7,13 +7,12 @@ import {
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import renderWithRouter from '../../../tests';
-import { getConfig } from '../../../../../config';
 import main from '../main';
 
 
 describe('Visitor Registration Component', () => {
   let mock;
-  const config = getConfig(process.env.NODE_ENV);
+  const API_HOST = process.env.API_HOST_DOMAIN;
   const noop = () => {};
 
   beforeAll(() => {
@@ -38,7 +37,7 @@ describe('Visitor Registration Component', () => {
       qrCode: 'data:image/png;base64,329t4ji3nfp23nfergj42finoregn',
     };
 
-    mock.onPost(`${config.client.api_host_domain}/api/v1/users/register/visitor`)
+    mock.onPost(`${API_HOST}/api/v1/users/register/visitor`)
       .reply(200, { data: { ...visitor } });
 
     mock.onGet('/api/users/cb-name')
