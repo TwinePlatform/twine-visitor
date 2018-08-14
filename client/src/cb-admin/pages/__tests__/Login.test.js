@@ -43,7 +43,7 @@ describe('Login Component', () => {
     expect.assertions(1);
 
     mock.onPost('/api/cb/login')
-      .reply(200, {});
+      .reply(200, { result: { token: '' } });
 
     const { getByText, history, getByLabelText } =
       renderWithRouter({ setLoggedIn: () => { }, route: '/cb/login' })(Login);

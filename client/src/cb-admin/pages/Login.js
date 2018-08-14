@@ -7,6 +7,7 @@ import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import { fonts } from '../../shared/style_guide';
+import storage from '../../shared/storage';
 
 
 const SubmitButton = styled(PrimaryButton)`
@@ -39,7 +40,7 @@ export default class Login extends React.Component {
 
     CbAdmin.login({ email: this.state.email, password: this.state.password })
       .then((res) => {
-        if (process && process.env.NODE_ENV !== 'test') localStorage.setItem('token', res.data.result.token);
+        storage.set('token', res.data.result.token);
         this.props.setLoggedIn();
         this.props.history.push('/');
       })

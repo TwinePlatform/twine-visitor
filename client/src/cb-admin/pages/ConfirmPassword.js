@@ -5,6 +5,8 @@ import { Form, FormSection, PrimaryButton } from '../../shared/components/form/b
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import { FlexContainerCol } from '../../shared/components/layout/base';
+import storage from '../../shared/storage';
+
 
 const SubmitButton = PrimaryButton.extend`
   height: 4em;
@@ -31,14 +33,9 @@ export default class ConfirmPassword extends React.Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-    const stdToken = (process && process.env.NODE_ENV !== 'test')
-      ? localStorage.getItem('token')
-      : 'teststring';
-
-    CbAdmin.upgradePermissions(stdToken, { password: this.state.password })
-      .then(res => res.data)
-      .then((data) => {
-        this.props.updateAdminToken(data.result.token);
+    CbAdmin.upgradePermissions(storage.get('token'), { password: this.state.password })
+      .then((res) => {
+        this.props.updateAdminToken(res.data.result.token);
         this.props.history.push('/admin');
       })
       .catch(() => {
