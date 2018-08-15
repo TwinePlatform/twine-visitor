@@ -39,7 +39,7 @@ describe('Visitor Registration Component', () => {
     mock.onPost(`${API_HOST}/api/v1/users/register/visitor`)
       .reply(200, { data: { ...visitor } });
 
-    mock.onGet(`${API_HOST}/api/v1/organisations/me`)
+    mock.onGet(`${API_HOST}/api/v1/community-businesses/me`)
       .reply(200, { result: { name: 'cbName', logoUrl: 'cbURL' } });
 
     const tools = renderWithRouter({ route: '/visitor/signup' })(main);
