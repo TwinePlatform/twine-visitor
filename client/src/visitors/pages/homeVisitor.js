@@ -7,6 +7,7 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 import confused from '../../shared/assets/icons/faces/confused.svg';
 import happy from '../../shared/assets/icons/faces/happy.svg';
 import sad from '../../shared/assets/icons/faces/sad.svg';
+import { CbAdmin, ErrorUtils } from '../../api';
 
 const StyledNav = styled.nav`
   display: flex;
@@ -51,12 +52,17 @@ const FeedbackStyledSection = styled.section`
   margin: 0 auto;
 `;
 
-const postFeedback = (feedbackScore, props) => fetch('/api/cb/feedback', {
-  method: 'POST',
-  body: JSON.stringify({
-    query: { feedbackScore },
-  }),
-}).then(() => props.history.push('/thankyou'));
+const postFeedback = (feedbackScore, props) =>
+  CbAdmin.postFeedback(localStorage.getItem('token'), { feedbackScore })
+    .then(() => props.history.push('/thankyou'))
+    .catch((error) => {
+      const status = ErrorUtils.getErrorStatus(error);
+      if (status === 401) {
+        props.history.push('/login');
+      } else {
+        props.history.push(`/error/${status}`);
+      }
+    });
 
 export default props => (
   <div>
@@ -81,13 +87,13 @@ export default props => (
       <FeedbackStyledSection>
         <Heading2>What did you think of your visit today?</Heading2>
         <FlexContainerRow>
-          <FeedbackButton onClick={() => postFeedback(-1, props)}>
+          <FeedbackButton data-testid="negative-feedback-btn" onClick={() => postFeedback(-1, props)}>
             <img src={sad} alt="sad feedback button" />
           </FeedbackButton>
-          <FeedbackButton onClick={() => postFeedback(0, props)}>
+          <FeedbackButton data-testid="neutral-feedback-btn" onClick={() => postFeedback(0, props)}>
             <img src={confused} alt="confused feedback button" />
           </FeedbackButton>
-          <FeedbackButton onClick={() => postFeedback(+1, props)}>
+          <FeedbackButton data-testid="positive-feedback-btn" onClick={() => postFeedback(+1, props)}>
             <img src={happy} alt="happy feedback button" />
           </FeedbackButton>
         </FlexContainerRow>

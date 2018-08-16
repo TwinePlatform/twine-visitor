@@ -241,6 +241,13 @@ export const CbAdmin = {
       },
 
     }),
+
+  postFeedback: (tkn, score) =>
+    axios.post(
+      `${API_HOST}/api/v1/community-businesses/me/feedback`,
+      { feedbackScore: score },
+      { headers: { Authorization: tkn } },
+    ),
 };
 
 export const Cloudinary = {
