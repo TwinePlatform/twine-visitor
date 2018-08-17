@@ -70,7 +70,8 @@ router.post('/', validate(schema), async (req, res, next) => {
       pmClient,
       formEmail,
       req.auth.cb_email,
-      formSender, hashString,
+      formSender,
+      hashString,
       req.auth.cb_name,
       req.auth.cb_logo
     );
