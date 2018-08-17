@@ -35,6 +35,7 @@ module.exports = morgan(
       reset(`${tokens['response-time'](req, res)}ms`.padStart(8)),
       reset('-'),
       reset(tokens['cb-name'](req, res)),
+      reset(tokens.req(req, res, 'X-Forwarded-For')),
       reset(tokens['req-body'](req, res)),
       reset('-'),
       reset(tokens.res(req, res, 'content-length') || 'Empty response'),
