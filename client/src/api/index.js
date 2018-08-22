@@ -166,14 +166,9 @@ export const Visitors = {
 };
 
 export const CbAdmin = {
-  get: tkn => axios.post('/api/cb/details', {}),
+  get: () => axios.post('/api/cb/details', {}),
 
-  __DEPRECATED_get: tkn =>
-    axios.get(
-      // eslint-disable-line
-      '/api/users/cb-name',
-
-    ),
+  __DEPRECATED_get: () => axios.get('/api/users/cb-name'),
 
   create: ({ orgName, category, email, password, passwordConfirm, region }) =>
     axios.post('/api/cb/register', {
