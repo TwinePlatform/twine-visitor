@@ -99,7 +99,7 @@ export default class QRCode extends Component {
       this.scanner.addListener('scan', (content) => {
         this.scanner.stop();
 
-        Visitors.get(localStorage.getItem('token'), { hash: content })
+        Visitors.get({ hash: content })
           .then((res) => {
             this.setState({
               username: res.data.fullname,
@@ -114,7 +114,7 @@ export default class QRCode extends Component {
       });
     }
 
-    Activities.get(localStorage.getItem('token'), { weekday: 'today' })
+    Activities.get({ weekday: 'today' })
       .then((res) => {
         this.setState({ activities: res.data.activities });
       })
@@ -136,7 +136,7 @@ export default class QRCode extends Component {
   changeActivity = (newActivity) => {
     this.setState({ activity: newActivity });
 
-    Visitors.createVisit(localStorage.getItem('token'), {
+    Visitors.createVisit({
       hash: this.state.hash,
       activity: newActivity,
     })

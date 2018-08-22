@@ -102,7 +102,7 @@ export default class ActivitiesPage extends React.Component {
   }
 
   componentDidMount() {
-    Activities.get(this.props.auth)
+    Activities.get()
       .then((res) => {
         const activities = res.data.result;
 
@@ -112,8 +112,6 @@ export default class ActivitiesPage extends React.Component {
           return acc;
         }, {});
         this.setState(state => ({ ...state, activities: { items, order } }));
-
-        this.props.updateAdminToken(res.headers.authorization);
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
@@ -132,9 +130,8 @@ export default class ActivitiesPage extends React.Component {
   toggleCheckbox = (id, day) => {
     const current = this.state.activities.items[id][day];
 
-    Activities.update(this.props.auth, { id, [day]: !current })
+    Activities.update({ id, [day]: !current })
       .then((res) => {
-        this.props.updateAdminToken(res.headers.authorization);
         this.setState(assocPath(['activities', 'items', id], res.data.result));
         this.setState(assocPath(['errors', 'view'], false));
       })
@@ -150,7 +147,7 @@ export default class ActivitiesPage extends React.Component {
   addActivity = (e) => {
     e.preventDefault();
 
-    Activities.create(this.props.auth, this.state.form)
+    Activities.create(this.state.form)
       .then((res) => {
         this.setState((state) => {
           const item = res.data.result;
@@ -179,9 +176,8 @@ export default class ActivitiesPage extends React.Component {
   }
 
   deleteActivity = (id) => {
-    Activities.delete(this.props.auth, { id })
-      .then((res) => {
-        this.props.updateAdminToken(res.headers.authorization);
+    Activities.delete({ id })
+      .then(() => {
         this.setState(assocPath(['errors', 'view'], false));
         this.setState((state) => {
           const order = state.activities.order.filter(i => i !== id);
@@ -288,7 +284,5 @@ export default class ActivitiesPage extends React.Component {
 }
 
 ActivitiesPage.propTypes = {
-  auth: PropTypes.string.isRequired,
-  updateAdminToken: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

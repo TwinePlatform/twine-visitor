@@ -30,11 +30,9 @@ describe('Settings Component', () => {
           email: 'findmyfroggy@frogfinders.com',
           uploadedfilecloudinaryurl: null,
           date: '2017-05-15T12:24:56.000Z' },
-        },
-        { authorization: 'authtoken' });
+        });
 
-    const { getByText } = renderWithRouter({ auth: 'authstring', updateAdminToken: () => { }, updateLoggedIn: () => { } })(Settings);
-
+    const { getByText } = renderWithRouter()(Settings);
     const [title, cbType, email] = await waitForElement(() => [
       getByText('Frog Finders'),
       getByText('Environment or nature'),
@@ -54,7 +52,7 @@ describe('Settings Component', () => {
         { result: null,
         });
 
-    const { history } = renderWithRouter({ auth: 'authstring', updateAdminToken: () => { }, updateLoggedIn: () => { } })(Settings);
+    const { history } = renderWithRouter()(Settings);
 
     await wait(() => expect(history.location.pathname).toEqual('/admin/login'));
   });

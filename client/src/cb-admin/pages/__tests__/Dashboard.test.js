@@ -34,7 +34,7 @@ describe('Dashboard Component', () => {
       });
 
     const { getByText } =
-      renderWithRouter({ auth: 'authstring', updateAdminToken: () => { }, updateLoggedIn: () => { } })(Dashboard);
+      renderWithRouter()(Dashboard);
 
     const insertedCbNameInSubtitle = await waitForElement(() => getByText('Frog', { exact: false }));
 
@@ -48,7 +48,7 @@ describe('Dashboard Component', () => {
       .reply(401, { result: null, error: 'Credentials not recognised' });
 
     const { history } =
-      renderWithRouter({ auth: 'authstring', updateAdminToken: () => { }, updateLoggedIn: () => { } })(Dashboard);
+      renderWithRouter()(Dashboard);
 
     await wait(() => history.length === 2);
     expect(history.location.pathname).toEqual('/cb/login');

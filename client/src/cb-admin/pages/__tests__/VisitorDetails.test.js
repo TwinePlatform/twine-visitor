@@ -32,11 +32,10 @@ describe('VisitorDetails Component', () => {
           registered_at: '2017-05-15T12:24:52.000Z',
           email_consent: false,
           sms_consent: false }],
-        meta: { full_count: 1 } },
-        { authorization: 'authtoken' });
+        meta: { full_count: 1 } });
 
     const { getByText } =
-        renderWithRouter({ auth: 'authstring', updateAdminToken: () => { } })(VisitorDetails);
+        renderWithRouter()(VisitorDetails);
 
     const [name, gender, email] = await waitForElement(() => [
       getByText('yusra mardini'),
@@ -63,7 +62,7 @@ describe('VisitorDetails Component', () => {
         });
 
     const { history } =
-      renderWithRouter({ auth: 'authstring', updateAdminToken: () => { } })(VisitorDetails);
+      renderWithRouter()(VisitorDetails);
 
     await wait(() => expect(history.location.pathname).toEqual('/admin/login'));
   });

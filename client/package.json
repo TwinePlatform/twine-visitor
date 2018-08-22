@@ -34,7 +34,6 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.7.0",
     "jest-dom": "^1.11.0",
-    "jest-localstorage-mock": "^2.2.0",
     "react-testing-library": "^4.1.3"
   },
   "scripts": {
@@ -43,7 +42,6 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:4000",
   "contributors": [
     "James Inglis <jinglis12@gmail.com>",
     "Alina Solinas",

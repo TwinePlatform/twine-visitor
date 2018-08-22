@@ -111,7 +111,7 @@ export default class VisitorDetailsPage extends React.Component {
 
   getDataForCsv = () => {
     const { genderFilter, ageFilter } = this.state;
-    Visitors.get(this.props.auth, {
+    Visitors.get({
       visitors: true,
       genderFilter,
       ageFilter,
@@ -176,9 +176,8 @@ export default class VisitorDetailsPage extends React.Component {
   update = (offset = 0) => {
     const { genderFilter, ageFilter } = this.state;
     const sort = colToState[this.state.sort];
-    const cbAdminToken = this.props.auth;
 
-    Visitors.get(cbAdminToken, {
+    Visitors.get({
       offset,
       genderFilter,
       ageFilter,
@@ -187,7 +186,6 @@ export default class VisitorDetailsPage extends React.Component {
       pagination: true,
     })
       .then((res) => {
-        this.props.updateAdminToken(res.headers.authorization);
         this.setState({ users: res.data.result, fullCount: res.data.meta.full_count });
       })
       .catch((error) => {
@@ -272,7 +270,5 @@ export default class VisitorDetailsPage extends React.Component {
 }
 
 VisitorDetailsPage.propTypes = {
-  auth: PropTypes.string.isRequired,
-  updateAdminToken: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

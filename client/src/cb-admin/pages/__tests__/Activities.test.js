@@ -48,8 +48,7 @@ describe('Activities Component', () => {
           friday: true,
           saturday: false,
           sunday: false,
-        }] },
-      { authorization: 'authstring' });
+        }] });
 
     mock.onPost('/api/activity/add')
       .reply(200, { result: {
@@ -64,8 +63,7 @@ describe('Activities Component', () => {
         friday: false,
         saturday: false,
         sunday: false,
-        date: '2018-07-27T00:15:16.510Z' } },
-      { authorization: 'authstring' });
+        date: '2018-07-27T00:15:16.510Z' } });
 
     mock.onPost('/api/activity/update')
       .reply(200,
@@ -82,11 +80,10 @@ describe('Activities Component', () => {
           saturday: false,
           sunday: false,
           date: '2017-12-22T17:24:57.000Z',
-        } },
-        { authorization: 'authstring' });
+        } });
 
     mock.onPost('/api/activity/delete')
-      .reply(200, { result: null }, { authorization: 'authstring' });
+      .reply(200, { result: null });
   });
 
   afterEach(cleanup);
@@ -94,7 +91,7 @@ describe('Activities Component', () => {
   test('page load :: correct response renders rows for each activity', async () => {
     expect.assertions(3);
     const { getByText } =
-          renderWithRouter({ auth: 'authstring', updateAdminToken: () => {} })(Activities);
+          renderWithRouter()(Activities);
     const [french, yoga, skating] = await waitForElement(() => [
       getByText('French Lessons'),
       getByText('Yoga'),
@@ -108,8 +105,7 @@ describe('Activities Component', () => {
 
   test('add :: correct response adds new row', async () => {
     expect.assertions(1);
-    const { getByText, getByLabelText } =
-          renderWithRouter({ auth: 'authstring', updateAdminToken: () => {} })(Activities);
+    const { getByText, getByLabelText } = renderWithRouter()(Activities);
 
     const input = getByLabelText('Add an activity');
     const add = getByText('ADD');
@@ -126,7 +122,7 @@ describe('Activities Component', () => {
   test('update :: correct response updates specified row', async () => {
     expect.assertions(2);
     const { getByAltText } =
-          renderWithRouter({ auth: 'authstring', updateAdminToken: () => {} })(Activities);
+          renderWithRouter()(Activities);
 
     const checkbox = await waitForElement(() => getByAltText('French Lessons monday update button'));
     expect(checkbox.checked).toBeFalsy();
@@ -141,7 +137,7 @@ describe('Activities Component', () => {
   test('delete :: correct response deletes specified row', async () => {
     expect.assertions(1);
     const { getByText, getByTestId } =
-        renderWithRouter({ auth: 'authstring', updateAdminToken: () => {} })(Activities);
+        renderWithRouter()(Activities);
 
     const [frenchLessons, deleteButton] = await waitForElement(() => [
       getByText('French Lessons'),

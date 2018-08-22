@@ -13,7 +13,6 @@ import main from '../main';
 describe('Visitor Registration Component', () => {
   let mock;
   const API_HOST = process.env.API_HOST_DOMAIN;
-  const noop = () => {};
 
   beforeAll(() => {
     mock = new MockAdapter(axios);
@@ -43,12 +42,7 @@ describe('Visitor Registration Component', () => {
     mock.onGet('/api/users/cb-name')
       .reply(200, { result: { cbOrgName: 'cbName', cbLogoUrl: 'cbURL' } });
 
-    const tools = renderWithRouter({
-      route: '/visitor/signup',
-      auth: 'fakeauthtoken',
-      updateAdminToken: noop,
-      updateLoggedIn: noop,
-    })(main);
+    const tools = renderWithRouter({ route: '/visitor/signup' })(main);
 
     const [
       fullName,

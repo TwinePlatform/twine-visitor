@@ -26,7 +26,7 @@ describe('Login Component', () => {
       .reply(200, { result: null });
 
     const { getByText, getByLabelText, history } =
-      renderWithRouter({ setLoggedIn: () => { } })(ForgotPassword);
+      renderWithRouter()(ForgotPassword);
 
     const email = getByLabelText('Email');
     const submit = getByText('CONTINUE');
@@ -45,8 +45,7 @@ describe('Login Component', () => {
     mock.onPost('/api/cb/pwd/reset')
       .reply(401, { result: null, error: 'Email not recognised' });
 
-    const { getByText, getByLabelText } =
-      renderWithRouter({ setLoggedIn: () => { } })(ForgotPassword);
+    const { getByText, getByLabelText } = renderWithRouter()(ForgotPassword);
 
     const email = getByLabelText('Email');
     const submit = getByText('CONTINUE');

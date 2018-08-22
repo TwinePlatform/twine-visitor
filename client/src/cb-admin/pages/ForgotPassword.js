@@ -33,7 +33,7 @@ export default class ForgotPassword extends React.Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-    CbAdmin.email(null, { email: this.state.email })
+    CbAdmin.email({ email: this.state.email })
       .then(() => this.props.history.push('/cb/login'))
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 400)) {
