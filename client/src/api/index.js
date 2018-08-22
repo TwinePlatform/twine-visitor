@@ -258,5 +258,5 @@ export const ErrorUtils = {
 };
 
 export const logout = () =>
-  axios.post('http://localhost:4000/api/v1/users/logout', {}, { withCredentials: true })
+  axios.get('http://localhost:4000/api/v1/users/logout', { withCredentials: true })
 ;
