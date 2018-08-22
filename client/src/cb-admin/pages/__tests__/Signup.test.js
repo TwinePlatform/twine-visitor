@@ -25,8 +25,7 @@ describe('Signup Component', () => {
     mock.onPost('/api/cb/register')
       .reply(200, { result: null });
 
-    const { getByText, getByLabelText, history } =
-        renderWithRouter({ setLoggedIn: () => { } })(Signup);
+    const { getByText, getByLabelText, history } = renderWithRouter()(Signup);
 
     const businessName = getByLabelText('Business name');
     const email = getByLabelText('Contact email');
@@ -61,7 +60,7 @@ describe('Signup Component', () => {
     mock.onPost('/api/cb/register')
       .reply(409, { result: null, error: 'Business already registered' });
 
-    const { getByText, getByLabelText } = renderWithRouter({ setLoggedIn: () => { } })(Signup);
+    const { getByText, getByLabelText } = renderWithRouter()(Signup);
 
     const businessName = getByLabelText('Business name');
     const email = getByLabelText('Contact email');

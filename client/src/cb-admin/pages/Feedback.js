@@ -5,7 +5,7 @@ import 'react-dates/initialize';
 import { DateRangePicker, isInclusivelyBeforeDay } from 'react-dates';
 import moment from 'moment';
 import styled from 'styled-components';
-import { CbAdmin } from '../../api';
+import { CbAdmin, logout } from '../../api';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { Heading, Link, Paragraph } from '../../shared/components/text/base';
 import { colors } from '../../shared/style_guide';
@@ -71,11 +71,6 @@ const doughnutConfig = (colorConfig, feedbackCountArray) => ({
   ],
 });
 
-const logout = props => () => {
-  localStorage.removeItem('token');
-  props.updateLoggedIn();
-};
-
 const lastCallStates = {
   ALL: 'ALL',
   DATERANGEPICKER: 'DATERANGEPICKER',
@@ -114,7 +109,7 @@ export default class Feedback extends Component {
   }
 
   handleGetFeedback = () => {
-    CbAdmin.getFeedback(this.props.auth, this.state.startDate, this.state.endDate)
+    CbAdmin.getFeedback(this.state.startDate, this.state.endDate)
       .then(({ data }) => {
         data.result[0] //eslint-disable-line
           ? this.setState({ data, error: null })
@@ -145,7 +140,7 @@ export default class Feedback extends Component {
             Back to dashboard
           </Link>
           <Heading>Visitor Satisfaction</Heading>
-          <Link to="/cb/login" onClick={logout(this.props)}>
+          <Link to="/cb/login" onClick={() => logout()}>
             Logout
           </Link>
         </StyledNav>
@@ -187,6 +182,5 @@ export default class Feedback extends Component {
 }
 
 Feedback.propTypes = {
-  auth: PropTypes.string.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

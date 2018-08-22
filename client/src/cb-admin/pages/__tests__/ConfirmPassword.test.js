@@ -24,10 +24,9 @@ describe('ConfirmPassword Component', () => {
     expect.assertions(1);
 
     mock.onPost('/api/admin/login')
-      .reply(401, { result: null, error: 'Incorrect password' }, { authorization: 'authstring' });
+      .reply(401, { result: null, error: 'Incorrect password' });
 
-    const { getByText, getByLabelText } =
-        renderWithRouter({ updateAdminToken: () => { } })(ConfirmPassword);
+    const { getByText, getByLabelText } = renderWithRouter()(ConfirmPassword);
     const password = getByLabelText('Password');
     const submit = getByText('CONTINUE');
     password.value = 'lolLOL123';
@@ -42,10 +41,10 @@ describe('ConfirmPassword Component', () => {
     expect.assertions(1);
 
     mock.onPost('/api/admin/login')
-      .reply(200, { result: { token: 'authstring' } });
+      .reply(200);
 
     const { getByText, getByLabelText, history } =
-        renderWithRouter({ updateAdminToken: () => { } })(ConfirmPassword);
+        renderWithRouter()(ConfirmPassword);
     const password = getByLabelText('Password');
     const submit = getByText('CONTINUE');
     password.value = 'Funnyfingers11!';

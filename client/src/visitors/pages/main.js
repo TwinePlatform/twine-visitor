@@ -116,7 +116,7 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
-    CbAdmin.__DEPRECATED_get(localStorage.getItem('token')) // eslint-disable-line
+    CbAdmin.__DEPRECATED_get() // eslint-disable-line
       .then(res =>
         this.setState({
           cbOrgName: res.data.result.cbOrgName,
@@ -154,7 +154,7 @@ export default class Main extends Component {
   createVisitor = (e) => {
     e.preventDefault();
 
-    Visitors.create(localStorage.getItem('token'), {
+    Visitors.create({
       name: this.state.fullname,
       gender: this.state.gender,
       yob: this.state.year,

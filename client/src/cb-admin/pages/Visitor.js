@@ -123,9 +123,8 @@ export default class VisitorProfile extends React.Component {
   }
 
   componentDidMount() {
-    Visitors.get(this.props.auth, { id: this.props.match.params.id })
+    Visitors.get({ id: this.props.match.params.id })
       .then((res) => {
-        this.props.updateAdminToken(res.headers.authorization);
         this.updateStateFromApi(res.data.result);
       })
       .catch((error) => {
@@ -140,7 +139,7 @@ export default class VisitorProfile extends React.Component {
         }
       });
 
-    CbAdmin.get(this.props.auth)
+    CbAdmin.get()
       .then(res =>
         this.setState({
           cbOrgName: res.data.result.org_name,
@@ -164,7 +163,7 @@ export default class VisitorProfile extends React.Component {
   };
 
   onClickResend = () => {
-    Visitors.email(this.props.auth, { id: this.state.id })
+    Visitors.email({ id: this.state.id })
       .then(() => this.setState({ hasResent: true }))
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
@@ -185,7 +184,7 @@ export default class VisitorProfile extends React.Component {
     e.preventDefault();
     e.target.reset();
 
-    Visitors.update(this.props.auth, { ...payloadFromState(this.state), id: this.state.id })
+    Visitors.update({ ...payloadFromState(this.state), id: this.state.id })
       .then((res) => {
         this.updateStateFromApi(res.data.result);
       })
@@ -309,8 +308,6 @@ export default class VisitorProfile extends React.Component {
 }
 
 VisitorProfile.propTypes = {
-  auth: PropTypes.string.isRequired,
-  updateAdminToken: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({

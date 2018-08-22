@@ -5,6 +5,7 @@ import { SecondaryButton } from '../components/form/base';
 import { Heading, Link as HyperLink } from '../components/text/base';
 import { FlexContainerCol } from '../components/layout/base';
 import DotButton from '../components/form/DottedButton';
+import { logout } from '../../api';
 
 
 const Nav = styled.nav`
@@ -37,16 +38,11 @@ const ButtonRight = SecondaryButton.extend`
   height: 12em;
 `;
 
-const logout = props => () => {
-  localStorage.removeItem('token');
-  props.updateLoggedIn();
-};
-
-export default props => (
+export default () => (
   <FlexContainerCol justify="space-around">
     <Nav>
       <FlexItem>
-        <HyperLink to="/cb/login" onClick={logout(props)}> Logout </HyperLink>
+        <HyperLink to="/cb/login" onClick={() => logout()}> Logout </HyperLink>
       </FlexItem>
       <FlexItem flex="2">
         <Heading> Who are you? </Heading>

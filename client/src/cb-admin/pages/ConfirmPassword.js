@@ -32,9 +32,8 @@ export default class ConfirmPassword extends React.Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-    CbAdmin.upgradePermissions(localStorage.getItem('token'), { password: this.state.password })
-      .then((res) => {
-        this.props.updateAdminToken(res.data.result.token);
+    CbAdmin.upgradePermissions({ password: this.state.password })
+      .then(() => {
         this.props.history.push('/admin');
       })
       .catch(() => {
@@ -70,6 +69,5 @@ export default class ConfirmPassword extends React.Component {
 }
 
 ConfirmPassword.propTypes = {
-  updateAdminToken: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

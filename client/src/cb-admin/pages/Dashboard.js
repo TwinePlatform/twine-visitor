@@ -5,7 +5,7 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 import { SecondaryButton } from '../../shared/components/form/base';
 import DotButton from '../../shared/components/form/DottedButton';
 import { Heading, Link as StyledLink } from '../../shared/components/text/base';
-import { CbAdmin } from '../../api';
+import { CbAdmin, logout } from '../../api';
 
 
 const Nav = styled.nav`
@@ -49,18 +49,9 @@ export default class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    CbAdmin.get(this.props.auth)
+    CbAdmin.get()
       .then(res => this.setState({ orgName: res.data.result.org_name }))
-      .catch(() => {
-        this.props.history.push('/cb/login');
-      });
-  }
-
-  logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('adminToken');
-    this.props.updateAdminToken('');
-    this.props.updateLoggedIn();
+      .catch(() => { this.props.history.push('/cb/login'); });
   }
 
   render() {
@@ -68,7 +59,7 @@ export default class Dashboard extends React.Component {
       <FlexContainerCol>
         <Nav>
           <FlexItem>
-            <StyledLink to="/cb/login" onClick={this.logout}>Logout</StyledLink>
+            <StyledLink to="/cb/login" onClick={() => logout()}>Logout</StyledLink>
           </FlexItem>
           <FlexItem flex="2">
             <Heading>Welcome admin! Where do you want to go?</Heading>
@@ -114,8 +105,5 @@ export default class Dashboard extends React.Component {
 
 
 Dashboard.propTypes = {
-  auth: PropTypes.string.isRequired,
-  updateAdminToken: PropTypes.func.isRequired,
-  updateLoggedIn: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

@@ -51,20 +51,12 @@ const FeedbackStyledSection = styled.section`
   margin: 0 auto;
 `;
 
-const postFeedback = (feedbackScore, props) => {
-  const headers = new Headers({
-    Authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
-  });
-
-  return fetch('/api/cb/feedback', {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      query: { feedbackScore },
-    }),
-  }).then(() => props.history.push('/thankyou'));
-};
+const postFeedback = (feedbackScore, props) => fetch('/api/cb/feedback', {
+  method: 'POST',
+  body: JSON.stringify({
+    query: { feedbackScore },
+  }),
+}).then(() => props.history.push('/thankyou'));
 
 export default props => (
   <div>

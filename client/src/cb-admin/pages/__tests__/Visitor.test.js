@@ -34,8 +34,7 @@ describe('Visitor Component', () => {
           phone_number: '7835110026',
           registered_at: '2017-05-15T12:24:52.000Z',
           email_consent: false,
-          sms_consent: false } },
-        { authorization: 'authtoken' });
+          sms_consent: false } });
 
     mock.onPost('/api/cb/details')
       .reply(200,
@@ -45,21 +44,19 @@ describe('Visitor Component', () => {
           genre: 'Environment or nature',
           email: 'findmyfroggy@frogfinders.com',
           uploadedfilecloudinaryurl: null,
-          date: '2017-05-15T12:24:56.000Z' } },
-        { authorization: 'authtoken' });
+          date: '2017-05-15T12:24:56.000Z' } });
 
     const { getByText } =
-        renderWithRouter({ auth: 'authstring',
+        renderWithRouter({
           match: { isExact: true, params: { id: '4' }, path: '/cb/visitors/:id', url: '/cb/visitors/4' },
-          updateAdminToken: () => { },
         })(Visitor);
-
+    // debug();
     const [name, gender, email] = await waitForElement(() => [
       getByText('yusra mardini'),
       getByText('female'),
       getByText('maemail@gmail.com'),
-
     ]);
+
     expect(name.textContent).toEqual('yusra mardini');
     expect(gender.textContent).toEqual('female');
     expect(email.textContent).toEqual('maemail@gmail.com');
@@ -78,9 +75,8 @@ describe('Visitor Component', () => {
         { result: null,
         });
 
-    const { history } = renderWithRouter({ auth: 'authstring',
+    const { history } = renderWithRouter({
       match: { isExact: true, params: { id: '4' }, path: '/cb/visitors/:id', url: '/cb/visitors/4' },
-      updateAdminToken: () => { },
     })(Visitor);
 
     await wait(() => expect(history.location.pathname).toEqual('/admin/login'));

@@ -22,10 +22,10 @@ describe('Login Component', () => {
   test(':: incorrect user details returns 401 and displays error message', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/cb/login')
-      .reply(401, { result: null, error: 'Credentials not recognised' });
+    mock.onPost('http://localhost:4000/api/v1/users/login/admin')
+      .reply(401, { result: null, error: { message: 'Credentials not recognised' } });
 
-    const { getByText, getByLabelText } = renderWithRouter({ setLoggedIn: () => { } })(Login);
+    const { getByText, getByLabelText, debug } = renderWithRouter()(Login);
     const email = getByLabelText('Email');
     const password = getByLabelText('Password');
     const submit = getByText('LOGIN');
@@ -35,18 +35,21 @@ describe('Login Component', () => {
     fireEvent.change(password);
     fireEvent.click(submit);
 
-    const error = await waitForElement(() => getByText('Credentials', { exact: false }));
+    const error = await waitForElement(() => {
+      debug();
+      return getByText('Credentials', { exact: false })
+      ;
+    });
     expect(error.textContent).toEqual('Credentials not recognised');
   });
 
   test(':: correct user details returns 200 and redirects to homepage', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/cb/login')
-      .reply(200, { result: { token: '' } });
+    mock.onPost('http://localhost:4000/api/v1/users/login/admin')
+      .reply(200, { });
 
-    const { getByText, history, getByLabelText } =
-      renderWithRouter({ setLoggedIn: () => { }, route: '/cb/login' })(Login);
+    const { getByText, history, getByLabelText } = renderWithRouter({ route: '/cb/login' })(Login);
 
     const email = getByLabelText('Email');
     const password = getByLabelText('Password');

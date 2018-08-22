@@ -10,27 +10,27 @@ const API_HOST = process.env.API_HOST_DOMAIN;
 
 
 export const Activities = {
-  get: (tkn, { weekday = 'all' } = {}) =>
-    axios.get(`/api/activities/${weekday}`, { headers: { Authorization: tkn } }),
+  get: ({ weekday = 'all' } = {}) =>
+    axios.get(`/api/activities/${weekday}`),
 
-  create: (tkn, { name }) =>
-    axios.post('/api/activity/add', { name }, { headers: { Authorization: tkn } }),
+  create: ({ name }) =>
+    axios.post('/api/activity/add', { name }),
 
-  update: (tkn, { id, monday, tuesday, wednesday, thursday, friday, saturday, sunday }) =>
+  update: ({ id, monday, tuesday, wednesday, thursday, friday, saturday, sunday }) =>
     axios.post(
       '/api/activity/update',
       { id, monday, tuesday, wednesday, thursday, friday, saturday, sunday },
-      { headers: { Authorization: tkn } },
+
     ),
 
-  delete: (tkn, { id }) =>
-    axios.post('/api/activity/delete', { id }, { headers: { Authorization: tkn } }),
+  delete: ({ id }) =>
+    axios.post('/api/activity/delete', { id }),
 };
 
 export const Visitors = {
-  get: (tkn, query) => {
+  get: (query) => {
     if (!query) {
-      return axios.get('/api/users/all', { headers: { Authorization: tkn } });
+      return axios.get('/api/users/all');
     } else if (query.visitors) {
       return axios.get('/api/users/all', {
         params: {
@@ -40,7 +40,7 @@ export const Visitors = {
           gender: query.genderFilter,
           age: query.ageFilter,
         },
-        headers: { Authorization: tkn },
+
       });
     } else if (query.filter || query.sort) {
       return axios.post(
@@ -49,7 +49,7 @@ export const Visitors = {
           filterBy: query.filter,
           orderBy: Object.keys(query.sort)[0],
         },
-        { headers: { Authorization: tkn } },
+
       );
     } else if (query.name && query.email) {
       return axios.post(
@@ -61,7 +61,7 @@ export const Visitors = {
           formGender: query.gender,
           formYear: query.yob,
         },
-        { headers: { Authorization: tkn } },
+
       );
     } else if (query.id) {
       return axios.post(
@@ -69,7 +69,7 @@ export const Visitors = {
         {
           userId: query.id,
         },
-        { headers: { Authorization: tkn } },
+
       );
     } else if (query.hash) {
       return axios.post(
@@ -77,7 +77,7 @@ export const Visitors = {
         {
           hash: query.hash,
         },
-        { headers: { Authorization: tkn } },
+
       );
     } else if (query.withVisits) {
       return axios.get('/api/visitors/all', {
@@ -88,7 +88,7 @@ export const Visitors = {
           age: query.ageFilter,
           activity: query.activityFilter,
         },
-        headers: { Authorization: tkn },
+
       });
     }
 
@@ -96,7 +96,7 @@ export const Visitors = {
   },
 
   create: (
-    tkn,
+
     { name, gender, yob, email, phoneNumber, emailContactConsent, smsContactConsent },
   ) =>
     axios.post(
@@ -110,11 +110,10 @@ export const Visitors = {
         emailConsent: emailContactConsent,
         smsConsent: smsContactConsent,
       },
-      { headers: { Authorization: `Bearer ${tkn}` } },
     ),
 
   update: (
-    tkn,
+
     { id, name, gender, yob, email, phoneNumber }, // eslint-disable-line
   ) =>
     axios.post(
@@ -126,31 +125,31 @@ export const Visitors = {
         yearOfBirth: yob,
         email,
       },
-      { headers: { Authorization: tkn } },
+
     ),
 
   delete: () => {},
 
-  email: (tkn, { id }) =>
+  email: ({ id }) =>
     axios.post(
       '/api/user/qr/email',
       {
         id,
       },
-      { headers: { Authorization: tkn } },
+
     ),
 
-  createVisit: (tkn, { hash, activity }) =>
+  createVisit: ({ hash, activity }) =>
     axios.post(
       '/api/visit/add',
       {
         hash,
         activity,
       },
-      { headers: { Authorization: tkn } },
+
     ),
 
-  getStatistics: (tkn, { groupBy, sort, filter } = {}) => {
+  getStatistics: ({ groupBy, sort, filter } = {}) => {
     if (groupBy || filter || sort) {
       return axios.post(
         '/api/users/filtered',
@@ -158,22 +157,22 @@ export const Visitors = {
           filterBy: filter,
           orderBy: Object.keys(sort)[0],
         },
-        { headers: { Authorization: tkn } },
+
       );
     }
 
-    return axios.get('/api/users/chart-all', { headers: { Authorization: tkn } });
+    return axios.get('/api/users/chart-all');
   },
 };
 
 export const CbAdmin = {
-  get: tkn => axios.post('/api/cb/details', {}, { headers: { Authorization: tkn } }),
+  get: tkn => axios.post('/api/cb/details', {}),
 
   __DEPRECATED_get: tkn =>
     axios.get(
       // eslint-disable-line
       '/api/users/cb-name',
-      { headers: { Authorization: tkn } },
+
     ),
 
   create: ({ orgName, category, email, password, passwordConfirm, region }) =>
@@ -187,7 +186,7 @@ export const CbAdmin = {
     }),
 
   update: (
-    tkn,
+
     { orgName, sector, email, region, logoUrl }, // eslint-disable-line
   ) =>
     axios.post(
@@ -198,45 +197,46 @@ export const CbAdmin = {
         email,
         uploadedFileCloudinaryUrl: logoUrl,
       },
-      { headers: { Authorization: tkn } },
     ),
 
   delete: () => {},
 
-  resetPassword: (tkn, { password, passwordConfirm }) =>
+  resetPassword: ({ password, passwordConfirm }) =>
     axios.post('/api/cb/pwd/change', {
       password,
       passwordConfirm,
-      token: tkn,
     }),
 
   login: ({ email, password }) =>
-    axios.post('/api/v1/users/login/admin', {
-      email,
-      password,
-    }),
+    axios.post('http://localhost:4000/api/v1/users/login/admin',
+      {
+        email,
+        password,
+      },
+      { withCredentials: true },
+    ),
 
-  upgradePermissions: (tkn, { password }) =>
+  upgradePermissions: ({ password }) =>
     axios.post(
       '/api/admin/login',
       {
         password,
       },
-      { headers: { Authorization: tkn } },
+
     ),
 
-  email: (tkn, { email }) =>
+  email: ({ email }) =>
     axios.post('/api/cb/pwd/reset', {
       email,
     }),
 
-  getFeedback: (tkn, since, until) =>
+  getFeedback: (since, until) =>
     axios.get('/api/cb/feedback', {
       params: {
         since: since ? since.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : '',
         until: until ? until.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : '',
       },
-      headers: { Authorization: tkn },
+
     }),
 };
 
@@ -262,10 +262,6 @@ export const ErrorUtils = {
   errorStatusEquals: (error, status) => equals(ErrorUtils.getErrorStatus(error), status),
 };
 
-export default {
-  Activities,
-  Visitors,
-  CbAdmin,
-  Cloudinary,
-  ErrorUtils,
-};
+export const logout = () =>
+  axios.post('http://localhost:4000/api/v1/users/logout', {}, { withCredentials: true })
+;

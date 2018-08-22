@@ -111,12 +111,11 @@ export default class VisitsDataPage extends React.Component {
   }
 
   componentDidMount() {
-    const pVisitors = Visitors.get(this.props.auth, { withVisits: true, pagination: true });
-    const pStats = Visitors.getStatistics(this.props.auth);
+    const pVisitors = Visitors.get({ withVisits: true, pagination: true });
+    const pStats = Visitors.getStatistics();
 
     Promise.all([pVisitors, pStats])
       .then(([resVisitors, resStats]) => {
-        this.props.updateAdminToken(resVisitors.headers.authorization);
 
         const visits = resVisitors.data.result;
 
@@ -243,7 +242,7 @@ export default class VisitsDataPage extends React.Component {
   getDataForCsv = () => {
     const { genderFilter, ageFilter, activityFilter } = this.state;
 
-    Visitors.get(this.props.auth, {
+    Visitors.get({
       withVisits: true,
       genderFilter,
       ageFilter,
@@ -297,7 +296,7 @@ export default class VisitsDataPage extends React.Component {
 
   update = (offset = 0) => {
     const { genderFilter, ageFilter, activityFilter } = this.state;
-    const pVisitors = Visitors.get(this.props.auth, {
+    const pVisitors = Visitors.get({
       withVisits: true,
       pagination: true,
       offset,
@@ -305,7 +304,7 @@ export default class VisitsDataPage extends React.Component {
       ageFilter,
       activityFilter,
     });
-    const pStats = Visitors.getStatistics(this.props.auth, {
+    const pStats = Visitors.getStatistics({
       filter: [
         this.state.genderFilter && `gender@${this.state.genderFilter.toLowerCase()}`,
         this.state.ageFilter && `age@${this.state.ageFilter}`,
@@ -316,7 +315,6 @@ export default class VisitsDataPage extends React.Component {
 
     Promise.all([pVisitors, pStats])
       .then(([resVisitors, resStats]) => {
-        this.props.updateAdminToken(resVisitors.headers.authorization);
 
         const visits = resVisitors.data.result;
         const stats = resStats.data.result; // res[0] no longer used
@@ -433,7 +431,5 @@ export default class VisitsDataPage extends React.Component {
 }
 
 VisitsDataPage.propTypes = {
-  auth: PropTypes.string.isRequired,
-  updateAdminToken: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };

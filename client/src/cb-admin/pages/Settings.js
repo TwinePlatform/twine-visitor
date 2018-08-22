@@ -118,9 +118,8 @@ export default class SettingsPage extends React.Component {
   }
 
   componentDidMount() {
-    CbAdmin.get(this.props.auth)
+    CbAdmin.get()
       .then((res) => {
-        this.props.updateAdminToken(res.headers.authorization);
         this.updateStateFromApi(res.data.result);
       })
       .catch((error) => {
@@ -146,7 +145,7 @@ export default class SettingsPage extends React.Component {
     e.preventDefault();
     e.target.reset();
 
-    CbAdmin.update(this.props.auth, payloadFromState(this.state))
+    CbAdmin.update(payloadFromState(this.state))
       .then((res) => {
         this.updateStateFromApi(res.data.result);
       })
@@ -182,13 +181,11 @@ export default class SettingsPage extends React.Component {
 
   createZip = () => {
     const zip = jsZip();
-    const pUsers = Visitors.get(this.props.auth);
-    const pVisits = Visitors.get(this.props.auth, { withVisits: true });
+    const pUsers = Visitors.get();
+    const pVisits = Visitors.get({ withVisits: true });
 
     Promise.all([pUsers, pVisits])
       .then(([resUsers, resVisits]) => {
-        this.props.updateAdminToken(resUsers.headers.authorization);
-
         const usersCsvData = resUsers.data.result.map(x =>
           pipe(
             pick([
@@ -331,7 +328,5 @@ export default class SettingsPage extends React.Component {
 }
 
 SettingsPage.propTypes = {
-  auth: PropTypes.string.isRequired,
-  updateAdminToken: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };
