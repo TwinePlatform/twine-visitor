@@ -25,7 +25,7 @@ describe('Login Component', () => {
     mock.onPost('http://localhost:4000/api/v1/users/login/admin')
       .reply(401, { result: null, error: { message: 'Credentials not recognised' } });
 
-    const { getByText, getByLabelText, debug } = renderWithRouter()(Login);
+    const { getByText, getByLabelText } = renderWithRouter()(Login);
     const email = getByLabelText('Email');
     const password = getByLabelText('Password');
     const submit = getByText('LOGIN');
@@ -35,11 +35,7 @@ describe('Login Component', () => {
     fireEvent.change(password);
     fireEvent.click(submit);
 
-    const error = await waitForElement(() => {
-      debug();
-      return getByText('Credentials', { exact: false })
-      ;
-    });
+    const error = await waitForElement(() => getByText('Credentials', { exact: false }));
     expect(error.textContent).toEqual('Credentials not recognised');
   });
 
