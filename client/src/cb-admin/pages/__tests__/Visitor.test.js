@@ -50,7 +50,6 @@ describe('Visitor Component', () => {
         renderWithRouter({
           match: { isExact: true, params: { id: '4' }, path: '/cb/visitors/:id', url: '/cb/visitors/4' },
         })(Visitor);
-    // debug();
     const [name, gender, email] = await waitForElement(() => [
       getByText('yusra mardini'),
       getByText('female'),
