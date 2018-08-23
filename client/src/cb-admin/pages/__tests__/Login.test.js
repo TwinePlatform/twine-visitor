@@ -4,14 +4,15 @@ import {
   waitForElement,
   wait,
 } from 'react-testing-library';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import renderWithRouter from '../../../tests';
 import Login from '../Login';
+import { axios } from '../../../api';
 
 
 describe('Login Component', () => {
   let mock;
+  const API_HOST = 'http://localhost:4000';
 
   beforeAll(() => {
     mock = new MockAdapter(axios);
@@ -22,7 +23,7 @@ describe('Login Component', () => {
   test(':: incorrect user details returns 401 and displays error message', async () => {
     expect.assertions(1);
 
-    mock.onPost('http://localhost:4000/api/v1/users/login/admin')
+    mock.onPost(`${API_HOST}/api/v1/users/login/admin`)
       .reply(401, { result: null, error: { message: 'Credentials not recognised' } });
 
     const { getByText, getByLabelText } = renderWithRouter()(Login);
@@ -42,7 +43,7 @@ describe('Login Component', () => {
   test(':: correct user details returns 200 and redirects to homepage', async () => {
     expect.assertions(1);
 
-    mock.onPost('http://localhost:4000/api/v1/users/login/admin')
+    mock.onPost(`${API_HOST}/api/v1/users/login/admin`)
       .reply(200, { });
 
     const { getByText, history, getByLabelText } = renderWithRouter({ route: '/cb/login' })(Login);

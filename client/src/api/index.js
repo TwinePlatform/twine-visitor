@@ -11,7 +11,7 @@ require('env2')(`${__dirname}/../../../config/config.env`);
 
 const API_HOST = process.env.API_HOST_DOMAIN;
 
-const axios = create({
+export const axios = create({
   baseURL: 'http://localhost:4000/api/v1/',
   withCredentials: true,
 });
