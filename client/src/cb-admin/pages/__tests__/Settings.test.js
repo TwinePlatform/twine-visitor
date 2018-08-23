@@ -3,14 +3,14 @@ import {
   waitForElement,
   wait,
 } from 'react-testing-library';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import renderWithRouter from '../../../tests';
 import Settings from '../Settings';
-
+import { axios } from '../../../api';
 
 describe('Settings Component', () => {
   let mock;
+  const API_HOST = 'http://localhost:4000';
 
   beforeAll(() => {
     mock = new MockAdapter(axios);
@@ -21,14 +21,14 @@ describe('Settings Component', () => {
   test(':: succesful load displays cbs details on page', async () => {
     expect.assertions(3);
 
-    mock.onPost('/api/cb/details')
+    mock.onGet(`${API_HOST}/api/v1/organisations/me`)
       .reply(200,
         { result: {
           id: 3,
-          org_name: 'Frog Finders',
-          genre: 'Environment or nature',
-          email: 'findmyfroggy@frogfinders.com',
-          uploadedfilecloudinaryurl: null,
+          name: 'Frog Finders',
+          sector: 'Environment or nature',
+          email: 'findmyfroggy@frogfinders.com', // currently not returned in response
+          logoUrl: null,
           date: '2017-05-15T12:24:56.000Z' },
         });
 
@@ -47,7 +47,7 @@ describe('Settings Component', () => {
   test(':: unauthorised request redirects to ', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/cb/details')
+    mock.onGet(`${API_HOST}/api/v1/organisations/me`)
       .reply(401,
         { result: null,
         });
