@@ -142,8 +142,8 @@ export default class VisitorProfile extends React.Component {
     CbAdmin.get()
       .then(res =>
         this.setState({
-          cbOrgName: res.data.result.org_name,
-          cbLogoUrl: res.data.result.uploadedfilecloudinaryurl,
+          cbOrgName: res.data.result.name,
+          cbLogoUrl: res.data.result.logoUrl,
         }))
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {

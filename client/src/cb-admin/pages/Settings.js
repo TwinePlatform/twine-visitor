@@ -157,11 +157,11 @@ export default class SettingsPage extends React.Component {
   updateStateFromApi = (data) => {
     this.setState({
       id: data.id,
-      orgName: data.org_name,
-      sector: data.genre,
-      email: data.email,
+      orgName: data.name,
+      sector: data.sector,
+      email: data.email, // not returned in response
       date: moment(data.date).format('Do MMMM YYYY'),
-      logoUrl: data.uploadedfilecloudinaryurl,
+      logoUrl: data.logoUrl,
       form: {},
       errors: {},
       dropzoneMsg: undefined,

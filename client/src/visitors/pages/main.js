@@ -116,14 +116,29 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
-    CbAdmin.__DEPRECATED_get() // eslint-disable-line
+    CbAdmin.get()
       .then(res =>
         this.setState({
-          cbOrgName: res.data.result.cbOrgName,
-          cbLogoUrl: res.data.result.cbLogoUrl,
+          cbOrgName: res.data.result.name,
+          cbLogoUrl: res.data.result.logoUrl,
           formAutocompleteUUID: Date.now().toString(),
-        }),
-      );
+        }))
+      .catch((error) => {
+
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/cb/login');
+
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
+
+        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+          this.props.history.push('/error/404');
+
+        } else {
+          this.props.history.push('/error/unknown');
+
+        }
+      });
   }
 
   onClickPrint = () => {
