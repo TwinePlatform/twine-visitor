@@ -5,7 +5,7 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 import { SecondaryButton } from '../../shared/components/form/base';
 import DotButton from '../../shared/components/form/DottedButton';
 import { Heading, Link as StyledLink } from '../../shared/components/text/base';
-import { CbAdmin, logout } from '../../api';
+import { CbAdmin, logout, ErrorUtils } from '../../api';
 
 
 const Nav = styled.nav`
@@ -50,8 +50,24 @@ export default class Dashboard extends React.Component {
 
   componentDidMount() {
     CbAdmin.get()
-      .then(res => this.setState({ orgName: res.data.result.org_name }))
-      .catch(() => { this.props.history.push('/cb/login'); });
+      .then(res => this.setState({ orgName: res.data.result.name }))
+      .catch((error) => {
+
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/cb/login');
+
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
+
+        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+          this.props.history.push('/error/404');
+
+        } else {
+          this.props.history.push('/error/unknown');
+
+        }
+      });
+
   }
 
   render() {
