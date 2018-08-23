@@ -1,38 +1,45 @@
 /*
  * Twine API interface
  */
-import axios from 'axios';
+import _axios from 'axios'; // eslint-disable-line
+// 👆🏽 to be removed
+
+import { create } from 'axios'; // eslint-disable-line
 import { map, head, pathOr, equals, compose } from 'ramda';
 
 require('env2')(`${__dirname}/../../../config/config.env`);
 
 const API_HOST = process.env.API_HOST_DOMAIN;
 
+const axios = create({
+  baseURL: 'http://localhost:4000/api/v1/',
+  withCredentials: true,
+});
 
 export const Activities = {
   get: ({ weekday = 'all' } = {}) =>
-    axios.get(`/api/activities/${weekday}`),
+    _axios.get(`/api/activities/${weekday}`),
 
   create: ({ name }) =>
-    axios.post('/api/activity/add', { name }),
+    _axios.post('/api/activity/add', { name }),
 
   update: ({ id, monday, tuesday, wednesday, thursday, friday, saturday, sunday }) =>
-    axios.post(
+    _axios.post(
       '/api/activity/update',
       { id, monday, tuesday, wednesday, thursday, friday, saturday, sunday },
 
     ),
 
   delete: ({ id }) =>
-    axios.post('/api/activity/delete', { id }),
+    _axios.post('/api/activity/delete', { id }),
 };
 
 export const Visitors = {
   get: (query) => {
     if (!query) {
-      return axios.get('/api/users/all');
+      return _axios.get('/api/users/all');
     } else if (query.visitors) {
-      return axios.get('/api/users/all', {
+      return _axios.get('/api/users/all', {
         params: {
           pagination: query.pagination || null,
           offset: query.offset,
@@ -43,7 +50,7 @@ export const Visitors = {
 
       });
     } else if (query.filter || query.sort) {
-      return axios.post(
+      return _axios.post(
         '/api/visitors/filtered',
         {
           filterBy: query.filter,
@@ -52,7 +59,7 @@ export const Visitors = {
 
       );
     } else if (query.name && query.email) {
-      return axios.post(
+      return _axios.post(
         '/api/visit/check',
         {
           formSender: query.name,
@@ -64,7 +71,7 @@ export const Visitors = {
 
       );
     } else if (query.id) {
-      return axios.post(
+      return _axios.post(
         '/api/user/details',
         {
           userId: query.id,
@@ -72,7 +79,7 @@ export const Visitors = {
 
       );
     } else if (query.hash) {
-      return axios.post(
+      return _axios.post(
         query.asAdmin ? '/api/user/qr' : '/api/user/name-from-scan',
         {
           hash: query.hash,
@@ -80,7 +87,7 @@ export const Visitors = {
 
       );
     } else if (query.withVisits) {
-      return axios.get('/api/visitors/all', {
+      return _axios.get('/api/visitors/all', {
         params: {
           pagination: query.pagination || null,
           offset: query.offset || null,
@@ -99,7 +106,7 @@ export const Visitors = {
 
     { name, gender, yob, email, phoneNumber, emailContactConsent, smsContactConsent },
   ) =>
-    axios.post(
+    _axios.post(
       `${API_HOST}/api/v1/users/register/visitor`,
       {
         name,
@@ -116,7 +123,7 @@ export const Visitors = {
 
     { id, name, gender, yob, email, phoneNumber }, // eslint-disable-line
   ) =>
-    axios.post(
+    _axios.post(
       '/api/user/details/update',
       {
         userId: id,
@@ -131,7 +138,7 @@ export const Visitors = {
   delete: () => {},
 
   email: ({ id }) =>
-    axios.post(
+    _axios.post(
       '/api/user/qr/email',
       {
         id,
@@ -140,7 +147,7 @@ export const Visitors = {
     ),
 
   createVisit: ({ hash, activity }) =>
-    axios.post(
+    _axios.post(
       '/api/visit/add',
       {
         hash,
@@ -151,27 +158,24 @@ export const Visitors = {
 
   getStatistics: ({ groupBy, sort, filter } = {}) => {
     if (groupBy || filter || sort) {
-      return axios.post(
+      return _axios.post(
         '/api/users/filtered',
         {
           filterBy: filter,
           orderBy: Object.keys(sort)[0],
         },
-
       );
     }
 
-    return axios.get('/api/users/chart-all');
+    return _axios.get('/api/users/chart-all');
   },
 };
 
 export const CbAdmin = {
-  get: () => axios.post('/api/cb/details', {}),
-
-  __DEPRECATED_get: () => axios.get('/api/users/cb-name'),
+  get: () => axios.get('/organisations/me'),
 
   create: ({ orgName, category, email, password, passwordConfirm, region }) =>
-    axios.post('/api/cb/register', {
+    _axios.post('/api/cb/register', {
       orgName,
       email,
       category,
@@ -184,7 +188,7 @@ export const CbAdmin = {
 
     { orgName, sector, email, region, logoUrl }, // eslint-disable-line
   ) =>
-    axios.post(
+    _axios.post(
       '/api/cb/details/update',
       {
         org_name: orgName,
@@ -197,22 +201,21 @@ export const CbAdmin = {
   delete: () => {},
 
   resetPassword: ({ password, passwordConfirm }) =>
-    axios.post('/api/cb/pwd/change', {
+    _axios.post('/api/cb/pwd/change', {
       password,
       passwordConfirm,
     }),
 
   login: ({ email, password }) =>
-    axios.post('http://localhost:4000/api/v1/users/login/admin',
+    axios.post('/users/login/admin',
       {
         email,
         password,
       },
-      { withCredentials: true },
     ),
 
   upgradePermissions: ({ password }) =>
-    axios.post(
+    _axios.post(
       '/api/admin/login',
       {
         password,
@@ -221,12 +224,12 @@ export const CbAdmin = {
     ),
 
   email: ({ email }) =>
-    axios.post('/api/cb/pwd/reset', {
+    _axios.post('/api/cb/pwd/reset', {
       email,
     }),
 
   getFeedback: (since, until) =>
-    axios.get('/api/cb/feedback', {
+    _axios.get('/api/cb/feedback', {
       params: {
         since: since ? since.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : '',
         until: until ? until.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : '',
@@ -244,7 +247,7 @@ export const Cloudinary = {
     form.append('file', file);
     form.append('upload_preset', Cloudinary.UPLOAD_PRESET);
 
-    return axios.post(Cloudinary.UPLOAD_URL, form);
+    return _axios.post(Cloudinary.UPLOAD_URL, form);
   },
 };
 
@@ -258,5 +261,5 @@ export const ErrorUtils = {
 };
 
 export const logout = () =>
-  axios.get('http://localhost:4000/api/v1/users/logout', { withCredentials: true })
+  axios.get('/users/logout')
 ;
