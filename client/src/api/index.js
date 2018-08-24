@@ -12,7 +12,7 @@ require('env2')(`${__dirname}/../../../config/config.env`);
 const API_HOST = process.env.API_HOST_DOMAIN;
 
 export const axios = create({
-  baseURL: 'http://localhost:4000/api/v1/',
+  baseURL: 'http://localhost:4000/v1/',
   withCredentials: true,
 });
 

@@ -23,7 +23,7 @@ describe('Dashboard Component', () => {
   test(':: successful response with 200 displays CB welcome message', async () => {
     expect.assertions(1);
 
-    mock.onGet(`${API_HOST}/api/v1/organisations/me`)
+    mock.onGet(`${API_HOST}/v1/organisations/me`)
       .reply(200, {
         result: {
           id: 3,
@@ -45,7 +45,7 @@ describe('Dashboard Component', () => {
   test(':: unsuccessful response with 401 redirects to login', async () => {
     expect.assertions(1);
 
-    mock.onGet(`${API_HOST}/api/v1/organisations/me`)
+    mock.onGet(`${API_HOST}/v1/organisations/me`)
       .reply(401, { result: null, error: 'Credentials not recognised' });
 
     const { history } =
