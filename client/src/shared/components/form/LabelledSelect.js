@@ -41,7 +41,10 @@ LabelledSelect.propTypes = {
   label: PropTypes.node.isRequired,
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      key: PropTypes.string.isRequired,
+      key: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+      ]).isRequired,
       value: PropTypes.string.isRequired,
       content: PropTypes.string,
     }),

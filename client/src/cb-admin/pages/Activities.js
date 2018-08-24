@@ -8,7 +8,7 @@ import { Form, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import Checkbox from '../components/Checkbox';
-import { Activities, ErrorUtils } from '../../api';
+import { Activities, Constants, ErrorUtils } from '../../api';
 import ActivityLabel from '../components/ActivityLabel';
 
 
@@ -51,28 +51,6 @@ const TableCell = styled.td`
 `;
 const TableHeader = styled.th``;
 
-
-const categories = [
-  { key: '0', value: '' },
-  { key: '1', value: 'Sports' },
-  { key: '2', value: 'Arts, Craft, and Music' },
-  { key: '3', value: 'Physical health and wellbeing' },
-  { key: '4', value: 'Socialising' },
-  { key: '5', value: 'Adult skills building' },
-  { key: '6', value: 'Education support' },
-  { key: '7', value: 'Employment support' },
-  { key: '8', value: 'Business support' },
-  { key: '9', value: 'Care service' },
-  { key: '10', value: 'Mental health support' },
-  { key: '11', value: 'Housing support' },
-  { key: '12', value: 'Work space' },
-  { key: '13', value: 'Food' },
-  { key: '14', value: 'Outdoor work and gardening' },
-  { key: '15', value: 'Local products' },
-  { key: '16', value: 'Environment and conservation work' },
-  { key: '17', value: 'Transport' },
-];
-
 const keyMap = {
   name: 'Activity',
   monday: 'Mon',
@@ -92,6 +70,7 @@ export default class ActivitiesPage extends React.Component {
     super(props);
 
     this.state = {
+      categories: [],
       activities: {
         items: {},
         order: [],
@@ -102,16 +81,19 @@ export default class ActivitiesPage extends React.Component {
   }
 
   componentDidMount() {
-    Activities.get()
-      .then((res) => {
-        const activities = res.data.result;
+    Promise.all([Activities.get(), Constants.getActivities()])
+      .then(([{ data: { result: activities } }, { data: { result: categories } }]) => {
 
         const order = activities.map(activity => activity.id);
         const items = activities.reduce((acc, activity) => {
           acc[activity.id] = activity;
           return acc;
         }, {});
-        this.setState(state => ({ ...state, activities: { items, order } }));
+
+        this.setState({
+          activities: { items, order },
+          categories: categories.map((value, key) => ({ key, value })),
+        });
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
@@ -225,7 +207,7 @@ export default class ActivitiesPage extends React.Component {
             id="cb-admin-activities-category"
             label="Category"
             name="category"
-            options={categories}
+            options={this.state.categories}
             error={errors.activity}
             required
           />
@@ -265,7 +247,8 @@ export default class ActivitiesPage extends React.Component {
                                     name={`${activity.id}-${k}`}
                                     alt={`${activity.name} ${k} update button`}
                                     checked={activity[k]}
-                                    onChange={() => this.toggleCheckbox(activity.id, k)}
+                                    onChange={() =>
+                                      this.toggleCheckbox(activity.id, k)}
                                   />
                                 )
                             }
