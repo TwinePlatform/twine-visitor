@@ -18,7 +18,8 @@ export const axios = create({
 
 export const Activities = {
   get: ({ weekday = 'all' } = {}) =>
-    _axios.get(`/api/activities/${weekday}`),
+    // _axios.get(`/api/activities/${weekday}`),
+    axios.get('/community-businesses/me/visit_activities'),
 
   create: ({ name }) =>
     _axios.post('/api/activity/add', { name }),
@@ -263,3 +264,7 @@ export const ErrorUtils = {
 export const logout = () =>
   axios.get('/users/logout')
 ;
+
+export const Constants = {
+  getActivities: () => axios.get('/visit_activity_categories'),
+};
