@@ -7,10 +7,6 @@ import _axios from 'axios'; // eslint-disable-line
 import { create } from 'axios'; // eslint-disable-line
 import { map, head, pathOr, equals, compose } from 'ramda';
 
-require('env2')(`${__dirname}/../../../config/config.env`);
-
-const API_HOST = process.env.API_HOST_DOMAIN;
-
 export const axios = create({
   baseURL: 'http://localhost:4000/v1/',
   withCredentials: true,
@@ -110,8 +106,8 @@ export const Visitors = {
   create: (
     { name, gender, yob, email, phoneNumber, emailContactConsent, smsContactConsent },
   ) =>
-    _axios.post(
-      `${API_HOST}/api/v1/users/register/visitor`,
+    axios.post(
+      '/users/register/visitor',
       {
         name,
         gender,
@@ -241,7 +237,7 @@ export const CbAdmin = {
 
   postFeedback: score =>
     axios.post(
-      `${API_HOST}/v1/community-businesses/me/feedback`,
+      '/community-businesses/me/feedback',
       { feedbackScore: score },
     ),
 };

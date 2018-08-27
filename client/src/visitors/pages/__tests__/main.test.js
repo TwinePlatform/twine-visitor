@@ -4,15 +4,14 @@ import {
   fireEvent,
   wait,
 } from 'react-testing-library';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { axios } from '../../../api';
 import renderWithRouter from '../../../tests';
 import main from '../main';
 
 
 describe('Visitor Registration Component', () => {
   let mock;
-  const API_HOST = process.env.API_HOST_DOMAIN;
 
   beforeAll(() => {
     mock = new MockAdapter(axios);
@@ -36,10 +35,10 @@ describe('Visitor Registration Component', () => {
       qrCode: 'data:image/png;base64,329t4ji3nfp23nfergj42finoregn',
     };
 
-    mock.onPost(`${API_HOST}/api/v1/users/register/visitor`)
+    mock.onPost('/users/register/visitor')
       .reply(200, { data: { ...visitor } });
 
-    mock.onGet(`${API_HOST}/api/v1/community-businesses/me`)
+    mock.onGet('/community-businesses/me')
       .reply(200, { result: { name: 'cbName', logoUrl: 'cbURL' } });
 
     const tools = renderWithRouter({ route: '/visitor/signup' })(main);
