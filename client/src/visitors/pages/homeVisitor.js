@@ -53,7 +53,7 @@ const FeedbackStyledSection = styled.section`
 `;
 
 const postFeedback = (feedbackScore, props) =>
-  CbAdmin.postFeedback(localStorage.getItem('token'), { feedbackScore })
+  CbAdmin.postFeedback(feedbackScore)
     .then(() => props.history.push('/thankyou'))
     .catch((error) => {
       const status = ErrorUtils.getErrorStatus(error);

@@ -103,7 +103,6 @@ export const Visitors = {
   },
 
   create: (
-
     { name, gender, yob, email, phoneNumber, emailContactConsent, smsContactConsent },
   ) =>
     _axios.post(
@@ -120,7 +119,6 @@ export const Visitors = {
     ),
 
   update: (
-
     { id, name, gender, yob, email, phoneNumber }, // eslint-disable-line
   ) =>
     _axios.post(
@@ -185,7 +183,6 @@ export const CbAdmin = {
     }),
 
   update: (
-
     { orgName, sector, email, region, logoUrl }, // eslint-disable-line
   ) =>
     _axios.post(
@@ -237,11 +234,10 @@ export const CbAdmin = {
 
     }),
 
-  postFeedback: (tkn, score) =>
+  postFeedback: score =>
     axios.post(
-      `${API_HOST}/api/v1/community-businesses/me/feedback`,
+      `${API_HOST}/v1/community-businesses/me/feedback`,
       { feedbackScore: score },
-      { headers: { Authorization: tkn } },
     ),
 };
 
