@@ -21,7 +21,7 @@ describe('Settings Component', () => {
   test(':: succesful load displays cbs details on page', async () => {
     expect.assertions(3);
 
-    mock.onGet(`${API_HOST}/v1/organisations/me`)
+    mock.onGet(`${API_HOST}/v1/community-businesses/me`)
       .reply(200,
         { result: {
           id: 3,
@@ -47,7 +47,7 @@ describe('Settings Component', () => {
   test(':: unauthorised request redirects to ', async () => {
     expect.assertions(1);
 
-    mock.onGet(`${API_HOST}/v1/organisations/me`)
+    mock.onGet(`${API_HOST}/v1/community-businesses/me`)
       .reply(401,
         { result: null,
         });

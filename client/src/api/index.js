@@ -172,7 +172,7 @@ export const Visitors = {
 };
 
 export const CbAdmin = {
-  get: () => axios.get('/organisations/me'),
+  get: () => axios.get('/community-businesses/me'),
 
   create: ({ orgName, category, email, password, passwordConfirm, region }) =>
     _axios.post('/api/cb/register', {
