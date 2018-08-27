@@ -4,9 +4,9 @@ import {
   waitForElement,
   wait,
 } from 'react-testing-library';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import 'jest-dom/extend-expect';
+import { axios } from '../../../api';
 
 import renderWithRouter from '../../../tests';
 import Activities from '../Activities';
@@ -17,7 +17,28 @@ describe('Activities Component', () => {
 
   beforeAll(() => {
     mock = new MockAdapter(axios);
-    mock.onGet('/api/activities/all')
+
+    mock.onGet('/visit_activity_categories')
+      .reply(200, { result: [
+        'Adult skills building',
+        'Arts, Craft, and Music',
+        'Business support',
+        'Care service',
+        'Education support',
+        'Employment support',
+        'Environment and conservation work',
+        'Food',
+        'Housing support',
+        'Local products',
+        'Mental health support',
+        'Outdoor work and gardening',
+        'Physical health and wellbeing',
+        'Socialising',
+        'Sports',
+        'Transport',
+        'Work space'] });
+
+    mock.onGet('/community-businesses/me/visit_activities')
       .reply(200, { result: [
         { id: 8,
           name: 'French Lessons',
@@ -50,11 +71,10 @@ describe('Activities Component', () => {
           sunday: false,
         }] });
 
-    mock.onPost('/api/activity/add')
+    mock.onPost('/community-businesses/me/visit_activities')
       .reply(200, { result: {
         id: 14,
         name: 'Cycling',
-        cb_id: 4,
         deleted: false,
         monday: false,
         tuesday: false,
@@ -65,12 +85,11 @@ describe('Activities Component', () => {
         sunday: false,
         date: '2018-07-27T00:15:16.510Z' } });
 
-    mock.onPost('/api/activity/update')
+    mock.onPut('/community-businesses/me/visit_activities/8')
       .reply(200,
         { result: {
           id: 8,
           name: 'French Lessons',
-          cb_id: 4,
           deleted: false,
           monday: true,
           tuesday: true,
@@ -82,7 +101,7 @@ describe('Activities Component', () => {
           date: '2017-12-22T17:24:57.000Z',
         } });
 
-    mock.onPost('/api/activity/delete')
+    mock.onDelete('/community-businesses/me/visit_activities/8')
       .reply(200, { result: null });
   });
 

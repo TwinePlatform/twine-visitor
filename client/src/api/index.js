@@ -17,22 +17,26 @@ export const axios = create({
 });
 
 export const Activities = {
-  get: ({ weekday = 'all' } = {}) =>
-    // _axios.get(`/api/activities/${weekday}`),
-    axios.get('/community-businesses/me/visit_activities'),
+  get: () => axios.get('/community-businesses/me/visit_activities'),
 
-  create: ({ name }) =>
-    _axios.post('/api/activity/add', { name }),
+  create: ({ name, category }) =>
+    axios.post('/community-businesses/me/visit_activities', { name, category }),
 
   update: ({ id, monday, tuesday, wednesday, thursday, friday, saturday, sunday }) =>
-    _axios.post(
-      '/api/activity/update',
-      { id, monday, tuesday, wednesday, thursday, friday, saturday, sunday },
+    axios.put(`/community-businesses/me/visit_activities/${id}`, {
+      id,
+      monday,
+      tuesday,
+      wednesday,
+      thursday,
+      friday,
+      saturday,
+      sunday,
+    }),
 
-    ),
 
   delete: ({ id }) =>
-    _axios.post('/api/activity/delete', { id }),
+    axios.delete(`/community-businesses/me/visit_activities/${id}`),
 };
 
 export const Visitors = {
