@@ -64,6 +64,11 @@ const keyMap = {
 const colToState = invertObj(keyMap);
 const columns = Object.values(keyMap);
 
+const doesActivityAlreadyExist = (newActivityName, activitiesObject) =>
+  Object.values(activitiesObject).some(({ name }) =>
+    name === newActivityName,
+  );
+
 
 export default class ActivitiesPage extends React.Component {
   constructor(props) {
@@ -93,6 +98,7 @@ export default class ActivitiesPage extends React.Component {
         this.setState({
           activities: { items, order },
           categories: categories.map((value, key) => ({ key, value })),
+          form: { category: categories[0] },
         });
       })
       .catch((error) => {
@@ -129,7 +135,10 @@ export default class ActivitiesPage extends React.Component {
   addActivity = (e) => {
     e.preventDefault();
 
-    Activities.create(this.state.form)
+    if (doesActivityAlreadyExist(this.state.form.name, this.state.activities.items)) {
+      return this.setState({ errors: { general: 'Activity already exists', view: true } });
+    }
+    return Activities.create(this.state.form)
       .then((res) => {
         this.setState((state) => {
           const item = res.data.result;
@@ -157,6 +166,7 @@ export default class ActivitiesPage extends React.Component {
       });
   }
 
+
   deleteActivity = (id) => {
     Activities.delete({ id })
       .then(() => {
@@ -177,6 +187,8 @@ export default class ActivitiesPage extends React.Component {
   }
 
   render() {
+    // console.log(this.state);
+
     const { errors } = this.state;
     const errorMessage = <ActivitiesError vis={errors.view}> {errors.general} </ActivitiesError>;
     return (
