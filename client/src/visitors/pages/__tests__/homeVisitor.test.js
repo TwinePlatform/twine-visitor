@@ -4,15 +4,14 @@ import {
   fireEvent,
   wait,
 } from 'react-testing-library';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { axios } from '../../../api';
 import renderWithRouter from '../../../tests';
 import homeVisitor from '../homeVisitor';
 
 
 describe('Visitor Home Page', () => {
   let mock;
-  const API_HOST = process.env.API_HOST_DOMAIN;
   const noop = () => {};
 
   beforeAll(() => {
@@ -25,7 +24,7 @@ describe('Visitor Home Page', () => {
     expect.assertions(1);
 
     mock
-      .onPost(`${API_HOST}/api/v1/community-businesses/me/feedback`)
+      .onPost('/community-businesses/me/feedback')
       .reply(200, { data: null });
 
     const tools = renderWithRouter({
@@ -48,7 +47,7 @@ describe('Visitor Home Page', () => {
     expect.assertions(1);
 
     mock
-      .onPost(`${API_HOST}/api/v1/community-businesses/me/feedback`)
+      .onPost('/community-businesses/me/feedback')
       .reply(200, { data: null });
 
     const tools = renderWithRouter({
@@ -71,7 +70,7 @@ describe('Visitor Home Page', () => {
     expect.assertions(1);
 
     mock
-      .onPost(`${API_HOST}/api/v1/community-businesses/me/feedback`)
+      .onPost('/community-businesses/me/feedback')
       .reply(200, { data: null });
 
     const tools = renderWithRouter({
@@ -94,7 +93,7 @@ describe('Visitor Home Page', () => {
     expect.assertions(1);
 
     mock
-      .onPost(`${API_HOST}/api/v1/community-businesses/me/feedback`)
+      .onPost('/community-businesses/me/feedback')
       .reply(500, { error: { statusCode: 500, type: 'Internal Server Error', message: 'Oops' } });
 
     const tools = renderWithRouter({
