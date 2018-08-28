@@ -187,8 +187,6 @@ export default class ActivitiesPage extends React.Component {
   }
 
   render() {
-    // console.log(this.state);
-
     const { errors } = this.state;
     const errorMessage = <ActivitiesError vis={errors.view}> {errors.general} </ActivitiesError>;
     return (
