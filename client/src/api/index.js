@@ -13,13 +13,13 @@ export const axios = create({
 });
 
 export const Activities = {
-  get: () => axios.get('/community-businesses/me/visit_activities'),
+  get: () => axios.get('/community-businesses/me/visit-activities'),
 
   create: ({ name, category }) =>
-    axios.post('/community-businesses/me/visit_activities', { name, category }),
+    axios.post('/community-businesses/me/visit-activities', { name, category }),
 
   update: ({ id, monday, tuesday, wednesday, thursday, friday, saturday, sunday }) =>
-    axios.put(`/community-businesses/me/visit_activities/${id}`, {
+    axios.put(`/community-businesses/me/visit-activities/${id}`, {
       id,
       monday,
       tuesday,
@@ -32,7 +32,7 @@ export const Activities = {
 
 
   delete: ({ id }) =>
-    axios.delete(`/community-businesses/me/visit_activities/${id}`),
+    axios.delete(`/community-businesses/me/visit-activities/${id}`),
 };
 
 export const Visitors = {
@@ -269,5 +269,5 @@ export const logout = () =>
 ;
 
 export const Constants = {
-  getActivities: () => axios.get('/visit_activity_categories'),
+  getActivities: () => axios.get('/visit-activity-categories'),
 };

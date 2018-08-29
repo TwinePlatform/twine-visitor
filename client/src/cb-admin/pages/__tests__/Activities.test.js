@@ -18,7 +18,7 @@ describe('Activities Component', () => {
   beforeAll(() => {
     mock = new MockAdapter(axios);
 
-    mock.onGet('/visit_activity_categories')
+    mock.onGet('/visit-activity-categories')
       .reply(200, { result: [
         'Adult skills building',
         'Arts, Craft, and Music',
@@ -38,7 +38,7 @@ describe('Activities Component', () => {
         'Transport',
         'Work space'] });
 
-    mock.onGet('/community-businesses/me/visit_activities')
+    mock.onGet('/community-businesses/me/visit-activities')
       .reply(200, { result: [
         { id: 8,
           name: 'French Lessons',
@@ -71,7 +71,7 @@ describe('Activities Component', () => {
           sunday: false,
         }] });
 
-    mock.onPost('/community-businesses/me/visit_activities')
+    mock.onPost('/community-businesses/me/visit-activities')
       .reply(200, { result: {
         id: 14,
         name: 'Cycling',
@@ -85,7 +85,7 @@ describe('Activities Component', () => {
         sunday: false,
         date: '2018-07-27T00:15:16.510Z' } });
 
-    mock.onPut('/community-businesses/me/visit_activities/8')
+    mock.onPut('/community-businesses/me/visit-activities/8')
       .reply(200,
         { result: {
           id: 8,
@@ -101,7 +101,7 @@ describe('Activities Component', () => {
           date: '2017-12-22T17:24:57.000Z',
         } });
 
-    mock.onDelete('/community-businesses/me/visit_activities/8')
+    mock.onDelete('/community-businesses/me/visit-activities/8')
       .reply(200, { result: null });
   });
 
