@@ -56,15 +56,11 @@ const feedbackColors = [
   },
 ];
 
-const doughnutConfig = (colorConfig, feedbackCountArray) => ({
+const doughnutConfig = (colorConfig, feedbackCounts) => ({
   labels: feedbackColors.map(el => el.label),
   datasets: [
     {
-      data: feedbackColors.map(
-        el => feedbackCountArray.filter(
-          feedbackCount => feedbackCount.feedback_score === el.feedback_score,
-        )[0].count,
-      ),
+      data: feedbackColors.map(el => feedbackCounts[el.feedback_score]),
       backgroundColor: feedbackColors.map(el => el.backgroundColor),
       hoverBackgroundColor: feedbackColors.map(el => el.hoverBackgroundColor),
     },
@@ -80,7 +76,7 @@ export default class Feedback extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: null,
+      feedbackCounts: null,
       error: null,
       startDate: null,
       endDate: null,
@@ -111,8 +107,8 @@ export default class Feedback extends Component {
   handleGetFeedback = () => {
     CbAdmin.getFeedback(this.state.startDate, this.state.endDate)
       .then(({ data }) => {
-        data.result[0] //eslint-disable-line
-          ? this.setState({ data, error: null })
+        !data.error && data.result && data.result.totalFeedback > 0 //eslint-disable-line
+          ? this.setState({ feedbackCounts: data.result, error: null })
           : this.setState({ error: 'Sorry, no data was found', data: null });
       })
       .catch((err) => {
@@ -170,11 +166,11 @@ export default class Feedback extends Component {
           </InvisibleDiv>
         </div>
 
-        {this.state.data
-          ? <DoughnutContainer>
-            <Doughnut data={doughnutConfig(feedbackColors, this.state.data.result)} />
+        {this.state.feedbackCounts
+          ? <DoughnutContainer data-testid="doughnut">
+            <Doughnut data={doughnutConfig(feedbackColors, this.state.feedbackCounts)} />
           </DoughnutContainer>
-          : <h2>{this.state.error}.</h2>
+          : <h2 data-testid="doughnut-error">{this.state.error}.</h2>
         }
       </div>
     );
