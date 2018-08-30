@@ -103,6 +103,9 @@ export const Visitors = {
     return Promise.reject(new Error('Invalid query parameters'));
   },
 
+  search: ({ hash }) =>
+    axios.post('/users/visitors/search', { qrCode: hash }),
+
   create: (
     { name, gender, yob, email, phoneNumber, emailContactConsent, smsContactConsent },
   ) =>
