@@ -65,7 +65,7 @@ export default class QRCode extends Component {
     this.state = {
       hasScanned: false,
       username: '',
-      hash: '',
+      qrCodeContent: '',
       activity: 'not selected',
       activities: [],
     };
@@ -99,11 +99,11 @@ export default class QRCode extends Component {
       this.scanner.addListener('scan', (content) => {
         this.scanner.stop();
 
-        Visitors.get({ hash: content })
+        Visitors.search({ qrCode: content })
           .then((res) => {
             this.setState({
-              username: res.data.fullname,
-              hash: res.data.hash,
+              username: res.data.result.name,
+              qrCodeContent: content,
               hasScanned: true,
             });
           })
@@ -137,7 +137,7 @@ export default class QRCode extends Component {
     this.setState({ activity: newActivity });
 
     Visitors.createVisit({
-      hash: this.state.hash,
+      qrCode: this.state.qrCodeContent,
       activity: newActivity,
     })
       .then(() => this.props.history.push('/visitor/end'))
