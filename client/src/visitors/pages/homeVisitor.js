@@ -58,7 +58,7 @@ const postFeedback = (feedbackScore, props) =>
     .catch((error) => {
       const status = ErrorUtils.getErrorStatus(error);
       if (status === 401) {
-        props.history.push('/login');
+        props.history.push('/cb/login');
       } else {
         props.history.push(`/error/${status}`);
       }
