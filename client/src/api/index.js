@@ -216,13 +216,7 @@ export const CbAdmin = {
     ),
 
   upgradePermissions: ({ password }) =>
-    _axios.post(
-      '/api/admin/login',
-      {
-        password,
-      },
-
-    ),
+    axios.post('/users/login/escalate', { password }),
 
   email: ({ email }) =>
     _axios.post('/api/cb/pwd/reset', {

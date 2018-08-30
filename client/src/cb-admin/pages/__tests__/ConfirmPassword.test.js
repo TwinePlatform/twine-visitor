@@ -4,10 +4,9 @@ import {
   waitForElement,
   wait,
 } from 'react-testing-library';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import 'jest-dom/extend-expect';
-
+import { axios } from '../../../api';
 import renderWithRouter from '../../../tests';
 import ConfirmPassword from '../ConfirmPassword';
 
@@ -23,7 +22,7 @@ describe('ConfirmPassword Component', () => {
   test(':: incorrect password responds 401 and displays error message', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/admin/login')
+    mock.onPost('/users/login/escalate')
       .reply(401, { result: null, error: 'Incorrect password' });
 
     const { getByText, getByLabelText } = renderWithRouter()(ConfirmPassword);
@@ -40,7 +39,7 @@ describe('ConfirmPassword Component', () => {
   test(':: incorrect password responds 401 and displays error message', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/admin/login')
+    mock.onPost('/users/login/escalate')
       .reply(200);
 
     const { getByText, getByLabelText, history } =
