@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
-import { assocPath, compose, pick, prop, filter, pipe, assoc, evolve, prepend } from 'ramda';
+import { assocPath, compose, pick, prop, filter, pipe, prepend, map, omit, flatten } from 'ramda';
 import csv from 'fast-csv';
 import jsZip from 'jszip';
 import fileSaver from 'file-saver';
@@ -84,7 +84,7 @@ const ErrorMessage = P.extend`
 
 const payloadFromState = compose(
   filter(Boolean),
-  pick(['orgName', 'sector', 'email', 'region', 'logoUrl']),
+  pick(['name', 'sector', 'email', 'region', 'logoUrl']),
   prop('form'),
 );
 
@@ -101,7 +101,7 @@ export default class SettingsPage extends React.Component {
 
     this.state = {
       id: null,
-      orgName: null,
+      name: null,
       sector: null,
       email: null,
       region: null,
@@ -150,17 +150,17 @@ export default class SettingsPage extends React.Component {
         this.updateStateFromApi(res.data.result);
       })
       .catch((error) => {
-        this.setState({ errors: error });
+        this.setState({ errors: error.response.data.error });
       });
   };
 
   updateStateFromApi = (data) => {
     this.setState({
       id: data.id,
-      orgName: data.name,
+      name: data.name,
       sector: data.sector,
       email: data.email, // not returned in response
-      date: moment(data.date).format('Do MMMM YYYY'),
+      date: moment(data.createdAt).format('Do MMMM YYYY'),
       logoUrl: data.logoUrl,
       form: {},
       errors: {},
@@ -169,98 +169,92 @@ export default class SettingsPage extends React.Component {
   };
 
   createCSVString = arrayCSV =>
-    new Promise((resolve, reject) => {
-      csv.writeToString(arrayCSV, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
+    new Promise((resolve, reject) =>
+      csv.writeToString(arrayCSV, (err, data) => (err ? reject(err) : resolve(data))));
+
+  createZip = async () => {
+    const visitorProps = [
+      'id',
+      'name',
+      'gender',
+      'birthYear',
+      'email',
+      'createdAt',
+      'emailConsent',
+      'smsConsent',
+    ];
+
+    const {
+      data: { result: visitors },
+    } = await Visitors.get({ fields: visitorProps, visits: true });
+
+    const transformers = {
+      users: pipe(
+        omit(['visits']),
+        ({ createdAt, ...obj }) => ({
+          ...obj,
+          registeredTime: moment(createdAt).format('HH:MM'),
+          registeredDate: moment(createdAt).format('DD-MM-YYY'),
+        }),
+      ),
+
+      visits: pipe(
+        omit(['createdAt', 'emailConsent', 'smsConsent', 'id']),
+        ({ visits, ...rest }) => visits.map(v => ({ ...rest, ...omit(['deletedAt', 'modifiedAt'], v) })),
+        map(({ createdAt, ...obj }) => ({
+          ...obj,
+          visitTime: moment(createdAt).format('HH:MM'),
+          visitDate: moment(createdAt).format('DD-MM-YYYY'),
+        })),
+      ),
+    };
+
+    const usersCsvData = visitors.map(transformers.users);
+    const visitsCsvData = flatten(visitors.map(transformers.visits));
+
+    const usersWithHeaders = prepend(
+      {
+        id: 'User ID',
+        name: 'Full Name',
+        gender: 'Gender',
+        birthYear: 'Year of Birth',
+        email: 'Email',
+        registeredDate: 'Register Date',
+        registeredTime: 'Register Time',
+        emailConsent: 'Email Opt-in',
+        smsConsent: 'Sms Opt-in',
+      },
+      usersCsvData,
+    );
+    const visitsWithHeaders = prepend(
+      {
+        id: 'Visit ID',
+        name: 'Full Name',
+        gender: 'Gender',
+        birthYear: 'Year of Birth',
+        visitActivity: 'Activity',
+        visitDate: 'Visit Date',
+        visitTime: 'Visit Time',
+      },
+      visitsCsvData,
+    );
+
+    await Promise.all([
+      this.createCSVString(usersWithHeaders),
+      this.createCSVString(visitsWithHeaders),
+    ]).then((array) => {
+      const zip = jsZip();
+      zip.file('App Data/users_data.csv', array[0]);
+      zip.file('App Data/visits_data.csv', array[1]);
+      zip.generateAsync({ type: 'blob' }).then((blob) => {
+        fileSaver.saveAs(blob, 'AppData.zip');
       });
     });
-
-  createZip = () => {
-    const zip = jsZip();
-    const pUsers = Visitors.get();
-    const pVisits = Visitors.get({ withVisits: true });
-
-    Promise.all([pUsers, pVisits])
-      .then(([resUsers, resVisits]) => {
-        const usersCsvData = resUsers.data.result.map(x =>
-          pipe(
-            pick([
-              'id',
-              'name',
-              'gender',
-              'yob',
-              'email',
-              'registered_at',
-              'email_consent',
-              'sms_consent',
-            ]),
-            assoc('registered_time', moment(x.registered_at).format('HH:MM')),
-            evolve({ registered_at: y => moment(y).format('DD-MM-YYYY') }),
-          )(x),
-        );
-        const usersWithHeaders = prepend(
-          {
-            id: 'User ID',
-            name: 'Full Name',
-            gender: 'Gender',
-            yob: 'Year of Birth',
-            email: 'Email',
-            registered_at: 'Register Date',
-            registered_time: 'Register Time',
-            email_consent: 'Email Opt-in',
-            sms_consent: 'Sms Opt-in',
-          },
-          usersCsvData,
-        );
-
-        const visitsCsvData = resVisits.data.result.map(x =>
-          pipe(
-            pick(['visit_id', 'visitor_name', 'gender', 'yob', 'activity', 'visit_date']),
-            assoc('visit_time', moment(x.visit_date).format('HH:MM')),
-            evolve({ visit_date: y => moment(y).format('DD-MM-YYYY') }),
-          )(x),
-        );
-        const visitsWithHeaders = prepend(
-          {
-            visit_id: 'Visit ID',
-            visitor_name: 'Full Name',
-            gender: 'Gender',
-            yob: 'Year of Birth',
-            activity: 'Activity',
-            visit_date: 'Visit Date',
-            visit_time: 'Visit Time',
-          },
-          visitsCsvData,
-        );
-
-        Promise.all([
-          this.createCSVString(usersWithHeaders),
-          this.createCSVString(visitsWithHeaders),
-        ]).then((array) => {
-          zip.file('App Data/users_data.csv', array[0]);
-          zip.file('App Data/visits_data.csv', array[1]);
-          zip.generateAsync({ type: 'blob' }).then((blob) => {
-            fileSaver.saveAs(blob, 'AppData.zip');
-          });
-        });
-      })
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-        } else {
-          this.setState({ errors: { general: 'Could not create CSV' } });
-        }
-      });
   };
 
   render() {
     const { errors, ...rest } = this.state;
+
     const rows = [
       { name: 'Business ID', value: rest.id },
       { name: 'Type of business', value: rest.sector },
@@ -273,7 +267,7 @@ export default class SettingsPage extends React.Component {
       <FlexContainerCol>
         <Nav>
           <HyperLink to="/admin"> Back to dashboard </HyperLink>
-          <Heading flex={2}>{rest.orgName}</Heading>
+          <Heading flex={2}>{rest.name}</Heading>
           <FlexItem />
         </Nav>
         <Row>
@@ -291,9 +285,9 @@ export default class SettingsPage extends React.Component {
               <LabelledInput
                 id="cb-admin-business-name"
                 label="Business name"
-                name="orgName"
+                name="name"
                 type="text"
-                error={errors.orgName}
+                error={errors.name}
               />
               <LabelledSelect
                 id="cb-admin-business-sector"
