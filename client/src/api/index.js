@@ -1,15 +1,15 @@
 /*
  * Twine API interface
  */
-import _axios from 'axios'; // eslint-disable-line
-// 👆🏽 to be removed
-
-import { create } from 'axios'; // eslint-disable-line
+import _axios, { create } from 'axios';
 import { map, head, pathOr, equals, compose } from 'ramda';
+import qs from 'qs';
+
 
 export const axios = create({
   baseURL: 'http://localhost:4000/v1/',
   withCredentials: true,
+  paramsSerializer: qs.stringify,
 });
 
 export const Activities = {
