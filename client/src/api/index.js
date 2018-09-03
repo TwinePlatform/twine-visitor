@@ -36,72 +36,8 @@ export const Activities = {
 };
 
 export const Visitors = {
-  get: (query) => {
-    if (!query) {
-      return _axios.get('/api/users/all');
-    } else if (query.visitors) {
-      return _axios.get('/api/users/all', {
-        params: {
-          pagination: query.pagination || null,
-          offset: query.offset,
-          sort: query.sort,
-          gender: query.genderFilter,
-          age: query.ageFilter,
-        },
-
-      });
-    } else if (query.filter || query.sort) {
-      return _axios.post(
-        '/api/visitors/filtered',
-        {
-          filterBy: query.filter,
-          orderBy: Object.keys(query.sort)[0],
-        },
-
-      );
-    } else if (query.name && query.email) {
-      return _axios.post(
-        '/api/visit/check',
-        {
-          formSender: query.name,
-          formEmail: query.email,
-          formPhone: query.phone_number,
-          formGender: query.gender,
-          formYear: query.yob,
-        },
-
-      );
-    } else if (query.id) {
-      return _axios.post(
-        '/api/user/details',
-        {
-          userId: query.id,
-        },
-
-      );
-    } else if (query.hash) {
-      return _axios.post(
-        query.asAdmin ? '/api/user/qr' : '/api/user/name-from-scan',
-        {
-          hash: query.hash,
-        },
-
-      );
-    } else if (query.withVisits) {
-      return _axios.get('/api/visitors/all', {
-        params: {
-          pagination: query.pagination || null,
-          offset: query.offset || null,
-          gender: query.genderFilter,
-          age: query.ageFilter,
-          activity: query.activityFilter,
-        },
-
-      });
-    }
-
-    return Promise.reject(new Error('Invalid query parameters'));
-  },
+  get: params =>
+    axios.get('/users/visitors', { params }),
 
   search: ({ hash }) =>
     axios.post('/users/visitors/search', { qrCode: hash }),
@@ -174,7 +110,14 @@ export const Visitors = {
 };
 
 export const CbAdmin = {
-  get: () => axios.get('/community-businesses/me'),
+  get: async () => {
+    const [cbRes, userRes] = await Promise.all([
+      axios.get('/community-businesses/me'),
+      axios.get('/users/me'),
+    ]);
+
+    return { data: { result: { ...cbRes.data.result, email: userRes.data.result.email } } };
+  },
 
   create: ({ orgName, category, email, password, passwordConfirm, region }) =>
     _axios.post('/api/cb/register', {
@@ -186,18 +129,15 @@ export const CbAdmin = {
       passwordConfirm,
     }),
 
-  update: (
-    { orgName, sector, email, region, logoUrl }, // eslint-disable-line
-  ) =>
-    _axios.post(
-      '/api/cb/details/update',
-      {
-        org_name: orgName,
-        genre: sector,
-        email,
-        uploadedFileCloudinaryUrl: logoUrl,
-      },
-    ),
+  update: async ({ name, sector, email, region, logoUrl }) => {
+    const resCb = await axios.put('/community-businesses/me', { name, sector, region, logoUrl });
+
+    const resUser = await (email
+      ? axios.put('/users/me', { email })
+      : Promise.resolve({ data: { result: { email: email || null } } }));
+
+    return { data: { result: { ...resCb.data.result, email: resUser.data.result.email } } };
+  },
 
   delete: () => {},
 
