@@ -29,13 +29,13 @@ describe('Dashboard Component', () => {
           id: 3,
           name: 'Frog Finders',
           sector: 'Environment or nature',
-          email: 'findmyfroggy@frogfinders.com',
           logoUrl: null,
           date: '2018-01-11T21:50:10.000Z' } },
       );
+    mock.onGet(`${API_HOST}/v1/users/me`)
+      .reply(200, { result: { email: 'findmyfroggy@frogfinders.com' } });
 
-    const { getByText } =
-      renderWithRouter()(Dashboard);
+    const { getByText } = renderWithRouter()(Dashboard);
 
     const insertedCbNameInSubtitle = await waitForElement(() => getByText('Frog', { exact: false }));
 
