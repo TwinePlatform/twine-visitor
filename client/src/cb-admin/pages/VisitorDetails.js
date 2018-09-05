@@ -111,11 +111,16 @@ export default class VisitorDetailsPage extends React.Component {
 
   getDataForCsv = () => {
     const { genderFilter, ageFilter } = this.state;
-    Visitors.get({
-      visitors: true,
-      genderFilter,
-      ageFilter,
-    })
+    const params = { visits: true };
+    const visFilter = (genderFilter || ageFilter)
+      ? { gender: genderFilter || undefined, age: ageFilter || undefined }
+      : undefined;
+
+    if (visFilter) {
+      params.filter = visFilter;
+    }
+
+    Visitors.get({}, params)
       .then((res) => {
         const csvData = res.data.result.map(x =>
           pipe(
@@ -175,16 +180,21 @@ export default class VisitorDetailsPage extends React.Component {
 
   update = (offset = 0) => {
     const { genderFilter, ageFilter } = this.state;
+    const params = { visits: true, offset, limit: 10 };
     const sort = colToState[this.state.sort];
+    const visFilter = (genderFilter || ageFilter)
+      ? { gender: genderFilter || undefined, age: ageFilter || undefined }
+      : undefined;
 
-    Visitors.get({
-      offset,
-      genderFilter,
-      ageFilter,
-      sort,
-      visitors: true,
-      pagination: true,
-    })
+    if (visFilter) {
+      params.filter = visFilter;
+    }
+
+    if (sort) {
+      params.sort = sort;
+    }
+
+    Visitors.get({}, params)
       .then((res) => {
         this.setState({ users: res.data.result, fullCount: res.data.meta.full_count });
       })

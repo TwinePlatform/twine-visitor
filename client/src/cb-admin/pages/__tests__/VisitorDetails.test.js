@@ -3,14 +3,15 @@ import {
   waitForElement,
   wait,
 } from 'react-testing-library';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { axios } from '../../../api';
 import renderWithRouter from '../../../tests';
 import VisitorDetails from '../VisitorDetails';
 
 
 describe('VisitorDetails Component', () => {
   let mock;
+  const API_HOST = 'http://localhost:4000';
 
   beforeAll(() => {
     mock = new MockAdapter(axios);
@@ -21,7 +22,7 @@ describe('VisitorDetails Component', () => {
   test(':: succesful load displays visitor details on page', async () => {
     expect.assertions(3);
 
-    mock.onGet('/api/users/all')
+    mock.onGet(`${API_HOST}/v1/community-businesses/me/visitors`, { params: { visits: true, offset: 0, limit: 10 } })
       .reply(200,
         { result: [{ full_count: '1',
           id: 4,
@@ -51,18 +52,11 @@ describe('VisitorDetails Component', () => {
   test(':: unauthorised request redirects to login', async () => {
     expect.assertions(1);
 
-    mock.onGet('/api/users/all')
-      .reply(401,
-        { result: null,
-        });
+    mock
+      .onGet(`${API_HOST}/v1/community-businesses/me/visitors`, { params: { visits: true, offset: 0, limit: 10 } })
+      .reply(401, { result: null });
 
-    mock.onPost('/api/cb/details')
-      .reply(401,
-        { result: null,
-        });
-
-    const { history } =
-      renderWithRouter()(VisitorDetails);
+    const { history } = renderWithRouter()(VisitorDetails);
 
     await wait(() => expect(history.location.pathname).toEqual('/admin/login'));
   });

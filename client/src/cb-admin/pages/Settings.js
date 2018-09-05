@@ -15,7 +15,7 @@ import { colors } from '../../shared/style_guide';
 import DetailsTable from '../components/DetailsTable';
 import Dropzone from '../components/Dropzone';
 import Logo from '../components/Logo';
-import { CbAdmin, Cloudinary, Visitors, ErrorUtils } from '../../api';
+import { CbAdmin, Cloudinary, Visitors } from '../../api';
 
 const sectors = [
   { key: '0', value: '' },

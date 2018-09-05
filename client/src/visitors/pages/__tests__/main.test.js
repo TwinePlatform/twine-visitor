@@ -35,11 +35,10 @@ describe('Visitor Registration Component', () => {
       qrCode: 'data:image/png;base64,329t4ji3nfp23nfergj42finoregn',
     };
 
-    mock.onPost('/users/register/visitor')
-      .reply(200, { data: { ...visitor } });
-
-    mock.onGet('/community-businesses/me')
-      .reply(200, { result: { name: 'cbName', logoUrl: 'cbURL' } });
+    mock.onPost('/users/register/visitor').reply(200, { data: { ...visitor } })
+      .onGet('/community-businesses/me').reply(200, { result: { name: 'cbName', logoUrl: 'cbURL' } })
+      .onGet('/users/me')
+      .reply(200, { result: {} });
 
     const tools = renderWithRouter({ route: '/visitor/signup' })(main);
 

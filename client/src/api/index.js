@@ -36,8 +36,8 @@ export const Activities = {
 };
 
 export const Visitors = {
-  get: params =>
-    axios.get('/users/visitors', { params }),
+  get: ({ id }, params) =>
+    axios.get(`/community-businesses/me/visitors${id ? `/${id}` : ''}`, { params }),
 
   search: ({ hash }) =>
     axios.post('/users/visitors/search', { qrCode: hash }),
