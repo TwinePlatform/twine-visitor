@@ -11,7 +11,6 @@ import Visitor from '../Visitor';
 
 describe('Visitor Component', () => {
   let mock;
-  const API_HOST = 'http://localhost:4000';
 
   beforeAll(() => {
     mock = new MockAdapter(axios);
@@ -22,7 +21,7 @@ describe('Visitor Component', () => {
   test(':: succesful load displays visitor details on page', async () => {
     expect.assertions(3);
 
-    mock.onGet(`${API_HOST}/v1/community-businesses/me/visitors/4`)
+    mock.onGet('/community-businesses/me/visitors/4')
       .reply(200,
         { result: {
           qrCode: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgEQVR4AewaftIAAAzUSU==',
@@ -37,7 +36,7 @@ describe('Visitor Component', () => {
           email_consent: false,
           sms_consent: false } });
 
-    mock.onGet(`${API_HOST}/v1/community-businesses/me`)
+    mock.onGet('/community-businesses/me')
       .reply(200,
         { result: {
           id: 3,
@@ -46,7 +45,7 @@ describe('Visitor Component', () => {
           uploadedfilecloudinaryurl: null,
           date: '2017-05-15T12:24:56.000Z' } });
 
-    mock.onGet(`${API_HOST}/v1/users/me`)
+    mock.onGet('/users/me')
       .reply(200, { email: 'findmyfroggy@frogfinders.com' });
 
     const { getByText } =
@@ -68,9 +67,9 @@ describe('Visitor Component', () => {
     expect.assertions(1);
 
     mock
-      .onGet(`${API_HOST}/v1/community-businesses/me/visitors/4`).reply(401, { result: null })
-      .onGet(`${API_HOST}/v1/community-businesses/me`).reply(401, { result: null })
-      .onGet(`${API_HOST}/v1/users/me`)
+      .onGet('/community-businesses/me/visitors/4').reply(401, { result: null })
+      .onGet('/community-businesses/me').reply(401, { result: null })
+      .onGet('/users/me')
       .reply(401, { result: null });
 
     const { history } = renderWithRouter({

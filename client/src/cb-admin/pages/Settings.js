@@ -188,8 +188,8 @@ export default class SettingsPage extends React.Component {
       data: { result: visitors },
     } = await Visitors.get({ fields: visitorProps, visits: true });
 
-    const transformers = {
-      users: pipe(
+    const responsePayloadTransformers = {
+      toUsersCsvData: pipe(
         omit(['visits']),
         ({ createdAt, ...obj }) => ({
           ...obj,
@@ -198,7 +198,7 @@ export default class SettingsPage extends React.Component {
         }),
       ),
 
-      visits: pipe(
+      toVisitsCsvData: pipe(
         omit(['createdAt', 'emailConsent', 'smsConsent', 'id']),
         ({ visits, ...rest }) => visits.map(v => ({ ...rest, ...omit(['deletedAt', 'modifiedAt'], v) })),
         map(({ createdAt, ...obj }) => ({
@@ -209,8 +209,8 @@ export default class SettingsPage extends React.Component {
       ),
     };
 
-    const usersCsvData = visitors.map(transformers.users);
-    const visitsCsvData = flatten(visitors.map(transformers.visits));
+    const usersCsvData = visitors.map(responsePayloadTransformers.toUsersCsvData);
+    const visitsCsvData = flatten(visitors.map(responsePayloadTransformers.toVisitsCsvData));
 
     const usersWithHeaders = prepend(
       {

@@ -11,7 +11,6 @@ import VisitorDetails from '../VisitorDetails';
 
 describe('VisitorDetails Component', () => {
   let mock;
-  const API_HOST = 'http://localhost:4000';
 
   beforeAll(() => {
     mock = new MockAdapter(axios);
@@ -22,7 +21,7 @@ describe('VisitorDetails Component', () => {
   test(':: succesful load displays visitor details on page', async () => {
     expect.assertions(3);
 
-    mock.onGet(`${API_HOST}/v1/community-businesses/me/visitors`, { params: { visits: true, offset: 0, limit: 10 } })
+    mock.onGet('/community-businesses/me/visitors', { params: { visits: true, offset: 0, limit: 10 } })
       .reply(200,
         { result: [{ full_count: '1',
           id: 4,
@@ -53,7 +52,7 @@ describe('VisitorDetails Component', () => {
     expect.assertions(1);
 
     mock
-      .onGet(`${API_HOST}/v1/community-businesses/me/visitors`, { params: { visits: true, offset: 0, limit: 10 } })
+      .onGet('/community-businesses/me/visitors', { params: { visits: true, offset: 0, limit: 10 } })
       .reply(401, { result: null });
 
     const { history } = renderWithRouter()(VisitorDetails);
