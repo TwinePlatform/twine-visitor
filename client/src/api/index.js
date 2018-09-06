@@ -30,7 +30,6 @@ export const Activities = {
       sunday,
     }),
 
-
   delete: ({ id }) =>
     axios.delete(`/community-businesses/me/visit-activities/${id}`),
 };
