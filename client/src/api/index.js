@@ -129,11 +129,12 @@ export const CbAdmin = {
     }),
 
   update: async ({ name, sector, email, region, logoUrl }) => {
-    const resCb = await axios.put('/community-businesses/me', { name, sector, region, logoUrl });
-
-    const resUser = await (email
+    const putCb = axios.put('/community-businesses/me', { name, sector, region, logoUrl });
+    const putUser = (email
       ? axios.put('/users/me', { email })
       : Promise.resolve({ data: { result: { email: email || null } } }));
+
+    const [resCb, resUser] = await Promise.all([putCb, putUser]);
 
     return { data: { result: { ...resCb.data.result, email: resUser.data.result.email } } };
   },
