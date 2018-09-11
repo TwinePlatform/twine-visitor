@@ -64,7 +64,8 @@ export default class QRCode extends Component {
 
     this.state = {
       hasScanned: false,
-      username: '',
+      visitorId: null,
+      visitorName: '',
       qrCodeContent: '',
       activity: 'not selected',
       activities: [],
@@ -102,7 +103,8 @@ export default class QRCode extends Component {
         Visitors.search({ qrCode: content })
           .then((res) => {
             this.setState({
-              username: res.data.result.name,
+              visitorName: res.data.result.name,
+              visitorId: res.data.result.id,
               qrCodeContent: content,
               hasScanned: true,
             });
@@ -114,9 +116,9 @@ export default class QRCode extends Component {
       });
     }
 
-    Activities.get({ weekday: 'today' })
+    Activities.get({ day: 'today' })
       .then((res) => {
-        this.setState({ activities: res.data.activities });
+        this.setState({ activities: res.data.result });
       })
       .catch((error) => {
         console.log('ERROR HAPPENING AT FETCH', error);
@@ -136,9 +138,18 @@ export default class QRCode extends Component {
   changeActivity = (newActivity) => {
     this.setState({ activity: newActivity });
 
+    const activity = this.state.activities.find(a => a.name === newActivity);
+
+    if (!activity) {
+      // TODO: Do something better here
+      console.log('Activity not recognised');
+      this.props.history.push('/error/unknown');
+    }
+
     Visitors.createVisit({
+      activityId: activity.id,
+      visitorId: this.state.visitorId,
       qrCode: this.state.qrCodeContent,
-      activity: newActivity,
     })
       .then(() => this.props.history.push('/visitor/end'))
       .catch((error) => {
@@ -175,7 +186,7 @@ export default class QRCode extends Component {
       <Fragment>
         <StyledNav>
           <Heading>
-            Welcome back, {capitaliseFirstName(this.state.username)}! Why are you here today?
+            Welcome back, {capitaliseFirstName(this.state.visitorName)}! Why are you here today?
           </Heading>
         </StyledNav>
         <StyledSection margin={3}>
@@ -183,7 +194,7 @@ export default class QRCode extends Component {
             {this.state.activities
               .map((activity, index) => (
                 <PurposeButton
-                  key={activity.name}
+                  key={activity.id}
                   color={index}
                   session={activity.name}
                   activity={this.state.activity}
