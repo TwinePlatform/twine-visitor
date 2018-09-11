@@ -13,7 +13,7 @@ export const axios = create({
 });
 
 export const Activities = {
-  get: () => axios.get('/community-businesses/me/visit-activities'),
+  get: params => axios.get('/community-businesses/me/visit-activities', params),
 
   create: ({ name, category }) =>
     axios.post('/community-businesses/me/visit-activities', { name, category }),
@@ -83,12 +83,13 @@ export const Visitors = {
 
     ),
 
-  createVisit: ({ hash, activity }) =>
-    _axios.post(
-      '/api/visit/add',
+  createVisit: ({ visitorId, hash, activityId }) =>
+    axios.post(
+      '/community-businesses/me/visit-logs',
       {
-        hash,
-        activity,
+        userId: visitorId,
+        visitActivityId: activityId,
+        qrCode: hash,
       },
 
     ),
