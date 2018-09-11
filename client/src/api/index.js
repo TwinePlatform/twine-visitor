@@ -57,19 +57,16 @@ export const Visitors = {
       },
     ),
 
-  update: (
-    { id, name, gender, yob, email, phoneNumber }, // eslint-disable-line
-  ) =>
-    _axios.post(
-      '/api/user/details/update',
+  update: ({ id, name, gender, yob, email, phoneNumber }) =>
+    axios.put(
+      `/users/${id}`,
       {
-        userId: id,
-        userFullName: name,
-        sex: gender,
-        yearOfBirth: yob,
+        name,
+        gender,
         email,
+        phoneNumber,
+        birthYear: yob,
       },
-
     ),
 
   delete: () => {},
