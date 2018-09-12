@@ -42,14 +42,14 @@ export const Visitors = {
     axios.post('/users/visitors/search', { qrCode: hash }),
 
   create: (
-    { name, gender, yob, email, phoneNumber, emailContactConsent, smsContactConsent },
+    { name, gender, birthYear, email, phoneNumber, emailContactConsent, smsContactConsent },
   ) =>
     axios.post(
       '/users/register/visitor',
       {
         name,
         gender,
-        birthYear: yob,
+        birthYear,
         email,
         phoneNumber,
         emailConsent: emailContactConsent,
@@ -57,7 +57,7 @@ export const Visitors = {
       },
     ),
 
-  update: ({ id, name, gender, yob, email, phoneNumber }) =>
+  update: ({ id, name, gender, birthYear, email, phoneNumber }) =>
     axios.put(
       `/users/${id}`,
       {
@@ -65,7 +65,7 @@ export const Visitors = {
         gender,
         email,
         phoneNumber,
-        birthYear: yob,
+        birthYear,
       },
     ),
 
@@ -88,7 +88,6 @@ export const Visitors = {
         visitActivityId: activityId,
         qrCode: hash,
       },
-
     ),
 
   getStatistics: ({ groupBy, sort, filter } = {}) => {
@@ -167,7 +166,6 @@ export const CbAdmin = {
         since: since ? since.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : null,
         until: until ? until.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : null,
       },
-
     }),
 
   postFeedback: score =>

@@ -96,7 +96,7 @@ const genderOptions = [
 
 const payloadFromState = compose(
   filter(Boolean),
-  pick(['name', 'gender', 'email', 'yob', 'phoneNumber']),
+  pick(['name', 'gender', 'email', 'birthYear', 'phoneNumber']),
   prop('form'),
 );
 
@@ -108,7 +108,7 @@ export default class VisitorProfile extends React.Component {
       id: null,
       name: null,
       gender: null,
-      yob: null,
+      birthYear: null,
       email: null,
       phoneNumber: null,
       registeredAt: null,
@@ -198,7 +198,7 @@ export default class VisitorProfile extends React.Component {
       id: data.id,
       name: data.name,
       gender: data.gender,
-      yob: data.birthYear,
+      birthYear: data.birthYear,
       email: data.email,
       phoneNumber: data.phoneMumber,
       registeredAt: moment(data.createdAt).format('Do MMMM YYYY'),
@@ -229,7 +229,7 @@ export default class VisitorProfile extends React.Component {
       { name: 'Visitor ID', value: rest.id },
       { name: 'Name', value: rest.name },
       { name: 'Gender', value: rest.gender },
-      { name: 'Year of birth', value: rest.yob },
+      { name: 'Year of birth', value: rest.birthYear },
       { name: 'Email', value: rest.email },
       { name: 'Phone number', value: rest.phoneNumber },
       { name: 'Registration date', value: rest.registeredAt },
@@ -277,11 +277,11 @@ export default class VisitorProfile extends React.Component {
             </FlexItem>
             <FlexItem flex={4}>
               <LabelledSelect
-                id="visitor-yob"
+                id="visitor-birthYear"
                 label="Year of birth"
-                name="yob"
+                name="birthYear"
                 options={years}
-                error={errors.yob}
+                error={errors.birthYear}
               />
               <LabelledSelect
                 id="visitor-gender"
