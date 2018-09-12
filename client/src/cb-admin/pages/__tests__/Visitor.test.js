@@ -26,10 +26,9 @@ describe('Visitor Component', () => {
         { result: {
           qrCode: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgEQVR4AewaftIAAAzUSU==',
           id: 4,
-          cb_id: 3,
           name: 'yusra mardini',
           gender: 'female',
-          yob: 1998,
+          birthYear: 1998,
           email: 'maemail@gmail.com',
           phone_number: '7835110026',
           registered_at: '2017-05-15T12:24:52.000Z',
@@ -40,18 +39,23 @@ describe('Visitor Component', () => {
       .reply(200,
         { result: {
           id: 3,
-          org_name: 'Frog Finders',
-          genre: 'Environment or nature',
-          uploadedfilecloudinaryurl: null,
-          date: '2017-05-15T12:24:56.000Z' } });
+          name: 'Frog Finders',
+          sector: 'Environment or nature',
+          logoUrl: null,
+          createdAt: '2017-05-15T12:24:56.000Z' } });
 
     mock.onGet('/users/me')
       .reply(200, { email: 'findmyfroggy@frogfinders.com' });
 
-    const { getByText } =
-        renderWithRouter({
-          match: { isExact: true, params: { id: '4' }, path: '/cb/visitors/:id', url: '/cb/visitors/4' },
-        })(Visitor);
+    const { getByText } = renderWithRouter({
+      match: {
+        isExact: true,
+        params: { id: '4' },
+        path: '/cb/visitors/:id',
+        url: '/cb/visitors/4',
+      },
+    })(Visitor);
+
     const [name, gender, email] = await waitForElement(() => [
       getByText('yusra mardini'),
       getByText('female'),
@@ -73,7 +77,12 @@ describe('Visitor Component', () => {
       .reply(401, { result: null });
 
     const { history } = renderWithRouter({
-      match: { isExact: true, params: { id: '4' }, path: '/cb/visitors/:id', url: '/cb/visitors/4' },
+      match: {
+        isExact: true,
+        params: { id: '4' },
+        path: '/cb/visitors/:id',
+        url: '/cb/visitors/4',
+      },
     })(Visitor);
 
     await wait(() => expect(history.location.pathname).toEqual('/admin/login'));

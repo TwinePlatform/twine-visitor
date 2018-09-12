@@ -172,7 +172,7 @@ export default class Main extends Component {
     Visitors.create({
       name: this.state.fullname,
       gender: this.state.gender,
-      yob: this.state.year,
+      birthYear: this.state.year,
       email: this.state.email,
       phoneNumber: this.state.phone,
       emailContactConsent: this.state.emailContact,
