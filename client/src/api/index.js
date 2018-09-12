@@ -59,7 +59,7 @@ export const Visitors = {
 
   update: ({ id, name, gender, birthYear, email, phoneNumber }) =>
     axios.put(
-      `/users/${id}`,
+      `/community-businesses/me/visitors/${id}`,
       {
         name,
         gender,
