@@ -67,7 +67,6 @@ export default class QRCode extends Component {
       visitorId: null,
       visitorName: '',
       qrCodeContent: '',
-      activity: 'not selected',
       activities: [],
     };
 
@@ -136,8 +135,6 @@ export default class QRCode extends Component {
   }
 
   changeActivity = (newActivity) => {
-    this.setState({ activity: newActivity });
-
     const activity = this.state.activities.find(a => a.name === newActivity);
 
     if (!activity) {
@@ -197,7 +194,6 @@ export default class QRCode extends Component {
                   key={activity.id}
                   color={index}
                   session={activity.name}
-                  activity={this.state.activity}
                   onClick={this.changeActivity}
                 />
               ))
