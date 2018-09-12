@@ -105,7 +105,7 @@ export default class VisitorProfile extends React.Component {
     super(props);
 
     this.state = {
-      id: null,
+      id: props.match.params.id || null,
       name: null,
       gender: null,
       birthYear: null,
@@ -189,7 +189,7 @@ export default class VisitorProfile extends React.Component {
         this.updateStateFromApi(res.data.result);
       })
       .catch((error) => {
-        this.setState({ errors: error });
+        this.setState({ errors: error.response.data.error });
       });
   };
 
