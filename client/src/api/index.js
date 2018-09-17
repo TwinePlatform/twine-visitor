@@ -22,7 +22,6 @@ export const Activities = {
 
   update: ({ id, monday, tuesday, wednesday, thursday, friday, saturday, sunday }) =>
     axios.put(`/community-businesses/me/visit-activities/${id}`, {
-      id,
       monday,
       tuesday,
       wednesday,
