@@ -57,12 +57,12 @@ const feedbackColors = [
 ];
 
 const doughnutConfig = (colorConfig, feedbackCounts) => ({
-  labels: feedbackColors.map(el => el.label),
+  labels: colorConfig.map(el => el.label),
   datasets: [
     {
-      data: feedbackColors.map(el => feedbackCounts[el.feedback_score]),
-      backgroundColor: feedbackColors.map(el => el.backgroundColor),
-      hoverBackgroundColor: feedbackColors.map(el => el.hoverBackgroundColor),
+      data: colorConfig.map(el => feedbackCounts[el.feedback_score]),
+      backgroundColor: colorConfig.map(el => el.backgroundColor),
+      hoverBackgroundColor: colorConfig.map(el => el.hoverBackgroundColor),
     },
   ],
 });
@@ -109,7 +109,7 @@ export default class Feedback extends Component {
       .then(({ data }) => {
         !data.error && data.result && data.result.totalFeedback > 0 //eslint-disable-line
           ? this.setState({ feedbackCounts: data.result, error: null })
-          : this.setState({ error: 'Sorry, no data was found', data: null });
+          : this.setState({ error: 'Sorry, no data was found', feedbackCounts: null });
       })
       .catch((err) => {
         if (err.response.status === 401) {
