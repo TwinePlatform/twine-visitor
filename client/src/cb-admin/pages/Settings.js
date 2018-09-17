@@ -17,23 +17,6 @@ import Dropzone from '../components/Dropzone';
 import Logo from '../components/Logo';
 import { CbAdmin, Cloudinary, Visitors } from '../../api';
 
-const sectors = [
-  { key: '0', value: '' },
-  { key: '1', value: 'Art centre or facility' },
-  { key: '2', value: 'Community hub, facility or space' },
-  { key: '3', value: 'Community pub, shop or café' },
-  { key: '4', value: 'Employment, training, business support or education' },
-  { key: '5', value: 'Energy' },
-  { key: '6', value: 'Environment or nature' },
-  { key: '7', value: 'Food catering or production (incl. farming)' },
-  { key: '8', value: 'Health, care or wellbeing' },
-  { key: '9', value: 'Housing' },
-  { key: '10', value: 'Income or financial inclusion' },
-  { key: '11', value: 'Sport & leisure' },
-  { key: '12', value: 'Transport' },
-  { key: '13', value: 'Visitor facilities or tourism' },
-  { key: '14', value: 'Waste reduction, reuse or recycling' },
-];
 
 const Nav = styled.nav`
   display: flex;
@@ -114,13 +97,21 @@ export default class SettingsPage extends React.Component {
       visits: [],
       visitsString: '',
       usersString: '',
+      sectorList: [],
+      regionList: [],
     };
   }
 
   componentDidMount() {
-    CbAdmin.get()
-      .then((res) => {
+    const { get, sectors, regions } = CbAdmin;
+
+    Promise.all([get(), sectors(), regions()])
+      .then(([res, rSectors, rRegions]) => {
         this.updateStateFromApi(res.data.result);
+        this.setState({
+          sectorList: rSectors.data.result.map((value, key) => ({ key, value })),
+          regionList: rRegions.data.result.map((value, key) => ({ key, value })),
+        });
       })
       .catch((error) => {
         if (error.status === 500) {
@@ -159,7 +150,7 @@ export default class SettingsPage extends React.Component {
       id: data.id,
       name: data.name,
       sector: data.sector,
-      email: data.email, // not returned in response
+      email: data.email,
       date: moment(data.createdAt).format('Do MMMM YYYY'),
       logoUrl: data.logoUrl,
       form: {},
@@ -293,7 +284,7 @@ export default class SettingsPage extends React.Component {
                 id="cb-admin-business-sector"
                 label="Type of business"
                 name="sector"
-                options={sectors}
+                options={rest.sectorList}
                 error={errors.sector}
               />
               <LabelledInput

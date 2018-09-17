@@ -63,13 +63,6 @@ const ExportButton = PrimaryButton.extend`
   padding: 0.3rem 1rem;
 `;
 
-const genderOptions = [
-  { key: '0', value: '' },
-  { key: '1', value: 'male' },
-  { key: '2', value: 'female' },
-  { key: '3', value: 'prefer not to say' },
-];
-
 const ageOptions = [
   { key: '0', value: '' },
   { key: '1', value: '0-17' },
@@ -107,15 +100,17 @@ export default class VisitsDataPage extends React.Component {
       ageGroups: { datasets: [], labels: [] },
       activitiesGroups: { datasets: [], labels: [] },
       errors: {},
+      genderList: [],
     };
   }
 
   componentDidMount() {
     const pVisitors = Visitors.get({ withVisits: true, pagination: true });
     const pStats = Visitors.getStatistics();
+    const pGenders = Visitors.genders();
 
-    Promise.all([pVisitors, pStats])
-      .then(([resVisitors, resStats]) => {
+    Promise.all([pVisitors, pStats, pGenders])
+      .then(([resVisitors, resStats, resGenders]) => {
 
         const visits = resVisitors.data.result;
 
@@ -135,6 +130,7 @@ export default class VisitsDataPage extends React.Component {
           activities: activities.map(activity => activity.name),
           visitsList: visits,
           fullCount: resVisitors.data.meta.full_count,
+          genderList: [''].concat(resGenders.data.result).map((value, key) => ({ key, value })),
         });
       })
       .catch((error) => {
@@ -357,7 +353,7 @@ export default class VisitsDataPage extends React.Component {
                 id="visits-data-gender"
                 name="genderFilter"
                 label="Filter by gender"
-                options={genderOptions}
+                options={this.state.genderList}
                 errors={errors.gender}
               />
             </FormSection>

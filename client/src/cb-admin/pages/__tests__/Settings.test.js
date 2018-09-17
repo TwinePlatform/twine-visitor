@@ -11,7 +11,6 @@ import { axios } from '../../../api';
 
 describe('Settings Component', () => {
   let mock;
-  const API_HOST = 'http://localhost:4000';
 
   beforeAll(() => {
     mock = new MockAdapter(axios);
@@ -22,7 +21,9 @@ describe('Settings Component', () => {
   test(':: succesful load displays cbs details on page', async () => {
     expect.assertions(3);
 
-    mock.onGet(`${API_HOST}/v1/community-businesses/me`)
+    mock.onGet('/sectors').reply(200, { result: ['Energy', 'Cafe', 'Other'] });
+    mock.onGet('/regions').reply(200, { result: ['London', 'West Midlands', 'Other'] });
+    mock.onGet('/community-businesses/me')
       .reply(200, { result: {
         id: 3,
         name: 'Frog Finders',
@@ -30,7 +31,7 @@ describe('Settings Component', () => {
         logoUrl: null,
         date: '2017-05-15T12:24:56.000Z',
       } });
-    mock.onGet(`${API_HOST}/v1/users/me`)
+    mock.onGet('/users/me')
       .reply(200, { result: { email: 'findmyfroggy@frogfinders.com' } });
 
     const { getByText } = renderWithRouter()(Settings);
@@ -47,7 +48,7 @@ describe('Settings Component', () => {
   test(':: unauthorised request redirects to ', async () => {
     expect.assertions(1);
 
-    mock.onGet(`${API_HOST}/v1/community-businesses/me`)
+    mock.onGet('/community-businesses/me')
       .reply(401, { result: null });
 
     const { history } = renderWithRouter()(Settings);
@@ -56,7 +57,7 @@ describe('Settings Component', () => {
   });
 
   test(':: update CB details successful updates fields', async () => {
-    mock.onGet(`${API_HOST}/v1/community-businesses/me`)
+    mock.onGet('/community-businesses/me')
       .reply(200, { result: {
         id: 3,
         name: 'Frog Finders',
@@ -64,7 +65,7 @@ describe('Settings Component', () => {
         logoUrl: null,
         date: '2017-05-15T12:24:56.000Z',
       } });
-    mock.onPut(`${API_HOST}/v1/community-businesses/me`)
+    mock.onPut('/community-businesses/me')
       .reply(200, { result: {
         id: 3,
         name: 'Frog Minders',
@@ -72,9 +73,9 @@ describe('Settings Component', () => {
         logoUrl: null,
         date: '2017-05-15T12:24:56.000Z',
       } });
-    mock.onGet(`${API_HOST}/v1/users/me`)
+    mock.onGet('/users/me')
       .reply(200, { result: { email: 'findmyfroggy@frogfinders.com' } });
-    mock.onPut(`${API_HOST}/v1/users/me`)
+    mock.onPut('/users/me')
       .reply(200, { result: { email: 'mindmyfroggy@frogminders.com' } });
 
     const { getByLabelText, getByText } = renderWithRouter()(Settings);
@@ -99,7 +100,7 @@ describe('Settings Component', () => {
   });
 
   test(':: update CB details fails does not update fields', async () => {
-    mock.onGet(`${API_HOST}/v1/community-businesses/me`)
+    mock.onGet('/community-businesses/me')
       .reply(200, { result: {
         id: 3,
         name: 'Frog Finders',
@@ -107,11 +108,11 @@ describe('Settings Component', () => {
         logoUrl: null,
         date: '2017-05-15T12:24:56.000Z',
       } });
-    mock.onPut(`${API_HOST}/v1/community-businesses/me`)
+    mock.onPut('/community-businesses/me')
       .reply(400, { result: null, error: { name: 'Invalid name' } });
-    mock.onGet(`${API_HOST}/v1/users/me`)
+    mock.onGet('/users/me')
       .reply(200, { result: { email: 'findmyfroggy@frogfinders.com' } });
-    mock.onPut(`${API_HOST}/v1/users/me`)
+    mock.onPut('/users/me')
       .reply(400, { result: null });
 
     const { getByLabelText, getByText } = renderWithRouter()(Settings);

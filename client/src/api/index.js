@@ -13,6 +13,8 @@ export const axios = create({
 });
 
 export const Activities = {
+  categories: () => axios.get('/visit_activity_categories'),
+
   get: params => axios.get('/community-businesses/me/visit-activities', params),
 
   create: ({ name, category }) =>
@@ -35,6 +37,12 @@ export const Activities = {
 };
 
 export const Visitors = {
+  genders: () => axios.get('/genders'),
+
+  ethnicities: () => axios.get('/ethnicities'),
+
+  disabilities: () => axios.get('/disabilities'),
+
   get: ({ id }, params) =>
     axios.get(`/community-businesses/me/visitors${id ? `/${id}` : ''}`, { params }),
 
@@ -106,6 +114,10 @@ export const Visitors = {
 };
 
 export const CbAdmin = {
+  sectors: () => axios.get('/sectors'),
+
+  regions: () => axios.get('/regions'),
+
   get: async () => {
     const [cbRes, userRes] = await Promise.all([
       axios.get('/community-businesses/me'),

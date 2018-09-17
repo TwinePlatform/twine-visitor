@@ -87,13 +87,6 @@ const PrintHeaderRow = FlexContainerRow.extend`
   align-items: center;
 `;
 
-const genderOptions = [
-  { key: '0', value: '' },
-  { key: '1', value: 'male' },
-  { key: '2', value: 'female' },
-  { key: '3', value: 'Prefer not to say' },
-];
-
 const payloadFromState = compose(
   filter(Boolean),
   pick(['name', 'gender', 'email', 'birthYear', 'phoneNumber']),
@@ -119,13 +112,20 @@ export default class VisitorProfile extends React.Component {
       cbLogoUrl: '',
       form: {},
       errors: {},
+      genderList: [],
     };
   }
 
   componentDidMount() {
-    Visitors.get({ id: this.props.match.params.id })
-      .then((res) => {
+    Promise.all([
+      Visitors.get({ id: this.props.match.params.id }),
+      Visitors.genders(),
+    ])
+      .then(([res, rGenders]) => {
         this.updateStateFromApi(res.data.result);
+        this.setState({
+          genderList: [''].concat(rGenders.data.result).map((value, key) => ({ key, value })),
+        });
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
@@ -287,7 +287,7 @@ export default class VisitorProfile extends React.Component {
                 id="visitor-gender"
                 label="Gender"
                 name="gender"
-                options={genderOptions}
+                options={rest.genderList}
                 error={errors.gender}
               />
             </FlexItem>
