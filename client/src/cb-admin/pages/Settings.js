@@ -85,7 +85,7 @@ export default class SettingsPage extends React.Component {
     this.state = {
       id: null,
       name: null,
-      sector: null,
+      sector: '',
       email: null,
       region: null,
       registeredAt: null,
@@ -119,7 +119,7 @@ export default class SettingsPage extends React.Component {
         } else if (error.message === 'No admin token') {
           this.props.history.push('/admin/login');
         } else {
-          this.props.history.push('/admin/login');
+          this.props.history.push('/error/unknown');
         }
       });
   }
@@ -150,8 +150,9 @@ export default class SettingsPage extends React.Component {
       id: data.id,
       name: data.name,
       sector: data.sector,
-      email: data.email,
-      date: moment(data.createdAt).format('Do MMMM YYYY'),
+      region: data.region,
+      email: data.email || this.state.email,
+      registeredAt: moment(data.createdAt).format('Do MMMM YYYY'),
       logoUrl: data.logoUrl,
       form: {},
       errors: {},
@@ -278,12 +279,14 @@ export default class SettingsPage extends React.Component {
                 label="Business name"
                 name="name"
                 type="text"
+                placeholder={rest.name}
                 error={errors.name}
               />
               <LabelledSelect
                 id="cb-admin-business-sector"
                 label="Type of business"
                 name="sector"
+                value={rest.form.sector || rest.sector}
                 options={rest.sectorList}
                 error={errors.sector}
               />
@@ -292,6 +295,7 @@ export default class SettingsPage extends React.Component {
                 label="Email"
                 name="email"
                 type="email"
+                placeholder={rest.email}
                 error={errors.email}
               />
               <ExportButton onClick={this.createZip}>Download data as CSV</ExportButton>
