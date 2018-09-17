@@ -22,6 +22,9 @@ describe('Visitor Component', () => {
   test(':: succesful load displays visitor details on page', async () => {
     expect.assertions(3);
 
+    mock.onGet('/genders')
+      .reply(200, { result: ['male', 'female', 'prefer not to say'] });
+
     mock.onGet('/community-businesses/me/visitors/4')
       .reply(200,
         { result: {
@@ -72,8 +75,10 @@ describe('Visitor Component', () => {
     expect.assertions(1);
 
     mock
+      .onGet('/genders').reply(401, { result: null })
       .onGet('/community-businesses/me/visitors/4').reply(401, { result: null })
-      .onGet('/community-businesses/me').reply(401, { result: null })
+      .onGet('/community-businesses/me')
+      .reply(401, { result: null })
       .onGet('/users/me')
       .reply(401, { result: null });
 
@@ -91,6 +96,10 @@ describe('Visitor Component', () => {
 
   test(':: can update visitor details', async () => {
     expect.assertions(3);
+
+    mock
+      .onGet('/genders')
+      .reply(200, { result: ['male', 'female', 'prefer not to say'] });
 
     mock
       .onGet('/community-businesses/me/visitors/4')
@@ -169,6 +178,10 @@ describe('Visitor Component', () => {
 
   test(':: fail to update visitor details', async () => {
     expect.assertions(1);
+
+    mock
+      .onGet('/genders')
+      .reply(200, { result: ['male', 'female', 'prefer not to say'] });
 
     mock
       .onGet('/community-businesses/me/visitors/4')

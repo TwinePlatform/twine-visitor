@@ -77,13 +77,6 @@ const sortOptions = [{ key: '0', value: '' }].concat(
   columns.map((col, i) => ({ key: `${i + 1}`, value: col })),
 );
 
-const genderOptions = [
-  { key: '0', value: '' },
-  { key: '1', value: 'male' },
-  { key: '2', value: 'female' },
-  { key: '3', value: 'prefer not to say' },
-];
-
 const ageOptions = [
   { key: '0', value: '' },
   { key: '1', value: '0-17' },
@@ -104,7 +97,24 @@ export default class VisitorDetailsPage extends React.Component {
       genderFilter: '',
       ageFilter: '',
       errors: {},
+      genderList: [],
     };
+  }
+
+  componentDidMount() {
+    Visitors.genders()
+      .then(res => this.setState({
+        genderList: [''].concat(res.data.result).map((value, key) => ({ key, value })),
+      }))
+      .catch((error) => {
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/admin/login');
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
+        } else {
+          this.setState({ errors: { general: 'Could not fetch visitors data' } });
+        }
+      });
   }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value }, this.update);
@@ -235,7 +245,7 @@ export default class VisitorDetailsPage extends React.Component {
                 id="visitor-filter-by-gender"
                 label="Filter by gender"
                 name="genderFilter"
-                options={genderOptions}
+                options={this.state.genderList}
                 error={errors.sort}
               />
             </FormSection>
