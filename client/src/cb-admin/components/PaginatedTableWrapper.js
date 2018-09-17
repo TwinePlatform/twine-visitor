@@ -33,10 +33,6 @@ export default class PaginatedTableWrapper extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.loadRows();
-  }
-
   onPageChange = ({ selected }) =>
     this.setState(
       { offset: Math.ceil(selected * this.props.rowsPerPage) },
