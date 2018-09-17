@@ -15,7 +15,7 @@ import { colors } from '../../shared/style_guide';
 import DetailsTable from '../components/DetailsTable';
 import Dropzone from '../components/Dropzone';
 import Logo from '../components/Logo';
-import { CbAdmin, Cloudinary, Visitors } from '../../api';
+import { CbAdmin, Cloudinary, Visitors, ErrorUtils } from '../../api';
 
 
 const Nav = styled.nav`
@@ -114,9 +114,9 @@ export default class SettingsPage extends React.Component {
         });
       })
       .catch((error) => {
-        if (error.status === 500) {
+        if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
-        } else if (error.message === 'No admin token') {
+        } else if (ErrorUtils.errorStatusEquals(error, 401)) {
           this.props.history.push('/admin/login');
         } else {
           this.props.history.push('/error/unknown');
