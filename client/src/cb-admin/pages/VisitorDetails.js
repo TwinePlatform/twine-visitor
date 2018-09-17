@@ -13,6 +13,7 @@ import { colors, fonts } from '../../shared/style_guide';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
 import { Visitors, ErrorUtils } from '../../api';
+import { renameKeys } from '../../util';
 
 const Nav = styled.nav`
   display: flex;
@@ -64,9 +65,9 @@ const keyMap = {
   name: 'Name',
   email: 'Email',
   gender: 'Gender',
-  yob: 'Year of birth',
-  email_consent: 'Email opt-in',
-  sms_consent: 'SMS opt-in',
+  birthYear: 'Year of birth',
+  isEmailConsentGranted: 'Email opt-in',
+  isSMSConsentGranted: 'SMS opt-in',
 };
 
 const colToState = invertObj(keyMap);
@@ -138,14 +139,15 @@ export default class VisitorDetailsPage extends React.Component {
               'id',
               'name',
               'gender',
-              'yob',
+              'birthYear',
               'email',
-              'registered_at',
-              'email_consent',
-              'sms_consent',
+              'createdAt',
+              'isEmailConsentGranted',
+              'isSMSConsentGranted',
             ]),
-            assoc('registered_time', moment(x.registered_at).format('HH:MM')),
-            evolve({ registered_at: y => moment(y).format('DD-MM-YYYY') }),
+            assoc('createdAtTime', moment(x.createdAt).format('HH:MM')),
+            evolve({ createdAt: y => moment(y).format('DD-MM-YYYY') }),
+            renameKeys({ createdAt: 'createdAtDate' }),
           )(x),
         );
         const withHeaders = prepend(
@@ -153,12 +155,12 @@ export default class VisitorDetailsPage extends React.Component {
             id: 'User ID',
             name: 'Full Name',
             gender: 'Gender',
-            yob: 'Year of Birth',
+            birthYear: 'Year of Birth',
             email: 'Email',
-            registered_at: 'Register Date',
-            registered_time: 'Register Time',
-            email_consent: 'Email Opt-in',
-            sms_consent: 'Sms Opt-in',
+            createdAtDate: 'Register Date',
+            createdAtTime: 'Register Time',
+            isEmailConsentGranted: 'Email Opt-in',
+            isSMSConsentGranted: 'Sms Opt-in',
           },
           csvData,
         );
@@ -206,7 +208,7 @@ export default class VisitorDetailsPage extends React.Component {
 
     Visitors.get({}, params)
       .then((res) => {
-        this.setState({ users: res.data.result, fullCount: res.data.meta.full_count });
+        this.setState({ users: res.data.result, fullCount: res.data.meta.total });
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
