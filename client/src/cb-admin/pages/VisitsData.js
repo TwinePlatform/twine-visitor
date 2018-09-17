@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
-import { filter, project, pick, evolve, assoc, pipe, prepend } from 'ramda';
+import { filter, project, pick, evolve, assoc, pipe, prepend, identity, toPairs, head, last, map } from 'ramda';
 import { Bar, Pie } from 'react-chartjs-2';
 import csv from 'fast-csv';
 import { saveAs } from 'file-saver';
@@ -13,12 +13,9 @@ import { colors, fonts } from '../../shared/style_guide';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
-import { Visitors, ErrorUtils } from '../../api';
+import { ErrorUtils, CbAdmin, Visitors } from '../../api';
 
-const circShift = (xs, n) => xs.slice(-n).concat(xs.slice(0, -n));
 const repeat = (xs, n) => (xs.length >= n ? xs.slice(0, n) : repeat(xs.concat(xs), n));
-
-const PieChart = styled(Pie)``;
 
 const BarChart = styled(Bar)``;
 
@@ -74,11 +71,11 @@ const ageOptions = [
 
 const keyMap = {
   visit_id: null,
-  visitor_id: 'Visitor ID',
+  userId: 'Visitor ID',
   gender: 'Gender',
-  yob: 'Year of birth',
-  activity: 'Activities',
-  visit_date: 'Date of visit',
+  birthYear: 'Year of birth',
+  visitActivity: 'Activities',
+  createdAt: 'Date of visit',
 };
 
 const columns = Object.values(keyMap).filter(Boolean);
@@ -105,56 +102,21 @@ export default class VisitsDataPage extends React.Component {
   }
 
   componentDidMount() {
-    const pVisitors = Visitors.get({ withVisits: true, pagination: true });
-    const pStats = Visitors.getStatistics();
-    const pGenders = Visitors.genders();
-
-    Promise.all([pVisitors, pStats, pGenders])
-      .then(([resVisitors, resStats, resGenders]) => {
-
-        const visits = resVisitors.data.result;
-
-        const [
-          visitsNumbers,
-          genderNumbers,
-          activitiesNumbers,
-          ageGroups,
-          activities,
-        ] = resStats.data.result;
-
-        this.setState({
-          visitNumbers: this.getVisitsWeek(visitsNumbers),
-          genderNumbers: this.getGendersForChart(genderNumbers),
-          activitiesGroups: this.getActivitiesForChart(activitiesNumbers),
-          ageGroups: this.getAgeGroupsForChart(ageGroups),
-          activities: activities.map(activity => activity.name),
-          visitsList: visits,
-          fullCount: resVisitors.data.meta.full_count,
-          genderList: [''].concat(resGenders.data.result).map((value, key) => ({ key, value })),
-        });
-      })
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-        } else {
-          this.setState({ errors: { general: 'Could not fetch visits data' } });
-        }
-      });
+    this.getData();
   }
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value }, this.update);
+  onChange = e => this.setState({ [e.target.name]: e.target.value }, this.getData);
 
-  getActivitiesForChart = (activities) => {
+  getActivitiesForChart = (activitiesObject) => {
+
     const activitiesData = {
-      labels: activities.map(el => el.name),
+      labels: Object.keys(activitiesObject),
       datasets: [
         {
-          data: activities.map(el => el.count),
+          data: Object.values(activitiesObject),
           backgroundColor: repeat(
             [colors.highlight_primary, colors.highlight_secondary, colors.light],
-            activities.length,
+            Object.values(activitiesObject).length,
           ),
         },
       ],
@@ -162,77 +124,50 @@ export default class VisitsDataPage extends React.Component {
     return activitiesData;
   };
 
-  getGendersForChart = (genders) => {
-    const genderData = {
-      labels: genders.map(el => el.sex),
+  getGendersForChart = (genderData) => {
+    const pairedGenderData = toPairs(genderData);
+    return {
+      labels: map(head, pairedGenderData),
       datasets: [
         {
-          data: genders.map(el => el.count),
+          data: map(last, pairedGenderData),
           backgroundColor: [colors.highlight_primary, colors.highlight_secondary, colors.light],
         },
       ],
     };
-    return genderData;
   };
 
   getVisitsWeek = (visits) => {
-    const now = moment();
-    const today = now.format('dddd');
-    const lastWeek = now.subtract(7, 'days');
-
-    const dN = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    const dayName = circShift(dN, -dN.indexOf(today));
-
-    const initObj = dayName.reduce((acc, d) => {
-      acc[d] = 0;
-      return acc;
-    }, {});
-    const visitCount = visits
-      .map(v => v.date)
-      .slice()
-      .sort()
-      .map(d => moment(d))
-      .filter(m => m.isAfter(lastWeek))
-      .reduce((acc, m) => {
-        const day = m.format('dddd');
-        acc[day]++; //eslint-disable-line
-        return acc;
-      }, initObj);
-
+    const pairedVisits = toPairs(visits);
     return {
-      labels: dayName,
+      labels: map(head, pairedVisits),
       datasets: [
         {
           label: 'Visits over the last week',
-          data: dayName.map(n => visitCount[n]),
-          backgroundColor: [
+          data: map(last, pairedVisits),
+          backgroundColor: repeat([
             colors.highlight_primary,
             colors.highlight_secondary,
-            colors.highlight_primary,
-            colors.highlight_secondary,
-            colors.highlight_primary,
-            colors.highlight_secondary,
-            colors.highlight_primary,
-          ],
+          ], 7),
         },
       ],
     };
   };
 
-  getAgeGroupsForChart = (ageGroups) => {
-    const ageData = {
-      labels: ageGroups.map(el => el.agegroups),
+  getAgeGroupsForChart = (ageData) => {
+    const pairedAgeData = toPairs(ageData);
+    return {
+      labels: map(head, pairedAgeData),
       datasets: [
         {
-          data: ageGroups.map(el => el.agecount),
+          data: map(last, pairedAgeData),
           backgroundColor: repeat(
             [colors.highlight_primary, colors.highlight_secondary, colors.light],
-            ageGroups.length,
+            pairedAgeData.length,
           ),
         },
       ],
     };
-    return ageData;
   };
 
   getDataForCsv = () => {
@@ -258,7 +193,7 @@ export default class VisitsDataPage extends React.Component {
             visitor_name: 'Full Name',
             gender: 'Gender',
             yob: 'Year of Birth',
-            activity: 'Activity',
+            visitActivity: 'Activity',
             visit_date: 'Visit Date',
             visit_time: 'Visit Time',
           },
@@ -290,37 +225,45 @@ export default class VisitsDataPage extends React.Component {
       });
   };
 
-  update = (offset = 0) => {
-    const { genderFilter, ageFilter, activityFilter } = this.state;
-    const pVisitors = Visitors.get({
-      withVisits: true,
-      pagination: true,
-      offset,
-      genderFilter,
-      ageFilter,
-      activityFilter,
-    });
-    const pStats = Visitors.getStatistics({
-      filter: [
-        this.state.genderFilter && `gender@${this.state.genderFilter.toLowerCase()}`,
-        this.state.ageFilter && `age@${this.state.ageFilter}`,
-        this.state.activityFilter && `activity@${this.state.activityFilter}`,
-      ].filter(Boolean),
-      sort: { [this.state.orderBy]: 'asc' },
-    });
+  getData = (offset = 0) => {
+    const { genderFilter, ageFilter: _ageFilter, activityFilter } = this.state;
+    const ageFilter = _ageFilter === '70+' //eslint-disable-line
+      ? [70, 112]
+      : _ageFilter
+        ? _ageFilter.split(/[-+]/)
+        : '';
 
-    Promise.all([pVisitors, pStats])
-      .then(([resVisitors, resStats]) => {
+    const queryFilter = {
+      gender: genderFilter,
+      age: ageFilter,
+      visitActivity: activityFilter,
+    };
 
-        const visits = resVisitors.data.result;
-        const stats = resStats.data.result; // res[0] no longer used
+    const getVisits = CbAdmin.getVisits(
+      { limit: 10,
+        offset,
+        filter: filter(identity, queryFilter),
+      });
+    const getAggregates = CbAdmin.getVisitAggregates(
+      { fields: ['gender', 'age', 'visitActivity', 'lastWeek'],
+        filter: filter(identity, queryFilter),
+      });
+
+
+    Promise.all([getVisits, getAggregates])
+      .then(([resVisits, resAggs]) => {
+
+        const { meta: { total: fullCount }, result: visitsList } = resVisits.data;
+        const { result: { visitActivity, age, gender, lastWeek } } = resAggs.data;
 
         this.setState({
-          ageGroups: this.getAgeGroupsForChart(stats[1]),
-          activitiesGroups: this.getActivitiesForChart(stats[2]),
-          genderNumbers: this.getGendersForChart(stats[3]),
-          visitsList: visits,
-          fullCount: resVisitors.data.meta.full_count,
+          visitNumbers: this.getVisitsWeek(lastWeek),
+          genderNumbers: this.getGendersForChart(gender),
+          activitiesGroups: this.getActivitiesForChart(visitActivity),
+          ageGroups: this.getAgeGroupsForChart(age),
+          activities: Object.keys(visitActivity),
+          visitsList,
+          fullCount,
         });
       })
       .catch((error) => {
@@ -382,26 +325,37 @@ export default class VisitsDataPage extends React.Component {
             <Paragraph>Visitor numbers in last week</Paragraph>
             <BarChart
               data={this.state.visitNumbers}
-              options={{ responsive: true, maintainAspectRatio: false, legend: { display: false } }}
+              options={{
+                legend: { display: false },
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: true,
+                      stepSize: 1, // NB this may need to be dynamically set in
+                      // future to accomodate large datasets
+                    },
+                  }],
+                } }
+              }
             />
           </FlexItem>
           <FlexItem>
             <Paragraph>Visitors by gender</Paragraph>
-            <PieChart data={this.state.genderNumbers} />
+            <Pie data={this.state.genderNumbers} />
           </FlexItem>
           <FlexItem>
             <Paragraph>Visitors by age</Paragraph>
-            <PieChart data={this.state.ageGroups} />
+            <Pie data={this.state.ageGroups} />
           </FlexItem>
           <FlexItem>
             <Paragraph>Reason for visiting</Paragraph>
-            <PieChart data={this.state.activitiesGroups} />
+            <Pie data={this.state.activitiesGroups} />
           </FlexItem>
         </Row>
         <Row>
           <PaginatedTableWrapper
             rowCount={this.state.fullCount}
-            loadRows={this.update}
+            loadRows={this.getData}
           >
             <TranslucentTable
               exportComponent={
@@ -412,10 +366,10 @@ export default class VisitsDataPage extends React.Component {
               rows={visitsList
                 .map(visit => ({
                   ...visit,
-                  visit_date: moment(visit.visit_date).format('DD-MM-YY HH:mm'),
+                  createdAt: moment(visit.createdAt).format('DD-MM-YY HH:mm'),
                 }))
                 .map(visit => ({
-                  key: visit.visit_id,
+                  key: visit.id,
                   data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [visit])[0]),
                 }))}
             />

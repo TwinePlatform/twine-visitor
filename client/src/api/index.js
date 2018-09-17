@@ -9,7 +9,7 @@ import qs from 'qs';
 export const axios = create({
   baseURL: 'http://localhost:4000/v1/',
   withCredentials: true,
-  paramsSerializer: qs.stringify,
+  paramsSerializer: params => qs.stringify(params, { encode: false }),
 });
 
 export const Activities = {
@@ -96,20 +96,6 @@ export const Visitors = {
         qrCode: hash,
       },
     ),
-
-  getStatistics: ({ groupBy, sort, filter } = {}) => {
-    if (groupBy || filter || sort) {
-      return _axios.post(
-        '/api/users/filtered',
-        {
-          filterBy: filter,
-          orderBy: Object.keys(sort)[0],
-        },
-      );
-    }
-
-    return _axios.get('/api/users/chart-all');
-  },
 };
 
 export const CbAdmin = {
@@ -125,6 +111,10 @@ export const CbAdmin = {
 
     return { data: { result: { ...cbRes.data.result, email: userRes.data.result.email } } };
   },
+
+  getVisits: query => axios.get('/community-businesses/me/visit-logs', { params: query }),
+
+  getVisitAggregates: query => axios.get('/community-businesses/me/visit-logs/aggregates', { params: query }),
 
   create: ({ orgName, category, email, password, passwordConfirm, region }) =>
     _axios.post('/api/cb/register', {
