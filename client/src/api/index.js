@@ -174,8 +174,8 @@ export const CbAdmin = {
   getFeedback: (since, until) =>
     axios.get('/community-businesses/me/feedback/aggregates', {
       params: {
-        since: since ? since.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : null,
-        until: until ? until.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : null,
+        since: since ? since.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : undefined,
+        until: until ? until.format('YYYY-MM-DDTHH:mm:ss.SSSZ') : undefined,
       },
     }),
 
