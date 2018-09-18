@@ -145,7 +145,6 @@ export default class SettingsPage extends React.Component {
 
     const uup = userUpdatePayloadFromState(this.state);
     const cup = cbUpdatePayloadFromState(this.state);
-    console.log(uup, cup);
 
     Promise.all([
       Object.keys(uup).length > 0 ? CbAdmin.update(uup) : Promise.resolve(),
