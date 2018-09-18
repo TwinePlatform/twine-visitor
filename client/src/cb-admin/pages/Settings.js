@@ -15,7 +15,7 @@ import { colors } from '../../shared/style_guide';
 import DetailsTable from '../components/DetailsTable';
 import Dropzone from '../components/Dropzone';
 import Logo from '../components/Logo';
-import { CbAdmin, Cloudinary, Visitors, ErrorUtils } from '../../api';
+import { CbAdmin, CommunityBusiness, Cloudinary, Visitors, ErrorUtils } from '../../api';
 
 
 const Nav = styled.nav`
@@ -65,9 +65,15 @@ const ErrorMessage = P.extend`
   padding: 1rem;
 `;
 
-const payloadFromState = compose(
+const cbUpdatePayloadFromState = compose(
   filter(Boolean),
-  pick(['name', 'sector', 'email', 'region', 'logoUrl']),
+  pick(['name', 'sector', 'region', 'logoUrl']),
+  prop('form'),
+);
+
+const userUpdatePayloadFromState = compose(
+  filter(Boolean),
+  pick(['email']),
   prop('form'),
 );
 
@@ -103,11 +109,12 @@ export default class SettingsPage extends React.Component {
   }
 
   componentDidMount() {
-    const { get, sectors, regions } = CbAdmin;
+    const { get } = CbAdmin;
+    const { get: getCb, sectors, regions } = CommunityBusiness;
 
-    Promise.all([get(), sectors(), regions()])
-      .then(([res, rSectors, rRegions]) => {
-        this.updateStateFromApi(res.data.result);
+    Promise.all([get({ fields: ['email'] }), getCb(), sectors(), regions()])
+      .then(([resUser, resCb, rSectors, rRegions]) => {
+        this.updateStateFromApi({ ...resUser.data.result, ...resCb.data.result });
         this.setState({
           sectorList: rSectors.data.result.map((value, key) => ({ key, value })),
           regionList: rRegions.data.result.map((value, key) => ({ key, value })),
@@ -136,9 +143,23 @@ export default class SettingsPage extends React.Component {
     e.preventDefault();
     e.target.reset();
 
-    CbAdmin.update(payloadFromState(this.state))
-      .then((res) => {
-        this.updateStateFromApi(res.data.result);
+    const uup = userUpdatePayloadFromState(this.state);
+    const cup = cbUpdatePayloadFromState(this.state);
+    console.log(uup, cup);
+
+    Promise.all([
+      Object.keys(uup).length > 0 ? CbAdmin.update(uup) : Promise.resolve(),
+      Object.keys(cup).length > 0 ? CommunityBusiness.update(cup) : Promise.resolve(),
+    ])
+      .then(([resUser, resCb]) => {
+        const update = {
+          ...resUser ? resUser.data.result : {},
+          ...resCb ? resCb.data.result : {},
+        };
+
+        if (Object.keys(update).length > 0) {
+          this.updateStateFromApi(update);
+        }
       })
       .catch((error) => {
         this.setState({ errors: error.response.data.error });
@@ -298,7 +319,7 @@ export default class SettingsPage extends React.Component {
                 placeholder={rest.email}
                 error={errors.email}
               />
-              <ExportButton onClick={this.createZip}>Download data as CSV</ExportButton>
+              <ExportButton type="button" onClick={this.createZip}>Download data as CSV</ExportButton>
               <ErrorMessage>{this.state.errors.general}</ErrorMessage>
             </FlexItem>
             <FlexItem flex={4}>

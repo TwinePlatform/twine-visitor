@@ -99,67 +99,45 @@ export const Visitors = {
 };
 
 export const CbAdmin = {
-  sectors: () => axios.get('/sectors'),
+  get: params =>
+    axios.get('/users/me', params),
 
-  regions: () => axios.get('/regions'),
-
-  get: async () => {
-    const [cbRes, userRes] = await Promise.all([
-      axios.get('/community-businesses/me'),
-      axios.get('/users/me'),
-    ]);
-
-    return { data: { result: { ...cbRes.data.result, email: userRes.data.result.email } } };
-  },
-
-  getVisits: query => axios.get('/community-businesses/me/visit-logs', { params: query }),
-
-  getVisitAggregates: query => axios.get('/community-businesses/me/visit-logs/aggregates', { params: query }),
-
-  create: ({ orgName, category, email, password, passwordConfirm, region }) =>
-    _axios.post('/api/cb/register', {
-      orgName,
-      email,
-      category,
-      region,
-      password,
-      passwordConfirm,
-    }),
-
-  update: async ({ name, sector, email, region, logoUrl }) => {
-    const putCb = axios.put('/community-businesses/me', { name, sector, region, logoUrl });
-    const putUser = (email
-      ? axios.put('/users/me', { email })
-      : Promise.resolve({ data: { result: { email: email || null } } }));
-
-    const [resCb, resUser] = await Promise.all([putCb, putUser]);
-
-    return { data: { result: { ...resCb.data.result, email: resUser.data.result.email } } };
-  },
-
-  delete: () => {},
-
-  resetPassword: ({ password, passwordConfirm }) =>
-    _axios.post('/api/cb/pwd/change', {
-      password,
-      passwordConfirm,
-    }),
+  update: ({ email }) =>
+    axios.put('/users/me', { email }),
 
   login: ({ email, password }) =>
-    axios.post('/users/login/admin',
-      {
-        email,
-        password,
-      },
-    ),
+    axios.post('/users/login/admin', { email, password }),
+
+  logout: () =>
+    axios.get('/users/logout'),
 
   upgradePermissions: ({ password }) =>
     axios.post('/users/login/escalate', { password }),
 
-  email: ({ email }) =>
-    _axios.post('/api/cb/pwd/reset', {
-      email,
-    }),
+  downgradePermissions: () =>
+    axios.post('/users/login/de-escalate'),
+
+  forgotPassword: ({ email }) =>
+    axios.post('/users/password/forgot', { email }),
+
+  resetPassword: ({ password, confirmPassword, token }) =>
+    axios.post('/users/password/reset', { password, confirmPassword, token }),
+
+};
+
+export const CommunityBusiness = {
+  sectors: () => axios.get('/sectors'),
+
+  regions: () => axios.get('/regions'),
+
+  get: params => axios.get('/community-businesses/me', params),
+
+  getVisits: params => axios.get('/community-businesses/me/visit-logs', { params }),
+
+  getVisitAggregates: params => axios.get('/community-businesses/me/visit-logs/aggregates', { params }),
+
+  update: async ({ name, sector, region, logoUrl }) =>
+    axios.put('/community-businesses/me', { name, sector, region, logoUrl }),
 
   getFeedback: (since, until) =>
     axios.get('/community-businesses/me/feedback/aggregates', {

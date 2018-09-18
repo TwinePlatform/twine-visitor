@@ -13,7 +13,7 @@ import { colors, fonts } from '../../shared/style_guide';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
-import { ErrorUtils, CbAdmin, Visitors } from '../../api';
+import { ErrorUtils, CommunityBusiness, Visitors } from '../../api';
 
 const repeat = (xs, n) => (xs.length >= n ? xs.slice(0, n) : repeat(xs.concat(xs), n));
 
@@ -249,12 +249,12 @@ export default class VisitsDataPage extends React.Component {
       visitActivity: activityFilter,
     };
 
-    const getVisits = CbAdmin.getVisits(
+    const getVisits = CommunityBusiness.getVisits(
       { limit: 10,
         offset,
         filter: filter(identity, queryFilter),
       });
-    const getAggregates = CbAdmin.getVisitAggregates(
+    const getAggregates = CommunityBusiness.getVisitAggregates(
       { fields: ['gender', 'age', 'visitActivity', 'lastWeek'],
         filter: filter(identity, queryFilter),
       });

@@ -34,7 +34,7 @@ export default class ResetPassword extends React.Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-    CbAdmin.resetPassword(this.props.match.params.token, payloadFromState(this.state))
+    CbAdmin.resetPassword({ token: this.props.match.params.token, ...payloadFromState(this.state) })
       .then(() => this.props.history.push('/cb/login?ref=pwd_reset'))
       .catch((error) => {
         if (errorStatusEquals(error, 400)) {

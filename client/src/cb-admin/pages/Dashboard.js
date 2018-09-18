@@ -5,7 +5,7 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 import { SecondaryButton } from '../../shared/components/form/base';
 import DotButton from '../../shared/components/form/DottedButton';
 import { Heading, Link as StyledLink } from '../../shared/components/text/base';
-import { CbAdmin, logout, ErrorUtils } from '../../api';
+import { CommunityBusiness, logout, ErrorUtils } from '../../api';
 
 
 const Nav = styled.nav`
@@ -49,7 +49,7 @@ export default class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    CbAdmin.get()
+    CommunityBusiness.get({ fields: ['name'] })
       .then(res => this.setState({ orgName: res.data.result.name }))
       .catch((error) => {
 
