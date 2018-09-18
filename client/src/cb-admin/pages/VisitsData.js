@@ -117,16 +117,16 @@ export default class VisitsDataPage extends React.Component {
 
   onChange = e => this.setState({ [e.target.name]: e.target.value }, this.getData);
 
-  getActivitiesForChart = (activitiesObject) => {
-
+  getActivitiesForChart = (activityData) => {
+    const pairedActivityData = toPairs(activityData);
     const activitiesData = {
-      labels: Object.keys(activitiesObject),
+      labels: map(head, pairedActivityData),
       datasets: [
         {
-          data: Object.values(activitiesObject),
+          data: map(last, pairedActivityData),
           backgroundColor: repeat(
             [colors.highlight_primary, colors.highlight_secondary, colors.light],
-            Object.values(activitiesObject).length,
+            pairedActivityData.length,
           ),
         },
       ],
