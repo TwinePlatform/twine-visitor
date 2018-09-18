@@ -10,7 +10,7 @@ import renderWithRouter from '../../../tests';
 import Signup from '../Signup';
 
 
-describe('Signup Component', () => {
+describe.skip('Signup Component', () => {
   let mock;
 
   beforeAll(() => {

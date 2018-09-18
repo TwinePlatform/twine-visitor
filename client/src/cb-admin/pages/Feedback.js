@@ -5,7 +5,7 @@ import 'react-dates/initialize';
 import { DateRangePicker, isInclusivelyBeforeDay } from 'react-dates';
 import moment from 'moment';
 import styled from 'styled-components';
-import { CbAdmin, logout } from '../../api';
+import { CommunityBusiness, logout } from '../../api';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { Heading, Link, Paragraph } from '../../shared/components/text/base';
 import { colors } from '../../shared/style_guide';
@@ -105,7 +105,7 @@ export default class Feedback extends Component {
   }
 
   handleGetFeedback = () => {
-    CbAdmin.getFeedback(this.state.startDate, this.state.endDate)
+    CommunityBusiness.getFeedback(this.state.startDate, this.state.endDate)
       .then(({ data }) => {
         !data.error && data.result && data.result.totalFeedback > 0 //eslint-disable-line
           ? this.setState({ feedbackCounts: data.result, error: null })

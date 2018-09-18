@@ -4,13 +4,13 @@ import {
   waitForElement,
   wait,
 } from 'react-testing-library';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { axios } from '../../../api';
 import renderWithRouter from '../../../tests';
 import ForgotPassword from '../ForgotPassword';
 
 
-describe('Login Component', () => {
+describe('ForgotPassword Component', () => {
   let mock;
 
   beforeAll(() => {
@@ -22,7 +22,7 @@ describe('Login Component', () => {
   test(':: subscribed email sends 200 and redirects to login', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/cb/pwd/reset')
+    mock.onPost('/users/password/forgot')
       .reply(200, { result: null });
 
     const { getByText, getByLabelText, history } =
@@ -35,14 +35,13 @@ describe('Login Component', () => {
     fireEvent.change(email);
     fireEvent.click(submit);
 
-    await wait(() => history.length === 2);
-    expect(history.location.pathname).toEqual('/cb/login');
+    await wait(() => expect(history.location.pathname).toEqual('/cb/login'));
   });
 
   test(':: unsubscribed email sends 401 and displays error message', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/cb/pwd/reset')
+    mock.onPost('/users/password/forgot')
       .reply(401, { result: null, error: 'Email not recognised' });
 
     const { getByText, getByLabelText } = renderWithRouter()(ForgotPassword);
