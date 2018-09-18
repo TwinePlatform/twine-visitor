@@ -91,9 +91,6 @@ export default class Login extends React.Component {
           </FormSection>
         </Form>
         <CenteredParagraph>
-          Not a subscriber? <Link to="/cb/register">Create a new account</Link>
-        </CenteredParagraph>
-        <CenteredParagraph>
           <LightLink to="/cb/password/forgot">Forgot your password?</LightLink>
         </CenteredParagraph>
       </FlexContainerCol>

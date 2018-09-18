@@ -18,7 +18,6 @@ import Container from './shared/components/Container';
 import HomePage from './shared/pages/Home';
 
 import Login from './cb-admin/pages/Login';
-import CbSignupPage from './cb-admin/pages/Signup';
 import ConfirmPassword from './cb-admin/pages/ConfirmPassword';
 import ForgotPassword from './cb-admin/pages/ForgotPassword';
 import ResetPassword from './cb-admin/pages/ResetPassword';
@@ -31,7 +30,7 @@ import CbAdminActivitiesPage from './cb-admin/pages/Activities';
 import CbAdminVisitsDataPage from './cb-admin/pages/VisitsData';
 
 
-class App extends Component {
+export default class App extends Component {
 
   componentWillMount() {
     // avoid eslint errors to keep this a class component
@@ -43,7 +42,6 @@ class App extends Component {
         <Container>
           <Switch>
             <Route exact path="/" component={HomePage} />
-            <Route exact path="/cb/register" component={CbSignupPage} />
             <Route exact path="/cb/password/reset/:token" component={ResetPassword} />
             <Route exact path="/cb/password/forgot" component={ForgotPassword} />
             <Route exact path="/cb/login" component={Login} />
@@ -88,5 +86,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;
