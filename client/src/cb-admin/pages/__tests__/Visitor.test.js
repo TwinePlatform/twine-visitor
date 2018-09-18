@@ -36,8 +36,8 @@ describe('Visitor Component', () => {
           email: 'maemail@gmail.com',
           phoneNumber: '7835110026',
           createdAt: '2017-05-15T12:24:52.000Z',
-          isEmailContactConsentGranted: false,
-          isSMSContactConsentGranted: false } });
+          isEmailConsentGranted: false,
+          isSMSConsentGranted: false } });
 
     mock.onGet('/community-businesses/me')
       .reply(200,
@@ -113,8 +113,8 @@ describe('Visitor Component', () => {
           email: 'maemail@gmail.com',
           phoneNumber: '7835110026',
           createdAt: '2017-05-15T12:24:52.000Z',
-          isEmailContactConsentGranted: false,
-          isSMSContactConsentGranted: false } })
+          isEmailConsentGranted: false,
+          isSMSConsentGranted: false } })
       .onPut('/community-businesses/me/visitors/4')
       .reply(200, {
         result: {
@@ -127,8 +127,8 @@ describe('Visitor Component', () => {
           phoneNumber: '7835110026',
           createdAt: '2017-05-15T12:24:52.000Z',
           modifiedAt: (new Date()).toISOString(),
-          isEmailContactConsentGranted: false,
-          isSMSContactConsentGranted: false,
+          isEmailConsentGranted: false,
+          isSMSConsentGranted: false,
         },
       });
 
@@ -195,8 +195,8 @@ describe('Visitor Component', () => {
           email: 'maemail@gmail.com',
           phoneNumber: '7835110026',
           createdAt: '2017-05-15T12:24:52.000Z',
-          isEmailContactConsentGranted: false,
-          isSMSContactConsentGranted: false } })
+          isEmailConsentGranted: false,
+          isSMSConsentGranted: false } })
       .onPut('/community-businesses/me/visitors/4')
       .reply(400, { error: { email: 'Invalid email' } });
 
