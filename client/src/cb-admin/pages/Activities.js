@@ -8,7 +8,7 @@ import { Form, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import Checkbox from '../components/Checkbox';
-import { Activities, Constants, ErrorUtils } from '../../api';
+import { Activities, CommunityBusiness, ErrorUtils } from '../../api';
 import ActivityLabel from '../components/ActivityLabel';
 
 
@@ -86,7 +86,7 @@ export default class ActivitiesPage extends React.Component {
   }
 
   componentDidMount() {
-    Promise.all([Activities.get(), Constants.getActivities()])
+    Promise.all([Activities.get(), CommunityBusiness.getActivities()])
       .then(([{ data: { result: activities } }, { data: { result: categories } }]) => {
 
         const order = activities.map(activity => activity.id);

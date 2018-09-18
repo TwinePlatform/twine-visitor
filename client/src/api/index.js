@@ -136,6 +136,8 @@ export const CommunityBusiness = {
 
   getVisitAggregates: params => axios.get('/community-businesses/me/visit-logs/aggregates', { params }),
 
+  getActivities: () => axios.get('/visit-activity-categories'),
+
   update: async ({ name, sector, region, logoUrl }) =>
     axios.put('/community-businesses/me', { name, sector, region, logoUrl }),
 
@@ -179,7 +181,3 @@ export const ErrorUtils = {
 export const logout = () =>
   axios.get('/users/logout')
 ;
-
-export const Constants = {
-  getActivities: () => axios.get('/visit-activity-categories'),
-};
