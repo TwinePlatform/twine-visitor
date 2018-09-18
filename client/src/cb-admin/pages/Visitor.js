@@ -163,7 +163,7 @@ export default class VisitorProfile extends React.Component {
   };
 
   onClickResend = () => {
-    Visitors.email({ id: this.state.id })
+    Visitors.sendQrCode({ id: this.state.id })
       .then(() => this.setState({ hasResent: true }))
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
