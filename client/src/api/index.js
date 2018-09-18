@@ -7,7 +7,7 @@ import qs from 'qs';
 
 
 export const axios = create({
-  baseURL: 'http://localhost:4000/v1/',
+  baseURL: process.env.REACT_APP_HOST_API,
   withCredentials: true,
   paramsSerializer: params => qs.stringify(params, { encode: false }),
 });
