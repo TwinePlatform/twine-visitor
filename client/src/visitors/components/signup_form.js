@@ -17,7 +17,7 @@ import StyledLabelledCheckbox from '../../shared/components/form/StyledLabelledC
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 import { colors, fonts } from '../../shared/style_guide';
-import { VISITOR_NAME_INVALID } from '../../cb-admin/constants/error_text';
+import { VISITOR_NAME_INVALID } from '../../cb_admin/constants/error_text';
 
 const SubmitButton = PrimaryButton.extend`
   height: 4em;
