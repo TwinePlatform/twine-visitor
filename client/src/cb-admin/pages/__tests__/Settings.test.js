@@ -113,7 +113,7 @@ describe('Settings Component', () => {
     mock.onGet('/users/me')
       .reply(200, { result: { email: 'findmyfroggy@frogfinders.com' } });
     mock.onPut('/users/me')
-      .reply(400, { result: null });
+      .reply(400, { result: null, error: { email: 'Invalid email' } });
 
     const { getByLabelText, getByText } = renderWithRouter()(Settings);
 
@@ -128,13 +128,13 @@ describe('Settings Component', () => {
     fireEvent.click(submitBtn);
 
     const [nameError] = await waitForElement(() => [
-      getByText('Invalid name'),
+      getByText('Invalid email'),
     ]);
 
     expect(nameError).toBeDefined();
   });
 
-  // test(':: successfully upload image to Cloudinary', async () => {});
-  // test(':: fail to upload image to Cloudinary', async () => {});
-  // test(':: generate CSV export', async () => {});
+  test.skip(':: successfully upload image to Cloudinary', async () => {});
+  test.skip(':: fail to upload image to Cloudinary', async () => {});
+  test.skip(':: generate CSV export', async () => {});
 });

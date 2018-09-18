@@ -12,7 +12,6 @@ import homeVisitor from '../homeVisitor';
 
 describe('Visitor Home Page', () => {
   let mock;
-  const noop = () => {};
 
   beforeAll(() => {
     mock = new MockAdapter(axios);
@@ -27,12 +26,7 @@ describe('Visitor Home Page', () => {
       .onPost('/community-businesses/me/feedback')
       .reply(200, { data: null });
 
-    const tools = renderWithRouter({
-      route: '/visitor/signup',
-      auth: 'fakeauthtoken',
-      updateAdminToken: noop,
-      updateLoggedIn: noop,
-    })(homeVisitor);
+    const tools = renderWithRouter({ route: '/visitor/signup' })(homeVisitor);
 
     const posBtn = await waitForElement(() => tools.getByTestId('positive-feedback-btn'));
 
@@ -50,12 +44,7 @@ describe('Visitor Home Page', () => {
       .onPost('/community-businesses/me/feedback')
       .reply(200, { data: null });
 
-    const tools = renderWithRouter({
-      route: '/visitor/signup',
-      auth: 'fakeauthtoken',
-      updateAdminToken: noop,
-      updateLoggedIn: noop,
-    })(homeVisitor);
+    const tools = renderWithRouter({ route: '/visitor/signup' })(homeVisitor);
 
     const neuBtn = await waitForElement(() => tools.getByTestId('neutral-feedback-btn'));
 
@@ -73,12 +62,7 @@ describe('Visitor Home Page', () => {
       .onPost('/community-businesses/me/feedback')
       .reply(200, { data: null });
 
-    const tools = renderWithRouter({
-      route: '/visitor/signup',
-      auth: 'fakeauthtoken',
-      updateAdminToken: noop,
-      updateLoggedIn: noop,
-    })(homeVisitor);
+    const tools = renderWithRouter({ route: '/visitor/signup' })(homeVisitor);
 
     const negBtn = await waitForElement(() => tools.getByTestId('negative-feedback-btn'));
 
@@ -96,13 +80,7 @@ describe('Visitor Home Page', () => {
       .onPost('/community-businesses/me/feedback')
       .reply(500, { error: { statusCode: 500, type: 'Internal Server Error', message: 'Oops' } });
 
-    const tools = renderWithRouter({
-      route: '/visitor/signup',
-      auth: 'fakeauthtoken',
-      updateAdminToken: noop,
-      updateLoggedIn: noop,
-    })(homeVisitor);
-
+    const tools = renderWithRouter({ route: '/visitor/signup' })(homeVisitor);
     const neuBtn = await waitForElement(() => tools.getByTestId('neutral-feedback-btn'));
 
     fireEvent.click(neuBtn);

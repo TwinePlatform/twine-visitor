@@ -4,11 +4,10 @@ import {
   waitForElement,
   wait,
 } from 'react-testing-library';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { axios } from '../../../api';
 import renderWithRouter from '../../../tests';
 import ResetPassword from '../ResetPassword';
-// import App from '../../../App';
 
 
 describe('ResetPassword Component', () => {
@@ -23,7 +22,7 @@ describe('ResetPassword Component', () => {
   test(':: non matching passwords returns 400 and displays error message', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/cb/pwd/change')
+    mock.onPost('/users/password/reset')
       .reply(400, {
         result: null,
         error: { isJoi: true, name: 'ValidationError' },
@@ -53,7 +52,7 @@ describe('ResetPassword Component', () => {
   test(':: matching passwords returns 200 and redirect', async () => {
     expect.assertions(2);
 
-    mock.onPost('/api/cb/pwd/change')
+    mock.onPost('/users/password/reset')
       .reply(200, {
         result: null,
       });

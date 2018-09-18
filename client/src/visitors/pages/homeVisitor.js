@@ -7,7 +7,7 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 import confused from '../../shared/assets/icons/faces/confused.svg';
 import happy from '../../shared/assets/icons/faces/happy.svg';
 import sad from '../../shared/assets/icons/faces/sad.svg';
-import { CbAdmin, ErrorUtils } from '../../api';
+import { CommunityBusiness, ErrorUtils } from '../../api';
 
 const StyledNav = styled.nav`
   display: flex;
@@ -53,14 +53,13 @@ const FeedbackStyledSection = styled.section`
 `;
 
 const postFeedback = (feedbackScore, props) =>
-  CbAdmin.postFeedback(feedbackScore)
+  CommunityBusiness.postFeedback(feedbackScore)
     .then(() => props.history.push('/thankyou'))
     .catch((error) => {
-      const status = ErrorUtils.getErrorStatus(error);
-      if (status === 401) {
+      if (ErrorUtils.errorStatusEquals(error, 401)) {
         props.history.push('/cb/login');
       } else {
-        props.history.push(`/error/${status}`);
+        props.history.push(`/error/${ErrorUtils.getErrorStatus(error)}`);
       }
     });
 
