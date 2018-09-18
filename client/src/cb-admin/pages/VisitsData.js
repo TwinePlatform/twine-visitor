@@ -102,7 +102,13 @@ export default class VisitsDataPage extends React.Component {
   }
 
   componentDidMount() {
-    this.getData();
+    /*
+     * this.getData should be split into getTableData & getGraphData to avoid
+     * graph data being requested due to pagination
+     * this.getData currently called by PaginatedTableWrapper
+     *
+     * see https://github.com/TwinePlatform/twine-visitor/issues/499
+     */
   }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value }, this.getData);
