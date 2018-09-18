@@ -110,6 +110,7 @@ export default class Main extends Component {
       errors: {},
       isPrinting: false,
       cbOrgName: '',
+      organisationId: '',
       cbLogoUrl: '',
       formAutocompleteUUID: '', // See header comment in visitors/components/signup_form
     };
@@ -121,6 +122,7 @@ export default class Main extends Component {
         this.setState({
           cbOrgName: res.data.result.name,
           cbLogoUrl: res.data.result.logoUrl,
+          organisationId: res.data.result.id,
           formAutocompleteUUID: Date.now().toString(),
         }))
       .catch((error) => {
@@ -177,6 +179,7 @@ export default class Main extends Component {
       phoneNumber: this.state.phone,
       emailContactConsent: this.state.emailContact,
       smsContactConsent: this.state.smsContact,
+      organisationId: this.state.organisationId,
     })
       .then((res) => {
         this.setState({ url: res.data.qrCode });
@@ -241,7 +244,7 @@ export default class Main extends Component {
   }
 
   render() {
-    const { errors, cbOrgName } = this.state;
+    const { errors, cbOrgName, formAutocompleteUUID } = this.state;
 
     return (
       <div className="row">
@@ -253,7 +256,7 @@ export default class Main extends Component {
               years={years}
               createVisitor={this.createVisitor}
               cbOrgName={cbOrgName}
-              uuid={this.state.formAutocompleteUUID}
+              uuid={formAutocompleteUUID}
             />
           </Route>
 
