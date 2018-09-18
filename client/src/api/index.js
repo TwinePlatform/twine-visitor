@@ -76,16 +76,8 @@ export const Visitors = {
       },
     ),
 
-  delete: () => {},
-
-  email: ({ id }) =>
-    _axios.post(
-      '/api/user/qr/email',
-      {
-        id,
-      },
-
-    ),
+  sendQrCode: ({ id }) =>
+    axios.post(`/community-businesses/me/visitors/${id}/emails`, { type: 'qrcode' }),
 
   createVisit: ({ visitorId, hash, activityId }) =>
     axios.post(
