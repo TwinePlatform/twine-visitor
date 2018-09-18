@@ -17,17 +17,17 @@ import Dots from './shared/components/Dots';
 import Container from './shared/components/Container';
 import HomePage from './shared/pages/Home';
 
-import Login from './cb-admin/pages/Login';
-import ConfirmPassword from './cb-admin/pages/ConfirmPassword';
-import ForgotPassword from './cb-admin/pages/ForgotPassword';
-import ResetPassword from './cb-admin/pages/ResetPassword';
-import CbAdminDashboard from './cb-admin/pages/Dashboard';
-import CbAdminFeedback from './cb-admin/pages/Feedback';
-import CbAdminSettingsPage from './cb-admin/pages/Settings';
-import CbAdminVisitorPage from './cb-admin/pages/Visitor';
-import CbAdminVisitorDetailsPage from './cb-admin/pages/VisitorDetails';
-import CbAdminActivitiesPage from './cb-admin/pages/Activities';
-import CbAdminVisitsDataPage from './cb-admin/pages/VisitsData';
+import Login from './cb_admin/pages/Login';
+import ConfirmPassword from './cb_admin/pages/ConfirmPassword';
+import ForgotPassword from './cb_admin/pages/ForgotPassword';
+import ResetPassword from './cb_admin/pages/ResetPassword';
+import CbAdminDashboard from './cb_admin/pages/Dashboard';
+import CbAdminFeedback from './cb_admin/pages/Feedback';
+import CbAdminSettingsPage from './cb_admin/pages/Settings';
+import CbAdminVisitorPage from './cb_admin/pages/Visitor';
+import CbAdminVisitorDetailsPage from './cb_admin/pages/VisitorDetails';
+import CbAdminActivitiesPage from './cb_admin/pages/Activities';
+import CbAdminVisitsDataPage from './cb_admin/pages/VisitsData';
 
 
 export default class App extends Component {
