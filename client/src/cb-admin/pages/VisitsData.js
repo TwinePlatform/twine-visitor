@@ -341,8 +341,12 @@ export default class VisitsDataPage extends React.Component {
                   yAxes: [{
                     ticks: {
                       beginAtZero: true,
-                      stepSize: 1, // NB this may need to be dynamically set in
-                      // future to accomodate large datasets
+                      stepSize: 1,
+                      /*
+                       * NB this may need to be dynamically set in
+                       * future to accomodate large datasets
+                       * see https://github.com/TwinePlatform/twine-visitor/issues/503
+                       */
                     },
                   }],
                 } }
