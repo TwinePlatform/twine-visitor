@@ -109,6 +109,10 @@ export default class VisitsDataPage extends React.Component {
      *
      * see https://github.com/TwinePlatform/twine-visitor/issues/499
      */
+
+    Visitors.genders().then(res => this.setState({
+      genderList: [''].concat(res.data.result).map((value, key) => ({ key, value })),
+    }));
   }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value }, this.getData);
