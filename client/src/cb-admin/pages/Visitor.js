@@ -10,7 +10,7 @@ import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import DetailsTable from '../components/DetailsTable';
 import QrBox from '../components/QrBox';
-import { CbAdmin, Visitors, ErrorUtils } from '../../api';
+import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
 import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 
 const generateYearsArray = (startYear, currentYear) =>
@@ -139,7 +139,7 @@ export default class VisitorProfile extends React.Component {
         }
       });
 
-    CbAdmin.get()
+    CommunityBusiness.get({ fields: ['name', 'logoUrl'] })
       .then(res =>
         this.setState({
           cbOrgName: res.data.result.name,
