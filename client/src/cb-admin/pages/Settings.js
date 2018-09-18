@@ -172,13 +172,13 @@ export default class SettingsPage extends React.Component {
       'birthYear',
       'email',
       'createdAt',
-      'emailConsent',
-      'smsConsent',
+      'isEmailConsentGranted',
+      'isSMSConsentGranted',
     ];
 
     const {
       data: { result: visitors },
-    } = await Visitors.get({ fields: visitorProps, visits: true });
+    } = await Visitors.get({}, { fields: visitorProps, visits: true });
 
     const responsePayloadTransformers = {
       toUsersCsvData: pipe(
@@ -213,8 +213,8 @@ export default class SettingsPage extends React.Component {
         email: 'Email',
         registeredDate: 'Register Date',
         registeredTime: 'Register Time',
-        emailConsent: 'Email Opt-in',
-        smsConsent: 'Sms Opt-in',
+        isEmailConsentGranted: 'Email Opt-in',
+        isSMSConsentGranted: 'Sms Opt-in',
       },
       usersCsvData,
     );
