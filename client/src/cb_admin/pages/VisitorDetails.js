@@ -192,7 +192,7 @@ export default class VisitorDetailsPage extends React.Component {
 
   update = (offset = 0) => {
     const { genderFilter, ageFilter } = this.state;
-    const params = { visits: true, offset, limit: 10 };
+    const params = { offset, limit: 10 };
     const sort = colToState[this.state.sort];
     const visFilter = (genderFilter || ageFilter)
       ? { gender: genderFilter || undefined, age: ageFilter || undefined }
