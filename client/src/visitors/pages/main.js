@@ -106,11 +106,11 @@ export default class Main extends Component {
       emailContact: false,
       smsContact: false,
       users: [],
-      url: '',
+      qrCode: '',
       errors: {},
       isPrinting: false,
       cbOrgName: '',
-      organisationId: '',
+      organisationId: null,
       cbLogoUrl: '',
       formAutocompleteUUID: '', // See header comment in visitors/components/signup_form
     };
@@ -177,12 +177,12 @@ export default class Main extends Component {
       birthYear: this.state.year,
       email: this.state.email,
       phoneNumber: this.state.phone,
-      emailContactConsent: this.state.emailContact,
-      smsContactConsent: this.state.smsContact,
+      emailConsent: this.state.emailContact,
+      smsConsent: this.state.smsContact,
       organisationId: this.state.organisationId,
     })
       .then((res) => {
-        this.setState({ url: res.data.qrCode });
+        this.setState({ qrCode: res.data.result.qrCode });
         this.props.history.push('/visitor/signup/thankyou');
       })
       .catch((error) => {
@@ -212,7 +212,7 @@ export default class Main extends Component {
             <CbLogo src={p2cLogo} alt="Power to change logo" />
           )}
         </PrintHeaderRow>
-        <QrCodePrint src={state.url} alt="QR code" />
+        <QrCodePrint src={state.qrCode} alt="QR code" />
         <Paragraph>Please bring this QR code with you next time</Paragraph>
       </PrintContainer>
     );
@@ -229,7 +229,7 @@ export default class Main extends Component {
           </CenteredParagraph>
           <FlexContainerRow>
             <QRContainer>
-              <QRimg src={state.url} alt="This is your QRcode" />
+              <QRimg src={state.qrCode} alt="This is your QRcode" />
             </QRContainer>
             <ButtonsFlexContainerCol>
               <Link to="/visitor">
