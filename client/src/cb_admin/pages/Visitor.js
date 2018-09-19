@@ -215,8 +215,8 @@ export default class VisitorProfile extends React.Component {
           {state.cbLogoUrl
             ? (<CbLogo src={state.cbLogoUrl} alt="Business logo" />)
             : (<CbLogo src={p2cLogo} alt="Power to change logo" />)}
-          <Heading flex={9}>{state.cbOrgName} QR code</Heading>
         </PrintHeaderRow>
+        <Heading flex={9}>{state.cbOrgName} QR code</Heading>
         <QrCodePrint src={state.qrCodeUrl} alt="QR code" />
         <Paragraph>Please bring this QR code with you next time</Paragraph>
       </PrintContainer>
