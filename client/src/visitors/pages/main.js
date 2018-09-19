@@ -117,7 +117,7 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
-    CommunityBusiness.get({ fields: ['name', 'logoUrl'] })
+    CommunityBusiness.get({ fields: ['name', 'logoUrl', 'id'] })
       .then(res =>
         this.setState({
           cbOrgName: res.data.result.name,

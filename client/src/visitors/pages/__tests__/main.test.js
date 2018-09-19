@@ -36,7 +36,7 @@ describe('Visitor Registration Component', () => {
     };
 
     mock.onPost('/users/register/visitor').reply(200, { data: { ...visitor } })
-      .onGet('/community-businesses/me').reply(200, { result: { name: 'cbName', logoUrl: 'cbURL' } })
+      .onGet('/community-businesses/me').reply(200, { result: { name: 'cbName', logoUrl: 'cbURL', id: 1 } })
       .onGet('/users/me')
       .reply(200, { result: {} });
 
