@@ -113,8 +113,8 @@ export const CbAdmin = {
   forgotPassword: ({ email }) =>
     axios.post('/users/password/forgot', { email }),
 
-  resetPassword: ({ password, confirmPassword, token }) =>
-    axios.post('/users/password/reset', { password, confirmPassword, token }),
+  resetPassword: ({ password, passwordConfirm, token }) =>
+    axios.post('/users/password/reset', { password, passwordConfirm, token }),
 
 };
 
@@ -165,8 +165,7 @@ export const Cloudinary = {
 export const ErrorUtils = {
   getErrorStatus: pathOr(null, ['response', 'status']),
   getValidationErrors: compose(
-    map(head),
-    pathOr({ general: ['Unknown error'] }, ['response', 'data', 'validation']),
+    pathOr({ general: ['Unknown error'] }, ['response', 'data', 'error', 'validation']),
   ),
   errorStatusEquals: (error, status) => equals(ErrorUtils.getErrorStatus(error), status),
 };

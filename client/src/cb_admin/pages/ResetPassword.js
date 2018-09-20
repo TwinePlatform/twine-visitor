@@ -51,7 +51,7 @@ export default class ResetPassword extends React.Component {
           this.setState({ errors: ErrorUtils.getValidationErrors(error) });
 
         } else if (errorStatusEquals(error, 401)) {
-          this.setState({ errors: { password: error.response.data.error } });
+          this.setState({ errors: { password: error.response.data.error.message } });
 
         } else if (errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
@@ -97,6 +97,7 @@ export default class ResetPassword extends React.Component {
               <li>Use 1 or more numbers</li>
               <li>Use 1 or more special characters</li>
             </ErrorText>
+            <ErrorText show={this.state.errors.token}>{this.state.errors.token}</ErrorText>
           </FormSectionFixedHeight>
         </Form>
       </FlexContainerCol>
