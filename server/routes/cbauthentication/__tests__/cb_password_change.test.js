@@ -67,7 +67,7 @@ test('POST /api/cb/pwd/change | invalid token', (t) => {
     .expect('Content-Type', /json/)
     .end((err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
-      t.deepEqual(res.body, { result: null, error: 'Token not recognised' }, 'failed to log in with invalid token');
+      t.deepEqual(res.body, { result: null, error: 'Token not recognised. Reset password again.' }, 'failed to log in with invalid token');
       dbConnection.end(t.end);
     });
 });
@@ -98,7 +98,7 @@ test('POST /api/cb/pwd/change | expired token', async (t) => {
     .expect('Content-Type', /json/)
     .end(async (err, res) => {
       t.notOk(err, err || 'Passes supertest expect criteria');
-      t.deepEqual(res.body, { result: null, error: 'Token expired' }, 'failed to log in with expired token');
+      t.deepEqual(res.body, { result: null, error: 'Token expired. Reset password again.' }, 'failed to log in with expired token');
       dbConnection.end(t.end);
     });
 });

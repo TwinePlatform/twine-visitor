@@ -14,7 +14,7 @@ const schemas = {
   },
 };
 
-const TTL_TOKEN = 1000 * 60 * 60 * 1; // 1 hour
+const TTL_TOKEN = 1000 * 60 * 60 * 1 * 24; // 1 day
 
 router.post('/', validate(schemas), async (req, res, next) => {
   const { email } = req.body;
