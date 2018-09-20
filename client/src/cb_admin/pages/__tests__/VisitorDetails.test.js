@@ -21,9 +21,13 @@ describe('VisitorDetails Component', () => {
   test(':: succesful load displays visitor details on page', async () => {
     expect.assertions(3);
 
-    mock.onGet('/community-businesses/me/visitors', { params: { visits: true, offset: 0, limit: 10 } })
+    mock
+      .onGet('/genders')
+      .reply(200, { result: ['male', 'female', 'prefer not to say'] });
+
+    mock.onGet('/community-businesses/me/visitors', { params: { offset: 0, limit: 10 } })
       .reply(200,
-        { result: [{ full_count: '1',
+        { result: [{
           id: 4,
           name: 'yusra mardini',
           gender: 'female',
@@ -32,17 +36,16 @@ describe('VisitorDetails Component', () => {
           registered_at: '2017-05-15T12:24:52.000Z',
           email_consent: false,
           sms_consent: false }],
-        meta: { full_count: 1 } });
+        meta: { total: 1 } });
 
-    const { getByText } =
-        renderWithRouter()(VisitorDetails);
+    const { getByText } = renderWithRouter()(VisitorDetails);
 
     const [name, gender, email] = await waitForElement(() => [
       getByText('yusra mardini'),
       getByText('female'),
       getByText('maemail@gmail.com'),
-
     ]);
+
     expect(name.textContent).toEqual('yusra mardini');
     expect(gender.textContent).toEqual('female');
     expect(email.textContent).toEqual('maemail@gmail.com');
@@ -52,7 +55,10 @@ describe('VisitorDetails Component', () => {
     expect.assertions(1);
 
     mock
-      .onGet('/community-businesses/me/visitors', { params: { visits: true, offset: 0, limit: 10 } })
+      .onGet('/genders')
+      .reply(200, { result: ['male', 'female', 'prefer not to say'] });
+    mock
+      .onGet('/community-businesses/me/visitors', { params: { offset: 0, limit: 10 } })
       .reply(401, { result: null });
 
     const { history } = renderWithRouter()(VisitorDetails);
