@@ -24,10 +24,11 @@ describe('ResetPassword Component', () => {
 
     mock.onPost('/users/password/reset')
       .reply(400, {
-        result: null,
-        error: { isJoi: true, name: 'ValidationError' },
-        validation: { passwordConfirm: ['must match password'] },
-      });
+        error: {
+          statusCode: 400,
+          type: 'Bad Request',
+          message: '"passwordConfirm" must match password',
+          validation: { passwordConfirm: 'must match password' } } });
 
     const { getByText, getByLabelText } =
         renderWithRouter({
@@ -47,6 +48,38 @@ describe('ResetPassword Component', () => {
 
     const error = await waitForElement(() => getByText('match', { exact: false }));
     expect(error.textContent).toEqual('must match password');
+  });
+
+  test(':: invalid token returns 401 and displays error message', async () => {
+    expect.assertions(1);
+
+    mock.onPost('/users/password/reset')
+      .reply(401, {
+        error: {
+          statusCode: 401,
+          type: 'Unauthorized',
+          message: 'Invalid token. Reset password again.',
+        },
+      });
+
+    const { getByText, getByLabelText } =
+        renderWithRouter({
+          route: '/cb/password/reset/tickettonarnia',
+          match: { params: { token: 'tickettonarnia' } },
+        })(ResetPassword);
+
+    const newPassword = getByLabelText('New password');
+    const confirmPassword = getByLabelText('Confirm new password');
+    newPassword.value = 'lolLOL123!';
+    confirmPassword.value = 'lolLOL123!';
+
+    const submit = getByText('SUBMIT');
+    fireEvent.change(newPassword);
+    fireEvent.change(confirmPassword);
+    fireEvent.click(submit);
+
+    const error = await waitForElement(() => getByText('token', { exact: false }));
+    expect(error.textContent).toEqual('Invalid token. Reset password again.');
   });
 
   test(':: matching passwords returns 200 and redirect', async () => {
