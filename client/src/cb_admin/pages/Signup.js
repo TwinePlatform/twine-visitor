@@ -1,3 +1,12 @@
+/*
+ * NOTE THIS COMPONENT IS NO LONGER USED
+ * Responsibility to sign up new CBs will be moved to another application
+ * Component is being kept for future reference
+ *
+ * https://github.com/TwinePlatform/twine-api/issues/97
+ */
+
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
