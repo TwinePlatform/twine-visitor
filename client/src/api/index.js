@@ -2,7 +2,7 @@
  * Twine API interface
  */
 import _axios, { create } from 'axios';
-import { map, head, pathOr, equals, compose } from 'ramda';
+import { pathOr, equals, compose } from 'ramda';
 import qs from 'qs';
 
 
