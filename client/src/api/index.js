@@ -99,7 +99,7 @@ export const CbAdmin = {
     axios.put('/users/me', { email }),
 
   login: ({ email, password }) =>
-    axios.post('/users/login/admin', { email, password }),
+    axios.post('/users/login', { email, password, type: 'cookie', restrict: 'ORG_ADMIN' }),
 
   logout: () =>
     axios.get('/users/logout'),
