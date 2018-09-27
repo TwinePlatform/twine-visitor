@@ -22,7 +22,7 @@ describe('Login Component', () => {
   test(':: incorrect user details returns 401 and displays error message', async () => {
     expect.assertions(1);
 
-    mock.onPost('/users/login/admin')
+    mock.onPost('/users/login')
       .reply(401, { result: null, error: { message: 'Credentials not recognised' } });
 
     const { getByText, getByLabelText } = renderWithRouter()(Login);
@@ -42,7 +42,7 @@ describe('Login Component', () => {
   test(':: correct user details returns 200 and redirects to homepage', async () => {
     expect.assertions(1);
 
-    mock.onPost('/users/login/admin')
+    mock.onPost('/users/login')
       .reply(200, { });
 
     const { getByText, history, getByLabelText } = renderWithRouter({ route: '/cb/login' })(Login);
