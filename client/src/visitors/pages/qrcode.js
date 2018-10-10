@@ -151,7 +151,7 @@ export default class QRCode extends Component {
       .then(() => this.props.history.push('/visitor/end'))
       .catch((error) => {
         console.log('ERROR @ Visitors.createVisit', error);
-        this.props.history.push('/visitor/login');
+        this.props.history.push('/error/500');
       });
   };
 
