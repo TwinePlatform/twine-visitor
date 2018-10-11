@@ -40,6 +40,10 @@ describe('Visitor Registration Component', () => {
       .onGet('/users/me')
       .reply(200, { result: {} });
 
+    mock
+      .onGet('/genders')
+      .reply(200, { result: [{ id: 1, name: 'male' }, { id: 2, name: 'female' }, { id: 3, name: 'prefer not to say' }] });
+
     const tools = renderWithRouter({ route: '/visitor/signup' })(main);
 
     const [

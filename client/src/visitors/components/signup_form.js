@@ -54,14 +54,6 @@ const PrivacySection = FormSection.extend`
 margin-top: 2em;
 `;
 
-const genders = [
-  { key: '1', value: '' },
-  { key: '2', value: 'male' },
-  { key: '3', value: 'female' },
-  { key: '4', value: 'prefer not to say' },
-];
-
-
 const signupForm = props => (
   <FlexContainerCol>
     <CenteredHeading>Please tell us about yourself</CenteredHeading>
@@ -95,7 +87,7 @@ const signupForm = props => (
             id="visitor-signup-gender"
             label="Gender"
             name="gender"
-            options={genders}
+            options={props.genders}
             error={props.errors.formGender}
             required
           />
@@ -150,6 +142,7 @@ signupForm.propTypes = {
   cbOrgName: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
   uuid: PropTypes.string.isRequired, // See header comment
+  genders: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default signupForm;

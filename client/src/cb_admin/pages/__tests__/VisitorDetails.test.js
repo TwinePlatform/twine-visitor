@@ -23,7 +23,7 @@ describe('VisitorDetails Component', () => {
 
     mock
       .onGet('/genders')
-      .reply(200, { result: ['male', 'female', 'prefer not to say'] });
+      .reply(200, { result: [{ id: 1, name: 'male' }, { id: 2, name: 'female' }, { id: 3, name: 'prefer not to say' }] });
 
     mock.onGet('/community-businesses/me/visitors', { params: { offset: 0, limit: 10 } })
       .reply(200,
@@ -56,7 +56,7 @@ describe('VisitorDetails Component', () => {
 
     mock
       .onGet('/genders')
-      .reply(200, { result: ['male', 'female', 'prefer not to say'] });
+      .reply(200, { result: [{ id: 1, name: 'male' }, { id: 2, name: 'female' }, { id: 3, name: 'prefer not to say' }] });
     mock
       .onGet('/community-businesses/me/visitors', { params: { offset: 0, limit: 10 } })
       .reply(401, { result: null });
