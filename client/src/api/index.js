@@ -52,7 +52,7 @@ export const Visitors = {
     { name, gender, birthYear, email, phoneNumber, emailConsent, smsConsent, organisationId },
   ) =>
     axios.post(
-      '/users/register/visitor',
+      '/users/register/visitors',
       {
         name,
         gender,

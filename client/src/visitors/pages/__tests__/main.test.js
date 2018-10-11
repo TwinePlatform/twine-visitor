@@ -35,7 +35,7 @@ describe('Visitor Registration Component', () => {
       qrCode: 'data:image/png;base64,329t4ji3nfp23nfergj42finoregn',
     };
 
-    mock.onPost('/users/register/visitor').reply(200, { result: { ...visitor } })
+    mock.onPost('/users/register/visitors').reply(200, { result: { ...visitor } })
       .onGet('/community-businesses/me').reply(200, { result: { name: 'cbName', logoUrl: 'cbURL', id: 1 } })
       .onGet('/users/me')
       .reply(200, { result: {} });
