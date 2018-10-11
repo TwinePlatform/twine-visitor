@@ -9,6 +9,7 @@ import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
+import { renameKeys } from '../../util';
 
 
 const generateYearsArray = (startYear, currentYear) =>
@@ -106,6 +107,7 @@ export default class Main extends Component {
       emailContact: false,
       smsContact: false,
       users: [],
+      genders: [],
       qrCode: '',
       errors: {},
       isPrinting: false,
@@ -117,13 +119,17 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
-    CommunityBusiness.get({ fields: ['name', 'logoUrl', 'id'] })
-      .then(res =>
+    const getCb = CommunityBusiness.get({ fields: ['name', 'logoUrl', 'id'] });
+    const getGenders = Visitors.genders();
+
+    Promise.all([getCb, getGenders])
+      .then(([{ data: { result: cbRes } }, { data: { result: gendersRes } }]) =>
         this.setState({
-          cbOrgName: res.data.result.name,
-          cbLogoUrl: res.data.result.logoUrl,
-          organisationId: res.data.result.id,
+          cbOrgName: cbRes.name,
+          cbLogoUrl: cbRes.logoUrl,
+          organisationId: cbRes.id,
           formAutocompleteUUID: Date.now().toString(),
+          genders: [{ key: 0, value: '' }].concat(gendersRes.map(renameKeys({ id: 'key', name: 'value' }))),
         }))
       .catch((error) => {
 
@@ -244,7 +250,7 @@ export default class Main extends Component {
   }
 
   render() {
-    const { errors, cbOrgName, formAutocompleteUUID } = this.state;
+    const { errors, cbOrgName, formAutocompleteUUID, genders } = this.state;
 
     return (
       <div className="row">
@@ -257,6 +263,7 @@ export default class Main extends Component {
               createVisitor={this.createVisitor}
               cbOrgName={cbOrgName}
               uuid={formAutocompleteUUID}
+              genders={genders}
             />
           </Route>
 

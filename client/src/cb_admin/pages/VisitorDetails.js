@@ -105,7 +105,7 @@ export default class VisitorDetailsPage extends React.Component {
   componentDidMount() {
     Visitors.genders()
       .then(res => this.setState({
-        genderList: [''].concat(res.data.result).map((value, key) => ({ key, value })),
+        genderList: [{ key: 0, value: '' }].concat(res.data.result.map(renameKeys({ id: 'key', name: 'value' }))),
       }))
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {

@@ -16,6 +16,7 @@ import DetailsTable from '../components/DetailsTable';
 import Dropzone from '../components/Dropzone';
 import Logo from '../components/Logo';
 import { CbAdmin, CommunityBusiness, Cloudinary, Visitors, ErrorUtils } from '../../api';
+import { renameKeys } from '../../util';
 
 
 const Nav = styled.nav`
@@ -104,7 +105,6 @@ export default class SettingsPage extends React.Component {
       visitsString: '',
       usersString: '',
       sectorList: [],
-      regionList: [],
     };
   }
 
@@ -113,11 +113,10 @@ export default class SettingsPage extends React.Component {
     const { get: getCb, sectors, regions } = CommunityBusiness;
 
     Promise.all([get({ fields: ['email'] }), getCb(), sectors(), regions()])
-      .then(([resUser, resCb, rSectors, rRegions]) => {
+      .then(([resUser, resCb, rSectors]) => {
         this.updateStateFromApi({ ...resUser.data.result, ...resCb.data.result });
         this.setState({
-          sectorList: rSectors.data.result.map((value, key) => ({ key, value })),
-          regionList: rRegions.data.result.map((value, key) => ({ key, value })),
+          sectorList: rSectors.data.result.map(renameKeys({ id: 'key', name: 'value' })),
         });
       })
       .catch((error) => {

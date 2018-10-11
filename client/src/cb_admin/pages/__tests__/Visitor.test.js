@@ -23,7 +23,7 @@ describe('Visitor Component', () => {
     expect.assertions(3);
 
     mock.onGet('/genders')
-      .reply(200, { result: ['male', 'female', 'prefer not to say'] });
+      .reply(200, { result: [{ id: 1, name: 'male' }, { id: 2, name: 'female' }, { id: 3, name: 'prefer not to say' }] });
 
     mock.onGet('/community-businesses/me/visitors/4')
       .reply(200,
@@ -99,7 +99,7 @@ describe('Visitor Component', () => {
 
     mock
       .onGet('/genders')
-      .reply(200, { result: ['male', 'female', 'prefer not to say'] });
+      .reply(200, { result: [{ id: 1, name: 'male' }, { id: 2, name: 'female' }, { id: 3, name: 'prefer not to say' }] });
 
     mock
       .onGet('/community-businesses/me/visitors/4')
@@ -181,7 +181,7 @@ describe('Visitor Component', () => {
 
     mock
       .onGet('/genders')
-      .reply(200, { result: ['male', 'female', 'prefer not to say'] });
+      .reply(200, { result: [{ id: 1, name: 'male' }, { id: 2, name: 'female' }, { id: 3, name: 'prefer not to say' }] });
 
     mock
       .onGet('/community-businesses/me/visitors/4')

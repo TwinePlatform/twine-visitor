@@ -12,6 +12,7 @@ import DetailsTable from '../components/DetailsTable';
 import QrBox from '../components/QrBox';
 import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
 import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
+import { renameKeys } from '../../util';
 
 const generateYearsArray = (startYear, currentYear) =>
   Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
@@ -124,7 +125,7 @@ export default class VisitorProfile extends React.Component {
       .then(([res, rGenders]) => {
         this.updateStateFromApi(res.data.result);
         this.setState({
-          genderList: [''].concat(rGenders.data.result).map((value, key) => ({ key, value })),
+          genderList: [''].concat(rGenders.data.result).map(renameKeys({ id: 'key', name: 'value' })),
         });
       })
       .catch((error) => {
