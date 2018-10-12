@@ -110,9 +110,9 @@ export default class SettingsPage extends React.Component {
 
   componentDidMount() {
     const { get } = CbAdmin;
-    const { get: getCb, sectors, regions } = CommunityBusiness;
+    const { get: getCb, sectors } = CommunityBusiness;
 
-    Promise.all([get({ fields: ['email'] }), getCb(), sectors(), regions()])
+    Promise.all([get({ fields: ['email'] }), getCb(), sectors()])
       .then(([resUser, resCb, rSectors]) => {
         this.updateStateFromApi({ ...resUser.data.result, ...resCb.data.result });
         this.setState({
