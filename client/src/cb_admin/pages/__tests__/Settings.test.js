@@ -22,7 +22,6 @@ describe('Settings Component', () => {
     expect.assertions(3);
 
     mock.onGet('/sectors').reply(200, { result: [{ id: 1, name: 'Energy' }, { id: 2, name: 'Cafe' }, { id: 3, name: 'Other' }] });
-    mock.onGet('/regions').reply(200, { result: [{ id: 1, name: 'London' }, { id: 2, name: 'West Midlands' }, { id: 3, name: 'Other' }] });
     mock.onGet('/community-businesses/me')
       .reply(200, { result: {
         id: 3,
