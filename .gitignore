@@ -69,3 +69,7 @@ Thumbs.db
 
 # local vs code settigns
 .vscode
+
+# Custom
+.env*
+build
