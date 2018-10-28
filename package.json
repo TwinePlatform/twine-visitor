@@ -1,6 +1,6 @@
 {
-  "name": "client",
-  "version": "0.1.0",
+  "name": "twine-visitor-app",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
@@ -29,7 +29,6 @@
   "devDependencies": {
     "axios-mock-adapter": "^1.15.0",
     "babel-eslint": "^9.0.0",
-    "eslint": "^5.5.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
@@ -51,5 +50,11 @@
     "Finn Hodgkin",
     "Aisha Nasir <aisha@foundersandcoders.com>",
     "Elias Malik <elias@foundersandcoders.com>"
+  ],
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
   ]
 }
