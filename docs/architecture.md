@@ -4,73 +4,48 @@ This documents the desired architecture for this project. This was initially dis
 
 ### General
 
-The general principle is to arrange both applications with a kind of hub-and-spoke structure where each feature is a spoke, and the server and core application logic serves as the hub. There should ideally be no horizontal dependencies between features, each feature should only rely on the generic functionality provided by the hub. This should be reflected in the directory structure; if a feature directory is deleted, all other features should keep working.
+The general principle is to arrange the application in a kind of hub-and-spoke structure where each feature is a spoke, and the core application logic serves as the hub. There should ideally be no horizontal dependencies between features, each feature should only rely on the generic functionality provided by the hub. This should be reflected in the directory structure; if a feature directory is deleted, all other features should keep working.
 
 ### Root
 
 ```
 ./
-|- config       Project configuration
-|- db           Database migration files
+|- bin          Developer and deployment scripts
 |- docs         Documentation
-|- client       Client app
-|- scripts      Developer and deployment scripts
-|- server       Server app
+|- public       Public assets
+|- src          Client app
 |- ...dotfiles
-|- package.json Single top-level package.json instead of two different ones
+|- package.json
 |- README.md
 ```
 
 ### Client
-
 ```
-./client
+./src
 |- assets             Raw assets (img, external or pre-compiled js/css, etc.)
 |- dist               Built assets will be stored and served from here
 |- css                Styling source files
 |- src
-|  |- cb-admin        All code specific to the cb-admin UI
+|  |- api             Interface with the Twine HTTP API
+|  |- cb_admin        All code specific to the cb-admin UI
 |  |  |- components
-|  |  |- actions
+|  |  |- pages
 |  |  |- ...
-|  |  |- index.js     Exports a single component that contains the entire cb-admin UI
-|  |- twine-admin     All code specific to the twine-admin UI
-|  |  |- components
-|  |  |- actions
-|  |  |- ...
-|  |  |- index.js     Exports a single component that contains the entire twine-admin UI
+|  |  |- index.js     Defines public interface of `cb_admin` module
 |  |- shared          All code shared between the admin and visitor UIs
+|  |  |- assets
 |  |  |- components
-|  |  |- actions
+|  |  |- hoc
 |  |  |- ...
+|  |  |- index.js     Defines public interface of `shared` module
+|  |- styles          Stylesheets for external components or other things not compatible with Style Components
 |  |- visitor         All code specific to the visitor UI
 |  |  |- components
-|  |  |- actions
+|  |  |- pages
 |  |  |- ...
-|  |  |- index.js     Exports a single component that contains the entire visitor UI
+|  |  |- index.js     Defines public interface of `cb_admin` module
 |  |- App.js
 |  |- index.js
-```
-
-### Server
-
-```
-./server
-|- cb-admin            All code related to cb-admin features
-|  |- controllers      Route definitions for API routes
-|  |- models           Database models (objects representing cb-admin-related entities in the DB)
-|  |- index.js         Exports single function/app that can be mounted onto the main express app
-|- twine-admin         All code related to twine-admin features
-|  |- controllers
-|  |- ...
-|- visitor             All code related to visitor features
-|  |- controllers
-|  |- ...
-|- shared              All shared code
-|  |- db
-|  |- models
-|  |- ...
-|- index.js
 ```
 
 ### Tests
