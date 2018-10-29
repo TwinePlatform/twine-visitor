@@ -8,27 +8,15 @@ env:
 cache:
   directories:
     - "node_modules"
-    - "client/node_modules"
-
-addons:
-  postgresql: "9.4"
-
-services:
-  - postgresql
 
 install:
   - npm install -g codecov
   - npm install
 
-before_script:
-  - psql -c 'create database datapower_test;' -U postgres
-
 script:
   - npm run lint
-  - npm run build.client
+  - npm run build
   - npm run cover
-  - npm run cover.report.ci
-  - npm run cover:client
   - codecov
 
 notifications:
