@@ -37,6 +37,8 @@
     "react-testing-library": "^4.1.9"
   },
   "scripts": {
+    "lint": "eslint .",
+    "cover": "npm test -- --coverage",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
