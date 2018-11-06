@@ -32,8 +32,9 @@ describe('ResetPassword Component', () => {
 
     const { getByText, getByLabelText } =
         renderWithRouter({
-          route: '/cb/password/reset/tickettonarnia',
+          route: '/cb/password/reset/tickettonarnia?email=lion@inthecloset.com',
           match: { params: { token: 'tickettonarnia' } },
+          location: { search: '?email=lion@inthecloset.com' },
         })(ResetPassword);
 
     const newPassword = getByLabelText('New password');
@@ -64,8 +65,9 @@ describe('ResetPassword Component', () => {
 
     const { getByText, getByLabelText } =
         renderWithRouter({
-          route: '/cb/password/reset/tickettonarnia',
+          route: '/cb/password/reset/tickettonarnia?email=lion@inthecloset.com',
           match: { params: { token: 'tickettonarnia' } },
+          location: { search: '?email=lion@inthecloset.com' },
         })(ResetPassword);
 
     const newPassword = getByLabelText('New password');
@@ -92,8 +94,9 @@ describe('ResetPassword Component', () => {
 
     const { getByText, getByLabelText, history } =
         renderWithRouter({
-          route: '/cb/password/reset/tickettonarnia',
+          route: '/cb/password/reset/tickettonarnia?email=lion@inthecloset.com',
           match: { params: { token: 'tickettonarnia' } },
+          location: { search: '?email=lion@inthecloset.com' },
         })(ResetPassword);
 
     const newPassword = getByLabelText('New password');
