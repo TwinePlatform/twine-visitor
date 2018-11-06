@@ -5,9 +5,12 @@ import _axios, { create } from 'axios';
 import { pathOr, equals, compose } from 'ramda';
 import qs from 'qs';
 
+const baseURL = process.env && process.env.NODE_ENV === 'development'
+  ? 'http://localhost:4000/v1'
+  : 'https://api.twine-together.com/v1';
 
 export const axios = create({
-  baseURL: process.env.REACT_APP_HOST_API,
+  baseURL,
   withCredentials: true,
   paramsSerializer: params => qs.stringify(params, { encode: false }),
 });
