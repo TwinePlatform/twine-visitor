@@ -114,10 +114,10 @@ export const CbAdmin = {
     axios.post('/users/login/de-escalate'),
 
   forgotPassword: ({ email }) =>
-    axios.post('/users/password/forgot', { email }),
+    axios.post('/users/password/forgot', { email, redirect: 'VISITOR_APP' }),
 
-  resetPassword: ({ password, passwordConfirm, token }) =>
-    axios.post('/users/password/reset', { password, passwordConfirm, token }),
+  resetPassword: ({ email, password, passwordConfirm, token }) =>
+    axios.post('/users/password/reset', { email, password, passwordConfirm, token }),
 
 };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { pick, pathOr, equals } from 'ramda';
+import { parse } from 'querystring';
 import { CbAdmin, ErrorUtils } from '../../api';
 import { Heading } from '../../shared/components/text/base';
 import { FlexContainerCol } from '../../shared/components/layout/base';
@@ -43,8 +44,10 @@ export default class ResetPassword extends React.Component {
 
   onSubmit = (e) => {
     e.preventDefault();
+    const { props: { location: { search } } } = this;
+    const { email } = parse(search.replace('?', ''));
 
-    CbAdmin.resetPassword({ token: this.props.match.params.token, ...payloadFromState(this.state) })
+    CbAdmin.resetPassword({ email, token: this.props.match.params.token, ...payloadFromState(this.state) })
       .then(() => this.props.history.push('/cb/login?ref=pwd_reset'))
       .catch((error) => {
         if (errorStatusEquals(error, 400)) {
@@ -112,4 +115,5 @@ ResetPassword.propTypes = {
     }),
   }).isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+  location: PropTypes.shape({ search: PropTypes.func }).isRequired,
 };
