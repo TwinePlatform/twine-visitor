@@ -34,7 +34,7 @@ const ButtonLeft = styled(DotButton)`
   height: 12em;
 `;
 
-const ButtonRight = SecondaryButton.extend`
+const ButtonRight = styled(SecondaryButton)`
   width: 14.5em;
   height: 12em;
 `;

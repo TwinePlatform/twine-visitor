@@ -1,14 +1,15 @@
 import React, { Component, Fragment } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { PrimaryButtonNoFill, SecondaryButton } from '../../shared/components/form/base';
 
-const ActivitiesButtonYellow = PrimaryButtonNoFill.extend`
+const ActivitiesButtonYellow = styled(PrimaryButtonNoFill)`
   width: 9rem;
   margin: 1rem;
   padding: 1rem;
 `;
 
-const ActivitiesButtonPurple = SecondaryButton.extend`
+const ActivitiesButtonPurple = styled(SecondaryButton)`
   width: 9rem;
   margin: 1rem;
   padding: 1rem;

@@ -31,7 +31,7 @@ const Nav = styled.nav`
   flex: 1;
 `;
 
-const Col = FlexContainerCol.extend`
+const Col = styled(FlexContainerCol) `
   @media print {
     display: none;
   }
@@ -42,25 +42,25 @@ const FlexItem = styled.div`
   height: 100%;
 `;
 
-const Form = Fm.extend`
+const Form = styled(Fm) `
   width: 100%;
 `;
 
-const Paragraph = P.extend`
+const Paragraph = styled(P) `
   width: 100%;
 `;
 
-const Row = FlexContainerRow.extend`
+const Row = styled(FlexContainerRow) `
   align-content: center;
   align-items: flex-start;
   flex: 3;
 `;
 
-const HyperLink = Link.extend`
+const HyperLink = styled(Link) `
   flex: ${props => props.flex || '1'};
 `;
 
-const Button = PrimaryButton.extend`
+const Button = styled(PrimaryButton) `
   width: 90%;
   height: 3em;
 `;
@@ -83,7 +83,7 @@ const CbLogo = styled.img`
   flex-grow: 0;
 `;
 const QrCodePrint = styled.img``;
-const PrintHeaderRow = FlexContainerRow.extend`
+const PrintHeaderRow = styled(FlexContainerRow) `
   justify-content: center;
   align-items: center;
 `;

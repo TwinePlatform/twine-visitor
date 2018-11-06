@@ -19,7 +19,7 @@ import { FlexContainerCol } from '../../shared/components/layout/base';
 import { colors, fonts } from '../../shared/style_guide';
 import { VISITOR_NAME_INVALID } from '../../cb_admin/constants/error_text';
 
-const SubmitButton = PrimaryButton.extend`
+const SubmitButton = styled(PrimaryButton)`
   height: 4em;
   width: 90%;
 `;
@@ -29,20 +29,20 @@ const PrivacyLink = styled.a`
   color: ${colors.dark};
 `;
 
-const CenteredParagraph = Paragraph.extend`
+const CenteredParagraph = styled(Paragraph)`
   width: 90%;
   margin: 1.5em 0;
   margin-bottom: -5em;
   line-height: 1.5em;
 `;
 
-const CenteredHeading = Heading.extend`
+const CenteredHeading = styled(Heading)`
   width: 90%;
   text-align: center;
   margin-bottom: 5%;
 `;
 
-const TitleParagraph = Paragraph.extend`
+const TitleParagraph = styled(Paragraph)`
   font-weight: medium;
   width: 100%;
   font-size: 19px;
@@ -50,7 +50,7 @@ const TitleParagraph = Paragraph.extend`
   margin-bottom: -0.5em;
 `;
 
-const PrivacySection = FormSection.extend`
+const PrivacySection = styled(FormSection)`
 margin-top: 2em;
 `;
 

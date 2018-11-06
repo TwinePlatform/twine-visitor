@@ -21,7 +21,7 @@ const StyledSection = styled.section`
   justify-content: center;
 `;
 
-const BigFlexContainerRow = FlexContainerRow.extend`
+const BigFlexContainerRow = styled(FlexContainerRow)`
   width: 60%;
   padding: 1rem;
   flex-wrap: wrap;
@@ -30,7 +30,7 @@ const BigFlexContainerRow = FlexContainerRow.extend`
   }
 `;
 
-const SmallFlexContainerRow = FlexContainerRow.extend`
+const SmallFlexContainerRow = styled(FlexContainerRow)`
   width: 40%;
   padding: 1rem;
   flex-wrap: wrap;
@@ -43,12 +43,12 @@ const FlexItem = styled.div`
   flex: ${props => props.flex || '1'};
 `;
 
-const QrParagraph = Paragraph.extend`
+const QrParagraph = styled(Paragraph)`
   text-align: center;
   margin-bottom: 3rem;
 `;
 
-const SnakeContainerRow = FlexContainerRow.extend`
+const SnakeContainerRow = styled(FlexContainerRow)`
   width: 100%;
   justify-content: space-between;
   &:nth-child(2n) {

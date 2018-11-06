@@ -10,13 +10,13 @@ import { PrimaryButton } from '../../shared/components/form/base';
 import { Heading, Link, Paragraph } from '../../shared/components/text/base';
 import { colors } from '../../shared/style_guide';
 
-const FeedbackPrimaryButton = PrimaryButton.extend`
+const FeedbackPrimaryButton = styled(PrimaryButton) `
   width: auto;
   margin-left: 2rem;
   padding: 0.5rem;
 `;
 
-const FeedbackParagraph = Paragraph.extend`
+const FeedbackParagraph = styled(Paragraph) `
   display: inline-block;
 `;
 

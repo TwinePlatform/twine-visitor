@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { CbAdmin } from '../../api';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
@@ -7,12 +8,12 @@ import LabelledInput from '../../shared/components/form/LabelledInput';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 
 
-const SubmitButton = PrimaryButton.extend`
+const SubmitButton = styled(PrimaryButton) `
   height: 4em;
   width: 90%;
 `;
 
-const CenteredParagraph = Paragraph.extend`
+const CenteredParagraph = styled(Paragraph) `
   /* width: 90%; */
   text-align: center;
   margin: 2em 0;

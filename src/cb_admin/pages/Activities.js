@@ -23,12 +23,12 @@ const FlexItem = styled.div`
   flex: ${props => props.flex || '1'};
 `;
 
-const SubmitButton = PrimaryButton.extend`
+const SubmitButton = styled(PrimaryButton) `
   margin-left: 2em;
   height: 3em;
 `;
 
-const ActivitiesError = ErrorParagraph.extend`
+const ActivitiesError = styled(ErrorParagraph) `
   opacity: ${props => (props.vis ? '1' : '0')};
   height: 1rem;
   text-align: center;
