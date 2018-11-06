@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PurposeButton from '../components/purposeButton';
 import QRPrivacy from '../components/qrprivacy';
-import { Activities, Visitors } from '../../api';
+import { Activities, Visitors, ErrorUtils } from '../../api';
 import { Heading, Paragraph, Link as HyperLink } from '../../shared/components/text/base';
 import { FlexContainerRow, FlexContainerCol } from '../../shared/components/layout/base';
 
@@ -88,7 +88,7 @@ export default class QRCode extends Component {
         if (cameras.length < 1) {
           throw new Error('No accessible cameras');
         }
-        this.scanner.start(cameras[0]);
+        return this.scanner.start(cameras[0]);
       })
       .catch((err) => {
         console.log(err);
@@ -120,8 +120,18 @@ export default class QRCode extends Component {
         this.setState({ activities: res.data.result });
       })
       .catch((error) => {
-        console.log('ERROR HAPPENING AT FETCH', error);
-        this.props.history.push('/visitor/qrerror');
+        if (ErrorUtils.errorStatusEquals(error, 401)) {
+          this.props.history.push('/cb/login');
+
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
+
+        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+          this.props.history.push('/error/404');
+
+        } else {
+          this.props.history.push('/visitor/qrerror');
+        }
       });
   }
 
