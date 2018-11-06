@@ -36,6 +36,6 @@ export const Link = styled(RouterLink)`
   text-decoration: none;
 `;
 
-export const ErrorParagraph = Paragraph.extend`
+export const ErrorParagraph = styled(Paragraph)`
   color: ${colors.error}
 `;

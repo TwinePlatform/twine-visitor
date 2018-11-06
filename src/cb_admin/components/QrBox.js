@@ -18,7 +18,7 @@ const Img = styled.img`
   display: block;
 `;
 
-const Button = PrimaryButton.extend`
+const Button = styled(PrimaryButton) `
   width: 45%;
   margin: 0 2.5%;
   height: 4.5em;

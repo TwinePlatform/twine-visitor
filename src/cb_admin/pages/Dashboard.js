@@ -23,16 +23,16 @@ const ButtonOne = styled(DotButton)`
   height: 12em;
 `;
 
-const ButtonTwo = SecondaryButton.extend`
+const ButtonTwo = styled(SecondaryButton) `
   width: 14em;
   height: 12em;
 `;
 
-const Row = FlexContainerRow.extend`
+const Row = styled(FlexContainerRow) `
   align-content: space-evenly;
 `;
 
-const ButtonWrapperLink = StyledLink.extend`
+const ButtonWrapperLink = styled(StyledLink) `
   margin: 0 0.8em;
 `;
 

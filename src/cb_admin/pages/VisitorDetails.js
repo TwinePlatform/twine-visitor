@@ -27,17 +27,17 @@ const FlexItem = styled.div`
   height: 100%;
 `;
 
-const Form = Fm.extend`
+const Form = styled(Fm)`
   width: 100%;
 `;
 
-const Row = FlexContainerRow.extend`
+const Row = styled(FlexContainerRow)`
   align-content: center;
   align-items: flex-start;
   flex: 3;
 `;
 
-const HyperLink = Link.extend`
+const HyperLink = styled(Link)`
   flex: ${props => props.flex || '1'};
 `;
 
@@ -45,7 +45,7 @@ const FormSection = styled.section`
   width: 20%;
 `;
 
-const ExportButton = PrimaryButton.extend`
+const ExportButton = styled(PrimaryButton)`
   color: ${colors.dark};
   font-size: 0.9em;
   font-weight: ${fonts.weight.heavy};
@@ -56,7 +56,7 @@ const ExportButton = PrimaryButton.extend`
   padding: 0.3rem 1rem;
 `;
 
-const ErrorText = Paragraph.extend `
+const ErrorText = styled(Paragraph) `
   color: red;
 `;
 

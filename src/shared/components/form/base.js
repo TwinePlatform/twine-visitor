@@ -74,7 +74,7 @@ export const Button = styled.button`
   letter-spacing: 0.2em;
 `;
 
-export const PrimaryButton = Button.extend`
+export const PrimaryButton = styled(Button)`
   background-color: ${colors.highlight_primary}; /* Fallback */
   background: linear-gradient(
     0,
@@ -91,7 +91,7 @@ export const PrimaryButton = Button.extend`
   }
 `;
 
-export const SecondaryButton = Button.extend`
+export const SecondaryButton = styled(Button)`
   color: ${colors.white};
   background-color: ${colors.highlight_secondary}; /* Fallback */
   background: linear-gradient(
@@ -102,7 +102,7 @@ export const SecondaryButton = Button.extend`
   border-radius: 0;
 `;
 
-export const PrimaryButtonNoFill = PrimaryButton.extend`
+export const PrimaryButtonNoFill = styled(PrimaryButton)`
   background: transparent;
   border: 0.1em solid ${colors.highlight_primary};
   border-radius: 0;
@@ -112,7 +112,7 @@ export const PrimaryButtonNoFill = PrimaryButton.extend`
   }
 `;
 
-export const SecondaryButtonNoFill = SecondaryButton.extend`
+export const SecondaryButtonNoFill = styled(SecondaryButton)`
   background: transparent;
   border: 0.1em solid ${colors.highlight_secondary};
   border-color: ${colors.highlight_primary};

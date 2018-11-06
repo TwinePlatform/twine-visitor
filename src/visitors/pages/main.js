@@ -22,18 +22,18 @@ const years = [{ key: '', value: '' }].concat(
   })),
 );
 
-const ButtonsFlexContainerCol = FlexContainerCol.extend`
+const ButtonsFlexContainerCol = styled(FlexContainerCol)`
   padding-top: 10%;
   width: 40%;
 `;
 
-const SubmitButton = PrimaryButton.extend`
+const SubmitButton = styled(PrimaryButton)`
   height: 4em;
   width: 90%;
   margin-bottom: 5%;
 `;
 
-const CenteredParagraph = Paragraph.extend`
+const CenteredParagraph = styled(Paragraph)`
   width: 90%;
   font-weight: medium;
   font-size: 21px;
@@ -42,7 +42,7 @@ const CenteredParagraph = Paragraph.extend`
   padding-left: 15%;
 `;
 
-const CenteredHeading = Heading.extend`
+const CenteredHeading = styled(Heading)`
   padding-top: 5%;
   padding-left: 10%;
   width: 90%;
@@ -71,7 +71,7 @@ const QRimg = styled.img`
   margin-top: 10%;
 `;
 
-const NotPrint = FlexContainerCol.extend`
+const NotPrint = styled(FlexContainerCol)`
   @media print {
     display: none;
   }
@@ -83,7 +83,7 @@ const CbLogo = styled.img`
   flex-grow: 0;
 `;
 const QrCodePrint = styled.img``;
-const PrintHeaderRow = FlexContainerRow.extend`
+const PrintHeaderRow = styled(FlexContainerRow)`
   justify-content: center;
   align-items: center;
 `;

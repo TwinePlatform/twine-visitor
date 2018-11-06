@@ -28,25 +28,25 @@ const Dot = styled.span`
   position: absolute;
 `;
 
-const DotTL = Dot.extend`
+const DotTL = styled(Dot)`
   top: 0;
   left: 0;
   transform: translate3d(-50%, -50%, 0);
 `;
 
-const DotTR = Dot.extend`
+const DotTR = styled(Dot)`
   top: 0;
   right: 0;
   transform: translate3d(50%, -50%, 0);
 `;
 
-const DotBL = Dot.extend`
+const DotBL = styled(Dot)`
   bottom: 0;
   left: 0;
   transform: translate3d(-50%, 50%, 0);
 `;
 
-const DotBR = Dot.extend`
+const DotBR = styled(Dot)`
   bottom: 0;
   right: 0;
   transform: translate3d(50%, 50%, 0);

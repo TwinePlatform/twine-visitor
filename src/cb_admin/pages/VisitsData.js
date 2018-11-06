@@ -27,15 +27,15 @@ const Nav = styled.nav`
   flex: 1;
 `;
 
-const Form = F.extend`
+const Form = styled(F)`
   width: 100%;
 `;
 
-const FormSection = FS.extend`
+const FormSection = styled(FS)`
   width: 33%;
 `;
 
-const Row = FlexContainerRow.extend`
+const Row = styled(FlexContainerRow)`
   align-content: center;
   align-items: flex-start;
   margin-bottom: 2em;
@@ -46,11 +46,11 @@ const FlexItem = styled.div`
   height: 100%;
 `;
 
-const HyperLink = Link.extend`
+const HyperLink = styled(Link)`
   flex: ${props => props.flex || '1'};
 `;
 
-const ExportButton = PrimaryButton.extend`
+const ExportButton = styled(PrimaryButton)`
   color: ${colors.dark};
   font-size: 0.9em;
   font-weight: ${fonts.weight.heavy};

@@ -31,17 +31,17 @@ const FlexItem = styled.div`
   text-align: ${props => (props.textRight ? 'right' : 'left')};
 `;
 
-const ButtonLeft = PrimaryButtonNoFill.extend`
+const ButtonLeft = styled(PrimaryButtonNoFill)`
   width: 14rem;
   height: 11rem;
 `;
 
-const ButtonRight = SecondaryButton.extend`
+const ButtonRight = styled(SecondaryButton)`
   width: 14rem;
   height: 11rem;
 `;
 
-const FeedbackButton = PrimaryButtonNoFill.extend`
+const FeedbackButton = styled(PrimaryButtonNoFill)`
   flex: 1;
   padding: 1rem;
   border: none;
