@@ -47,7 +47,11 @@ export default class ResetPassword extends React.Component {
     const { props: { location: { search } } } = this;
     const { email } = parse(search.replace('?', ''));
 
-    CbAdmin.resetPassword({ email, token: this.props.match.params.token, ...payloadFromState(this.state) })
+    CbAdmin.resetPassword({
+      email,
+      token: this.props.match.params.token,
+      ...payloadFromState(this.state),
+    })
       .then(() => this.props.history.push('/cb/login?ref=pwd_reset'))
       .catch((error) => {
         if (errorStatusEquals(error, 400)) {
