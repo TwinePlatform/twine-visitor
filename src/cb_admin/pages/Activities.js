@@ -98,7 +98,6 @@ export default class ActivitiesPage extends React.Component {
         this.setState({
           activities: { items, order },
           categories: [{ id: -1, name: '' }].concat(categories).map(({ id, name }) => ({ key: id, value: name })),
-          form: { category: categories[0] },
         });
       })
       .catch((error) => {

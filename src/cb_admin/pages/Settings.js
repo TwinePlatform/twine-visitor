@@ -308,6 +308,7 @@ export default class SettingsPage extends React.Component {
                 value={rest.form.sector || rest.sector}
                 options={rest.sectorList}
                 error={errors.sector}
+                onChange={() => {}}
               />
               <LabelledInput
                 id="cb-admin-email"

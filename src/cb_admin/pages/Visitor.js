@@ -17,7 +17,7 @@ import { renameKeys } from '../../util';
 const generateYearsArray = (startYear, currentYear) =>
   Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
 
-const years = [{ key: '', value: '' }].concat(
+const years = [{ key: -1, value: '' }].concat(
   generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear()).map(y => ({
     key: y.toString(),
     value: y.toString(),
@@ -125,7 +125,7 @@ export default class VisitorProfile extends React.Component {
       .then(([res, rGenders]) => {
         this.updateStateFromApi(res.data.result);
         this.setState({
-          genderList: [''].concat(rGenders.data.result).map(renameKeys({ id: 'key', name: 'value' })),
+          genderList: [{ id: -1, name: '' }].concat(rGenders.data.result).map(renameKeys({ id: 'key', name: 'value' })),
         });
       })
       .catch((error) => {
