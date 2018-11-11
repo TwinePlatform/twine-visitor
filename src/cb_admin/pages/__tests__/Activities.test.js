@@ -20,23 +20,23 @@ describe('Activities Component', () => {
 
     mock.onGet('/visit-activity-categories')
       .reply(200, { result: [
-        'Adult skills building',
-        'Arts, Craft, and Music',
-        'Business support',
-        'Care service',
-        'Education support',
-        'Employment support',
-        'Environment and conservation work',
-        'Food',
-        'Housing support',
-        'Local products',
-        'Mental health support',
-        'Outdoor work and gardening',
-        'Physical health and wellbeing',
-        'Socialising',
-        'Sports',
-        'Transport',
-        'Work space'] });
+        { id: 1, name: 'Adult skills building' },
+        { id: 2, name: 'Arts, Craft, and Music' },
+        { id: 3, name: 'Business support' },
+        { id: 4, name: 'Care service' },
+        { id: 5, name: 'Education support' },
+        { id: 6, name: 'Employment support' },
+        { id: 7, name: 'Environment and conservation work' },
+        { id: 8, name: 'Food' },
+        { id: 9, name: 'Housing support' },
+        { id: 10, name: 'Local products' },
+        { id: 11, name: 'Mental health support' },
+        { id: 12, name: 'Outdoor work and gardening' },
+        { id: 13, name: 'Physical health and wellbeing' },
+        { id: 14, name: 'Socialising' },
+        { id: 15, name: 'Sports' },
+        { id: 16, name: 'Transport' },
+        { id: 17, name: 'Work space' }] });
 
     mock.onGet('/community-businesses/me/visit-activities')
       .reply(200, { result: [

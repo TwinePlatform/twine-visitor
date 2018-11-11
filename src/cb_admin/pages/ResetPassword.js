@@ -119,5 +119,5 @@ ResetPassword.propTypes = {
     }),
   }).isRequired,
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
-  location: PropTypes.shape({ search: PropTypes.func }).isRequired,
+  location: PropTypes.shape({ search: PropTypes.string }).isRequired,
 };
