@@ -70,8 +70,6 @@ export default class QRCode extends Component {
       activities: [],
     };
 
-    this.changeActivity = this.changeActivity.bind(this);
-
     this.scanner = null;
     this.previewDiv = null;
 
@@ -101,6 +99,10 @@ export default class QRCode extends Component {
 
         Visitors.search({ qrCode: content })
           .then((res) => {
+            if (!res.data.result) {
+              throw new Error('No user found');
+            }
+
             this.setState({
               visitorName: res.data.result.name,
               visitorId: res.data.result.id,
@@ -144,7 +146,7 @@ export default class QRCode extends Component {
     }
   }
 
-  changeActivity = (newActivity) => {
+  addVisitLog = (newActivity) => {
     const activity = this.state.activities.find(a => a.name === newActivity);
 
     if (!activity) {
@@ -156,7 +158,6 @@ export default class QRCode extends Component {
     Visitors.createVisit({
       activityId: activity.id,
       visitorId: this.state.visitorId,
-      qrCode: this.state.qrCodeContent,
     })
       .then(() => this.props.history.push('/visitor/end'))
       .catch((error) => {
@@ -204,7 +205,7 @@ export default class QRCode extends Component {
                   key={activity.id}
                   color={index}
                   session={activity.name}
-                  onClick={this.changeActivity}
+                  onClick={this.addVisitLog}
                 />
               ))
               .reduce(

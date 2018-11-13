@@ -48,8 +48,8 @@ export const Visitors = {
   get: ({ id }, params) =>
     axios.get(`/community-businesses/me/visitors${id ? `/${id}` : ''}`, { params }),
 
-  search: ({ hash }) =>
-    axios.post('/users/visitors/search', { qrCode: hash }),
+  search: ({ qrCode }) =>
+    axios.post('/users/visitors/search', { qrCode }),
 
   create: (
     { name, gender, birthYear, email, phoneNumber, emailConsent, smsConsent, organisationId },
@@ -83,13 +83,12 @@ export const Visitors = {
   sendQrCode: ({ id }) =>
     axios.post(`/community-businesses/me/visitors/${id}/emails`, { type: 'qrcode' }),
 
-  createVisit: ({ visitorId, hash, activityId }) =>
+  createVisit: ({ visitorId, activityId }) =>
     axios.post(
       '/community-businesses/me/visit-logs',
       {
         userId: visitorId,
         visitActivityId: activityId,
-        qrCode: hash,
       },
     ),
 };
