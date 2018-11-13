@@ -26,3 +26,10 @@ Attempting to disable autocomplete on input fields is basically ignored by all m
 See:
 * https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
 * https://caniuse.com/#search=autocomplete
+
+## Deprecated api used by instascan
+The release version of instascan relies on URL.createObjectURL which is has been deprecated. Although there is no official release, this has been fixed in the master branch of the repo. Steps to rebuild `public/instacam.min.js`:
+- clone `https://github.com/schmich/instascan`
+- install gulp-cli
+- run `gulp release`
+- copy `dist/instascan.min.js`
