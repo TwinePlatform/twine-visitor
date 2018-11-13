@@ -53,8 +53,9 @@ export default class Home extends Component {
         this.setState({ cbName: res.data.result.name });
       })
       .catch((error) => {
-        // on first load this is redirect to login if no cookie is present
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
+        // on first load this redirects to login if bad/no cookie is present
+
+        if (ErrorUtils.errorStatusEquals(error, 401) || ErrorUtils.errorStatusEquals(error, 403)) {
           this.props.history.push('/cb/login');
 
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
