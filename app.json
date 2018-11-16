@@ -25,7 +25,7 @@
   ],
   "buildpacks": [
     {
-      "url": "heroku/nodejs"
+      "url": "mars/create-react-app"
     }
   ]
 }
