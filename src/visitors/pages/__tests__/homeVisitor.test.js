@@ -26,6 +26,10 @@ describe('Visitor Home Page', () => {
       .onPost('/community-businesses/me/feedback')
       .reply(200, { data: null });
 
+    mock
+      .onPost('/users/login/de-escalate')
+      .reply(200, { data: null });
+
     const tools = renderWithRouter({ route: '/visitor/signup' })(homeVisitor);
 
     const posBtn = await waitForElement(() => tools.getByTestId('positive-feedback-btn'));
@@ -42,6 +46,10 @@ describe('Visitor Home Page', () => {
 
     mock
       .onPost('/community-businesses/me/feedback')
+      .reply(200, { data: null });
+
+    mock
+      .onPost('/users/login/de-escalate')
       .reply(200, { data: null });
 
     const tools = renderWithRouter({ route: '/visitor/signup' })(homeVisitor);
@@ -62,6 +70,10 @@ describe('Visitor Home Page', () => {
       .onPost('/community-businesses/me/feedback')
       .reply(200, { data: null });
 
+    mock
+      .onPost('/users/login/de-escalate')
+      .reply(200, { data: null });
+
     const tools = renderWithRouter({ route: '/visitor/signup' })(homeVisitor);
 
     const negBtn = await waitForElement(() => tools.getByTestId('negative-feedback-btn'));
@@ -79,6 +91,10 @@ describe('Visitor Home Page', () => {
     mock
       .onPost('/community-businesses/me/feedback')
       .reply(500, { error: { statusCode: 500, type: 'Internal Server Error', message: 'Oops' } });
+
+    mock
+      .onPost('/users/login/de-escalate')
+      .reply(200, { data: null });
 
     const tools = renderWithRouter({ route: '/visitor/signup' })(homeVisitor);
     const neuBtn = await waitForElement(() => tools.getByTestId('neutral-feedback-btn'));
