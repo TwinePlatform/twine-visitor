@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PurposeButton from '../components/purposeButton';
 import QRPrivacy from '../components/qrprivacy';
-import { Activities, Visitors, ErrorUtils } from '../../api';
+import { Activities, Visitors, ErrorUtils, CbAdmin } from '../../api';
 import { Heading, Paragraph, Link as HyperLink } from '../../shared/components/text/base';
 import { FlexContainerRow, FlexContainerCol } from '../../shared/components/layout/base';
 
@@ -78,7 +78,9 @@ export default class QRCode extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await CbAdmin.downgradePermissions();
+
     this.scanner = this.scanner || new Instascan.Scanner({ video: this.previewDiv, scanPeriod: 5 });
 
     Instascan.Camera.getCameras()

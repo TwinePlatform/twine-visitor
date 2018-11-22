@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { PrimaryButtonNoFill, SecondaryButton } from '../../shared/components/form/base';
@@ -7,7 +7,7 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 import confused from '../../shared/assets/icons/faces/confused.svg';
 import happy from '../../shared/assets/icons/faces/happy.svg';
 import sad from '../../shared/assets/icons/faces/sad.svg';
-import { CommunityBusiness, ErrorUtils } from '../../api';
+import { CommunityBusiness, ErrorUtils, CbAdmin } from '../../api';
 
 const StyledNav = styled.nav`
   display: flex;
@@ -63,40 +63,50 @@ const postFeedback = (feedbackScore, props) =>
       }
     });
 
-export default props => (
-  <div>
-    <FlexContainerCol justify="space-around">
-      <StyledNav>
-        <FlexItem>
-          <HyperLink to="/">Back to the main page</HyperLink>
-        </FlexItem>
-        <FlexItem flex="2">
-          <Heading>Welcome Visitor</Heading>
-        </FlexItem>
-        <FlexItem />
-      </StyledNav>
-      <StyledSection>
-        <FlexLink to="/visitor/login">
-          <ButtonLeft large>Sign in with QR code</ButtonLeft>
-        </FlexLink>
-        <FlexLink to="/visitor/signup">
-          <ButtonRight large>Sign up</ButtonRight>
-        </FlexLink>
-      </StyledSection>
-      <FeedbackStyledSection>
-        <Heading2>What did you think of your visit today?</Heading2>
-        <FlexContainerRow>
-          <FeedbackButton data-testid="negative-feedback-btn" onClick={() => postFeedback(-1, props)}>
-            <img src={sad} alt="sad feedback button" />
-          </FeedbackButton>
-          <FeedbackButton data-testid="neutral-feedback-btn" onClick={() => postFeedback(0, props)}>
-            <img src={confused} alt="confused feedback button" />
-          </FeedbackButton>
-          <FeedbackButton data-testid="positive-feedback-btn" onClick={() => postFeedback(+1, props)}>
-            <img src={happy} alt="happy feedback button" />
-          </FeedbackButton>
-        </FlexContainerRow>
-      </FeedbackStyledSection>
-    </FlexContainerCol>
-  </div>
-);
+export default class HomeVisitor extends Component {
+
+  async componentDidMount() {
+    await CbAdmin.downgradePermissions();
+  }
+
+  render() {
+    const { props } = this;
+    return (
+      <div>
+        <FlexContainerCol justify="space-around">
+          <StyledNav>
+            <FlexItem>
+              <HyperLink to="/">Back to the main page</HyperLink>
+            </FlexItem>
+            <FlexItem flex="2">
+              <Heading>Welcome Visitor</Heading>
+            </FlexItem>
+            <FlexItem />
+          </StyledNav>
+          <StyledSection>
+            <FlexLink to="/visitor/login">
+              <ButtonLeft large>Sign in with QR code</ButtonLeft>
+            </FlexLink>
+            <FlexLink to="/visitor/signup">
+              <ButtonRight large>Sign up</ButtonRight>
+            </FlexLink>
+          </StyledSection>
+          <FeedbackStyledSection>
+            <Heading2>What did you think of your visit today?</Heading2>
+            <FlexContainerRow>
+              <FeedbackButton data-testid="negative-feedback-btn" onClick={() => postFeedback(-1, props)}>
+                <img src={sad} alt="sad feedback button" />
+              </FeedbackButton>
+              <FeedbackButton data-testid="neutral-feedback-btn" onClick={() => postFeedback(0, props)}>
+                <img src={confused} alt="confused feedback button" />
+              </FeedbackButton>
+              <FeedbackButton data-testid="positive-feedback-btn" onClick={() => postFeedback(+1, props)}>
+                <img src={happy} alt="happy feedback button" />
+              </FeedbackButton>
+            </FlexContainerRow>
+          </FeedbackStyledSection>
+        </FlexContainerCol>
+      </div>)
+    ;
+  }
+}

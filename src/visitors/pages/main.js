@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 import SignupForm from '../components/signup_form';
 import NotFound from '../../shared/components/NotFound';
-import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
+import { CommunityBusiness, Visitors, ErrorUtils, CbAdmin } from '../../api';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
@@ -118,7 +118,9 @@ export default class Main extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await CbAdmin.downgradePermissions();
+
     const getCb = CommunityBusiness.get({ fields: ['name', 'logoUrl', 'id'] });
     const getGenders = Visitors.genders();
 
