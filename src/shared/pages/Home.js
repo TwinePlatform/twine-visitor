@@ -6,7 +6,7 @@ import { SecondaryButton } from '../components/form/base';
 import { Heading, Link as HyperLink, Heading2 } from '../components/text/base';
 import { FlexContainerCol } from '../components/layout/base';
 import DotButton from '../components/form/DottedButton';
-import { logout, CommunityBusiness, ErrorUtils } from '../../api';
+import { logout, CommunityBusiness, ErrorUtils, CbAdmin } from '../../api';
 
 
 const Nav = styled.nav`
@@ -47,7 +47,9 @@ export default class Home extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await CbAdmin.downgradePermissions();
+
     CommunityBusiness.get()
       .then((res) => {
         this.setState({ cbName: res.data.result.name });
