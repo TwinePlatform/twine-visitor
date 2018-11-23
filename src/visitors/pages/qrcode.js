@@ -1,3 +1,10 @@
+/*
+ *           ---- Scan QR code ---                       ---- Load activities ---- Register visit
+ *          /                     \                    /
+ * Login --                        -- Get visitor ID --
+ *          \                     /                    \
+ *           ---- Enter name ----                        ---- Failure screen
+ */
 /* global Instascan */
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
@@ -8,6 +15,9 @@ import QRPrivacy from '../components/qrprivacy';
 import { Activities, Visitors, ErrorUtils, CbAdmin } from '../../api';
 import { Heading, Paragraph, Link as HyperLink } from '../../shared/components/text/base';
 import { FlexContainerRow, FlexContainerCol } from '../../shared/components/layout/base';
+import { Form, PrimaryButton } from '../../shared/components/form/base';
+import LabelledInput from '../../shared/components/form/LabelledInput';
+
 
 const StyledNav = styled.nav`
   display: flex;
@@ -68,6 +78,8 @@ export default class QRCode extends Component {
       visitorName: '',
       qrCodeContent: '',
       activities: [],
+      form: { name: null },
+      errors: {},
     };
 
     this.scanner = null;
@@ -149,6 +161,31 @@ export default class QRCode extends Component {
     }
   }
 
+  handleFormChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  submitVisitorName = (e) => {
+    e.preventDefault();
+
+    Visitors.get(null, { filter: { name: this.state.form.name } })
+      .then((res) => {
+        if (!res.data.result) {
+          throw new Error('No user found');
+        }
+
+        this.setState({
+          visitorName: res.data.result.name,
+          visitorId: res.data.result.id,
+          hasScanned: true,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.props.history.push('/visitor/qrerror');
+      });
+  }
+
   addVisitLog = (newActivity) => {
     const activity = this.state.activities.find(a => a.name === newActivity);
 
@@ -167,10 +204,11 @@ export default class QRCode extends Component {
         console.log('ERROR @ Visitors.createVisit', error);
         this.props.history.push('/error/500');
       });
-  };
+  }
 
   render() {
-    if (!this.state.hasScanned) {
+    const { errors, hasScanned, visitorName } = this.state;
+    if (!hasScanned) {
       return (
         <Fragment>
           <StyledNav>
@@ -184,10 +222,19 @@ export default class QRCode extends Component {
           </StyledNav>
           <StyledSection margin={0}>
             <FlexContainerCol>
-              <QrParagraph>Please scan your QR code to log in</QrParagraph>
+              <QrParagraph>Please scan your QR code or enter your name to log in</QrParagraph>
               <div>
                 <video ref={this.previewRef} />
               </div>
+              <Form onSubmit={this.submitVisitorName}>
+                <LabelledInput
+                  id="visitor-login-name"
+                  name="name"
+                  label="Your name"
+                  error={errors.name}
+                />
+                <PrimaryButton type="submit">Login</PrimaryButton>
+              </Form>
             </FlexContainerCol>
           </StyledSection>
         </Fragment>
@@ -197,7 +244,7 @@ export default class QRCode extends Component {
       <Fragment>
         <StyledNav>
           <Heading>
-            Welcome back, {capitaliseFirstName(this.state.visitorName)}! Why are you here today?
+            Welcome back, {capitaliseFirstName(visitorName)}! Why are you here today?
           </Heading>
         </StyledNav>
         <StyledSection margin={3}>
