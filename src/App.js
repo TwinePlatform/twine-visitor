@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import redirectAfterTimeout from './shared/components/hoc/redirect_after_timeout';
 
-import Main from './visitors/pages/main';
+import VisitorSignupPage from './visitors/pages/Signup';
 import QRCode from './visitors/pages/qrcode';
 import QrError from './visitors/pages/qrerror';
 import Thanks from './visitors/pages/thanks';
@@ -49,9 +49,9 @@ export default class App extends Component {
             <Route exact path="/visitor" component={HomeVisitor} />
             <Route exact path="/thankyou" component={redirectAfterTimeout('/visitor', 5000)(ThankYouFeedback)} />
 
-            <Route exact path="/visitor/signup" component={Main} />
+            <Route exact path="/visitor/signup" component={VisitorSignupPage} />
 
-            <Route exact path="/visitor/signup/*" component={Main} />
+            <Route exact path="/visitor/signup/*" component={VisitorSignupPage} />
 
             <Route exact path="/visitor/login" component={QRCode} />
 
