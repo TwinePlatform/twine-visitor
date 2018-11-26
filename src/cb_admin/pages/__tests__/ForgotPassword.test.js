@@ -42,7 +42,7 @@ describe('ForgotPassword Component', () => {
     expect.assertions(1);
 
     mock.onPost('/users/password/forgot')
-      .reply(401, { result: null, error: 'Email not recognised' });
+      .reply(401, { result: null, error: { message: 'Email not recognised' } });
 
     const { getByText, getByLabelText } = renderWithRouter()(ForgotPassword);
 

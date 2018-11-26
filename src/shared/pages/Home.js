@@ -6,7 +6,8 @@ import { SecondaryButton } from '../components/form/base';
 import { Heading, Link as HyperLink, Heading2 } from '../components/text/base';
 import { FlexContainerCol } from '../components/layout/base';
 import DotButton from '../components/form/DottedButton';
-import { logout, CommunityBusiness, ErrorUtils, CbAdmin } from '../../api';
+import { logout, CommunityBusiness, CbAdmin } from '../../api';
+import { redirectOnError } from '../../util';
 
 
 const Nav = styled.nav`
@@ -51,23 +52,10 @@ export default class Home extends Component {
     CbAdmin.downgradePermissions()
       .then(() => CommunityBusiness.get())
       .then(res => this.setState({ cbName: res.data.result.name }))
-      .catch((error) => {
-        // on first load this redirects to login if bad/no cookie is present
-
-        if (ErrorUtils.errorStatusEquals(error, 401) || ErrorUtils.errorStatusEquals(error, 403)) {
-          this.props.history.push('/cb/login');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
-
-        } else {
-          this.props.history.push('/error/unknown');
-        }
-      });
+    // on first load this redirects to login if bad/no cookie is present
+      .catch(err => redirectOnError(this.props.history.push, err));
   }
+
   render() {
     return (
       <FlexContainerCol justify="space-around">

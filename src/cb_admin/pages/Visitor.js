@@ -10,9 +10,9 @@ import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import DetailsTable from '../components/DetailsTable';
 import QrBox from '../components/QrBox';
-import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
+import { CommunityBusiness, Visitors } from '../../api';
 import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
-import { renameKeys } from '../../util';
+import { renameKeys, redirectOnError } from '../../util';
 
 const generateYearsArray = (startYear, currentYear) =>
   Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
@@ -121,42 +121,17 @@ export default class VisitorProfile extends React.Component {
     Promise.all([
       Visitors.get({ id: this.props.match.params.id }),
       Visitors.genders(),
+      CommunityBusiness.get({ fields: ['name', 'logoUrl'] }),
     ])
-      .then(([res, rGenders]) => {
-        this.updateStateFromApi(res.data.result);
+      .then(([resVisitors, rGenders, resCb]) => {
+        this.updateStateFromApi(resVisitors.data.result);
         this.setState({
           genderList: [{ id: -1, name: '' }].concat(rGenders.data.result).map(renameKeys({ id: 'key', name: 'value' })),
+          cbOrgName: resCb.data.result.name,
+          cbLogoUrl: resCb.data.result.logoUrl,
         });
       })
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
-        } else {
-          this.props.history.push('/error/unknown');
-        }
-      });
-
-    CommunityBusiness.get({ fields: ['name', 'logoUrl'] })
-      .then(res =>
-        this.setState({
-          cbOrgName: res.data.result.name,
-          cbLogoUrl: res.data.result.logoUrl,
-        }))
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
-        } else {
-          this.props.history.push('/error/unknown');
-        }
-      });
+      .catch(err => redirectOnError(this.props.history.push, err));
   }
 
   onClickPrint = () => {
@@ -166,17 +141,7 @@ export default class VisitorProfile extends React.Component {
   onClickResend = () => {
     Visitors.sendQrCode({ id: this.state.id })
       .then(() => this.setState({ hasResent: true }))
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
-        } else {
-          this.props.history.push('/error/unknown');
-        }
-      });
+      .catch(err => redirectOnError(this.props.history.push, err));
   };
 
   onChange = e => this.setState(assocPath(['form', e.target.name], e.target.value));

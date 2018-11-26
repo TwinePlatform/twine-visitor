@@ -91,7 +91,7 @@ describe('Visitor Component', () => {
       },
     })(Visitor);
 
-    await wait(() => expect(history.location.pathname).toEqual('/admin/login'));
+    await wait(() => expect(history.location.pathname).toEqual('/cb/login'));
   });
 
   test(':: can update visitor details', async () => {

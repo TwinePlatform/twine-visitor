@@ -15,8 +15,8 @@ import { colors } from '../../shared/style_guide';
 import DetailsTable from '../components/DetailsTable';
 import Dropzone from '../components/Dropzone';
 import Logo from '../components/Logo';
-import { CbAdmin, CommunityBusiness, Cloudinary, Visitors, ErrorUtils } from '../../api';
-import { renameKeys } from '../../util';
+import { CbAdmin, CommunityBusiness, Cloudinary, Visitors } from '../../api';
+import { renameKeys, redirectOnError } from '../../util';
 
 
 const Nav = styled.nav`
@@ -119,15 +119,7 @@ export default class SettingsPage extends React.Component {
           sectorList: rSectors.data.result.map(renameKeys({ id: 'key', name: 'value' })),
         });
       })
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-        } else if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
-        } else {
-          this.props.history.push('/error/unknown');
-        }
-      });
+      .catch(err => redirectOnError(this.props.history.push, err));
   }
 
   onImageDrop = (files) => {

@@ -8,7 +8,8 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 import confused from '../../shared/assets/icons/faces/confused.svg';
 import happy from '../../shared/assets/icons/faces/happy.svg';
 import sad from '../../shared/assets/icons/faces/sad.svg';
-import { CommunityBusiness, ErrorUtils, CbAdmin } from '../../api';
+import { CommunityBusiness, CbAdmin } from '../../api';
+import { redirectOnError } from '../../util';
 
 const StyledNav = styled.nav`
   display: flex;
@@ -56,34 +57,13 @@ const FeedbackStyledSection = styled.section`
 const postFeedback = (feedbackScore, props) =>
   CommunityBusiness.postFeedback(feedbackScore)
     .then(() => props.history.push('/thankyou'))
-    .catch((error) => {
-      if (ErrorUtils.errorStatusEquals(error, 401)) {
-        props.history.push('/cb/login');
-      } else {
-        props.history.push(`/error/${ErrorUtils.getErrorStatus(error)}`);
-      }
-    });
+    .catch(err => redirectOnError(props.history.push, err));
 
 export default class HomeVisitor extends Component {
 
   componentDidMount() {
     CbAdmin.downgradePermissions()
-      .catch((error) => {
-      // on first load this redirects to login if bad/no cookie is present
-
-        if (ErrorUtils.errorStatusEquals(error, 401) || ErrorUtils.errorStatusEquals(error, 403)) {
-          this.props.history.push('/cb/login');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
-
-        } else {
-          this.props.history.push('/error/unknown');
-        }
-      });
+      .catch(err => redirectOnError(this.props.history.push, err));
   }
 
   render() {

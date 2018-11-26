@@ -5,7 +5,8 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 import { SecondaryButton } from '../../shared/components/form/base';
 import DotButton from '../../shared/components/form/DottedButton';
 import { Heading, Link as StyledLink } from '../../shared/components/text/base';
-import { CommunityBusiness, logout, ErrorUtils } from '../../api';
+import { CommunityBusiness, logout } from '../../api';
+import { redirectOnError } from '../../util';
 
 
 const Nav = styled.nav`
@@ -51,23 +52,7 @@ export default class Dashboard extends React.Component {
   componentDidMount() {
     CommunityBusiness.get({ fields: ['name'] })
       .then(res => this.setState({ orgName: res.data.result.name }))
-      .catch((error) => {
-
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/cb/login');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
-
-        } else {
-          this.props.history.push('/error/unknown');
-
-        }
-      });
-
+      .catch(err => redirectOnError(this.props.history.push, err));
   }
 
   render() {

@@ -6,6 +6,7 @@ import { FlexContainerCol } from '../../shared/components/layout/base';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
+import { redirectOnError } from '../../util';
 
 
 const SubmitButton = styled(PrimaryButton) `
@@ -35,22 +36,15 @@ export default class ForgotPassword extends React.Component {
 
     CbAdmin.forgotPassword({ email: this.state.email })
       .then(() => this.props.history.push('/cb/login'))
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 400)) {
-          this.setState({ errors: ErrorUtils.getValidationErrors(error) });
+      .catch((err) => {
+        if (ErrorUtils.errorStatusEquals(err, 400)) {
+          this.setState({ errors: ErrorUtils.getValidationErrors(err) });
 
-        } else if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.setState({ errors: { email: error.response.data.error } });
-
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
+        } else if (ErrorUtils.errorStatusEquals(err, 401)) {
+          this.setState({ errors: { email: err.response.data.error.message } });
 
         } else {
-          this.props.history.push('/error/unknown');
-
+          redirectOnError(this.props.history.push, err);
         }
       });
 
