@@ -66,6 +66,34 @@ const SnakeContainerRow = styled(FlexContainerRow)`
   }
 `;
 
+const SignInContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+`;
+
+const Video = styled.video`
+  background-color: black;
+  width: ${props => props.width || '50%'};
+`;
+
+const CustomForm = styled(Form)`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 1.2em;
+`;
+
+const Button = styled(PrimaryButton)`
+  width: 90%;
+  padding: 1.2em 0;
+`;
+
+const Input = styled(LabelledInput)`
+  width: 90%;
+`;
+
 const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
 
 export default class QRCode extends Component {
@@ -222,19 +250,21 @@ export default class QRCode extends Component {
           </StyledNav>
           <StyledSection margin={0}>
             <FlexContainerCol>
-              <QrParagraph>Please scan your QR code or enter your name to log in</QrParagraph>
-              <div>
-                <video ref={this.previewRef} />
-              </div>
-              <Form onSubmit={this.submitVisitorName}>
-                <LabelledInput
-                  id="visitor-login-name"
-                  name="name"
-                  label="Your name"
-                  error={errors.name}
-                />
-                <PrimaryButton type="submit">Login</PrimaryButton>
-              </Form>
+              <QrParagraph>Please scan your QR code OR enter your name to log in</QrParagraph>
+              <SignInContainer>
+                <Video ref={this.previewRef} />
+                <CustomForm onSubmit={this.submitVisitorName}>
+                  <div style={{ width: '100%' }}>
+                    <Input
+                      id="visitor-login-name"
+                      name="name"
+                      label="Your name"
+                      error={errors.name}
+                    />
+                  </div>
+                  <Button type="submit">Sign in</Button>
+                </CustomForm>
+              </SignInContainer>
             </FlexContainerCol>
           </StyledSection>
         </Fragment>

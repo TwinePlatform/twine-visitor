@@ -102,7 +102,7 @@ export default class HomeVisitor extends Component {
           </StyledNav>
           <StyledSection>
             <FlexLink to="/visitor/login">
-              <ButtonLeft large>Sign in with QR code</ButtonLeft>
+              <ButtonLeft large>Sign in</ButtonLeft>
             </FlexLink>
             <FlexLink to="/visitor/signup">
               <ButtonRight large>Sign up</ButtonRight>
