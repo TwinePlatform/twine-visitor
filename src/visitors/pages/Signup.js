@@ -9,7 +9,7 @@ import { CommunityBusiness, Visitors, ErrorUtils, CbAdmin } from '../../api';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
-import { renameKeys } from '../../util';
+import { renameKeys, redirectOnError } from '../../util';
 
 
 const generateYearsArray = (startYear, currentYear) =>
@@ -134,22 +134,7 @@ export default class Main extends Component {
           formAutocompleteUUID: Date.now().toString(),
           genders: [{ key: 0, value: '' }].concat(gendersRes.map(renameKeys({ id: 'key', name: 'value' }))),
         }))
-      .catch((error) => {
-
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/cb/login');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
-
-        } else {
-          this.props.history.push('/error/unknown');
-
-        }
-      });
+      .catch(err => redirectOnError(this.props.history.push, err));
   }
 
   onClickPrint = () => {
@@ -194,19 +179,15 @@ export default class Main extends Component {
         this.setState({ qrCode: res.data.result.qrCode });
         this.props.history.push('/visitor/signup/thankyou');
       })
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 400)) {
-          this.setState({ errors: ErrorUtils.getValidationErrors(error) });
-        } else if (ErrorUtils.errorStatusEquals(error, 409)) {
+      .catch((err) => {
+        if (ErrorUtils.errorStatusEquals(err, 400)) {
+          this.setState({ errors: ErrorUtils.getValidationErrors(err) });
+        } else if (ErrorUtils.errorStatusEquals(err, 409)) {
           this.setState({
             errors: { formEmail: 'A user has already been registered with this name and email' },
           });
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
         } else {
-          this.props.history.push('/error/unknown');
+          redirectOnError(this.props.history.push, err);
         }
       });
   };

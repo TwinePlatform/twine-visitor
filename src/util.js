@@ -70,10 +70,11 @@ export const toCancellable = (p) => {
  *
  * Allows passing custom redirects to override defaults
  */
-export const redirectOnError = (to, error, custom = {}) => {
+export const redirectOnError = (historyPush, error, custom = {}) => {
   const defaults = {
     400: '/error/400',
     401: '/cb/login',
+    403: '/cb/login',
     404: '/error/404',
     500: '/error/500',
     default: '/error/unknown',
@@ -82,18 +83,21 @@ export const redirectOnError = (to, error, custom = {}) => {
   const redirs = mergeDeepRight(defaults, custom);
 
   if (ErrorUtils.errorStatusEquals(error, 400)) {
-    to(redirs[400]);
+    historyPush(redirs[400]);
 
   } else if (ErrorUtils.errorStatusEquals(error, 401)) {
-    to(redirs[401]);
+    historyPush(redirs[401]);
+
+  } else if (ErrorUtils.errorStatusEquals(error, 403)) {
+    historyPush(redirs[403]);
 
   } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-    to(redirs[500]);
+    historyPush(redirs[500]);
 
   } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-    to(redirs[404]);
+    historyPush(redirs[404]);
 
   } else {
-    to(redirs.default);
+    historyPush(redirs.default);
   }
 };

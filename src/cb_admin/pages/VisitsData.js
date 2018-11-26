@@ -14,7 +14,7 @@ import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
 import { ErrorUtils, CommunityBusiness, Visitors } from '../../api';
-import { renameKeys } from '../../util';
+import { renameKeys, redirectOnError } from '../../util';
 
 const repeat = (xs, n) => (xs.length >= n ? xs.slice(0, n) : repeat(xs.concat(xs), n));
 
@@ -111,9 +111,11 @@ export default class VisitsDataPage extends React.Component {
      * see https://github.com/TwinePlatform/twine-visitor/issues/499
      */
 
-    Visitors.genders().then(res => this.setState({
-      genderList: [{ key: 0, value: '' }].concat(res.data.result.map(renameKeys({ id: 'key', name: 'value' }))),
-    }));
+    Visitors.genders()
+      .then(res => this.setState({
+        genderList: [{ key: 0, value: '' }].concat(res.data.result.map(renameKeys({ id: 'key', name: 'value' }))),
+      }))
+      .catch(err => redirectOnError(this.props.history.push, err));
   }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value }, this.getData);

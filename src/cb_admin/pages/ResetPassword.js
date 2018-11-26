@@ -9,6 +9,7 @@ import { FlexContainerCol } from '../../shared/components/layout/base';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import { colors } from '../../shared/style_guide';
+import { redirectOnError } from '../../util';
 
 const payloadFromState = pick(['password', 'passwordConfirm']);
 const getErrorStatus = pathOr(null, ['response', 'status']);
@@ -53,22 +54,15 @@ export default class ResetPassword extends React.Component {
       ...payloadFromState(this.state),
     })
       .then(() => this.props.history.push('/cb/login?ref=pwd_reset'))
-      .catch((error) => {
-        if (errorStatusEquals(error, 400)) {
-          this.setState({ errors: ErrorUtils.getValidationErrors(error) });
+      .catch((err) => {
+        if (errorStatusEquals(err, 400)) {
+          this.setState({ errors: ErrorUtils.getValidationErrors(err) });
 
-        } else if (errorStatusEquals(error, 401)) {
-          this.setState({ errors: { password: error.response.data.error.message } });
-
-        } else if (errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-
-        } else if (errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
+        } else if (errorStatusEquals(err, 401)) {
+          this.setState({ errors: { password: err.response.data.error.message } });
 
         } else {
-          this.props.history.push('/error/unknown');
-
+          redirectOnError(this.props.history.push, err);
         }
       });
   }
