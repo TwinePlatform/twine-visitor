@@ -45,8 +45,8 @@ export const Visitors = {
 
   disabilities: () => axios.get('/disabilities'),
 
-  get: ({ id }, params) =>
-    axios.get(`/community-businesses/me/visitors${id ? `/${id}` : ''}`, { params }),
+  get: (opts, params) =>
+    axios.get(`/community-businesses/me/visitors${opts && opts.id ? `/${opts.id}` : ''}`, { params }),
 
   search: ({ qrCode }) =>
     axios.post('/users/visitors/search', { qrCode }),

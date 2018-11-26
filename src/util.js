@@ -1,4 +1,6 @@
-import { curry } from 'ramda';
+import { curry, mergeDeepRight } from 'ramda';
+import { ErrorUtils } from './api';
+
 
 /**
  * Takes an object describing a mapping between strings,
@@ -60,4 +62,38 @@ export const toCancellable = (p) => {
   };
 
   return wrappedPromise;
+};
+
+/**
+ * Utility function to support client-side redirects based on
+ * common status codes
+ *
+ * Allows passing custom redirects to override defaults
+ */
+export const redirectOnError = (to, error, custom = {}) => {
+  const defaults = {
+    400: '/error/400',
+    401: '/cb/login',
+    404: '/error/404',
+    500: '/error/500',
+    default: '/error/unknown',
+  };
+
+  const redirs = mergeDeepRight(defaults, custom);
+
+  if (ErrorUtils.errorStatusEquals(error, 400)) {
+    to(redirs[400]);
+
+  } else if (ErrorUtils.errorStatusEquals(error, 401)) {
+    to(redirs[401]);
+
+  } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+    to(redirs[500]);
+
+  } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+    to(redirs[404]);
+
+  } else {
+    to(redirs.default);
+  }
 };

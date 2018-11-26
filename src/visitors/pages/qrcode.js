@@ -17,6 +17,7 @@ import { Heading, Paragraph, Link as HyperLink } from '../../shared/components/t
 import { FlexContainerRow, FlexContainerCol } from '../../shared/components/layout/base';
 import { Form, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
+import { redirectOnError } from '../../util';
 
 
 const StyledNav = styled.nav`
@@ -190,7 +191,7 @@ export default class QRCode extends Component {
   }
 
   handleFormChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ form: { [e.target.name]: e.target.value } });
   }
 
   submitVisitorName = (e) => {
@@ -203,15 +204,13 @@ export default class QRCode extends Component {
         }
 
         this.setState({
-          visitorName: res.data.result.name,
-          visitorId: res.data.result.id,
+          visitorName: res.data.result[0].name,
+          visitorId: res.data.result[0].id,
           hasScanned: true,
         });
       })
-      .catch((err) => {
-        console.log(err);
-        this.props.history.push('/visitor/qrerror');
-      });
+      .catch(err =>
+        redirectOnError(this.props.history.push, err, { default: '/visitor/qrerror' }));
   }
 
   addVisitLog = (newActivity) => {
@@ -253,7 +252,7 @@ export default class QRCode extends Component {
               <QrParagraph>Please scan your QR code OR enter your name to log in</QrParagraph>
               <SignInContainer>
                 <Video ref={this.previewRef} />
-                <CustomForm onSubmit={this.submitVisitorName}>
+                <CustomForm onChange={this.handleFormChange} onSubmit={this.submitVisitorName}>
                   <div style={{ width: '100%' }}>
                     <Input
                       id="visitor-login-name"
