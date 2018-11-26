@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { PrimaryButtonNoFill, SecondaryButton } from '../../shared/components/form/base';
@@ -65,8 +66,24 @@ const postFeedback = (feedbackScore, props) =>
 
 export default class HomeVisitor extends Component {
 
-  async componentDidMount() {
-    await CbAdmin.downgradePermissions();
+  componentDidMount() {
+    CbAdmin.downgradePermissions()
+      .catch((error) => {
+      // on first load this redirects to login if bad/no cookie is present
+
+        if (ErrorUtils.errorStatusEquals(error, 401) || ErrorUtils.errorStatusEquals(error, 403)) {
+          this.props.history.push('/cb/login');
+
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
+
+        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+          this.props.history.push('/error/404');
+
+        } else {
+          this.props.history.push('/error/unknown');
+        }
+      });
   }
 
   render() {
@@ -110,3 +127,7 @@ export default class HomeVisitor extends Component {
     ;
   }
 }
+
+HomeVisitor.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};

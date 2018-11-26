@@ -47,13 +47,10 @@ export default class Home extends Component {
     };
   }
 
-  async componentDidMount() {
-    await CbAdmin.downgradePermissions();
-
-    CommunityBusiness.get()
-      .then((res) => {
-        this.setState({ cbName: res.data.result.name });
-      })
+  componentDidMount() {
+    CbAdmin.downgradePermissions()
+      .then(() => CommunityBusiness.get())
+      .then(res => this.setState({ cbName: res.data.result.name }))
       .catch((error) => {
         // on first load this redirects to login if bad/no cookie is present
 
