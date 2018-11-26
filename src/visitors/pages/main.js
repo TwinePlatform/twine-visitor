@@ -118,13 +118,14 @@ export default class Main extends Component {
     };
   }
 
-  async componentDidMount() {
-    await CbAdmin.downgradePermissions();
+  componentDidMount() {
+    CbAdmin.downgradePermissions()
+      .then(() => {
+        const getCb = CommunityBusiness.get({ fields: ['name', 'logoUrl', 'id'] });
+        const getGenders = Visitors.genders();
 
-    const getCb = CommunityBusiness.get({ fields: ['name', 'logoUrl', 'id'] });
-    const getGenders = Visitors.genders();
-
-    Promise.all([getCb, getGenders])
+        return Promise.all([getCb, getGenders]);
+      })
       .then(([{ data: { result: cbRes } }, { data: { result: gendersRes } }]) =>
         this.setState({
           cbOrgName: cbRes.name,

@@ -78,8 +78,28 @@ export default class QRCode extends Component {
     };
   }
 
-  async componentDidMount() {
-    await CbAdmin.downgradePermissions();
+  componentDidMount() {
+    CbAdmin.downgradePermissions()
+      .then(() => Activities.get({ day: 'today' }))
+      .then((res) => {
+        this.setState({ activities: res.data.result });
+      })
+      .catch((error) => {
+        // on first load this redirects to login if bad/no cookie is present
+
+        if (ErrorUtils.errorStatusEquals(error, 401) || ErrorUtils.errorStatusEquals(error, 403)) {
+          this.props.history.push('/cb/login');
+
+        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
+          this.props.history.push('/error/500');
+
+        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
+          this.props.history.push('/error/404');
+
+        } else {
+          this.props.history.push('/error/unknown');
+        }
+      });
 
     this.scanner = this.scanner || new Instascan.Scanner({ video: this.previewDiv, scanPeriod: 5 });
 
@@ -118,25 +138,6 @@ export default class QRCode extends Component {
           });
       });
     }
-
-    Activities.get({ day: 'today' })
-      .then((res) => {
-        this.setState({ activities: res.data.result });
-      })
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/cb/login');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
-
-        } else {
-          this.props.history.push('/visitor/qrerror');
-        }
-      });
   }
 
   componentWillUnmount() {
