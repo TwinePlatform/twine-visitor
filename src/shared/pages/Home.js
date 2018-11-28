@@ -50,7 +50,7 @@ export default class Home extends Component {
 
   componentDidMount() {
     CbAdmin.downgradePermissions()
-      .then(() => CommunityBusiness.get())
+      .then(() => CommunityBusiness.get({ fields: ['name'] }))
       .then(res => this.setState({ cbName: res.data.result.name }))
     // on first load this redirects to login if bad/no cookie is present
       .catch(err => redirectOnError(this.props.history.push, err));
