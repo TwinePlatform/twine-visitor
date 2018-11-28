@@ -71,7 +71,7 @@ export default class Dashboard extends React.Component {
           <ButtonWrapperLink to="/cb/activities">
             <ButtonOne>
               Activities
-              <Caption>Edit what is happening at {this.state.orgName}</Caption>
+              <Caption>Edit what is happening at {this.state.orgName || 'your community business'}</Caption>
             </ButtonOne>
           </ButtonWrapperLink>
           <ButtonWrapperLink to="/cb/visits">
