@@ -40,7 +40,8 @@ describe('Visitor Registration Component', () => {
       .reply(200, { data: null });
 
     mock.onPost('/users/register/visitors').reply(200, { result: { ...visitor } })
-      .onGet('/community-businesses/me').reply(200, { result: { name: 'cbName', logoUrl: 'cbURL', id: 1 } })
+      .onGet('/community-businesses/me', { params: { fields: ['name', 'logoUrl', 'id'] } })
+      .reply(200, { result: { name: 'cbName', logoUrl: 'cbURL', id: 1 } })
       .onGet('/users/me')
       .reply(200, { result: {} });
 

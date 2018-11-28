@@ -39,7 +39,7 @@ describe('Visitor Component', () => {
           isEmailConsentGranted: false,
           isSMSConsentGranted: false } });
 
-    mock.onGet('/community-businesses/me')
+    mock.onGet('/community-businesses/me', { params: { fields: ['name', 'logoUrl'] } })
       .reply(200,
         { result: {
           id: 3,
@@ -77,7 +77,7 @@ describe('Visitor Component', () => {
     mock
       .onGet('/genders').reply(401, { result: null })
       .onGet('/community-businesses/me/visitors/4').reply(401, { result: null })
-      .onGet('/community-businesses/me')
+      .onGet('/community-businesses/me', { params: { fields: ['name', 'logoUrl'] } })
       .reply(401, { result: null })
       .onGet('/users/me')
       .reply(401, { result: null });
@@ -133,14 +133,8 @@ describe('Visitor Component', () => {
       });
 
     mock
-      .onGet('/community-businesses/me')
-      .reply(200,
-        { result: {
-          id: 3,
-          name: 'Frog Finders',
-          sector: 'Environment or nature',
-          logoUrl: null,
-          createdAt: '2017-05-15T12:24:56.000Z' } })
+      .onGet('/community-businesses/me', { params: { fields: ['name', 'logoUrl'] } })
+      .reply(200, { result: { name: 'Frog Finders', logoUrl: null } })
       .onGet('/users/me')
       .reply(200, { email: 'findmyfroggy@frogfinders.com' });
 
@@ -201,14 +195,8 @@ describe('Visitor Component', () => {
       .reply(400, { error: { email: 'Invalid email' } });
 
     mock
-      .onGet('/community-businesses/me')
-      .reply(200,
-        { result: {
-          id: 3,
-          name: 'Frog Finders',
-          sector: 'Environment or nature',
-          logoUrl: null,
-          createdAt: '2017-05-15T12:24:56.000Z' } })
+      .onGet('/community-businesses/me', { params: { fields: ['name', 'logoUrl'] } })
+      .reply(200, { result: { name: 'Frog Finders', logoUrl: null } })
       .onGet('/users/me')
       .reply(200, { email: 'findmyfroggy@frogfinders.com' });
 

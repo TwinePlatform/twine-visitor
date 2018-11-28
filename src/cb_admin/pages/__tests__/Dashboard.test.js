@@ -22,17 +22,8 @@ describe('Dashboard Component', () => {
   test(':: successful response with 200 displays CB welcome message', async () => {
     expect.assertions(1);
 
-    mock.onGet('/community-businesses/me')
-      .reply(200, {
-        result: {
-          id: 3,
-          name: 'Frog Finders',
-          sector: 'Environment or nature',
-          logoUrl: null,
-          date: '2018-01-11T21:50:10.000Z' } },
-      );
-    mock.onGet('/users/me')
-      .reply(200, { result: { email: 'findmyfroggy@frogfinders.com' } });
+    mock.onGet('/community-businesses/me', { params: { fields: ['name'] } })
+      .reply(200, { result: { name: 'Frog Finders' } });
 
     const { getByText } = renderWithRouter()(Dashboard);
 
@@ -44,7 +35,7 @@ describe('Dashboard Component', () => {
   test(':: unsuccessful response with 401 redirects to login', async () => {
     expect.assertions(1);
 
-    mock.onGet('/community-businesses/me')
+    mock.onGet('/community-businesses/me', { params: { fields: ['name'] } })
       .reply(401, { result: null, error: 'Credentials not recognised' });
 
     const { history } =

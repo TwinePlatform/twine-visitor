@@ -18,7 +18,7 @@ export const axios = create({
 export const Activities = {
   categories: () => axios.get('/visit_activity_categories'),
 
-  get: params => axios.get('/community-businesses/me/visit-activities', params),
+  get: params => axios.get('/community-businesses/me/visit-activities', { params }),
 
   create: ({ name, category }) =>
     axios.post('/community-businesses/me/visit-activities', { name, category }),
@@ -95,7 +95,7 @@ export const Visitors = {
 
 export const CbAdmin = {
   get: params =>
-    axios.get('/users/me', params),
+    axios.get('/users/me', { params }),
 
   update: ({ email }) =>
     axios.put('/users/me', { email }),
@@ -125,7 +125,7 @@ export const CommunityBusiness = {
 
   regions: () => axios.get('/regions'),
 
-  get: params => axios.get('/community-businesses/me', params),
+  get: params => axios.get('/community-businesses/me', { params }),
 
   getVisits: params => axios.get('/community-businesses/me/visit-logs', { params }),
 
