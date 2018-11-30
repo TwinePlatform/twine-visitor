@@ -87,6 +87,16 @@ const ageOptions = [
   { key: '5', value: '70+' },
 ];
 
+const ageOptsToParams = (str) => {
+  const x = str
+    .split(/[-+]/)
+    .map(d => parseInt(d, 10))
+    .filter(d => !isNaN(d))
+    .concat(999)
+    .slice(0, 2);
+
+  return x.length === 2 ? x : undefined;
+};
 export default class VisitorDetailsPage extends React.Component {
   constructor(props) {
     super(props);
@@ -96,7 +106,7 @@ export default class VisitorDetailsPage extends React.Component {
       fullCount: 0,
       sort: '',
       genderFilter: '',
-      ageFilter: '',
+      ageFilter: undefined,
       errors: {},
       genderList: [],
     };
@@ -118,7 +128,12 @@ export default class VisitorDetailsPage extends React.Component {
       });
   }
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value }, this.update);
+  onChange = (e) => {
+    const value = e.target.name === 'ageFilter'
+      ? ageOptsToParams(e.target.value)
+      : e.target.value;
+    this.setState({ [e.target.name]: value }, this.update);
+  };
 
   getDataForCsv = () => {
     const { genderFilter, ageFilter } = this.state;
