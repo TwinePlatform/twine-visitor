@@ -1,4 +1,5 @@
 /*
+ * NOTE: The "Enter name" path has been removed temporarily -- see https://github.com/TwinePlatform/twine-visitor/issues/562
  *           ---- Scan QR code ---                       ---- Load activities ---- Register visit
  *          /                     \                    /
  * Login --                        -- Get visitor ID --
@@ -15,8 +16,8 @@ import QRPrivacy from '../components/qrprivacy';
 import { Activities, Visitors, ErrorUtils, CbAdmin } from '../../api';
 import { Heading, Paragraph, Link as HyperLink } from '../../shared/components/text/base';
 import { FlexContainerRow, FlexContainerCol } from '../../shared/components/layout/base';
-import { Form, PrimaryButton } from '../../shared/components/form/base';
-import LabelledInput from '../../shared/components/form/LabelledInput';
+// import { Form, PrimaryButton } from '../../shared/components/form/base';
+// import LabelledInput from '../../shared/components/form/LabelledInput';
 import { redirectOnError } from '../../util';
 
 
@@ -78,22 +79,22 @@ const Video = styled.video`
   width: ${props => props.width || '50%'};
 `;
 
-const CustomForm = styled(Form)`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  padding: 1.2em;
-`;
+// const CustomForm = styled(Form)`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: flex-start;
+//   width: 100%;
+//   padding: 1.2em;
+// `;
 
-const Button = styled(PrimaryButton)`
-  width: 90%;
-  padding: 1.2em 0;
-`;
+// const Button = styled(PrimaryButton)`
+//   width: 90%;
+//   padding: 1.2em 0;
+// `;
 
-const Input = styled(LabelledInput)`
-  width: 90%;
-`;
+// const Input = styled(LabelledInput)`
+//   width: 90%;
+// `;
 
 const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
 
@@ -234,7 +235,7 @@ export default class QRCode extends Component {
   }
 
   render() {
-    const { errors, hasScanned, visitorName } = this.state;
+    const { hasScanned, visitorName } = this.state;
     if (!hasScanned) {
       return (
         <Fragment>
@@ -249,10 +250,10 @@ export default class QRCode extends Component {
           </StyledNav>
           <StyledSection margin={0}>
             <FlexContainerCol>
-              <QrParagraph>Please scan your QR code OR enter your name to log in</QrParagraph>
+              <QrParagraph>Please scan your QR code to log in</QrParagraph>
               <SignInContainer>
-                <Video ref={this.previewRef} />
-                <CustomForm onChange={this.handleFormChange} onSubmit={this.submitVisitorName}>
+                <Video ref={this.previewRef} width="100%" />
+                {/* <CustomForm onChange={this.handleFormChange} onSubmit={this.submitVisitorName}>
                   <div style={{ width: '100%' }}>
                     <Input
                       id="visitor-login-name"
@@ -262,7 +263,7 @@ export default class QRCode extends Component {
                     />
                   </div>
                   <Button type="submit">Sign in</Button>
-                </CustomForm>
+                </CustomForm> */}
               </SignInContainer>
             </FlexContainerCol>
           </StyledSection>
