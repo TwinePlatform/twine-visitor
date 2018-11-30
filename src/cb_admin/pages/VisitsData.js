@@ -13,8 +13,8 @@ import { colors, fonts } from '../../shared/style_guide';
 import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
-import { ErrorUtils, CommunityBusiness, Visitors } from '../../api';
-import { renameKeys, redirectOnError } from '../../util';
+import { ErrorUtils, CommunityBusiness, Visitors, Activities } from '../../api';
+import { renameKeys, redirectOnError, ageOptsToParams } from '../../util';
 
 const repeat = (xs, n) => (xs.length >= n ? xs.slice(0, n) : repeat(xs.concat(xs), n));
 
@@ -90,7 +90,7 @@ export default class VisitsDataPage extends React.Component {
       visitsList: [],
       activities: [],
       genderFilter: '',
-      ageFilter: '',
+      ageFilter: undefined,
       activityFilter: '',
       orderBy: '',
       genderNumbers: { datasets: [], labels: [] },
@@ -118,7 +118,12 @@ export default class VisitsDataPage extends React.Component {
       .catch(err => redirectOnError(this.props.history.push, err));
   }
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value }, this.getData);
+  onChange = (e) => {
+    const value = e.target.name === 'ageFilter'
+      ? ageOptsToParams(e.target.value)
+      : e.target.value;
+    this.setState({ [e.target.name]: value }, this.getData);
+  };
 
   getActivitiesForChart = (activityData) => {
     const pairedActivityData = toPairs(activityData);
@@ -239,12 +244,7 @@ export default class VisitsDataPage extends React.Component {
   };
 
   getData = (offset = 0) => {
-    const { genderFilter, ageFilter: _ageFilter, activityFilter } = this.state;
-    const ageFilter = _ageFilter === '70+' //eslint-disable-line
-      ? [70, 112]
-      : _ageFilter
-        ? _ageFilter.split(/[-+]/)
-        : '';
+    const { genderFilter, ageFilter, activityFilter } = this.state;
 
     const queryFilter = {
       gender: genderFilter,
