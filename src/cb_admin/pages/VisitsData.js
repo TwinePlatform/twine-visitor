@@ -88,7 +88,7 @@ export default class VisitsDataPage extends React.Component {
     this.state = {
       fullCount: 0,
       visitsList: [],
-      activities: [],
+      activitiesList: [],
       genderFilter: '',
       ageFilter: undefined,
       activityFilter: '',
@@ -114,6 +114,12 @@ export default class VisitsDataPage extends React.Component {
     Visitors.genders()
       .then(res => this.setState({
         genderList: [{ key: 0, value: '' }].concat(res.data.result.map(renameKeys({ id: 'key', name: 'value' }))),
+      }))
+      .catch(err => redirectOnError(this.props.history.push, err));
+
+    Activities.get()
+      .then(res => this.setState({
+        activitiesList: [{ key: 0, value: '' }].concat(res.data.result.map(renameKeys({ id: 'key', name: 'value' }))),
       }))
       .catch(err => redirectOnError(this.props.history.push, err));
   }
@@ -262,7 +268,6 @@ export default class VisitsDataPage extends React.Component {
         filter: filter(identity, queryFilter),
       });
 
-
     Promise.all([getVisits, getAggregates])
       .then(([resVisits, resAggs]) => {
 
@@ -274,7 +279,6 @@ export default class VisitsDataPage extends React.Component {
           genderNumbers: this.getGendersForChart(gender),
           activitiesGroups: this.getActivitiesForChart(visitActivity),
           ageGroups: this.getAgeGroupsForChart(age),
-          activities: Object.keys(visitActivity),
           visitsList,
           fullCount,
         });
@@ -292,9 +296,6 @@ export default class VisitsDataPage extends React.Component {
 
   render() {
     const { errors, visitsList } = this.state;
-    const activityOptions = ['']
-      .concat(this.state.activities)
-      .map((a, i) => ({ key: `${i}`, value: a }));
     return (
       <FlexContainerCol expand>
         <Nav>
@@ -327,7 +328,7 @@ export default class VisitsDataPage extends React.Component {
                 id="visits-data-activity"
                 name="activityFilter"
                 label="Filter by activity"
-                options={activityOptions}
+                options={this.state.activitiesList}
                 errors={errors.activity}
               />
             </FormSection>
