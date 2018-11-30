@@ -157,8 +157,11 @@ export default class Feedback extends Component {
               startDateId="start_date_id"
               endDate={this.state.endDate}
               endDateId="end_date_id"
-              onDatesChange={({ startDate, endDate }) =>
-                this.setState({ startDate, endDate, lastCall: lastCallStates.DATERANGEPICKER })
+              onDatesChange={({ startDate, endDate }) => {
+                if (startDate) startDate.hour(0).minute(0).second(0);
+                if (endDate) endDate.hour(23).minute(59).second(59).millisecond(999);
+                this.setState({ startDate, endDate, lastCall: lastCallStates.DATERANGEPICKER });
+              }
               }
               focusedInput={this.state.focusedInput}
               onFocusChange={focusedInput => this.setState({ focusedInput })}
