@@ -101,3 +101,15 @@ export const redirectOnError = (historyPush, error, custom = {}) => {
     historyPush(redirs.default);
   }
 };
+
+
+export const ageOptsToParams = (str) => {
+  const x = str
+    .split(/[-+]/)
+    .map(d => parseInt(d, 10))
+    .filter(d => !isNaN(d))
+    .concat(999)
+    .slice(0, 2);
+
+  return x.length === 2 ? x : undefined;
+};

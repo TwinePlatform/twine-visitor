@@ -13,7 +13,7 @@ import { colors, fonts } from '../../shared/style_guide';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
 import { Visitors, ErrorUtils } from '../../api';
-import { renameKeys } from '../../util';
+import { renameKeys, ageOptsToParams } from '../../util';
 
 const Nav = styled.nav`
   display: flex;
@@ -87,16 +87,6 @@ const ageOptions = [
   { key: '5', value: '70+' },
 ];
 
-const ageOptsToParams = (str) => {
-  const x = str
-    .split(/[-+]/)
-    .map(d => parseInt(d, 10))
-    .filter(d => !isNaN(d))
-    .concat(999)
-    .slice(0, 2);
-
-  return x.length === 2 ? x : undefined;
-};
 export default class VisitorDetailsPage extends React.Component {
   constructor(props) {
     super(props);
