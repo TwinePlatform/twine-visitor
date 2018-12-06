@@ -7,5 +7,5 @@ To create a project configuration, create a `.env` file in the project root. Pop
 ```sh
 # Base URL to use as a prefix for all API calls
 # This is used to support cases where the API is not hosted on the same domain as the application itself.
-API_HOST_DOMAIN=https://...
+REACT_APP_API_HOST_DOMAIN=<base_url>/<version_number>
 ```
