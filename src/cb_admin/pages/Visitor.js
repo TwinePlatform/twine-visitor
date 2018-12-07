@@ -230,6 +230,7 @@ export default class VisitorProfile extends React.Component {
                 label="Name"
                 name="name"
                 type="text"
+                placeholder={rest.name}
                 error={errors.name}
               />
               <LabelledInput
@@ -237,6 +238,7 @@ export default class VisitorProfile extends React.Component {
                 label="Email"
                 name="email"
                 type="email"
+                placeholder={rest.email}
                 error={errors.email}
               />
               <Button type="submit">SAVE</Button>
@@ -247,6 +249,7 @@ export default class VisitorProfile extends React.Component {
                 label="Year of birth"
                 name="birthYear"
                 options={years}
+                value={rest.form.birthYear || rest.birthYear}
                 error={errors.birthYear}
               />
               <LabelledSelect
@@ -254,6 +257,7 @@ export default class VisitorProfile extends React.Component {
                 label="Gender"
                 name="gender"
                 options={rest.genderList}
+                value={rest.form.gender || rest.gender}
                 error={errors.gender}
               />
             </FlexItem>
