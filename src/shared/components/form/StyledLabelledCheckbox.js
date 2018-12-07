@@ -6,7 +6,6 @@ import { colors } from '../../style_guide';
 const CheckboxDiv = styled.div`
   cursor: pointer;
   margin-bottom: 0.5em;
-  padding-left: 40%;
   & input {
     z-index: -1;
     opacity: 0;
@@ -16,8 +15,8 @@ const CheckboxDiv = styled.div`
   & input + label:before {
     content: '';
     display: inline-block;
-    height: 1em;
-    width: 1em;
+    height: 1.5em;
+    width: 1.5em;
     border-radius: 50%;
     border: 0.2em solid ${colors.highlight_primary};
     background: transparent;
