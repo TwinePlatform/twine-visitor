@@ -7,6 +7,8 @@ import qs from 'qs';
 
 const baseURL = process.env.REACT_APP_API_HOST_DOMAIN;
 
+console.log('REACT_APP_API_HOST_DOMAIN (1)', process.env.REACT_APP_API_HOST_DOMAIN);
+
 export const axios = create({
   baseURL,
   withCredentials: true,
@@ -107,8 +109,10 @@ export const CbAdmin = {
   upgradePermissions: ({ password }) =>
     axios.post('/users/login/escalate', { password }),
 
-  downgradePermissions: () =>
-    axios.post('/users/login/de-escalate'),
+  downgradePermissions: () => {
+    console.log('REACT_APP_API_HOST_DOMAIN', process.env.REACT_APP_API_HOST_DOMAIN);
+    return axios.post('/users/login/de-escalate');
+  },
 
   forgotPassword: ({ email }) =>
     axios.post('/users/password/forgot', { email, redirect: 'VISITOR_APP' }),
