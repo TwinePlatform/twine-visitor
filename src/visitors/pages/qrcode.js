@@ -164,10 +164,10 @@ export default class QRCode extends Component {
         Visitors.search({ qrCode: content })
           .then((res) => {
             if (!res.data.result) {
-              throw new Error('No user found');
+              return this.props.history.push('/visitor/qrerror?e=no_user');
             }
 
-            this.setState({
+            return this.setState({
               visitorName: res.data.result.name,
               visitorId: res.data.result.id,
               qrCodeContent: content,
