@@ -31,8 +31,6 @@ const PrivacyLink = styled.a`
 
 const CenteredParagraph = styled(Paragraph)`
   width: 90%;
-  margin: 1.5em 0;
-  margin-bottom: -5em;
   line-height: 1.5em;
 `;
 
@@ -46,12 +44,6 @@ const TitleParagraph = styled(Paragraph)`
   font-weight: medium;
   width: 100%;
   font-size: 19px;
-  margin-top: -8%;
-  margin-bottom: -0.5em;
-`;
-
-const PrivacySection = styled(FormSection)`
-margin-top: 2em;
 `;
 
 const signupForm = props => (
@@ -100,6 +92,7 @@ const signupForm = props => (
             required
           />
         </div>
+        <SubmitButton type="submit">CONTINUE</SubmitButton>
       </FormSection>
       <FormSection flexOrder={2}>
         <TitleParagraph>Why are we collecting this information?</TitleParagraph>
@@ -107,30 +100,23 @@ const signupForm = props => (
           Here at {props.cbOrgName}, we take your privacy seriously: we will only use your personal
           information to administer your account to provide the products and services you have
           requested from us, and improve how we deliver those.
-          <br />
-          <br />
-          However, from time to time we would like to contact you with details of other offers we
-          provide. If you consent to us contacting you by email, please tick to agree:
-          <StyledLabelledCheckbox name="emailContact" id="emailCheckboxInput" data-testid="emailConsent" />
         </CenteredParagraph>
         <CenteredParagraph>
-          <br />
-          <br />
-          We would like to send you surveys in order to improve our work via SMS. If you agree to us
-          using your personal data for that purpose, please tick to agree:
-          <StyledLabelledCheckbox name="smsContact" id="smsCheckboxInput" />
+          However, from time to time we would like to contact you with details of other offers we
+          provide. We would also like to send you surveys via SMS in order to improve our work.
         </CenteredParagraph>
-      </FormSection>
-
-      <FormSection flexOrder={3}>
-        <SubmitButton type="submit">CONTINUE</SubmitButton>
-      </FormSection>
-
-      <PrivacySection flexOrder={4}>
+        <CenteredParagraph>
+          If you consent to us contacting you by email, please tick to agree:
+        </CenteredParagraph>
+        <StyledLabelledCheckbox name="emailContact" id="emailCheckboxInput" data-testid="emailConsent" />
+        <CenteredParagraph>
+          If you consent to us contacting you by SMS, please tick to agree:
+        </CenteredParagraph>
+        <StyledLabelledCheckbox name="smsContact" id="smsCheckboxInput" />
         <PrivacyLink href="http://www.twine-together.com/privacy-policy/">
           Data Protection Policy
         </PrivacyLink>
-      </PrivacySection>
+      </FormSection>
     </Form>
   </FlexContainerCol>
 );
