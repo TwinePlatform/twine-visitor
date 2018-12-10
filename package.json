@@ -5,9 +5,18 @@
   "dependencies": {
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
+    "compression": "^1.7.3",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "express": "^4.16.4",
+    "express-sslify": "^1.2.0",
     "fast-csv": "^2.4.1",
     "file-saver": "^1.3.8",
     "history": "^4.7.2",
+    "hsts": "^2.1.0",
+    "http-proxy-middleware": "^0.19.1",
     "jszip": "^3.1.5",
     "moment": "^2.22.2",
     "normalize.css": "^8.0.1",
@@ -23,11 +32,7 @@
     "react-paginate": "^5.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.1",
-    "styled-components": "^4.0.3",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.11.1"
+    "styled-components": "^4.0.3"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.15.0",
@@ -40,7 +45,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "serve": "node index.js",
+    "heroku-postbuild": "npm run build"
   },
   "contributors": [
     "James Inglis <jinglis12@gmail.com>",
