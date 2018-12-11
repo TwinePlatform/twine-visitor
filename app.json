@@ -10,10 +10,5 @@
     "web": {
       "quantity": 1
     }
-  },
-  "buildpacks": [
-    {
-      "url": "mars/create-react-app"
-    }
-  ]
+  }
 }
