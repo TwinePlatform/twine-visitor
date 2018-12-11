@@ -9,14 +9,11 @@ To create a project configuration, create a `.env` file in the project root. Pop
 # Base URL to use as a prefix for all API calls
 # This is used to support cases where the API is not hosted on the same domain as the application itself.
 # NOTE:
-#   When proxying via the server using the PROXY_API_URL variable, this value MUST be a relative URL
-#   (that is, beginning with "/")
+# - The API version URL prefix is affixed in the code (see src/api/index.js)
+# - When proxying via the server using the PROXY_API_URL variable, this value MUST be unset
 # Example:
-#   Without proxy:
-#     https://api.example.com/v1
-#   With proxy:
-#     /v1
-REACT_APP_API_HOST_DOMAIN=<base_url>/<version_number>
+#   https://api.example.com
+REACT_APP_API_HOST_DOMAIN=<base_url>
 ```
 
 ## Server
@@ -36,7 +33,7 @@ REDIR_TO_HOST=...
 
 # Used to enable a proxy to a separate API server to avoid CORS issues
 # Example:
-#   https://api.example.com/v1
+#   https://api.example.com
 PROXY_API_URL=...
 
 # Port on which to listen
