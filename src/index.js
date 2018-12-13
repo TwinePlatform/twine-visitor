@@ -6,7 +6,7 @@ import './styles/index.css';
 import './styles/DatePicker.css';
 import './styles/ReactPagination.css';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+import { unregister } from './registerServiceWorker';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -14,4 +14,4 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById('root'),
 );
-registerServiceWorker();
+unregister();
