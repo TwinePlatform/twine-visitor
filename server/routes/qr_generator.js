@@ -6,7 +6,6 @@ const qrcodemaker = require('../functions/qrcodemaker');
 const sendQrCode = require('../functions/qr_send');
 const userCheckExists = require('../database/queries/user_check_exists');
 const Boom = require('boom');
-const { randomBytes } = require('crypto');
 const { hmac } = require('../shared/util/crypto');
 
 const schema = {
@@ -51,8 +50,7 @@ router.post('/', validate(schema), async (req, res, next) => {
       return next(Boom.conflict('User already registered'));
     }
 
-    const rnd = randomBytes(32).toString('hex');
-    const payload = formSender.concat(formEmail).concat(formGender).concat(formYear).concat(rnd);
+    const payload = formSender.concat(formEmail).concat(formGender).concat(formYear);
     const hashString = hmac(secret, payload);
 
     await userRegister(
@@ -72,8 +70,7 @@ router.post('/', validate(schema), async (req, res, next) => {
       pmClient,
       formEmail,
       req.auth.cb_email,
-      formSender,
-      hashString,
+      formSender, hashString,
       req.auth.cb_name,
       req.auth.cb_logo
     );

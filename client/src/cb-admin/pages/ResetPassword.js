@@ -7,7 +7,6 @@ import { Heading } from '../../shared/components/text/base';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
-import { colors } from '../../shared/style_guide';
 
 const payloadFromState = pick(['password', 'passwordConfirm']);
 const getErrorStatus = pathOr(null, ['response', 'status']);
@@ -19,15 +18,6 @@ const SubmitButton = styled(PrimaryButton) `
   width: 90%;
 `;
 
-const ErrorText = styled.p`
-  margin-top: 1em;
-  color: ${colors.error};
-  display: ${props => (props.show ? 'block' : 'none')};
-`;
-
-const FormSectionFixedHeight = styled(FormSection)`
-  height: 70%
-`;
 
 export default class ResetPassword extends React.Component {
   constructor(props) {
@@ -73,7 +63,7 @@ export default class ResetPassword extends React.Component {
       <FlexContainerCol>
         <Heading> Reset Password </Heading>
         <Form onChange={this.onChange} onSubmit={this.onSubmit}>
-          <FormSectionFixedHeight>
+          <FormSection>
             <LabelledInput
               id="cb-admin-new-password"
               label="New password"
@@ -91,13 +81,7 @@ export default class ResetPassword extends React.Component {
               required
             />
             <SubmitButton type="submit">SUBMIT</SubmitButton>
-            <ErrorText show={this.state.errors.password === 'is too weak'}>
-              <li>Use at least 8 characters</li>
-              <li>Use uppercase and lowercase characters</li>
-              <li>Use 1 or more numbers</li>
-              <li>Use 1 or more special characters</li>
-            </ErrorText>
-          </FormSectionFixedHeight>
+          </FormSection>
         </Form>
       </FlexContainerCol>
     );

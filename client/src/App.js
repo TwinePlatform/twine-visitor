@@ -5,6 +5,7 @@ import PrivateRoute from './PrivateRoute';
 import AdminRoute from './AdminRoute';
 
 import redirectAfterTimeout from './shared/components/hoc/redirect_after_timeout';
+import adminLoginCheck from './shared/components/hoc/admin_login_check';
 
 import Main from './visitors/pages/main';
 import QRCode from './visitors/pages/qrcode';
@@ -196,7 +197,7 @@ class App extends Component {
               updateLoggedIn={this.updateLoggedIn}
               exact
               path="/cb/feedback"
-              component={CbAdminFeedback}
+              component={adminLoginCheck(CbAdminFeedback)}
             />
 
             <Route exact path="/error/404" component={NotFound} />

@@ -13,7 +13,7 @@ const schemas = {
     token: Joi.string().required(),
 
     password: Joi.string()
-      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!#$%&()*+,\-./\\:;<=>@[\]^_{|}~?])(?=.{8,})/, 'strong_pwd')
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, 'strong_pwd')
       .required()
       .options({ language: { string: { regex: { name: 'is too weak' } } } }),
 
@@ -35,11 +35,11 @@ router.post('/', validate(schemas), async (req, res, next) => {
     const notExpired = await checkExpire(pgClient, token);
 
     if (!exists) {
-      return next(Boom.unauthorized('Token not recognised. Reset password again.'));
+      return next(Boom.unauthorized('Token not recognised'));
     }
 
     if (!notExpired) {
-      return next(Boom.unauthorized('Token expired. Reset password again.'));
+      return next(Boom.unauthorized('Token expired'));
     }
 
     const hashedPwd = await saltedHash(password);

@@ -123,9 +123,8 @@ export default class Feedback extends Component {
       .catch((err) => {
         if (err.response.status === 401) {
           this.props.history.push('/admin/login');
-        } else {
-          this.setState({ error: 'Sorry there has been an error with your request' });
         }
+        this.setState({ error: 'Sorry there has been an error with your request' });
       });
   };
 
