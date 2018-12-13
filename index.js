@@ -17,10 +17,20 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Force redirects from old host to new target host
-app.use((req, res, next) =>
-  (req.headers.host.startsWith(process.env.REDIR_FROM_HOST)
+app.use((req, res, next) => {
+  console.log({
+    reqHeadersHost: req.headers.host,
+    redirFromHost: process.env.REDIR_FROM_HOST,
+    redirToHost: process.env.REDIR_TO_HOST,
+    doesStartWith: req.headers.host.startsWith(process.env.REDIR_FROM_HOST),
+  });
+
+
+  return (req.headers.host.startsWith(process.env.REDIR_FROM_HOST)
     ? res.redirect(`${process.env.REDIR_TO_HOST}${req.url}`)
-    : next()),
+    : next())
+  ;
+},
 );
 
 // Conditional request proxying
