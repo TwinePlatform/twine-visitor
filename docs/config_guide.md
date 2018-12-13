@@ -1,35 +1,41 @@
 # Configuration Guide
 
-All configuration is stored in the `config` directory located in the project root.
+## Client
+All client configuration is stored in the project root in `.env*` files. Secrets and configuration variables that are likely to change between deployment environments are stored in these files.
 
-Secrets and configuration variables that are likely to change between deployment environments are stored in a file called `config.env`. This file should _NOT_ be checked into source control.
-
-Default configuration variables are stored in `config.defaults.js`.
-
-To create a project configuration, create the `config.env` in the `config` directory. Populate it with `=`-separated key-value pairs. Ensure at least the following parameters are provided:
+To create a project configuration, create a `.env` file in the project root. Populate it with `=`-separated key-value pairs. Ensure at least the following parameters are provided:
 
 ```sh
-# Used as a HMAC key to hash passwords (must change, see https://github.com/TwinePlatform/twine-visitor/issues/213)
-HMAC_SECRET=...
+# Base URL to use as a prefix for all API calls
+# This is used to support cases where the API is not hosted on the same domain as the application itself.
+# NOTE:
+# - The API version URL prefix is affixed in the code (see src/api/index.js)
+# - When proxying via the server using the PROXY_API_URL variable, this value MUST be unset
+# Example:
+#   https://api.example.com
+REACT_APP_API_HOST_DOMAIN=<base_url>
+```
 
-# Used to sign JWTs for session authentication
-STANDARD_JWT_SECRET=...
-CB_ADMIN_JWT_SECRET=...
+## Server
+The server may be configured with the following environment variables:
+```sh
+# Hostname from which to redirect
+# MUST NOT INCLUDE PROTOCOL
+# Example:
+#   twine-visitor.herokuapp.com
+REDIR_FROM_HOST=...
 
-# Postgres connection strings for postgres server in various environments
-# DATABASE_URL is used in production, the others are suffixed with their environments
-DATABASE_URL=...
-DATABASE_URL_DEV=...
-DATABASE_URL_TEST=...
+# Hostname to which to redirect
+# SHOULD INCLUDE PROTOCOL
+# Example:
+#   https://example.com
+REDIR_TO_HOST=...
 
-# Postmark API key for various environments
-# Postmark is the service used to send e-mails
-# NOTE: Use "POSTMARK_API_TEST" as the API key in the "test" environment, this will prevent sending
-#       emails when not in production. You may want a real API key in the "dev" environment to allow
-#       manual testing
-#       See https://github.com/TwinePlatform/twine-visitor/issues/240
-POSTMARK_KEY_DEV=...
-POSTMARK_KEY_TEST=...
-POSTMARK_KEY_PROD=...
+# Used to enable a proxy to a separate API server to avoid CORS issues
+# Example:
+#   https://api.example.com
+PROXY_API_URL=...
 
+# Port on which to listen
+PORT=...
 ```

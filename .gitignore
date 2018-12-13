@@ -55,8 +55,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
-config.env
+.env*
 
 # OS generated files #
 ######################
@@ -70,3 +69,7 @@ Thumbs.db
 
 # local vs code settigns
 .vscode
+
+# Custom
+
+build

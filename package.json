@@ -1,39 +1,53 @@
 {
-  "name": "twine-visitor",
+  "name": "twine-visitor-app",
   "version": "1.0.0",
-  "description": "",
   "private": true,
-  "main": "./server/index.js",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "chart.js": "^2.7.2",
+    "compression": "^1.7.3",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "express": "^4.16.4",
+    "express-sslify": "^1.2.0",
+    "fast-csv": "^2.4.1",
+    "file-saver": "^1.3.8",
+    "history": "^4.7.2",
+    "hsts": "^2.1.0",
+    "http-proxy-middleware": "^0.19.1",
+    "jszip": "^3.1.5",
+    "moment": "^2.22.2",
+    "normalize.css": "^8.0.1",
+    "polished": "^2.0.3",
+    "prop-types": "^15.6.2",
+    "qs": "^6.5.2",
+    "ramda": "^0.25.0",
+    "react": "^16.6.1",
+    "react-chartjs-2": "^2.7.4",
+    "react-dates": "^18.2.2",
+    "react-dom": "^16.6.1",
+    "react-dropzone": "^7.0.1",
+    "react-paginate": "^5.3.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "^2.1.1",
+    "styled-components": "^4.0.3"
+  },
+  "devDependencies": {
+    "axios-mock-adapter": "^1.15.0",
+    "jest-dom": "^1.12.1",
+    "react-testing-library": "^5.2.3"
+  },
   "scripts": {
-    "start": "node ./server/index.js",
-    "startmon": "nodemon ./server/index.js",
-    "postinstall": "cd client && npm install",
-    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
-    "build.client": "cd client && npm run build",
-    "test": "NODE_ENV=testing tape 'server/**/__tests__/*.test.js' | tap-spec",
-    "test:client": "cd client && CI=true npm t",
-    "start.client": "cd client && npm run start",
-    "cover": "nyc npm test",
-    "cover:client": "cd client && CI=true npm t -- --coverage",
-    "cover.report": "nyc report --reporter=html",
-    "cover.report.ci": "nyc report --reporter=text-lcov > coverage.lcov",
     "lint": "eslint .",
-    "lint.fix": "eslint . --fix",
-    "psql.build": "node ./db/scripts/index.js build",
-    "psql.destroy": "node ./db/scripts/index.js destroy",
-    "psql.empty": "node ./db/scripts/index.js empty",
-    "psql.populate": "node ./db/scripts/index.js populate",
-    "psql.migrate": "node ./db/scripts/index.js migrate",
-    "psql.refresh": "node ./db/scripts/index.js refresh",
-    "reporting": "node ./reporting/index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TwinePlatform/twine-visitor.git"
-  },
-  "engines": {
-    "node": "10.x",
-    "npm": "6.0.x"
+    "cover": "npm test -- --coverage",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "serve": "node index.js",
+    "heroku-postbuild": "npm run build"
   },
   "contributors": [
     "James Inglis <jinglis12@gmail.com>",
@@ -44,45 +58,10 @@
     "Aisha Nasir <aisha@foundersandcoders.com>",
     "Elias Malik <elias@foundersandcoders.com>"
   ],
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/TwinePlatform/twine-visitor/issues"
-  },
-  "homepage": "https://github.com/TwinePlatform/twine-visitor#readme",
-  "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.7.0",
-    "nock": "^9.2.5",
-    "nodemon": "^1.17.5",
-    "nyc": "^11.7.1",
-    "supertest": "^3.0.0",
-    "tap-spec": "^5.0.0",
-    "tape": "^4.9.0"
-  },
-  "dependencies": {
-    "axios": "^0.18.0",
-    "babel-eslint": "^8.2.3",
-    "bcrypt": "^2.0.1",
-    "body-parser": "^1.17.2",
-    "boom": "^7.2.0",
-    "chalk": "^2.4.1",
-    "cookie-parser": "^1.4.3",
-    "env2": "^2.2.0",
-    "express": "^4.16.3",
-    "express-sslify": "^1.2.0",
-    "joi": "^13.2.0",
-    "jsonwebtoken": "^8.3.0",
-    "moment": "^2.22.1",
-    "morgan": "^1.9.0",
-    "pdfmake": "^0.1.36",
-    "pg": "^7.4.1",
-    "postmark": "^1.6.1",
-    "qrcode": "^0.9.0",
-    "ramda": "^0.25.0",
-    "serve-favicon": "^2.4.2",
-    "validator": "^9.4.1"
-  }
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
