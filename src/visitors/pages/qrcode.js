@@ -16,8 +16,6 @@ import QRPrivacy from '../components/qrprivacy';
 import { Activities, Visitors, ErrorUtils, CbAdmin } from '../../api';
 import { Heading, Paragraph, Link as HyperLink } from '../../shared/components/text/base';
 import { FlexContainerRow, FlexContainerCol } from '../../shared/components/layout/base';
-// import { Form, PrimaryButton } from '../../shared/components/form/base';
-// import LabelledInput from '../../shared/components/form/LabelledInput';
 import { redirectOnError } from '../../util';
 
 
@@ -78,23 +76,6 @@ const Video = styled.video`
   background-color: black;
   width: ${props => props.width || '50%'};
 `;
-
-// const CustomForm = styled(Form)`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: flex-start;
-//   width: 100%;
-//   padding: 1.2em;
-// `;
-
-// const Button = styled(PrimaryButton)`
-//   width: 90%;
-//   padding: 1.2em 0;
-// `;
-
-// const Input = styled(LabelledInput)`
-//   width: 90%;
-// `;
 
 const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
 
@@ -253,17 +234,6 @@ export default class QRCode extends Component {
               <QrParagraph>Please scan your QR code to log in</QrParagraph>
               <SignInContainer>
                 <Video ref={this.previewRef} width="100%" />
-                {/* <CustomForm onChange={this.handleFormChange} onSubmit={this.submitVisitorName}>
-                  <div style={{ width: '100%' }}>
-                    <Input
-                      id="visitor-login-name"
-                      name="name"
-                      label="Your name"
-                      error={errors.name}
-                    />
-                  </div>
-                  <Button type="submit">Sign in</Button>
-                </CustomForm> */}
               </SignInContainer>
             </FlexContainerCol>
           </StyledSection>
