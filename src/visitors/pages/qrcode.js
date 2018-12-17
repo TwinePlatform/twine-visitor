@@ -79,6 +79,14 @@ const Video = styled.video`
 
 const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
 
+const instascanAvailable = () => {
+  try {
+    return Boolean(window.Instascan);
+  } catch (error) {
+    return false;
+  }
+};
+
 export default class QRCode extends Component {
   constructor() {
     super();
@@ -102,6 +110,11 @@ export default class QRCode extends Component {
   }
 
   componentDidMount() {
+    if (!instascanAvailable()) {
+      this.props.history.push('/visitor/qrerror?e=no_instascan');
+      return;
+    }
+
     CbAdmin.downgradePermissions()
       .then(() => Activities.get({ day: 'today' }))
       .then((res) => {
