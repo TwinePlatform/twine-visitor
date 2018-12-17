@@ -13,7 +13,7 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PurposeButton from '../components/purposeButton';
 import QRPrivacy from '../components/qrprivacy';
-import { Activities, Visitors, ErrorUtils, CbAdmin } from '../../api';
+import { Activities, Visitors, CbAdmin } from '../../api';
 import { Heading, Paragraph, Link as HyperLink } from '../../shared/components/text/base';
 import { FlexContainerRow, FlexContainerCol } from '../../shared/components/layout/base';
 import { redirectOnError } from '../../util';
@@ -107,22 +107,7 @@ export default class QRCode extends Component {
       .then((res) => {
         this.setState({ activities: res.data.result });
       })
-      .catch((error) => {
-        // on first load this redirects to login if bad/no cookie is present
-
-        if (ErrorUtils.errorStatusEquals(error, 401) || ErrorUtils.errorStatusEquals(error, 403)) {
-          this.props.history.push('/cb/login');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
-
-        } else {
-          this.props.history.push('/error/unknown');
-        }
-      });
+      .catch(error => redirectOnError(this.props.history.push, error));
 
     this.scanner = this.scanner || new Instascan.Scanner({ video: this.previewDiv, scanPeriod: 5 });
 
