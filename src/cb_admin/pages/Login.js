@@ -49,6 +49,9 @@ export default class Login extends React.Component {
         } else if (ErrorUtils.errorStatusEquals(err, 401)) {
           this.setState({ errors: { email: err.response.data.error.message } });
 
+        } else if (ErrorUtils.errorStatusEquals(err, 403)) {
+          this.setState({ errors: { email: err.response.data.error.message } });
+
         } else {
           redirectOnError(this.props.history.push, err);
         }
