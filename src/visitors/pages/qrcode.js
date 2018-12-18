@@ -13,11 +13,9 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PurposeButton from '../components/purposeButton';
 import QRPrivacy from '../components/qrprivacy';
-import { Activities, Visitors, ErrorUtils, CbAdmin } from '../../api';
+import { Activities, Visitors, CbAdmin } from '../../api';
 import { Heading, Paragraph, Link as HyperLink } from '../../shared/components/text/base';
 import { FlexContainerRow, FlexContainerCol } from '../../shared/components/layout/base';
-// import { Form, PrimaryButton } from '../../shared/components/form/base';
-// import LabelledInput from '../../shared/components/form/LabelledInput';
 import { redirectOnError } from '../../util';
 
 
@@ -79,24 +77,15 @@ const Video = styled.video`
   width: ${props => props.width || '50%'};
 `;
 
-// const CustomForm = styled(Form)`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: flex-start;
-//   width: 100%;
-//   padding: 1.2em;
-// `;
-
-// const Button = styled(PrimaryButton)`
-//   width: 90%;
-//   padding: 1.2em 0;
-// `;
-
-// const Input = styled(LabelledInput)`
-//   width: 90%;
-// `;
-
 const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
+
+const instascanAvailable = () => {
+  try {
+    return Boolean(window.Instascan);
+  } catch (error) {
+    return false;
+  }
+};
 
 export default class QRCode extends Component {
   constructor() {
@@ -121,27 +110,17 @@ export default class QRCode extends Component {
   }
 
   componentDidMount() {
+    if (!instascanAvailable()) {
+      this.props.history.push('/visitor/qrerror?e=no_instascan');
+      return;
+    }
+
     CbAdmin.downgradePermissions()
       .then(() => Activities.get({ day: 'today' }))
       .then((res) => {
         this.setState({ activities: res.data.result });
       })
-      .catch((error) => {
-        // on first load this redirects to login if bad/no cookie is present
-
-        if (ErrorUtils.errorStatusEquals(error, 401) || ErrorUtils.errorStatusEquals(error, 403)) {
-          this.props.history.push('/cb/login');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-
-        } else if (ErrorUtils.errorStatusEquals(error, 404)) {
-          this.props.history.push('/error/404');
-
-        } else {
-          this.props.history.push('/error/unknown');
-        }
-      });
+      .catch(error => redirectOnError(this.props.history.push, error));
 
     this.scanner = this.scanner || new Instascan.Scanner({ video: this.previewDiv, scanPeriod: 5 });
 
@@ -253,17 +232,6 @@ export default class QRCode extends Component {
               <QrParagraph>Please scan your QR code to log in</QrParagraph>
               <SignInContainer>
                 <Video ref={this.previewRef} width="100%" />
-                {/* <CustomForm onChange={this.handleFormChange} onSubmit={this.submitVisitorName}>
-                  <div style={{ width: '100%' }}>
-                    <Input
-                      id="visitor-login-name"
-                      name="name"
-                      label="Your name"
-                      error={errors.name}
-                    />
-                  </div>
-                  <Button type="submit">Sign in</Button>
-                </CustomForm> */}
               </SignInContainer>
             </FlexContainerCol>
           </StyledSection>
