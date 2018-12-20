@@ -6,7 +6,7 @@ import { rgba } from 'polished';
 import { colors, fonts } from '../../style_guide';
 
 export const Input = styled.input`
-  width: 90%;
+  width: 100%;
   padding: 0.7em;
   border: 0.1em solid ${colors.light};
   border-radius: 0.15em;
@@ -36,7 +36,7 @@ export const Select = styled.select`
 `;
 
 export const SelectWrapper = styled.div`
-  width: 90%;
+  width: 100%;
   margin-bottom: 1em;
   padding: 0.7em;
   border: 0.1em solid ${colors.light};
