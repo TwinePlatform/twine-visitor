@@ -7,7 +7,7 @@ import { SecondaryButton } from '../components/form/base';
 import { Heading, Link as HyperLink, Heading2 } from '../components/text/base';
 import { FlexContainerCol } from '../components/layout/base';
 import DotButton from '../components/form/DottedButton';
-import { logout, CommunityBusiness, CbAdmin } from '../../api';
+import { CommunityBusiness, CbAdmin } from '../../api';
 import { redirectOnError } from '../../util';
 import { colors } from '../style_guide';
 
@@ -84,7 +84,7 @@ export default class Home extends Component {
         <FlexContainerCol justify="space-around">
           <Nav>
             <FlexItem>
-              <HyperLink to="/cb/login" onClick={() => logout()}> Logout </HyperLink>
+              <HyperLink to="/cb/login" onClick={() => CbAdmin.logout()}> Logout </HyperLink>
             </FlexItem>
             <FlexItem flex="2">
               <Heading> Welcome to {this.state.cbName} </Heading>
