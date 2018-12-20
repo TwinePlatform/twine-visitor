@@ -1,4 +1,4 @@
-import { toCancellable, pairs, ageOptsToParams } from '../util';
+import { toCancellable, pairs } from '../util';
 
 
 describe('Client utility functions', () => {
@@ -59,26 +59,6 @@ describe('Client utility functions', () => {
         expect(q.isCancelled).toBe(true);
         done();
       }, 10);
-    });
-  });
-
-  describe('ageOptsToParams', () => {
-    test('Empty string', () => {
-      expect(ageOptsToParams('')).toEqual(undefined);
-    });
-
-    test('Upper and lower bound', () => {
-      expect(ageOptsToParams('21-45')).toEqual([21, 45]);
-    });
-    test('Lower bound only', () => {
-      expect(ageOptsToParams('-30')).toEqual(undefined);
-    });
-
-    test('Upper bound only', () => {
-      expect(ageOptsToParams('35+')).toEqual([35, 999]);
-    });
-    test('Invalid string', () => {
-      expect(ageOptsToParams('boo')).toEqual(undefined);
     });
   });
 
