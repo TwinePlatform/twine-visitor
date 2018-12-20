@@ -13,7 +13,8 @@ import { colors, fonts } from '../../shared/style_guide';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
 import { Visitors, ErrorUtils } from '../../api';
-import { renameKeys, ageOptsToParams } from '../../util';
+import { renameKeys } from '../../util';
+import { AgeRange } from '../../shared/constants';
 
 const Nav = styled.nav`
   display: flex;
@@ -120,7 +121,7 @@ export default class VisitorDetailsPage extends React.Component {
 
   onChange = (e) => {
     const value = e.target.name === 'ageFilter'
-      ? ageOptsToParams(e.target.value)
+      ? AgeRange.fromStr(e.target.value)
       : e.target.value;
     this.setState({ [e.target.name]: value }, this.update);
   };

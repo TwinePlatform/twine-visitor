@@ -10,17 +10,8 @@ import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { renameKeys, redirectOnError } from '../../util';
+import { BirthYear } from '../../shared/constants';
 
-
-const generateYearsArray = (startYear, currentYear) =>
-  Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
-
-const years = [{ key: '', value: '' }].concat(
-  generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear()).map(y => ({
-    key: String(y),
-    value: String(y),
-  })),
-);
 
 const ButtonsFlexContainerCol = styled(FlexContainerCol)`
   padding-top: 10%;
@@ -243,7 +234,7 @@ export default class Main extends Component {
             <SignupForm
               handleChange={this.handleChange}
               errors={errors}
-              years={years}
+              years={BirthYear.defaultOptionsList()}
               createVisitor={this.createVisitor}
               cbOrgName={cbOrgName}
               uuid={formAutocompleteUUID}

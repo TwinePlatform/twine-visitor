@@ -102,22 +102,6 @@ export const redirectOnError = (historyPush, error, custom = {}) => {
   }
 };
 
-// ageOptsToParams :: Converts strings representing age bounds to 2-tuple of numeric ages
-// ageOptsToParams :: String -> [Number, Number] | undefined
-export const ageOptsToParams = (str) => {
-  if (!/^\d/.test(str)) {
-    return undefined;
-  }
-
-  const x = str
-    .split(/[-+]/)
-    .map(d => parseInt(d, 10))
-    .filter(d => !isNaN(d))
-    .concat(999)
-    .slice(0, 2);
-
-  return x.length === 2 ? x : undefined;
-};
 
 // pairs :: Groups elements of array into pairs
 // pairs :: [a] -> [[a]]

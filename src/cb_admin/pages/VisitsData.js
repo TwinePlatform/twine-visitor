@@ -14,7 +14,8 @@ import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
 import { ErrorUtils, CommunityBusiness, Visitors, Activities } from '../../api';
-import { renameKeys, redirectOnError, ageOptsToParams } from '../../util';
+import { renameKeys, redirectOnError } from '../../util';
+import { AgeRange } from '../../shared/constants';
 
 const repeat = (xs, n) => (xs.length >= n ? xs.slice(0, n) : repeat(xs.concat(xs), n));
 
@@ -126,7 +127,7 @@ export default class VisitsDataPage extends React.Component {
 
   onChange = (e) => {
     const value = e.target.name === 'ageFilter'
-      ? ageOptsToParams(e.target.value)
+      ? AgeRange.fromStr(e.target.value)
       : e.target.value;
     this.setState({ [e.target.name]: value }, this.getData);
   };
