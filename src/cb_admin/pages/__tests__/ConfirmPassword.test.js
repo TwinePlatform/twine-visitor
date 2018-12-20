@@ -51,7 +51,7 @@ describe('ConfirmPassword Component', () => {
     fireEvent.click(submit);
 
     await wait(() => history.length === 2);
-    expect(history.location.pathname).toEqual('/admin');
+    expect(history.location.pathname).toEqual('/cb/dashboard');
   });
 
 });

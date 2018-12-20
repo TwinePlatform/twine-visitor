@@ -37,7 +37,7 @@ describe('Visitor Home Page', () => {
     fireEvent.click(posBtn);
 
     await wait(() => {
-      expect(tools.history.location.pathname).toBe('/thankyou');
+      expect(tools.history.location.pathname).toBe('/visitor/thankyou');
     });
   });
 
@@ -59,7 +59,7 @@ describe('Visitor Home Page', () => {
     fireEvent.click(neuBtn);
 
     await wait(() => {
-      expect(tools.history.location.pathname).toBe('/thankyou');
+      expect(tools.history.location.pathname).toBe('/visitor/thankyou');
     });
   });
 
@@ -81,7 +81,7 @@ describe('Visitor Home Page', () => {
     fireEvent.click(negBtn);
 
     await wait(() => {
-      expect(tools.history.location.pathname).toBe('/thankyou');
+      expect(tools.history.location.pathname).toBe('/visitor/thankyou');
     });
   });
 
