@@ -12,7 +12,8 @@ const Button = styled(PrimaryButton)`
 `;
 
 const ErrorText = {
-  no_user: 'Your QR code does not correspond to a user at this organisation',
+  no_user_qr: 'Your QR code does not correspond to a registered visitor at this organisation',
+  no_user: 'Your details do not correspond to a registered visitor at this organisation',
   no_instascan: 'There was an application error',
   default: null,
 };
@@ -24,7 +25,7 @@ const ContinueOptions = {
         <Button>Register as a new user</Button>
       </Link>
       <Link to="/visitor/login">
-        <Button>Try to scan QR code again</Button>
+        <Button>Try to sign in code again</Button>
       </Link>
     </>
   ),
@@ -40,7 +41,7 @@ const QrError = (props) => {
   const query = qs.parse(props.history.location.search.slice(1) || '');
 
   return (
-    <div className="row">
+    <div>
       <section>
         <h1>{props.headerContent}</h1>
         <h2>{ErrorText[query.e || 'default']}</h2>
@@ -63,7 +64,7 @@ QrError.propTypes = {
 };
 
 QrError.defaultProps = {
-  headerContent: 'We’re sorry, there was a problem scanning your code',
+  headerContent: 'We’re sorry, there was a problem registering your visit:',
   subHeaderContent: 'Please choose one of these options or go to Reception for help',
 };
 
