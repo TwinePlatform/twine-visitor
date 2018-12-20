@@ -5,7 +5,7 @@ import 'react-dates/initialize';
 import { DateRangePicker, isInclusivelyBeforeDay } from 'react-dates';
 import moment from 'moment';
 import styled from 'styled-components';
-import { CommunityBusiness, logout } from '../../api';
+import { CommunityBusiness, CbAdmin } from '../../api';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { Heading, Link, Paragraph } from '../../shared/components/text/base';
 import { colors } from '../../shared/style_guide';
@@ -136,7 +136,7 @@ export default class Feedback extends Component {
             Back to dashboard
           </Link>
           <Heading>Visitor Satisfaction</Heading>
-          <Link to="/cb/login" onClick={() => logout()}>
+          <Link to="/cb/login" onClick={() => CbAdmin.logout()}>
             Logout
           </Link>
         </StyledNav>

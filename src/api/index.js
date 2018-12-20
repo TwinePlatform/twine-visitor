@@ -172,6 +172,3 @@ export const ErrorUtils = {
   errorStatusEquals: (error, status) => equals(ErrorUtils.getErrorStatus(error), status),
 };
 
-export const logout = () =>
-  axios.get('/users/logout')
-  ;
