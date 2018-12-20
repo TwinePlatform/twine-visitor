@@ -6,7 +6,7 @@ import {
 } from 'react-testing-library';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import renderWithRouter from '../../../tests';
+import { renderWithRouter } from '../../../tests';
 import Signup from '../Signup';
 
 

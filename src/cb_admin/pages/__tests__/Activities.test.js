@@ -8,7 +8,7 @@ import MockAdapter from 'axios-mock-adapter';
 import 'jest-dom/extend-expect';
 import { axios } from '../../../api';
 
-import renderWithRouter from '../../../tests';
+import { renderWithRouter } from '../../../tests';
 import Activities from '../Activities';
 
 
@@ -109,8 +109,7 @@ describe('Activities Component', () => {
 
   test('page load :: correct response renders rows for each activity', async () => {
     expect.assertions(3);
-    const { getByText } =
-          renderWithRouter()(Activities);
+    const { getByText } = renderWithRouter()(Activities);
     const [french, yoga, skating] = await waitForElement(() => [
       getByText('French Lessons'),
       getByText('Yoga'),
