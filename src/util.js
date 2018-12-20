@@ -102,8 +102,13 @@ export const redirectOnError = (historyPush, error, custom = {}) => {
   }
 };
 
-
+// ageOptsToParams :: Converts strings representing age bounds to 2-tuple of numeric ages
+// ageOptsToParams :: String -> [Number, Number] | undefined
 export const ageOptsToParams = (str) => {
+  if (!/^\d/.test(str)) {
+    return undefined;
+  }
+
   const x = str
     .split(/[-+]/)
     .map(d => parseInt(d, 10))
@@ -113,3 +118,12 @@ export const ageOptsToParams = (str) => {
 
   return x.length === 2 ? x : undefined;
 };
+
+// pairs :: Groups elements of array into pairs
+// pairs :: [a] -> [[a]]
+export const pairs = xs =>
+  xs.reduce((acc, x, i) => // eslint-disable-line no-confusing-arrow
+    (i % 2 === 0)
+      ? acc.concat([xs.slice(i, i + 2)])
+      : acc
+  , []);
