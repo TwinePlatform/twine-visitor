@@ -14,18 +14,6 @@ The general principle is to arrange the application in a kind of hub-and-spoke s
 |- docs         Documentation
 |- public       Public assets
 |- src          Client app
-|- ...dotfiles
-|- package.json
-|- README.md
-```
-
-### Client
-```
-./src
-|- assets             Raw assets (img, external or pre-compiled js/css, etc.)
-|- dist               Built assets will be stored and served from here
-|- css                Styling source files
-|- src
 |  |- api             Interface with the Twine HTTP API
 |  |- cb_admin        All code specific to the cb-admin UI
 |  |  |- components
@@ -46,6 +34,9 @@ The general principle is to arrange the application in a kind of hub-and-spoke s
 |  |  |- index.js     Defines public interface of `cb_admin` module
 |  |- App.js
 |  |- index.js
+|- ...dotfiles
+|- package.json
+|- README.md
 ```
 
 ### Tests
