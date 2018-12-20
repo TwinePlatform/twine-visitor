@@ -102,7 +102,7 @@ export default class ActivitiesPage extends React.Component {
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
+          this.props.history.push('/cb/confirm');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
         } else {
@@ -124,7 +124,7 @@ export default class ActivitiesPage extends React.Component {
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
+          this.props.history.push('/cb/confirm');
         } else {
           this.setState({ errors: { general: 'Could not update activity', view: true } });
         }
@@ -156,7 +156,7 @@ export default class ActivitiesPage extends React.Component {
       )
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
+          this.props.history.push('/cb/confirm');
         } else if (ErrorUtils.errorStatusEquals(error, 409)) {
           this.setState({ errors: { general: 'Activity already exists', view: true } });
         } else {
@@ -178,7 +178,7 @@ export default class ActivitiesPage extends React.Component {
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
+          this.props.history.push('/cb/confirm');
         } else {
           this.setState({ errors: { general: 'Could not delete activity' }, view: true });
         }
@@ -192,7 +192,7 @@ export default class ActivitiesPage extends React.Component {
       <FlexContainerCol expand>
         <Nav>
           <FlexItem>
-            <HyperLink to="/admin"> Back to dashboard </HyperLink>
+            <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
           </FlexItem>
           <Heading flex={2}>Activities List</Heading>
           <FlexItem />

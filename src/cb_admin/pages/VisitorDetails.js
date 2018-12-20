@@ -110,7 +110,7 @@ export default class VisitorDetailsPage extends React.Component {
       }))
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
+          this.props.history.push('/cb/confirm');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
         } else {
@@ -187,7 +187,7 @@ export default class VisitorDetailsPage extends React.Component {
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
+          this.props.history.push('/cb/confirm');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
         } else {
@@ -218,7 +218,7 @@ export default class VisitorDetailsPage extends React.Component {
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
+          this.props.history.push('/cb/confirm');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
         } else {
@@ -233,7 +233,7 @@ export default class VisitorDetailsPage extends React.Component {
     return (
       <FlexContainerCol expand>
         <Nav>
-          <HyperLink to="/admin"> Back to dashboard </HyperLink>
+          <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
           <Heading flex={2}>Visitor details</Heading>
           <FlexItem />
         </Nav>

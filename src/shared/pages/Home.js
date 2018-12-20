@@ -96,7 +96,7 @@ export default class Home extends Component {
             <FlexLink to="/visitor">
               <ButtonLeft> Visitor </ButtonLeft>
             </FlexLink>
-            <FlexLink to="/admin/login">
+            <FlexLink to="/cb/confirm">
               <ButtonRight> Admin </ButtonRight>
             </FlexLink>
           </StyledSection>
