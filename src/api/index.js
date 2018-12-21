@@ -5,7 +5,9 @@ import _axios, { create } from 'axios';
 import { pathOr, equals, compose } from 'ramda';
 import qs from 'qs';
 
-const baseURL = `${process.env.REACT_APP_API_HOST_DOMAIN}/v1`;
+const baseURL = process.env.REACT_APP_API_HOST_DOMAIN ?
+  `${process.env.REACT_APP_API_HOST_DOMAIN}/v1`
+  : '/v1';
 
 export const axios = create({
   baseURL,
