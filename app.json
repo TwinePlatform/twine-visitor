@@ -1,11 +1,6 @@
 {
   "name": "twine-visitor",
   "scripts": {},
-  "env": {
-    "REACT_APP_API_HOST_DOMAIN": {
-      "required": true
-    }
-  },
   "formation": {
     "web": {
       "quantity": 1

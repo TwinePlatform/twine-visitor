@@ -41,7 +41,7 @@ app.use(compression());
 // Serve static files in "build" directory
 app.use(express.static(path.join(__dirname, 'build')));
 
-// All unmatched GET requests should serve "index.html"
+// All unmatched GET requests should serve "index.html" for refeshing on nested routes
 app.use((_, res) => res.sendFile(path.resolve(__dirname, 'build', 'index.html')));
 
 // Start server
