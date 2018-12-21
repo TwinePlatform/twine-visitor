@@ -106,6 +106,8 @@ export default class Main extends Component {
       organisationId: null,
       cbLogoUrl: '',
       formAutocompleteUUID: '', // See header comment in visitors/components/signup_form
+      hasGivenAge: true, // defaults to true to avoid showing age checkbox
+      ageCheck: false,
     };
   }
 
@@ -151,10 +153,18 @@ export default class Main extends Component {
         this.setState({ [name]: e.target.value });
         break;
     }
+
+    if (name === 'year') {
+      this.setState({ hasGivenAge: e.target.value !== 'prefer not to say' });
+    }
   };
 
-  createVisitor = (e) => {
+  createVisitor = (e) => { //eslint-disable-line
     e.preventDefault();
+
+    if (!this.state.hasGivenAge && !this.state.ageCheck) {
+      return this.setState({ errors: { ageCheck: 'You must be over 13 to register' } });
+    }
 
     Visitors.create({
       name: this.state.fullname,
@@ -239,6 +249,7 @@ export default class Main extends Component {
               cbOrgName={cbOrgName}
               uuid={formAutocompleteUUID}
               genders={genders}
+              hasGivenAge={this.state.hasGivenAge}
             />
           </Route>
 
