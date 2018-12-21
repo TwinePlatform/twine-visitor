@@ -22,12 +22,6 @@ import NavHeader from '../../shared/components/NavHeader';
 import { redirectOnError } from '../../util';
 
 
-const StyledNav = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 const StyledSection = styled.section`
   margin: ${props => props.margin}rem 0;
   display: flex;
