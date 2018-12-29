@@ -25,7 +25,7 @@ const ContinueOptions = {
         <Button>Register as a new user</Button>
       </Link>
       <Link to="/visitor/login">
-        <Button>Try to sign in code again</Button>
+        <Button>Try to sign in again</Button>
       </Link>
     </>
   ),
