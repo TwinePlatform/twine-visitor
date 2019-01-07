@@ -41,7 +41,7 @@ describe('Constants', () => {
     });
 
     test('toAge | non-null', () => {
-      expect(BirthYear.toAge(1985)).toBe(33);
+      expect(BirthYear.toAge(1985)).toBe(new Date().getFullYear() - 1985);
     });
 
     test('toAge | null', () => {

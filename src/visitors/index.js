@@ -5,7 +5,7 @@ import Signup from './pages/Signup';
 import Thanks from './pages/thanks';
 import ThanksFeedback from './pages/thank_you_feedback';
 import QrError from './pages/qrerror';
-import Login from './pages/Login';
+import Login from './pages/qrcode';
 import redirectAfterTimeout from '../shared/components/hoc/redirect_after_timeout';
 
 
