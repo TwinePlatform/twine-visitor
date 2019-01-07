@@ -204,7 +204,7 @@ export default class VisitorProfile extends React.Component {
     return (
       <Col>
         <Nav>
-          <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
+          <HyperLink to="/admin"> Back to dashboard </HyperLink>
           <Heading flex={2}>Visitor profile</Heading>
           <FlexItem />
         </Nav>

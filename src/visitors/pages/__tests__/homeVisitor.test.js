@@ -6,7 +6,7 @@ import {
 } from 'react-testing-library';
 import MockAdapter from 'axios-mock-adapter';
 import { axios } from '../../../api';
-import { renderWithRouter } from '../../../tests';
+import renderWithRouter from '../../../tests';
 import homeVisitor from '../homeVisitor';
 
 
@@ -37,7 +37,7 @@ describe('Visitor Home Page', () => {
     fireEvent.click(posBtn);
 
     await wait(() => {
-      expect(tools.history.location.pathname).toBe('/visitor/thankyou');
+      expect(tools.history.location.pathname).toBe('/thankyou');
     });
   });
 
@@ -59,7 +59,7 @@ describe('Visitor Home Page', () => {
     fireEvent.click(neuBtn);
 
     await wait(() => {
-      expect(tools.history.location.pathname).toBe('/visitor/thankyou');
+      expect(tools.history.location.pathname).toBe('/thankyou');
     });
   });
 
@@ -81,7 +81,7 @@ describe('Visitor Home Page', () => {
     fireEvent.click(negBtn);
 
     await wait(() => {
-      expect(tools.history.location.pathname).toBe('/visitor/thankyou');
+      expect(tools.history.location.pathname).toBe('/thankyou');
     });
   });
 

@@ -269,7 +269,7 @@ export default class SettingsPage extends React.Component {
     return (
       <FlexContainerCol>
         <Nav>
-          <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
+          <HyperLink to="/admin"> Back to dashboard </HyperLink>
           <Heading flex={2}>{rest.name}</Heading>
           <FlexItem />
         </Nav>

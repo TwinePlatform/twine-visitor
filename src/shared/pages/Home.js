@@ -93,10 +93,10 @@ export default class Home extends Component {
             <FlexItem />
           </Nav>
           <StyledSection>
-            <FlexLink to="/visitor/home">
+            <FlexLink to="/visitor">
               <ButtonLeft> Visitor </ButtonLeft>
             </FlexLink>
-            <FlexLink to="/cb/confirm">
+            <FlexLink to="/admin/login">
               <ButtonRight> Admin </ButtonRight>
             </FlexLink>
           </StyledSection>

@@ -35,7 +35,7 @@ export default class ConfirmPassword extends React.Component {
 
     CbAdmin.upgradePermissions({ password: this.state.password })
       .then(() => {
-        this.props.history.push('/cb/dashboard');
+        this.props.history.push('/admin');
       })
       .catch(() => {
         this.setState({ errors: { password: 'Wrong password' } });
