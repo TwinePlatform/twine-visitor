@@ -13,16 +13,12 @@ const ErrorText = styled.span`
   display: ${props => (props.show ? 'inline' : 'none')};
 `;
 
-const InputContainer = styled.div`
-  width: 100%;
-`;
-
 
 const LabelledInput = (props) => {
   const { id, label, error, ...rest } = props;
 
   return (
-    <InputContainer>
+    <div>
       <div>
         <Label htmlFor={id} display="inline">
           {[
@@ -33,7 +29,7 @@ const LabelledInput = (props) => {
         <ErrorText key={1} show={error}>{error}</ErrorText>
       </div>
       <Input id={id} {...rest} />
-    </InputContainer>
+    </div>
   );
 };
 

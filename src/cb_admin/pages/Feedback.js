@@ -113,7 +113,7 @@ export default class Feedback extends Component {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          this.props.history.push('/cb/confirm');
+          this.props.history.push('/admin/login');
         } else {
           this.setState({ error: 'Sorry there has been an error with your request' });
         }
@@ -132,7 +132,7 @@ export default class Feedback extends Component {
     return (
       <div>
         <StyledNav>
-          <Link to="/cb/dashboard" onClick={this.removeAdmin}>
+          <Link to="/admin" onClick={this.removeAdmin}>
             Back to dashboard
           </Link>
           <Heading>Visitor Satisfaction</Heading>

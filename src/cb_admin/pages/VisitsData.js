@@ -241,7 +241,7 @@ export default class VisitsDataPage extends React.Component {
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/cb/confirm');
+          this.props.history.push('/admin/login');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
         } else {
@@ -286,7 +286,7 @@ export default class VisitsDataPage extends React.Component {
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/cb/confirm');
+          this.props.history.push('/admin/login');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
         } else {
@@ -300,7 +300,7 @@ export default class VisitsDataPage extends React.Component {
     return (
       <FlexContainerCol expand>
         <Nav>
-          <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
+          <HyperLink to="/admin"> Back to dashboard </HyperLink>
           <Heading flex={2}>Visits data</Heading>
           <FlexItem />
         </Nav>

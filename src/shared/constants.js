@@ -24,10 +24,9 @@ export const BirthYear = {
 
   // defaultOptionsList :: () -> [{ key: string, value: string }]
   defaultOptionsList: () =>
-    BirthYear.listToOptions([
-      BirthYear.toDisplay(null),
-      ...BirthYear.list(new Date().getFullYear() - 113, new Date().getFullYear()),
-    ]),
+    BirthYear.listToOptions(
+      BirthYear.list(new Date().getFullYear() - 113, new Date().getFullYear()),
+    ),
 
   // toAge :: Number | null -> Number | null
   toAge: year =>

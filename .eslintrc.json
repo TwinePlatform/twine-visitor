@@ -8,7 +8,6 @@
   },
   "rules": {
     "padded-blocks": "off",
-    "no-confusing-arrow": "off",
     "react/jsx-filename-extension": 0,
     "jsx-a11y/media-has-caption": 0
   }

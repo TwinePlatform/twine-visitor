@@ -6,10 +6,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Select, SelectWrapper, Option, Label } from './base';
 
-const LabelledSelectContainer = styled.div`
-  width: 100%;
-`;
-
 const LabelledSelect = (props) => {
   const { id, label, options, ...rest } = props;
 
@@ -24,7 +20,7 @@ const LabelledSelect = (props) => {
   `;
 
   return (
-    <LabelledSelectContainer>
+    <div>
       <Label htmlFor={id}>{label}</Label>
       <SelectWrapper>
         <Select id={id} {...rest}>
@@ -36,7 +32,7 @@ const LabelledSelect = (props) => {
         </Select>
         <SelectArrow />
       </SelectWrapper>
-    </LabelledSelectContainer>
+    </div>
   );
 };
 
