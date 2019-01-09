@@ -358,11 +358,11 @@ export default class VisitsDataPage extends React.Component {
             />
           </FlexItem>
           <FlexItem>
-            <Paragraph>Visitors by gender</Paragraph>
+            <Paragraph>Visits by gender</Paragraph>
             <Pie data={this.state.genderNumbers} />
           </FlexItem>
           <FlexItem>
-            <Paragraph>Visitors by age</Paragraph>
+            <Paragraph>Visits by age</Paragraph>
             <Pie data={this.state.ageGroups} />
           </FlexItem>
           <FlexItem>
