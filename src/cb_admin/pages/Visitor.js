@@ -10,7 +10,7 @@ import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import DetailsTable from '../components/DetailsTable';
 import QrBox from '../components/QrBox';
-import { CommunityBusiness, Visitors } from '../../api';
+import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
 import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 import { renameKeys, redirectOnError } from '../../util';
 
@@ -94,6 +94,11 @@ const payloadFromState = compose(
   prop('form'),
 );
 
+const resendQrCodeState = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
+};
 export default class VisitorProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -108,7 +113,7 @@ export default class VisitorProfile extends React.Component {
       registeredAt: null,
       qrCodeUrl: '',
       isPrinting: false,
-      hasResent: false,
+      resendQrCodeState: null,
       cbOrgName: '',
       cbLogoUrl: '',
       form: {},
@@ -139,9 +144,20 @@ export default class VisitorProfile extends React.Component {
   };
 
   onClickResend = () => {
+    this.setState({ resendQrCodeState: resendQrCodeState.PENDING });
     Visitors.sendQrCode({ id: this.state.id })
-      .then(() => this.setState({ hasResent: true }))
-      .catch(err => redirectOnError(this.props.history.push, err));
+      .then(() => this.setState({ resendQrCodeState: resendQrCodeState.SUCCESS }))
+      .catch((err) => {
+        if (ErrorUtils.errorStatusEquals(err, 400)) {
+          this.setState({
+            resendQrCodeState: resendQrCodeState.ERROR,
+            errors: err.response.data.error,
+          });
+        } else {
+          redirectOnError(this.props.history.push, err);
+        }
+      },
+      );
   };
 
   onChange = e => this.setState(assocPath(['form', e.target.name], e.target.value));
@@ -217,7 +233,8 @@ export default class VisitorProfile extends React.Component {
               qrCodeUrl={rest.qrCodeUrl}
               print={this.onClickPrint}
               send={this.onClickResend}
-              hasSent={rest.hasResent}
+              status={rest.resendQrCodeState}
+              error={errors.message || ''}
             />
           </FlexItem>
         </Row>
