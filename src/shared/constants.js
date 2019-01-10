@@ -17,7 +17,10 @@ export const BirthYear = {
 
   // listToOptions :: (Number) -> [{ key: string, value: string }]
   listToOptions: years =>
-    [{ key: '', value: '' }]
+    [
+      { key: '', value: '' },
+      { key: 'prefer not to say', value: 'prefer not to say' },
+    ]
       .concat(
         years.map(y => ({ key: String(y), value: String(y) })),
       ),
