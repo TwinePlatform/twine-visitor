@@ -92,7 +92,7 @@ export default class ResetPassword extends React.Component {
               required
             />
             <SubmitButton type="submit">SUBMIT</SubmitButton>
-            <ErrorText show={this.state.errors.password === 'is too weak'}>
+            <ErrorText show={(this.state.errors.password || '').includes('is too weak')}>
               <li>Use at least 8 characters</li>
               <li>Use uppercase and lowercase characters</li>
               <li>Use 1 or more numbers</li>
