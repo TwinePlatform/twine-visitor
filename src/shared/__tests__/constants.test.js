@@ -27,6 +27,7 @@ describe('Constants', () => {
       expect(BirthYear.listToOptions([]))
         .toEqual([
           { key: '', value: '' },
+          { key: 'Prefer not to say', value: 'Prefer not to say' },
         ]);
     });
 
@@ -34,6 +35,7 @@ describe('Constants', () => {
       expect(BirthYear.listToOptions([1985, 1988, 1933]))
         .toEqual([
           { key: '', value: '' },
+          { key: 'Prefer not to say', value: 'Prefer not to say' },
           { key: '1985', value: '1985' },
           { key: '1988', value: '1988' },
           { key: '1933', value: '1933' },

@@ -13,16 +13,7 @@ import QrBox from '../components/QrBox';
 import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
 import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 import { renameKeys, redirectOnError } from '../../util';
-
-const generateYearsArray = (startYear, currentYear) =>
-  Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
-
-const years = [{ key: -1, value: '' }].concat(
-  generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear()).map(y => ({
-    key: y.toString(),
-    value: y.toString(),
-  })),
-);
+import { BirthYear } from '../../shared/constants';
 
 const Nav = styled.nav`
   display: flex;
@@ -265,7 +256,7 @@ export default class VisitorProfile extends React.Component {
                 id="visitor-birthYear"
                 label="Year of birth"
                 name="birthYear"
-                options={years}
+                options={BirthYear.defaultOptionsList()}
                 value={rest.form.birthYear || rest.birthYear}
                 error={errors.birthYear}
               />
