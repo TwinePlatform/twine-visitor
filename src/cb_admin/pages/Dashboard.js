@@ -5,7 +5,7 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 import { SecondaryButton } from '../../shared/components/form/base';
 import DotButton from '../../shared/components/form/DottedButton';
 import { Heading, Link as StyledLink } from '../../shared/components/text/base';
-import { CommunityBusiness, CbAdmin } from '../../api';
+import { CommunityBusiness } from '../../api';
 import { redirectOnError } from '../../util';
 
 
@@ -60,7 +60,7 @@ export default class Dashboard extends React.Component {
       <FlexContainerCol>
         <Nav>
           <FlexItem>
-            <StyledLink to="/cb/login" onClick={() => CbAdmin.logout()}>Logout</StyledLink>
+            <StyledLink to="/">Back home</StyledLink>
           </FlexItem>
           <FlexItem flex="2">
             <Heading>Welcome admin! Where do you want to go?</Heading>
