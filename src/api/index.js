@@ -14,7 +14,6 @@ export const axios = create({
   baseURL,
   withCredentials: true,
   paramsSerializer: params => qs.stringify(params, { encode: false }),
-  headers: { 'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json' },
   transformRequest: [data => evolve({ birthYear: BirthYear.fromDisplay }, data)]
     .concat(_axios.defaults.transformRequest),
   transformResponse: _axios.defaults.transformResponse.concat(data =>
