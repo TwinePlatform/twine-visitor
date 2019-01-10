@@ -2,8 +2,9 @@
  * Twine API interface
  */
 import _axios, { create } from 'axios';
-import { pathOr, equals, compose } from 'ramda';
+import { pathOr, equals, compose, evolve, map, assocPath } from 'ramda';
 import qs from 'qs';
+import { BirthYear } from '../shared/constants';
 
 const baseURL = process.env.REACT_APP_API_HOST_DOMAIN ?
   `${process.env.REACT_APP_API_HOST_DOMAIN}/v1`
@@ -13,6 +14,15 @@ export const axios = create({
   baseURL,
   withCredentials: true,
   paramsSerializer: params => qs.stringify(params, { encode: false }),
+  headers: { 'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json' },
+  transformRequest: [data => evolve({ birthYear: BirthYear.fromDisplay }, data)]
+    .concat(_axios.defaults.transformRequest),
+  transformResponse: _axios.defaults.transformResponse.concat(data =>
+    data.result === null //eslint-disable-line
+      ? assocPath(['result'], null, data)
+      : Array.isArray(data.result)
+        ? evolve({ result: map(evolve({ birthYear: BirthYear.toDisplay })) }, data)
+        : evolve({ result: evolve({ birthYear: BirthYear.toDisplay }) }, data)),
 });
 
 export const Activities = {
