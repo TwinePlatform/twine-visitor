@@ -2,7 +2,7 @@
  * Twine API interface
  */
 import _axios, { create } from 'axios';
-import { pathOr, equals, compose, evolve, map, assocPath } from 'ramda';
+import { pathOr, equals, compose, evolve, map } from 'ramda';
 import qs from 'qs';
 import { BirthYear } from '../shared/constants';
 
@@ -14,11 +14,11 @@ export const axios = create({
   baseURL,
   withCredentials: true,
   paramsSerializer: params => qs.stringify(params, { encode: false }),
-  transformRequest: [data => evolve({ birthYear: BirthYear.fromDisplay }, data)]
+  transformRequest: [evolve({ birthYear: BirthYear.fromDisplay })]
     .concat(_axios.defaults.transformRequest),
   transformResponse: _axios.defaults.transformResponse.concat(data =>
     data.result === null //eslint-disable-line
-      ? assocPath(['result'], null, data)
+      ? data
       : Array.isArray(data.result)
         ? evolve({ result: map(evolve({ birthYear: BirthYear.toDisplay })) }, data)
         : evolve({ result: evolve({ birthYear: BirthYear.toDisplay }) }, data)),
