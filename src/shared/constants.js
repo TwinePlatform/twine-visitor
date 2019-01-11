@@ -30,7 +30,7 @@ export const BirthYear = {
   // defaultOptionsList :: () -> [{ key: string, value: string }]
   defaultOptionsList: () =>
     BirthYear.listToOptions(
-      BirthYear.list(new Date().getFullYear() - 113, new Date().getFullYear()),
+      BirthYear.list(new Date().getFullYear() - 113, new Date().getFullYear() - 13),
     ),
 
   // toAge :: Number | null -> Number | null
