@@ -50,7 +50,7 @@ const QrBox = ({ qrCodeUrl, print, send, error, status }) => {
             : 'RESEND QR CODE'
         }
       </Button>
-      {hasError && <ErrorText>{error}</ErrorText>}
+      {hasError && <ErrorText>{error.message}</ErrorText>}
     </Container>
   );
 };
@@ -60,12 +60,17 @@ QrBox.propTypes = {
   qrCodeUrl: PropTypes.string.isRequired,
   print: PropTypes.func.isRequired,
   send: PropTypes.func.isRequired,
-  status: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
+  status: PropTypes.string,
+  error: PropTypes.shape({
+    message: PropTypes.string,
+    statusCode: PropTypes.number,
+    type: PropTypes.string,
+  }),
 };
 
 QrBox.defaultProps = {
-  hasSent: false,
+  error: {},
+  status: null,
 };
 
 

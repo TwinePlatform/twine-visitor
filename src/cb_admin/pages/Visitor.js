@@ -151,7 +151,7 @@ export default class VisitorProfile extends React.Component {
         if (ErrorUtils.errorStatusEquals(err, 400)) {
           this.setState({
             resendQrCodeState: resendQrCodeState.ERROR,
-            errors: err.response.data.error,
+            errors: { ...this.state.errors, resendButton: err.response.data.error },
           });
         } else {
           redirectOnError(this.props.history.push, err);
@@ -171,7 +171,7 @@ export default class VisitorProfile extends React.Component {
         this.updateStateFromApi(res.data.result);
       })
       .catch((error) => {
-        this.setState({ errors: error.response.data.error });
+        this.setState({ errors: { ...this.state.errors, ...error.response.data.error } });
       });
   };
 
@@ -234,7 +234,7 @@ export default class VisitorProfile extends React.Component {
               print={this.onClickPrint}
               send={this.onClickResend}
               status={rest.resendQrCodeState}
-              error={errors.message || ''}
+              error={errors.resendButton}
             />
           </FlexItem>
         </Row>
