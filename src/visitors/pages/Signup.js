@@ -158,7 +158,7 @@ export default class Main extends Component {
     }
 
     if (name === 'year') {
-      this.setState({ hasGivenAge: e.target.value !== BirthYear.nullValue });
+      this.setState({ hasGivenAge: e.target.value !== BirthYear.NULL_VALUE });
     }
   };
 

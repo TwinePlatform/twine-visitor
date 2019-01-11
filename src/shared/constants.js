@@ -11,7 +11,7 @@ import moment from 'moment';
 const capitaliseFirstWord = s => s.replace(/^\w/, str => str.toUpperCase());
 
 export const BirthYear = {
-  nullValue: 'Prefer not to say',
+  NULL_VALUE: 'Prefer not to say',
 
   // list :: (Number, Number, ['desc' | 'asc']) -> [Number]
   list: (start, end, order = 'desc') =>
@@ -21,7 +21,7 @@ export const BirthYear = {
   listToOptions: years =>
     [
       { key: '', value: '' },
-      { key: BirthYear.nullValue, value: BirthYear.nullValue },
+      { key: BirthYear.NULL_VALUE, value: BirthYear.NULL_VALUE },
     ]
       .concat(
         years.map(y => ({ key: String(y), value: String(y) })),
@@ -43,11 +43,11 @@ export const BirthYear = {
 
   // toDisplay :: Number | null -> String
   toDisplay: year =>
-    year === null ? BirthYear.nullValue : year,
+    year === null ? BirthYear.NULL_VALUE : year,
 
   // fromDisplay :: String -> Number | null
   fromDisplay: year =>
-    year === BirthYear.nullValue ? null : year,
+    year === BirthYear.NULL_VALUE ? null : year,
 };
 
 export const AgeRange = {
