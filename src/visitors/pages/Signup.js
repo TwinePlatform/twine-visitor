@@ -226,7 +226,7 @@ export default class Main extends Component {
               <QRimg src={state.qrCode} alt="This is your QRcode" />
             </QRContainer>
             <ButtonsFlexContainerCol>
-              <Link to="/visitor">
+              <Link to="/visitor/home">
                 <SubmitButton>NEXT</SubmitButton>
               </Link>
               <SubmitButton onClick={this.onClickPrint}>PRINT QR CODE</SubmitButton>
