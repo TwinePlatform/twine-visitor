@@ -9,6 +9,7 @@ import { CommunityBusiness } from '../../api';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { Heading, Link, Paragraph } from '../../shared/components/text/base';
 import { colors } from '../../shared/style_guide';
+import { redirectOnError } from '../../util';
 
 const FeedbackPrimaryButton = styled(PrimaryButton) `
   width: auto;
@@ -116,13 +117,7 @@ export default class Feedback extends Component {
           ? this.setState({ feedbackCounts: data.result, error: null })
           : this.setState({ error: 'Sorry, no data was found', feedbackCounts: null });
       })
-      .catch((err) => {
-        if (err.response.status === 401) {
-          this.props.history.push('/cb/confirm');
-        } else {
-          this.setState({ error: 'Sorry there has been an error with your request' });
-        }
-      });
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
   };
 
   handleAllDates = () => {
