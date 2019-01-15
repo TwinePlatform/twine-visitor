@@ -80,7 +80,7 @@ export default class ResetPassword extends React.Component {
               label="New password"
               type="password"
               name="password"
-              error={errors.password}
+              error={(errors.password || '').split(':')[0]} // removes details for password strength
               required
             />
             <LabelledInput
