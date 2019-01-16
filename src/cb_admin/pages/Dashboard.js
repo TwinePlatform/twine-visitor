@@ -51,7 +51,7 @@ export default class Dashboard extends React.Component {
 
   componentDidMount() {
     CommunityBusiness.update() // used to check cookie permissions
-      .then(CommunityBusiness.get({ fields: ['name'] }))
+      .then(() => CommunityBusiness.get({ fields: ['name'] }))
       .then(res => this.setState({ orgName: res.data.result.name }))
       .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
   }

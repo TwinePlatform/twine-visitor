@@ -105,7 +105,7 @@ export default class VisitorDetailsPage extends React.Component {
 
   componentDidMount() {
     CommunityBusiness.update() // used to check cookie permissions
-      .then(Visitors.genders())
+      .then(Visitors.genders)
       .then(res => this.setState({
         genderList: [{ key: 0, value: '' }].concat(res.data.result.map(renameKeys({ id: 'key', name: 'value' }))),
       }))

@@ -115,7 +115,7 @@ export default class VisitorProfile extends React.Component {
 
   componentDidMount() {
     CommunityBusiness.update() // used to check cookie permissions
-      .then(Promise.all([
+      .then(() => Promise.all([
         Visitors.get({ id: this.props.match.params.id }),
         Visitors.genders(),
         CommunityBusiness.get({ fields: ['name', 'logoUrl'] }),
