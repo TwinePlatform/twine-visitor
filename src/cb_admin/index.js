@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Activities from './pages/Activities';
@@ -11,10 +11,11 @@ import VisitorDetails from './pages/VisitorDetails';
 import VisitsData from './pages/VisitsData';
 import Settings from './pages/Settings';
 import Feedback from './pages/Feedback';
+import NotFound from '../shared/components/NotFound';
 
 
 export default () => (
-  <>
+  <Switch>
     <Route exact path="/cb/password/reset/:token" component={ResetPassword} />
     <Route exact path="/cb/password/forgot" component={ForgotPassword} />
     <Route exact path="/cb/login" component={Login} />
@@ -26,5 +27,6 @@ export default () => (
     <Route exact path="/cb/visitors/:id" component={Visitor} />
     <Route exact path="/cb/settings" component={Settings} />
     <Route exact path="/cb/feedback" component={Feedback} />
-  </>
+    <Route component={NotFound} />
+  </Switch>
 );
