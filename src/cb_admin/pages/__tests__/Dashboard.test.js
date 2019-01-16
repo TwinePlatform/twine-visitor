@@ -38,12 +38,7 @@ describe('Dashboard Component', () => {
   test(':: unsuccessful response with 401 redirects to login', async () => {
     expect.assertions(1);
 
-    mock.onPut('/community-businesses/me', {
-      name: undefined,
-      sector: undefined,
-      region: undefined,
-      logoUrl: undefined,
-    })
+    mock.onPut('/community-businesses/me')
       .reply(200, { result: null });
 
     mock.onGet('/community-businesses/me', { params: { fields: ['name'] } })
