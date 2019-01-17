@@ -38,10 +38,7 @@ export default class ForgotPassword extends React.Component {
       .then(() => this.props.history.push('/cb/login'))
       .catch((err) => {
         if (ErrorUtils.errorStatusEquals(err, 400)) {
-          this.setState({ errors: ErrorUtils.getValidationErrors(err) });
-
-        } else if (ErrorUtils.errorStatusEquals(err, 401)) {
-          this.setState({ errors: { email: err.response.data.error.message } });
+          this.setState({ errors: { email: ErrorUtils.getErrorMessage(err) } });
 
         } else {
           redirectOnError(this.props.history.push, err);

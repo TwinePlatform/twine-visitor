@@ -2,8 +2,9 @@
  * Twine API interface
  */
 import _axios, { create } from 'axios';
-import { pathOr, equals, compose } from 'ramda';
+import { pathOr, equals, evolve, map } from 'ramda';
 import qs from 'qs';
+import { BirthYear } from '../shared/constants';
 
 const baseURL = process.env.REACT_APP_API_HOST_DOMAIN ?
   `${process.env.REACT_APP_API_HOST_DOMAIN}/v1`
@@ -13,6 +14,14 @@ export const axios = create({
   baseURL,
   withCredentials: true,
   paramsSerializer: params => qs.stringify(params, { encode: false }),
+  transformRequest: [evolve({ birthYear: BirthYear.fromDisplay })]
+    .concat(_axios.defaults.transformRequest),
+  transformResponse: _axios.defaults.transformResponse.concat(data =>
+    data.result === null //eslint-disable-line
+      ? data
+      : Array.isArray(data.result)
+        ? evolve({ result: map(evolve({ birthYear: BirthYear.toDisplay })) }, data)
+        : evolve({ result: evolve({ birthYear: BirthYear.toDisplay }) }, data)),
 });
 
 export const Activities = {
@@ -20,10 +29,10 @@ export const Activities = {
 
   get: params => axios.get('/community-businesses/me/visit-activities', { params }),
 
-  create: ({ name, category }) =>
+  create: ({ name, category } = {}) =>
     axios.post('/community-businesses/me/visit-activities', { name, category }),
 
-  update: ({ id, monday, tuesday, wednesday, thursday, friday, saturday, sunday }) =>
+  update: ({ id, monday, tuesday, wednesday, thursday, friday, saturday, sunday } = {}) =>
     axios.put(`/community-businesses/me/visit-activities/${id}`, {
       monday,
       tuesday,
@@ -34,7 +43,7 @@ export const Activities = {
       sunday,
     }),
 
-  delete: ({ id }) =>
+  delete: ({ id } = {}) =>
     axios.delete(`/community-businesses/me/visit-activities/${id}`),
 };
 
@@ -52,7 +61,7 @@ export const Visitors = {
     axios.post('/users/visitors/search', { qrCode }),
 
   create: (
-    { name, gender, birthYear, email, phoneNumber, emailConsent, smsConsent, organisationId },
+    { name, gender, birthYear, email, phoneNumber, emailConsent, smsConsent, organisationId } = {},
   ) =>
     axios.post(
       '/users/register/visitors',
@@ -68,7 +77,7 @@ export const Visitors = {
       },
     ),
 
-  update: ({ id, name, gender, birthYear, email, phoneNumber }) =>
+  update: ({ id, name, gender, birthYear, email, phoneNumber } = {}) =>
     axios.put(
       `/community-businesses/me/visitors/${id}`,
       {
@@ -80,10 +89,10 @@ export const Visitors = {
       },
     ),
 
-  sendQrCode: ({ id }) =>
+  sendQrCode: ({ id } = {}) =>
     axios.post(`/community-businesses/me/visitors/${id}/emails`, { type: 'qrcode' }),
 
-  createVisit: ({ visitorId, activityId }) =>
+  createVisit: ({ visitorId, activityId } = {}) =>
     axios.post(
       '/community-businesses/me/visit-logs',
       {
@@ -97,25 +106,25 @@ export const CbAdmin = {
   get: params =>
     axios.get('/users/me', { params }),
 
-  update: ({ email }) =>
+  update: ({ email } = {}) =>
     axios.put('/users/me', { email }),
 
-  login: ({ email, password }) =>
+  login: ({ email, password } = {}) =>
     axios.post('/users/login', { email, password, type: 'cookie', restrict: 'CB_ADMIN' }),
 
   logout: () =>
     axios.get('/users/logout'),
 
-  upgradePermissions: ({ password }) =>
+  upgradePermissions: ({ password } = {}) =>
     axios.post('/users/login/escalate', { password }),
 
   downgradePermissions: () =>
     axios.post('/users/login/de-escalate'),
 
-  forgotPassword: ({ email }) =>
+  forgotPassword: ({ email } = {}) =>
     axios.post('/users/password/forgot', { email, redirect: 'VISITOR_APP' }),
 
-  resetPassword: ({ email, password, passwordConfirm, token }) =>
+  resetPassword: ({ email, password, passwordConfirm, token } = {}) =>
     axios.post('/users/password/reset', { email, password, passwordConfirm, token }),
 
 };
@@ -133,7 +142,7 @@ export const CommunityBusiness = {
 
   getActivities: () => axios.get('/visit-activity-categories'),
 
-  update: async ({ name, sector, region, logoUrl }) =>
+  update: async ({ name, sector, region, logoUrl } = {}) =>
     axios.put('/community-businesses/me', { name, sector, region, logoUrl }),
 
   getFeedback: (since, until) =>
@@ -166,12 +175,7 @@ export const Cloudinary = {
 
 export const ErrorUtils = {
   getErrorStatus: pathOr(null, ['response', 'status']),
-  getValidationErrors: compose(
-    pathOr({ general: ['Unknown error'] }, ['response', 'data', 'error', 'validation']),
-  ),
+  getValidationErrors: pathOr({ general: ['Unknown error'] }, ['response', 'data', 'error', 'validation']),
+  getErrorMessage: pathOr({ general: ['Unknown error'] }, ['response', 'data', 'error', 'message']),
   errorStatusEquals: (error, status) => equals(ErrorUtils.getErrorStatus(error), status),
 };
-
-export const logout = () =>
-  axios.get('/users/logout')
-  ;

@@ -5,10 +5,11 @@ import 'react-dates/initialize';
 import { DateRangePicker, isInclusivelyBeforeDay } from 'react-dates';
 import moment from 'moment';
 import styled from 'styled-components';
-import { CommunityBusiness, logout } from '../../api';
+import { CommunityBusiness } from '../../api';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { Heading, Link, Paragraph } from '../../shared/components/text/base';
 import { colors } from '../../shared/style_guide';
+import { redirectOnError } from '../../util';
 
 const FeedbackPrimaryButton = styled(PrimaryButton) `
   width: auto;
@@ -24,6 +25,11 @@ const StyledNav = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`;
+
+const FlexItem = styled.div`
+  flex: ${props => props.flex || '1'};
+  height: 100%;
 `;
 
 const InvisibleDiv = styled.div`
@@ -111,13 +117,7 @@ export default class Feedback extends Component {
           ? this.setState({ feedbackCounts: data.result, error: null })
           : this.setState({ error: 'Sorry, no data was found', feedbackCounts: null });
       })
-      .catch((err) => {
-        if (err.response.status === 401) {
-          this.props.history.push('/admin/login');
-        } else {
-          this.setState({ error: 'Sorry there has been an error with your request' });
-        }
-      });
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
   };
 
   handleAllDates = () => {
@@ -132,13 +132,13 @@ export default class Feedback extends Component {
     return (
       <div>
         <StyledNav>
-          <Link to="/admin" onClick={this.removeAdmin}>
-            Back to dashboard
-          </Link>
-          <Heading>Visitor Satisfaction</Heading>
-          <Link to="/cb/login" onClick={() => logout()}>
-            Logout
-          </Link>
+          <FlexItem>
+            <Link to="/cb/dashboard"> Back to dashboard </Link>
+          </FlexItem>
+          <FlexItem flex="2">
+            <Heading>Visitor Satisfaction</Heading>
+          </FlexItem>
+          <FlexItem />
         </StyledNav>
 
         <div>

@@ -10,6 +10,7 @@ import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import Checkbox from '../components/Checkbox';
 import { Activities, CommunityBusiness, ErrorUtils } from '../../api';
 import ActivityLabel from '../components/ActivityLabel';
+import { redirectOnError } from '../../util';
 
 
 const Nav = styled.nav`
@@ -86,7 +87,8 @@ export default class ActivitiesPage extends React.Component {
   }
 
   componentDidMount() {
-    Promise.all([Activities.get(), CommunityBusiness.getActivities()])
+    CommunityBusiness.update() // used to check cookie permissions
+      .then(() => Promise.all([Activities.get(), CommunityBusiness.getActivities()]))
       .then(([{ data: { result: activities } }, { data: { result: categories } }]) => {
 
         const order = activities.map(activity => activity.id);
@@ -100,15 +102,7 @@ export default class ActivitiesPage extends React.Component {
           categories: [{ id: -1, name: '' }].concat(categories).map(({ id, name }) => ({ key: id, value: name })),
         });
       })
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-        } else {
-          this.setState({ errors: { general: 'Could not get activity data', view: true } });
-        }
-      });
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
   }
 
   onChange = e =>
@@ -122,13 +116,7 @@ export default class ActivitiesPage extends React.Component {
         this.setState(assocPath(['activities', 'items', id], res.data.result));
         this.setState(assocPath(['errors', 'view'], false));
       })
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
-        } else {
-          this.setState({ errors: { general: 'Could not update activity', view: true } });
-        }
-      });
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
   }
 
   addActivity = (e) => {
@@ -154,15 +142,11 @@ export default class ActivitiesPage extends React.Component {
       },
 
       )
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
-        } else if (ErrorUtils.errorStatusEquals(error, 409)) {
-          this.setState({ errors: { general: 'Activity already exists', view: true } });
-        } else {
-          this.setState({ errors: { general: 'Could not create activity', view: true } });
-        }
-      });
+      .catch(error =>
+        ErrorUtils.errorStatusEquals(error, 409)
+          ? this.setState({ errors: { general: 'Activity already exists', view: true } })
+          : redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }),
+      );
   }
 
 
@@ -176,13 +160,7 @@ export default class ActivitiesPage extends React.Component {
           return { ...state, activities: { order, items } };
         });
       })
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
-        } else {
-          this.setState({ errors: { general: 'Could not delete activity' }, view: true });
-        }
-      });
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
   }
 
   render() {
@@ -192,7 +170,7 @@ export default class ActivitiesPage extends React.Component {
       <FlexContainerCol expand>
         <Nav>
           <FlexItem>
-            <HyperLink to="/admin"> Back to dashboard </HyperLink>
+            <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
           </FlexItem>
           <Heading flex={2}>Activities List</Heading>
           <FlexItem />

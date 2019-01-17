@@ -10,17 +10,8 @@ import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { renameKeys, redirectOnError } from '../../util';
+import { BirthYear } from '../../shared/constants';
 
-
-const generateYearsArray = (startYear, currentYear) =>
-  Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
-
-const years = [{ key: '', value: '' }].concat(
-  generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear()).map(y => ({
-    key: String(y),
-    value: String(y),
-  })),
-);
 
 const ButtonsFlexContainerCol = styled(FlexContainerCol)`
   padding-top: 10%;
@@ -115,6 +106,11 @@ export default class Main extends Component {
       organisationId: null,
       cbLogoUrl: '',
       formAutocompleteUUID: '', // See header comment in visitors/components/signup_form
+      /*
+       * last two values used as form validation for age
+       */
+      hasGivenAge: true, // defaults to true to avoid showing age checkbox on load
+      ageCheck: false,
     };
   }
 
@@ -160,12 +156,20 @@ export default class Main extends Component {
         this.setState({ [name]: e.target.value });
         break;
     }
+
+    if (name === 'year') {
+      this.setState({ hasGivenAge: e.target.value !== BirthYear.NULL_VALUE });
+    }
   };
 
   createVisitor = (e) => {
     e.preventDefault();
 
-    Visitors.create({
+    if (!this.state.hasGivenAge && !this.state.ageCheck) {
+      return this.setState({ errors: { ageCheck: 'You must be over 13 to register' } });
+    }
+
+    return Visitors.create({
       name: this.state.fullname,
       gender: this.state.gender,
       birthYear: this.state.year,
@@ -222,7 +226,7 @@ export default class Main extends Component {
               <QRimg src={state.qrCode} alt="This is your QRcode" />
             </QRContainer>
             <ButtonsFlexContainerCol>
-              <Link to="/visitor">
+              <Link to="/visitor/home">
                 <SubmitButton>NEXT</SubmitButton>
               </Link>
               <SubmitButton onClick={this.onClickPrint}>PRINT QR CODE</SubmitButton>
@@ -243,11 +247,12 @@ export default class Main extends Component {
             <SignupForm
               handleChange={this.handleChange}
               errors={errors}
-              years={years}
+              years={BirthYear.defaultOptionsList()}
               createVisitor={this.createVisitor}
               cbOrgName={cbOrgName}
               uuid={formAutocompleteUUID}
               genders={genders}
+              hasGivenAge={this.state.hasGivenAge}
             />
           </Route>
 

@@ -14,7 +14,8 @@ import { Heading, Paragraph, Link } from '../../shared/components/text/base';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
 import { ErrorUtils, CommunityBusiness, Visitors, Activities } from '../../api';
-import { renameKeys, redirectOnError, ageOptsToParams } from '../../util';
+import { renameKeys, redirectOnError } from '../../util';
+import { AgeRange } from '../../shared/constants';
 
 const repeat = (xs, n) => (xs.length >= n ? xs.slice(0, n) : repeat(xs.concat(xs), n));
 
@@ -126,7 +127,7 @@ export default class VisitsDataPage extends React.Component {
 
   onChange = (e) => {
     const value = e.target.name === 'ageFilter'
-      ? ageOptsToParams(e.target.value)
+      ? AgeRange.fromStr(e.target.value)
       : e.target.value;
     this.setState({ [e.target.name]: value }, this.getData);
   };
@@ -240,7 +241,7 @@ export default class VisitsDataPage extends React.Component {
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
+          this.props.history.push('/cb/confirm');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
         } else {
@@ -283,15 +284,7 @@ export default class VisitsDataPage extends React.Component {
           fullCount,
         });
       })
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/admin/login');
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-        } else {
-          this.setState({ errors: { general: 'Could not fetch visits data' } });
-        }
-      });
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
   };
 
   render() {
@@ -299,7 +292,7 @@ export default class VisitsDataPage extends React.Component {
     return (
       <FlexContainerCol expand>
         <Nav>
-          <HyperLink to="/admin"> Back to dashboard </HyperLink>
+          <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
           <Heading flex={2}>Visits data</Heading>
           <FlexItem />
         </Nav>

@@ -38,11 +38,11 @@ describe('ForgotPassword Component', () => {
     await wait(() => expect(history.location.pathname).toEqual('/cb/login'));
   });
 
-  test(':: unsubscribed email sends 401 and displays error message', async () => {
+  test(':: unsubscribed email sends 400 and displays error message', async () => {
     expect.assertions(1);
 
     mock.onPost('/users/password/forgot')
-      .reply(401, { result: null, error: { message: 'Email not recognised' } });
+      .reply(400, { result: null, error: { message: 'Email not recognised' } });
 
     const { getByText, getByLabelText } = renderWithRouter()(ForgotPassword);
 

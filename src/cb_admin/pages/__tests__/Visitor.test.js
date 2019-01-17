@@ -22,6 +22,9 @@ describe('Visitor Component', () => {
   test(':: succesful load displays visitor details on page', async () => {
     expect.assertions(3);
 
+    mock.onPut('/community-businesses/me')
+      .reply(200, { result: null });
+
     mock.onGet('/genders')
       .reply(200, { result: [{ id: 1, name: 'male' }, { id: 2, name: 'female' }, { id: 3, name: 'prefer not to say' }] });
 
@@ -74,6 +77,10 @@ describe('Visitor Component', () => {
   test(':: unauthorised request redirects to login', async () => {
     expect.assertions(1);
 
+
+    mock.onPut('/community-businesses/me')
+      .reply(200, { result: null });
+
     mock
       .onGet('/genders').reply(401, { result: null })
       .onGet('/community-businesses/me/visitors/4').reply(401, { result: null })
@@ -96,6 +103,9 @@ describe('Visitor Component', () => {
 
   test(':: can update visitor details', async () => {
     expect.assertions(3);
+
+    mock.onPut('/community-businesses/me')
+      .reply(200, { result: null });
 
     mock
       .onGet('/genders')
@@ -147,6 +157,9 @@ describe('Visitor Component', () => {
       },
     })(Visitor);
 
+    // ensures page has successfully loaded before continuing with tests
+    await waitForElement(() => tools.getByText('yusra mardini'));
+
     const [nameInput, emailInput, genderInput, submitBtn] = await waitForElement(() => [
       tools.getByLabelText('Name'),
       tools.getByLabelText('Email'),
@@ -172,6 +185,9 @@ describe('Visitor Component', () => {
 
   test(':: fail to update visitor details', async () => {
     expect.assertions(1);
+
+    mock.onPut('/community-businesses/me')
+      .reply(200, { result: null });
 
     mock
       .onGet('/genders')
@@ -208,6 +224,9 @@ describe('Visitor Component', () => {
         url: '/cb/visitors/4',
       },
     })(Visitor);
+
+    // ensures page has successfully loaded before continuing with tests
+    await waitForElement(() => tools.getByText('yusra mardini'));
 
     const [birthYearInput, submitBtn] = await waitForElement(() => [
       tools.getByLabelText('Email'),

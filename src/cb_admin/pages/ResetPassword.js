@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { pick, pathOr, equals } from 'ramda';
+import { pick } from 'ramda';
 import { parse } from 'querystring';
 import { CbAdmin, ErrorUtils } from '../../api';
 import { Heading } from '../../shared/components/text/base';
@@ -12,8 +12,6 @@ import { colors } from '../../shared/style_guide';
 import { redirectOnError } from '../../util';
 
 const payloadFromState = pick(['password', 'passwordConfirm']);
-const getErrorStatus = pathOr(null, ['response', 'status']);
-const errorStatusEquals = (error, status) => equals(getErrorStatus(error), status);
 
 
 const SubmitButton = styled(PrimaryButton) `
@@ -55,11 +53,14 @@ export default class ResetPassword extends React.Component {
     })
       .then(() => this.props.history.push('/cb/login?ref=pwd_reset'))
       .catch((err) => {
-        if (errorStatusEquals(err, 400)) {
+        if (ErrorUtils.errorStatusEquals(err, 400)) {
           this.setState({ errors: ErrorUtils.getValidationErrors(err) });
 
-        } else if (errorStatusEquals(err, 401)) {
+        } else if (ErrorUtils.errorStatusEquals(err, 401)) {
           this.setState({ errors: { password: err.response.data.error.message } });
+
+        } else if (ErrorUtils.errorStatusEquals(err, 403)) {
+          this.setState({ errors: { token: err.response.data.error.message } });
 
         } else {
           redirectOnError(this.props.history.push, err);
@@ -80,7 +81,7 @@ export default class ResetPassword extends React.Component {
               label="New password"
               type="password"
               name="password"
-              error={errors.password}
+              error={(errors.password || '').split(':')[0]} // removes details for password strength
               required
             />
             <LabelledInput
@@ -92,7 +93,7 @@ export default class ResetPassword extends React.Component {
               required
             />
             <SubmitButton type="submit">SUBMIT</SubmitButton>
-            <ErrorText show={this.state.errors.password === 'is too weak'}>
+            <ErrorText show={(this.state.errors.password || '').includes('is too weak')}>
               <li>Use at least 8 characters</li>
               <li>Use uppercase and lowercase characters</li>
               <li>Use 1 or more numbers</li>

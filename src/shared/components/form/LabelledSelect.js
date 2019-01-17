@@ -5,9 +5,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Select, SelectWrapper, Option, Label } from './base';
+import { colors } from '../../style_guide';
+
+const ErrorText = styled.span`
+color: ${colors.error};
+display: ${props => (props.show ? 'inline' : 'none')};
+`;
 
 const LabelledSelect = (props) => {
-  const { id, label, options, ...rest } = props;
+  const { id, label, options, error, ...rest } = props;
 
   const SelectArrow = styled.div`
     float: right;
@@ -19,9 +25,12 @@ const LabelledSelect = (props) => {
     border-color: #7b7b7b transparent transparent transparent;
   `;
 
+
   return (
     <div>
-      <Label htmlFor={id}>{label}</Label>
+      <Label htmlFor={id} display={'inline'}>{label}</Label>
+      <ErrorText key={1} show={error}>{error}</ErrorText>
+
       <SelectWrapper>
         <Select id={id} {...rest}>
           {options.map(opt => (

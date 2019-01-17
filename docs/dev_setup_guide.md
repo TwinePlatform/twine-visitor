@@ -2,10 +2,10 @@
 
 ## Contents
 
-1.  [Pre-requisites](#prerequisites)
-1.  [Getting started](#getting-started)
-1.  [Configuration](#configuration)
-1.  [Commands](#commands)
+1. [Pre-requisites](#prerequisites)
+1. [Getting started](#getting-started)
+1. [Configuration](#configuration)
+1. [Commands](#commands)
 
 ## Pre-requisites
 * `node` (v8.4.0+) and `npm` (v5.6.0+)

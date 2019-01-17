@@ -5,7 +5,7 @@ import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layo
 import { SecondaryButton } from '../../shared/components/form/base';
 import DotButton from '../../shared/components/form/DottedButton';
 import { Heading, Link as StyledLink } from '../../shared/components/text/base';
-import { CommunityBusiness, logout } from '../../api';
+import { CommunityBusiness } from '../../api';
 import { redirectOnError } from '../../util';
 
 
@@ -50,9 +50,10 @@ export default class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    CommunityBusiness.get({ fields: ['name'] })
+    CommunityBusiness.update() // used to check cookie permissions
+      .then(() => CommunityBusiness.get({ fields: ['name'] }))
       .then(res => this.setState({ orgName: res.data.result.name }))
-      .catch(err => redirectOnError(this.props.history.push, err));
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
   }
 
   render() {
@@ -60,7 +61,7 @@ export default class Dashboard extends React.Component {
       <FlexContainerCol>
         <Nav>
           <FlexItem>
-            <StyledLink to="/cb/login" onClick={() => logout()}>Logout</StyledLink>
+            <StyledLink to="/">Back home</StyledLink>
           </FlexItem>
           <FlexItem flex="2">
             <Heading>Welcome admin! Where do you want to go?</Heading>

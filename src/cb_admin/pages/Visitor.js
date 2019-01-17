@@ -10,19 +10,10 @@ import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import DetailsTable from '../components/DetailsTable';
 import QrBox from '../components/QrBox';
-import { CommunityBusiness, Visitors } from '../../api';
+import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
 import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 import { renameKeys, redirectOnError } from '../../util';
-
-const generateYearsArray = (startYear, currentYear) =>
-  Array.from({ length: (currentYear + 1) - startYear }, (v, i) => currentYear - i);
-
-const years = [{ key: -1, value: '' }].concat(
-  generateYearsArray(new Date().getFullYear() - 113, new Date().getFullYear()).map(y => ({
-    key: y.toString(),
-    value: y.toString(),
-  })),
-);
+import { BirthYear } from '../../shared/constants';
 
 const Nav = styled.nav`
   display: flex;
@@ -94,6 +85,11 @@ const payloadFromState = compose(
   prop('form'),
 );
 
+const resendQrCodeState = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
+};
 export default class VisitorProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -108,7 +104,7 @@ export default class VisitorProfile extends React.Component {
       registeredAt: null,
       qrCodeUrl: '',
       isPrinting: false,
-      hasResent: false,
+      resendQrCodeState: null,
       cbOrgName: '',
       cbLogoUrl: '',
       form: {},
@@ -118,11 +114,12 @@ export default class VisitorProfile extends React.Component {
   }
 
   componentDidMount() {
-    Promise.all([
-      Visitors.get({ id: this.props.match.params.id }),
-      Visitors.genders(),
-      CommunityBusiness.get({ fields: ['name', 'logoUrl'] }),
-    ])
+    CommunityBusiness.update() // used to check cookie permissions
+      .then(() => Promise.all([
+        Visitors.get({ id: this.props.match.params.id }),
+        Visitors.genders(),
+        CommunityBusiness.get({ fields: ['name', 'logoUrl'] }),
+      ]))
       .then(([resVisitors, rGenders, resCb]) => {
         this.updateStateFromApi(resVisitors.data.result);
         this.setState({
@@ -131,7 +128,7 @@ export default class VisitorProfile extends React.Component {
           cbLogoUrl: resCb.data.result.logoUrl,
         });
       })
-      .catch(err => redirectOnError(this.props.history.push, err));
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
   }
 
   onClickPrint = () => {
@@ -139,9 +136,20 @@ export default class VisitorProfile extends React.Component {
   };
 
   onClickResend = () => {
+    this.setState({ resendQrCodeState: resendQrCodeState.PENDING });
     Visitors.sendQrCode({ id: this.state.id })
-      .then(() => this.setState({ hasResent: true }))
-      .catch(err => redirectOnError(this.props.history.push, err));
+      .then(() => this.setState({ resendQrCodeState: resendQrCodeState.SUCCESS }))
+      .catch((err) => {
+        if (ErrorUtils.errorStatusEquals(err, 400)) {
+          this.setState({
+            resendQrCodeState: resendQrCodeState.ERROR,
+            errors: { ...this.state.errors, resendButton: err.response.data.error },
+          });
+        } else {
+          redirectOnError(this.props.history.push, err);
+        }
+      },
+      );
   };
 
   onChange = e => this.setState(assocPath(['form', e.target.name], e.target.value));
@@ -155,7 +163,7 @@ export default class VisitorProfile extends React.Component {
         this.updateStateFromApi(res.data.result);
       })
       .catch((error) => {
-        this.setState({ errors: error.response.data.error });
+        this.setState({ errors: { ...this.state.errors, ...error.response.data.error } });
       });
   };
 
@@ -204,7 +212,7 @@ export default class VisitorProfile extends React.Component {
     return (
       <Col>
         <Nav>
-          <HyperLink to="/admin"> Back to dashboard </HyperLink>
+          <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
           <Heading flex={2}>Visitor profile</Heading>
           <FlexItem />
         </Nav>
@@ -217,7 +225,8 @@ export default class VisitorProfile extends React.Component {
               qrCodeUrl={rest.qrCodeUrl}
               print={this.onClickPrint}
               send={this.onClickResend}
-              hasSent={rest.hasResent}
+              status={rest.resendQrCodeState}
+              error={errors.resendButton}
             />
           </FlexItem>
         </Row>
@@ -248,7 +257,7 @@ export default class VisitorProfile extends React.Component {
                 id="visitor-birthYear"
                 label="Year of birth"
                 name="birthYear"
-                options={years}
+                options={BirthYear.defaultOptionsList()}
                 value={rest.form.birthYear || rest.birthYear}
                 error={errors.birthYear}
               />

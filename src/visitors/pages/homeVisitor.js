@@ -56,7 +56,7 @@ const FeedbackStyledSection = styled.section`
 
 const postFeedback = (feedbackScore, props) =>
   CommunityBusiness.postFeedback(feedbackScore)
-    .then(() => props.history.push('/thankyou'))
+    .then(() => props.history.push('/visitor/thankyou'))
     .catch(err => redirectOnError(props.history.push, err));
 
 export default class HomeVisitor extends Component {

@@ -103,13 +103,11 @@ export const redirectOnError = (historyPush, error, custom = {}) => {
 };
 
 
-export const ageOptsToParams = (str) => {
-  const x = str
-    .split(/[-+]/)
-    .map(d => parseInt(d, 10))
-    .filter(d => !isNaN(d))
-    .concat(999)
-    .slice(0, 2);
-
-  return x.length === 2 ? x : undefined;
-};
+// pairs :: Groups elements of array into pairs
+// pairs :: [a] -> [[a]]
+export const pairs = xs =>
+  xs.reduce((acc, x, i) => // eslint-disable-line no-confusing-arrow
+    (i % 2 === 0)
+      ? acc.concat([xs.slice(i, i + 2)])
+      : acc
+  , []);

@@ -36,11 +36,11 @@ describe('ConfirmPassword Component', () => {
     expect(error.textContent).toEqual('Wrong password');
   });
 
-  test(':: incorrect password responds 401 and displays error message', async () => {
+  test(':: correct password redirects to dashboard', async () => {
     expect.assertions(1);
 
     mock.onPost('/users/login/escalate')
-      .reply(200);
+      .reply(200, { result: null });
 
     const { getByText, getByLabelText, history } =
         renderWithRouter()(ConfirmPassword);
@@ -51,7 +51,7 @@ describe('ConfirmPassword Component', () => {
     fireEvent.click(submit);
 
     await wait(() => history.length === 2);
-    expect(history.location.pathname).toEqual('/admin');
+    expect(history.location.pathname).toEqual('/cb/dashboard');
   });
 
 });
