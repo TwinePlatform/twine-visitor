@@ -284,15 +284,7 @@ export default class VisitsDataPage extends React.Component {
           fullCount,
         });
       })
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/cb/confirm');
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-        } else {
-          this.setState({ errors: { general: 'Could not fetch visits data' } });
-        }
-      });
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
   };
 
   render() {

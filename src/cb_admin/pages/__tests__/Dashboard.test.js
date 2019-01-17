@@ -22,6 +22,9 @@ describe('Dashboard Component', () => {
   test(':: successful response with 200 displays CB welcome message', async () => {
     expect.assertions(1);
 
+    mock.onPut('/community-businesses/me')
+      .reply(200, { result: null });
+
     mock.onGet('/community-businesses/me', { params: { fields: ['name'] } })
       .reply(200, { result: { name: 'Frog Finders' } });
 
@@ -34,6 +37,9 @@ describe('Dashboard Component', () => {
 
   test(':: unsuccessful response with 401 redirects to login', async () => {
     expect.assertions(1);
+
+    mock.onPut('/community-businesses/me')
+      .reply(200, { result: null });
 
     mock.onGet('/community-businesses/me', { params: { fields: ['name'] } })
       .reply(401, { result: null, error: 'Credentials not recognised' });

@@ -114,11 +114,12 @@ export default class VisitorProfile extends React.Component {
   }
 
   componentDidMount() {
-    Promise.all([
-      Visitors.get({ id: this.props.match.params.id }),
-      Visitors.genders(),
-      CommunityBusiness.get({ fields: ['name', 'logoUrl'] }),
-    ])
+    CommunityBusiness.update() // used to check cookie permissions
+      .then(() => Promise.all([
+        Visitors.get({ id: this.props.match.params.id }),
+        Visitors.genders(),
+        CommunityBusiness.get({ fields: ['name', 'logoUrl'] }),
+      ]))
       .then(([resVisitors, rGenders, resCb]) => {
         this.updateStateFromApi(resVisitors.data.result);
         this.setState({
@@ -127,7 +128,7 @@ export default class VisitorProfile extends React.Component {
           cbLogoUrl: resCb.data.result.logoUrl,
         });
       })
-      .catch(err => redirectOnError(this.props.history.push, err));
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
   }
 
   onClickPrint = () => {

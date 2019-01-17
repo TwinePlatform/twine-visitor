@@ -18,6 +18,9 @@ describe('Activities Component', () => {
   beforeAll(() => {
     mock = new MockAdapter(axios);
 
+    mock.onPut('/community-businesses/me')
+      .reply(200, { result: null });
+
     mock.onGet('/visit-activity-categories')
       .reply(200, { result: [
         { id: 1, name: 'Adult skills building' },

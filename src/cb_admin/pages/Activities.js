@@ -87,7 +87,8 @@ export default class ActivitiesPage extends React.Component {
   }
 
   componentDidMount() {
-    Promise.all([Activities.get(), CommunityBusiness.getActivities()])
+    CommunityBusiness.update() // used to check cookie permissions
+      .then(() => Promise.all([Activities.get(), CommunityBusiness.getActivities()]))
       .then(([{ data: { result: activities } }, { data: { result: categories } }]) => {
 
         const order = activities.map(activity => activity.id);

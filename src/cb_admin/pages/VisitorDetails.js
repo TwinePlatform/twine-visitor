@@ -12,8 +12,8 @@ import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { colors, fonts } from '../../shared/style_guide';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
-import { Visitors, ErrorUtils } from '../../api';
-import { renameKeys } from '../../util';
+import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
+import { renameKeys, redirectOnError } from '../../util';
 import { AgeRange } from '../../shared/constants';
 
 const Nav = styled.nav`
@@ -104,19 +104,12 @@ export default class VisitorDetailsPage extends React.Component {
   }
 
   componentDidMount() {
-    Visitors.genders()
+    CommunityBusiness.update() // used to check cookie permissions
+      .then(Visitors.genders)
       .then(res => this.setState({
         genderList: [{ key: 0, value: '' }].concat(res.data.result.map(renameKeys({ id: 'key', name: 'value' }))),
       }))
-      .catch((error) => {
-        if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/cb/confirm');
-        } else if (ErrorUtils.errorStatusEquals(error, 500)) {
-          this.props.history.push('/error/500');
-        } else {
-          this.setState({ errors: { general: 'Could not fetch visitors data' } });
-        }
-      });
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
   }
 
   onChange = (e) => {
