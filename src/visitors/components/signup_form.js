@@ -81,11 +81,10 @@ const signupForm = (props) => {
               name={`email$${props.uuid}`}
               type="email"
               error={props.errors.formEmail}
-              required
             />
             <LabelledInput
               id="visitor-signup-phonenumber"
-              label="Phone Number (optional)"
+              label="Phone Number"
               name={`phone$${props.uuid}`}
               type="text"
               error={props.errors.formPhone}
