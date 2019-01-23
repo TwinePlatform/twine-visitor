@@ -4,23 +4,17 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { assocPath, compose, filter, pick, prop } from 'ramda';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
-import { Paragraph as P, Heading, Link } from '../../shared/components/text/base';
+import { Paragraph as P, Heading } from '../../shared/components/text/base';
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
+import NavHeader from '../../shared/components/NavHeader';
 import DetailsTable from '../components/DetailsTable';
 import QrBox from '../components/QrBox';
 import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
 import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 import { renameKeys, redirectOnError } from '../../util';
 import { BirthYear } from '../../shared/constants';
-
-const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex: 1;
-`;
 
 const Col = styled(FlexContainerCol) `
   @media print {
@@ -45,10 +39,6 @@ const Row = styled(FlexContainerRow) `
   align-content: center;
   align-items: flex-start;
   flex: 3;
-`;
-
-const HyperLink = styled(Link) `
-  flex: ${props => props.flex || '1'};
 `;
 
 const Button = styled(PrimaryButton) `
@@ -211,11 +201,11 @@ export default class VisitorProfile extends React.Component {
 
     return (
       <Col>
-        <Nav>
-          <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
-          <Heading flex={2}>Visitor profile</Heading>
-          <FlexItem />
-        </Nav>
+        <NavHeader
+          leftTo="/cb/dashboard"
+          leftContent="Back to dashboard"
+          centerContent="Visitor profile"
+        />
         <Row>
           <FlexItem flex={7}>
             <DetailsTable rows={rows} caption="Visitor details" />
