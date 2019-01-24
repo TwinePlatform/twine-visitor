@@ -86,6 +86,12 @@ export default class Dashboard extends React.Component {
               <Caption>See how your visitors feel about your business</Caption>
             </ButtonOne>
           </ButtonWrapperLink>
+          <ButtonWrapperLink to="/cb/anonymous-user">
+            <ButtonTwo>
+              Create Anon User
+              <Caption>Create a new anonymous user</Caption>
+            </ButtonTwo>
+          </ButtonWrapperLink>
         </Row>
       </FlexContainerCol>
     );
