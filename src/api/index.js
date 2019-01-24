@@ -61,7 +61,17 @@ export const Visitors = {
     axios.post('/users/visitors/search', { qrCode }),
 
   create: (
-    { name, gender, birthYear, email, phoneNumber, emailConsent, smsConsent, organisationId } = {},
+    {
+      name,
+      gender,
+      birthYear,
+      email,
+      phoneNumber,
+      emailConsent,
+      smsConsent,
+      organisationId,
+      isAnonymous,
+    } = {},
   ) =>
     axios.post(
       '/users/register/visitors',
@@ -74,6 +84,7 @@ export const Visitors = {
         emailConsent,
         smsConsent,
         organisationId,
+        isAnonymous,
       }),
     ),
 

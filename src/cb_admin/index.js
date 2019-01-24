@@ -12,6 +12,7 @@ import VisitsData from './pages/VisitsData';
 import Settings from './pages/Settings';
 import Feedback from './pages/Feedback';
 import NotFound from '../shared/components/NotFound';
+import AnonUser from './pages/AnonUser/index';
 
 
 export default () => (
@@ -27,6 +28,7 @@ export default () => (
     <Route exact path="/cb/visitors/:id" component={Visitor} />
     <Route exact path="/cb/settings" component={Settings} />
     <Route exact path="/cb/feedback" component={Feedback} />
+    <Route exact path="/cb/anonymous-user" component={AnonUser} />
     <Route component={NotFound} />
   </Switch>
 );
