@@ -12,9 +12,9 @@ import NavHeader from '../../shared/components/NavHeader';
 import DetailsTable from '../components/DetailsTable';
 import QrBox from '../components/QrBox';
 import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
-import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 import { renameKeys, redirectOnError } from '../../util';
 import { BirthYear } from '../../shared/constants';
+import PrintableQrCode from '../../shared/components/PrintableQrCode';
 
 const Col = styled(FlexContainerCol) `
   @media print {
@@ -44,29 +44,6 @@ const Row = styled(FlexContainerRow) `
 const Button = styled(PrimaryButton) `
   width: 90%;
   height: 3em;
-`;
-
-const PrintContainer = styled.div`
-  display: none;
-
-  @media print {
-    display: block;
-    margin-top: 25pt;
-    background: white;
-    font-size: 12pt;
-    text-align: center;
-  }
-`;
-
-const CbLogo = styled.img`
-  height: 50pt;
-  flex: 1;
-  flex-grow: 0;
-`;
-const QrCodePrint = styled.img``;
-const PrintHeaderRow = styled(FlexContainerRow) `
-  justify-content: center;
-  align-items: center;
 `;
 
 const payloadFromState = compose(
@@ -172,21 +149,6 @@ export default class VisitorProfile extends React.Component {
     });
   };
 
-  renderPrinterFriendly(state) { // eslint-disable-line class-methods-use-this
-    return (
-      <PrintContainer>
-        <PrintHeaderRow>
-          {state.cbLogoUrl
-            ? (<CbLogo src={state.cbLogoUrl} alt="Business logo" />)
-            : (<CbLogo src={p2cLogo} alt="Power to change logo" />)}
-        </PrintHeaderRow>
-        <Heading flex={9}>{state.cbOrgName} QR code</Heading>
-        <QrCodePrint src={state.qrCodeUrl} alt="QR code" />
-        <Paragraph>Please bring this QR code with you next time</Paragraph>
-      </PrintContainer>
-    );
-  }
-
   renderMain(state) {
     const { errors, ...rest } = state;
     const rows = [
@@ -269,7 +231,7 @@ export default class VisitorProfile extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {this.renderPrinterFriendly(this.state)}
+        {<PrintableQrCode cbLogoUrl={this.state.cbLogoUrl} qrCode={this.state.qrCodeUrl} />}
         {this.renderMain(this.state)}
       </React.Fragment>
     );
