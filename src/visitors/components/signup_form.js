@@ -11,11 +11,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
-import { Heading, Paragraph } from '../../shared/components/text/base';
+import { Paragraph } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import StyledLabelledCheckbox from '../../shared/components/form/StyledLabelledCheckbox';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
+import NavHeader from '../../shared/components/NavHeader';
 import { colors, fonts } from '../../shared/style_guide';
 import { VISITOR_NAME_INVALID } from '../../cb_admin/constants/error_text';
 
@@ -32,12 +33,6 @@ const PrivacyLink = styled.a`
 const CenteredParagraph = styled(Paragraph)`
   width: 90%;
   line-height: 1.5em;
-`;
-
-const CenteredHeading = styled(Heading)`
-  width: 90%;
-  text-align: center;
-  margin-bottom: 5%;
 `;
 
 const TitleParagraph = styled(Paragraph)`
@@ -63,7 +58,7 @@ const signupForm = (props) => {
 
   return (
     <FlexContainerCol>
-      <CenteredHeading>Please tell us about yourself</CenteredHeading>
+      <NavHeader centerContent="Please tell us about yourself" />
       <Form className="SignupForm" onChange={props.handleChange} onSubmit={props.createVisitor}>
         <FormSection flexOrder={1}>
           <div>
