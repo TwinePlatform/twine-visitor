@@ -47,7 +47,11 @@ export default class ConfirmPassword extends React.Component {
     const { errors } = this.state;
     return (
       <FlexContainerCol>
-        <NavHeader centerContent="Confirm password" />
+        <NavHeader
+          leftTo="/"
+          leftContent="Back to main page"
+          centerContent="Confirm password"
+        />
         <CenteredParagraph>Welcome admin, please confirm your password</CenteredParagraph>
         <Form onChange={this.onChange} onSubmit={this.onSubmit}>
           <FormSection>
