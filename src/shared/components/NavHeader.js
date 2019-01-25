@@ -17,7 +17,7 @@ const NavHeaderItem = ({ to, content, onClick }) => (
     ? <HyperLink to={to} onClick={onClick}>{content}</HyperLink>
     : typeof content === 'string'
       ? <Heading onClick={onClick}>{content}</Heading>
-      : <Fragment onClick={onClick}>{content}</Fragment>
+      : <Fragment>{content}</Fragment>
 );
 
 NavHeaderItem.propTypes = {
@@ -81,9 +81,6 @@ NavHeader.defaultProps = {
   leftOnClick: noop,
   centreOnClick: noop,
   rightOnClick: noop,
-  leftCol: { sm: 1, md: 1, lg: 1 },
-  centerCol: { sm: 1, md: 1, lg: 1 },
-  rightCol: { sm: 1, md: 1, lg: 1 },
 };
 
 
