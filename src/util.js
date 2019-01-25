@@ -1,4 +1,4 @@
-import { curry, mergeDeepRight } from 'ramda';
+import { curry, mergeDeepRight, pick, map, compose, filter, uniq, keys } from 'ramda';
 import { ErrorUtils } from './api';
 
 
@@ -111,3 +111,23 @@ export const pairs = xs =>
       ? acc.concat([xs.slice(i, i + 2)])
       : acc
   , []);
+
+// combineValues :: [{ k: v }] -> { k: [v] }
+const combineValues = os =>
+  os.reduce((acc, v) => {
+    Object.keys(v)
+      .forEach((k) => {
+        acc[k] = (acc[k] || []).concat(v[k]);
+      });
+    return acc;
+  }, {});
+
+// reduceVisitorsToFields :: [Visitor] -> [Fields]
+export const reduceVisitorsToFields =
+  compose(
+    keys,
+    filter(fs => uniq(fs).length > 1), // keep fields that have at least two different values
+    filter(fs => fs.some(f => f !== null)), // keep fields that have at least one non-null value
+    combineValues, // concat all values for given keys
+    map(pick(['name', 'email', 'postCode', 'phoneNumber', 'birthYear'])), // pick relevant keys
+  );
