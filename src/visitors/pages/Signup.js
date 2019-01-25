@@ -106,9 +106,7 @@ export default class Main extends Component {
       organisationId: null,
       cbLogoUrl: '',
       formAutocompleteUUID: '', // See header comment in visitors/components/signup_form
-      /*
-       * last two values used as form validation for age
-       */
+      // form validation for age
       hasGivenAge: true, // defaults to true to avoid showing age checkbox on load
       ageCheck: false,
     };
@@ -164,6 +162,10 @@ export default class Main extends Component {
 
   createVisitor = (e) => {
     e.preventDefault();
+
+    if (!this.state.phone && !this.state.email) {
+      return this.setState({ errors: { formEmail: 'You must supply a phone number or email address' } });
+    }
 
     if (!this.state.hasGivenAge && !this.state.ageCheck) {
       return this.setState({ errors: { ageCheck: 'You must be over 13 to register' } });
