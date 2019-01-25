@@ -22,7 +22,8 @@ const CreateAnonUserForm = props => (
           label="Anonymous Account Name"
           name={'name'}
           type="text"
-          error={props.errors.formName}
+          value={props.name}
+          error={props.errors.name}
           required
         />
         <LabelledSelect
@@ -30,7 +31,7 @@ const CreateAnonUserForm = props => (
           label="Gender"
           name="gender"
           options={props.genders}
-          error={props.errors.formGender}
+          error={props.errors.gender}
           required
         />
         <LabelledSelect
@@ -38,7 +39,7 @@ const CreateAnonUserForm = props => (
           label="Year of Birth"
           name="year"
           options={BirthYear.defaultOptionsList()}
-          error={props.errors.formYear}
+          error={props.errors.year}
           required
         />
         <SubmitButton type="submit">CREATE</SubmitButton>
@@ -48,6 +49,7 @@ const CreateAnonUserForm = props => (
 
 
 CreateAnonUserForm.propTypes = {
+  name: PropTypes.string.isRequired,
   errors: PropTypes.object.isRequired, // eslint-disable-line
   genders: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleChange: PropTypes.func.isRequired,
