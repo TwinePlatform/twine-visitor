@@ -33,10 +33,60 @@ const postFeedback = (feedbackScore, props) =>
     .catch(err => redirectOnError(props.history.push, err));
 
 export default class HomeVisitor extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      displaySigninOptions: false,
+    };
+  }
 
   componentDidMount() {
     CbAdmin.downgradePermissions()
       .catch(err => redirectOnError(this.props.history.push, err));
+  }
+
+  renderNav = () => (
+    <NavHeader
+      leftTo="/"
+      leftContent="Back to main page"
+      centerContent="Welcome, visitor!"
+    />
+  )
+
+  renderMain() {
+    if (!this.state.displaySigninOptions) {
+      return (
+        <StyledSection>
+          <FlexLink to="#" onClick={() => this.setState({ displaySigninOptions: true })}>
+            <ButtonLeft>Sign in</ButtonLeft>
+          </FlexLink>
+          <FlexLink to="/visitor/signup">
+            <ButtonRight>Sign up</ButtonRight>
+          </FlexLink>
+        </StyledSection>
+      );
+    }
+
+    return (
+      <StyledSection>
+        <FlexLink to="/visitor/login?type=qr_code">
+          <ButtonLeft large>Sign in with QR code</ButtonLeft>
+        </FlexLink>
+        <FlexLink to="/visitor/login?type=name">
+          <ButtonRight large>Sign in with name</ButtonRight>
+        </FlexLink>
+      </StyledSection>
+    );
+  }
+
+  renderFeedbackButtons() {
+    return (
+      <FeedbackStyledSection>
+        <Heading2>What did you think of your visit today?</Heading2>
+        <FeedbackButtons onClick={score => postFeedback(score, this.props)} />
+      </FeedbackStyledSection>
+    );
   }
 
   render() {
