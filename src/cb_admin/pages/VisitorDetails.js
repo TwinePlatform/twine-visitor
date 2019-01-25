@@ -30,6 +30,7 @@ const Row = styled(FlexContainerRow)`
 
 const FormSection = styled.section`
   width: 20%;
+  margin: 0 0.5em;
 `;
 
 const ExportButton = styled(PrimaryButton)`

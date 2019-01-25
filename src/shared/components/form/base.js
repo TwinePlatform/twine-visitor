@@ -38,7 +38,7 @@ export const Select = styled.select`
 export const SelectWrapper = styled.div`
   width: 90%;
   margin-bottom: 1em;
-  padding: 0.7em;
+  padding: 0.6em;
   border: 0.1em solid ${colors.light};
   border-radius: 0.15em;
   overflow: hidden;

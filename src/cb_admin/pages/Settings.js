@@ -23,6 +23,7 @@ import NavHeader from '../../shared/components/NavHeader';
 const FlexItem = styled.div`
   flex: ${props => props.flex || '1'};
   height: 100%;
+  margin-right: 1em;
 `;
 
 const Form = styled(Fm)`

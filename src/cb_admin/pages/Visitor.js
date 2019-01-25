@@ -25,6 +25,7 @@ const Col = styled(FlexContainerCol) `
 const FlexItem = styled.div`
   flex: ${props => props.flex || '1'};
   height: 100%;
+  margin-right: 1em;
 `;
 
 const Form = styled(Fm) `
@@ -42,7 +43,7 @@ const Row = styled(FlexContainerRow) `
 `;
 
 const Button = styled(PrimaryButton) `
-  width: 90%;
+  width: 100%;
   height: 3em;
 `;
 

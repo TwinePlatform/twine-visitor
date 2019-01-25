@@ -23,7 +23,7 @@ import { VISITOR_NAME_INVALID } from '../../cb_admin/constants/error_text';
 
 const SubmitButton = styled(PrimaryButton)`
   height: 4em;
-  width: 90%;
+  width: 100%;
 `;
 
 const PrivacyLink = styled.a`
