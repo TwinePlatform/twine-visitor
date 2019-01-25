@@ -163,7 +163,7 @@ export default class Main extends Component {
   createVisitor = (e) => {
     e.preventDefault();
 
-    if (!this.state.phone || !this.state.email) {
+    if (!this.state.phone && !this.state.email) {
       return this.setState({ errors: { formEmail: 'You must supply a phone number or email address' } });
     }
 
