@@ -7,7 +7,7 @@ import MockAdapter from 'axios-mock-adapter';
 import 'jest-dom/extend-expect';
 import { axios } from '../../../api';
 
-import renderWithRouter from '../../../tests';
+import { renderWithRouter } from '../../../tests';
 import Dashboard from '../Dashboard';
 
 describe('Dashboard Component', () => {
