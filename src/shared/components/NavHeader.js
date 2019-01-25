@@ -1,9 +1,15 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Row, Col } from 'react-flexbox-grid';
 import { Link as HyperLink, Heading } from './text/base';
 
+
 const noop = () => {};
+
+const PaddedRow = styled(Row)`
+  padding: 2em 0;
+`;
 
 
 const NavHeaderItem = ({ to, content, onClick }) => (
@@ -27,7 +33,7 @@ NavHeaderItem.defaultProps = {
 };
 
 const NavHeader = props => (
-  <Row middle="xs">
+  <PaddedRow middle="xs">
     <Col xs={3}>
       <NavHeaderItem
         to={props.leftTo}
@@ -49,7 +55,7 @@ const NavHeader = props => (
         onClick={props.rightOnClick}
       />
     </Col>
-  </Row>
+  </PaddedRow>
 );
 
 

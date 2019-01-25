@@ -37,6 +37,7 @@ const Row = styled(FlexContainerRow)`
   align-content: center;
   align-items: flex-start;
   flex: 2;
+  margin-bottom: 1.5em;
 `;
 
 const Button = styled(PrimaryButton)`
