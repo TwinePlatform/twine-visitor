@@ -4,20 +4,11 @@ import styled from 'styled-components';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { SecondaryButton } from '../../shared/components/form/base';
 import DotButton from '../../shared/components/form/DottedButton';
-import { Heading, Link as StyledLink } from '../../shared/components/text/base';
+import NavHeader from '../../shared/components/NavHeader';
+import { Link as StyledLink } from '../../shared/components/text/base';
 import { CommunityBusiness } from '../../api';
 import { redirectOnError } from '../../util';
 
-
-const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const FlexItem = styled.div`
-  flex: ${props => props.flex || '1'};
-`;
 
 const ButtonOne = styled(DotButton)`
   width: 14em;
@@ -59,15 +50,11 @@ export default class Dashboard extends React.Component {
   render() {
     return (
       <FlexContainerCol>
-        <Nav>
-          <FlexItem>
-            <StyledLink to="/">Back home</StyledLink>
-          </FlexItem>
-          <FlexItem flex="2">
-            <Heading>Welcome admin! Where do you want to go?</Heading>
-          </FlexItem>
-          <FlexItem />
-        </Nav>
+        <NavHeader
+          leftTo="/"
+          leftContent="Back home"
+          centerContent="Welcome admin! Where do you want to go?"
+        />
         <Row>
           <ButtonWrapperLink to="/cb/activities">
             <ButtonOne>

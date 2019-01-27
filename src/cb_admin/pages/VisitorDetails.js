@@ -6,9 +6,10 @@ import moment from 'moment';
 import csv from 'fast-csv';
 import { saveAs } from 'file-saver';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
-import { Heading, Link, Paragraph } from '../../shared/components/text/base';
+import { Paragraph } from '../../shared/components/text/base';
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
+import NavHeader from '../../shared/components/NavHeader';
 import { colors, fonts } from '../../shared/style_guide';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
@@ -16,17 +17,6 @@ import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
 import { renameKeys, redirectOnError } from '../../util';
 import { AgeRange } from '../../shared/constants';
 
-const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex: 1;
-`;
-
-const FlexItem = styled.div`
-  flex: ${props => props.flex || '1'};
-  height: 100%;
-`;
 
 const Form = styled(Fm)`
   width: 100%;
@@ -36,10 +26,6 @@ const Row = styled(FlexContainerRow)`
   align-content: center;
   align-items: flex-start;
   flex: 3;
-`;
-
-const HyperLink = styled(Link)`
-  flex: ${props => props.flex || '1'};
 `;
 
 const FormSection = styled.section`
@@ -225,11 +211,11 @@ export default class VisitorDetailsPage extends React.Component {
 
     return (
       <FlexContainerCol expand>
-        <Nav>
-          <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
-          <Heading flex={2}>Visitor details</Heading>
-          <FlexItem />
-        </Nav>
+        <NavHeader
+          leftTo="/cb/dashboard"
+          leftContent="Back to dashboard"
+          centerContent="Visitor details"
+        />
         <Row>
           <Form onChange={this.onChange}>
             <FormSection>

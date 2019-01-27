@@ -3,19 +3,15 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { PrimaryButtonNoFill, SecondaryButton } from '../../shared/components/form/base';
-import { Heading, Heading2, Link as HyperLink } from '../../shared/components/text/base';
+import { Heading2 } from '../../shared/components/text/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
+import NavHeader from '../../shared/components/NavHeader';
 import confused from '../../shared/assets/icons/faces/confused.svg';
 import happy from '../../shared/assets/icons/faces/happy.svg';
 import sad from '../../shared/assets/icons/faces/sad.svg';
 import { CommunityBusiness, CbAdmin } from '../../api';
 import { redirectOnError } from '../../util';
 
-const StyledNav = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const StyledSection = styled.section`
   margin: 3rem 0;
@@ -26,11 +22,6 @@ const StyledSection = styled.section`
 const FlexLink = styled(Link)`
   flex: 1 0 20vh;
   text-align: center;
-`;
-
-const FlexItem = styled.div`
-  flex: ${props => props.flex || '1'};
-  text-align: ${props => (props.textRight ? 'right' : 'left')};
 `;
 
 const ButtonLeft = styled(PrimaryButtonNoFill)`
@@ -71,15 +62,11 @@ export default class HomeVisitor extends Component {
     return (
       <div>
         <FlexContainerCol justify="space-around">
-          <StyledNav>
-            <FlexItem>
-              <HyperLink to="/">Back to the main page</HyperLink>
-            </FlexItem>
-            <FlexItem flex="2">
-              <Heading>Welcome Visitor</Heading>
-            </FlexItem>
-            <FlexItem />
-          </StyledNav>
+          <NavHeader
+            leftTo="/"
+            leftContent="Back to main page"
+            centerContent="Welcome, visitor!"
+          />
           <StyledSection>
             <FlexLink to="/visitor/login">
               <ButtonLeft large>Sign in</ButtonLeft>

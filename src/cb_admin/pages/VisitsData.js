@@ -10,7 +10,8 @@ import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { Form as F, FormSection as FS, PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { colors, fonts } from '../../shared/style_guide';
-import { Heading, Paragraph, Link } from '../../shared/components/text/base';
+import { Paragraph } from '../../shared/components/text/base';
+import NavHeader from '../../shared/components/NavHeader';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
 import { ErrorUtils, CommunityBusiness, Visitors, Activities } from '../../api';
@@ -20,13 +21,6 @@ import { AgeRange } from '../../shared/constants';
 const repeat = (xs, n) => (xs.length >= n ? xs.slice(0, n) : repeat(xs.concat(xs), n));
 
 const BarChart = styled(Bar)``;
-
-const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex: 1;
-`;
 
 const Form = styled(F)`
   width: 100%;
@@ -45,10 +39,6 @@ const Row = styled(FlexContainerRow)`
 const FlexItem = styled.div`
   flex: ${props => props.flex || '1'};
   height: 100%;
-`;
-
-const HyperLink = styled(Link)`
-  flex: ${props => props.flex || '1'};
 `;
 
 const ExportButton = styled(PrimaryButton)`
@@ -291,11 +281,11 @@ export default class VisitsDataPage extends React.Component {
     const { errors, visitsList } = this.state;
     return (
       <FlexContainerCol expand>
-        <Nav>
-          <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
-          <Heading flex={2}>Visits data</Heading>
-          <FlexItem />
-        </Nav>
+        <NavHeader
+          leftTo="/cb/dashboard"
+          leftContent="Back to dashboard"
+          centerContent="Visits data"
+        />
         <Row flex={2}>
           <Form onChange={this.onChange}>
             <FormSection>

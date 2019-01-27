@@ -7,7 +7,8 @@ import moment from 'moment';
 import styled from 'styled-components';
 import { CommunityBusiness } from '../../api';
 import { PrimaryButton } from '../../shared/components/form/base';
-import { Heading, Link, Paragraph } from '../../shared/components/text/base';
+import { Paragraph } from '../../shared/components/text/base';
+import NavHeader from '../../shared/components/NavHeader';
 import { colors } from '../../shared/style_guide';
 import { redirectOnError } from '../../util';
 
@@ -19,17 +20,6 @@ const FeedbackPrimaryButton = styled(PrimaryButton) `
 
 const FeedbackParagraph = styled(Paragraph) `
   display: inline-block;
-`;
-
-const StyledNav = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const FlexItem = styled.div`
-  flex: ${props => props.flex || '1'};
-  height: 100%;
 `;
 
 const InvisibleDiv = styled.div`
@@ -131,15 +121,11 @@ export default class Feedback extends Component {
   render() {
     return (
       <div>
-        <StyledNav>
-          <FlexItem>
-            <Link to="/cb/dashboard"> Back to dashboard </Link>
-          </FlexItem>
-          <FlexItem flex="2">
-            <Heading>Visitor Satisfaction</Heading>
-          </FlexItem>
-          <FlexItem />
-        </StyledNav>
+        <NavHeader
+          leftTo="/cb/dashboard"
+          leftContent="Back to dashboard"
+          centerContent="Visitor Satisfaction"
+        />
 
         <div>
           <FeedbackParagraph displayInline>View:</FeedbackParagraph>

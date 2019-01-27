@@ -14,16 +14,11 @@ import styled from 'styled-components';
 import PurposeButton from '../components/purposeButton';
 import QRPrivacy from '../components/qrprivacy';
 import { Activities, Visitors, CbAdmin } from '../../api';
-import { Heading, Paragraph, Link as HyperLink } from '../../shared/components/text/base';
+import { Paragraph } from '../../shared/components/text/base';
 import { FlexContainerRow, FlexContainerCol } from '../../shared/components/layout/base';
+import NavHeader from '../../shared/components/NavHeader';
 import { redirectOnError } from '../../util';
 
-
-const StyledNav = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const StyledSection = styled.section`
   margin: ${props => props.margin}rem 0;
@@ -47,10 +42,6 @@ const SmallFlexContainerRow = styled(FlexContainerRow)`
   @media (min-width: 1000px) {
     width: 50%;
   }
-`;
-
-const FlexItem = styled.div`
-  flex: ${props => props.flex || '1'};
 `;
 
 const QrParagraph = styled(Paragraph)`
@@ -218,15 +209,11 @@ export default class QRCode extends Component {
     if (!hasScanned) {
       return (
         <Fragment>
-          <StyledNav>
-            <FlexItem>
-              <HyperLink to="/">Back to the main page</HyperLink>
-            </FlexItem>
-            <FlexItem flex="2">
-              <Heading>Welcome Visitor!</Heading>
-            </FlexItem>
-            <FlexItem />
-          </StyledNav>
+          <NavHeader
+            leftTo="/"
+            leftContent="Back to main page"
+            centerContent="Welcome, visitor!"
+          />
           <StyledSection margin={0}>
             <FlexContainerCol>
               <QrParagraph>Please scan your QR code to log in</QrParagraph>
@@ -240,11 +227,9 @@ export default class QRCode extends Component {
     }
     return (
       <Fragment>
-        <StyledNav>
-          <Heading>
-            Welcome back, {capitaliseFirstName(visitorName)}! Why are you here today?
-          </Heading>
-        </StyledNav>
+        <NavHeader
+          centerContent={`Welcome back, ${capitaliseFirstName(visitorName)}! Why are you here today?`}
+        />
         <StyledSection margin={3}>
           <BigFlexContainerRow>
             {this.state.activities

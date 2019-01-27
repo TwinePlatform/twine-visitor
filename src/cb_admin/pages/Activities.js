@@ -3,26 +3,16 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { assocPath, dissoc, invertObj } from 'ramda';
 import { FlexContainerCol } from '../../shared/components/layout/base';
-import { Paragraph, Heading, Link as HyperLink, ErrorParagraph } from '../../shared/components/text/base';
+import { Paragraph, ErrorParagraph } from '../../shared/components/text/base';
 import { Form, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
+import NavHeader from '../../shared/components/NavHeader';
 import Checkbox from '../components/Checkbox';
 import { Activities, CommunityBusiness, ErrorUtils } from '../../api';
 import ActivityLabel from '../components/ActivityLabel';
 import { redirectOnError } from '../../util';
 
-
-const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex: 1;
-`;
-
-const FlexItem = styled.div`
-  flex: ${props => props.flex || '1'};
-`;
 
 const SubmitButton = styled(PrimaryButton) `
   margin-left: 2em;
@@ -168,13 +158,11 @@ export default class ActivitiesPage extends React.Component {
     const errorMessage = <ActivitiesError vis={errors.view}> {errors.general} </ActivitiesError>;
     return (
       <FlexContainerCol expand>
-        <Nav>
-          <FlexItem>
-            <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
-          </FlexItem>
-          <Heading flex={2}>Activities List</Heading>
-          <FlexItem />
-        </Nav>
+        <NavHeader
+          leftTo="/cb/dashboard"
+          leftContent="Back to dashboard"
+          centerContent="Activities List"
+        />
         <Paragraph>
           Add and edit the services, activities, and events being offered at your community
           business here. You can select which days of the week each of them will be available
