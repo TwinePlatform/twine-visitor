@@ -3,18 +3,36 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { BirthYear } from '../../../shared/constants';
+import NavHeader from '../../../shared/components/NavHeader';
 import LabelledInput from '../../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../../shared/components/form/LabelledSelect';
 import { FlexContainerCol } from '../../../shared/components/layout/base';
 import { Form, FormSection, PrimaryButton } from '../../../shared/components/form/base';
+import { Paragraph } from '../../../shared/components/text/base';
 
 const SubmitButton = styled(PrimaryButton)`
   height: 4em;
   width: 90%;
 `;
 
+const CenteredParagraph = styled(Paragraph)`
+  width: 90%;
+  font-size: 1.1em;
+  text-align: center;
+`;
+
 const CreateAnonUserForm = props => (
   <FlexContainerCol>
+    <NavHeader
+      leftTo="/cb/dashboard"
+      leftContent="Back to dashboard"
+      centerContent="Create Anonymous User"
+    />
+    <CenteredParagraph>
+      This allows you to track footfall for visitors who do not want to sign up for an individual
+      account. You can pick what demographic data you would like to be associated to this account
+      and name it to reflect this.
+    </CenteredParagraph>
     <Form className="SignupForm" onChange={props.handleChange} onSubmit={props.onSubmit}>
       <FormSection>
         <LabelledInput
