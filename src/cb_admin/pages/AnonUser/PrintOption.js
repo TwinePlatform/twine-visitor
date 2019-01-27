@@ -2,39 +2,30 @@ import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import { Heading, Paragraph, Link } from '../../../shared/components/text/base';
+import NavHeader from '../../../shared/components/NavHeader';
+import { Paragraph } from '../../../shared/components/text/base';
 import { PrimaryButton } from '../../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../../shared/components/layout/base';
 import PrintableQrCode from '../../../shared/components/PrintableQrCode';
 
 
 const ButtonsFlexContainerCol = styled(FlexContainerCol)`
-  padding-top: 10%;
-  width: 40%;
+  width: 50%;
 `;
 
 const SubmitButton = styled(PrimaryButton)`
   height: 4em;
-  width: 90%;
-  margin-bottom: 5%;
+  width: 80%;
 `;
 
 const CenteredParagraph = styled(Paragraph)`
   width: 90%;
-  font-weight: medium;
   font-size: 21px;
   text-align: center;
   margin-top: 5%;
   padding-left: 15%;
 `;
 
-const CenteredHeading = styled(Heading)`
-  padding-top: 5%;
-  padding-left: 10%;
-  width: 90%;
-  text-align: center;
-  font-weight: heavy;
-`;
 
 const QRimg = styled.img`
   height: 25em;
@@ -61,7 +52,11 @@ const PrintOption = props =>
   (<Fragment>
     <NotPrint>
       <FlexContainerCol>
-        <CenteredHeading>Anonymous User QR code</CenteredHeading>
+        <NavHeader
+          leftTo="/cb/dashboard"
+          leftContent="Back to dashboard"
+          centerContent="Anonymous User QR code"
+        />
         <CenteredParagraph>
         Please print this page. If you loose the QR code it can be reprinted from the Visitor page.
         </CenteredParagraph>
@@ -70,9 +65,6 @@ const PrintOption = props =>
             <QRimg src={props.qrCode} alt="This is your QRcode" />
           </QRContainer>
           <ButtonsFlexContainerCol>
-            <Link to="/cb/dashboard">
-              <SubmitButton>NEXT</SubmitButton>
-            </Link>
             <SubmitButton onClick={props.onClickPrint}>PRINT QR CODE</SubmitButton>
           </ButtonsFlexContainerCol>
         </FlexContainerRow>
