@@ -8,7 +8,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import qs from 'qs';
 import styled from 'styled-components';
 import { Row, Col, Grid } from 'react-flexbox-grid';
 import { BeatLoader as Bl } from 'react-spinners';
@@ -96,7 +95,7 @@ export default class Login extends Component {
     Visitors.search({ qrCode: content })
       .then((res) => {
         if (!res.data.result) {
-          throw new SignInForm.NoUserError('No user found');
+          return this.props.history.push('/visitor/qrerror?e=no_user_qr');
         }
 
         return this.onSignInSuccess({
@@ -124,50 +123,7 @@ export default class Login extends Component {
       .catch(err => redirectOnError(this.props.history.push, err));
   }
 
-  renderQrSignIn() {
-    return (
-      <>
-        <Row center="xs">
-          <Col xs={12}>
-            Please scan your QR code
-          </Col>
-        </Row>
-        <Row center="xs">
-          <Col xs={12} md={6}>
-            <QrScanner
-              onCameraError={this.onCameraError}
-              onScannerError={this.onScannerError}
-              onScan={this.searchVisitorByQrCode}
-            />
-          </Col>
-        </Row>
-      </>
-    );
-  }
-
-  renderNameSignIn() {
-    return (
-      <>
-        <Row center="xs">
-          <Col xs={12}>
-            Please enter the details you signed up with
-          </Col>
-        </Row>
-        <Row center="xs">
-          <Col xs={12} md={6}>
-            <SignInForm
-              onSuccess={this.onSignInSuccess}
-              onFailure={this.onSignInFailure}
-            />
-          </Col>
-        </Row>
-      </>
-    );
-  }
-
   renderSignInPage() {
-    const query = qs.parse(this.props.history.location.search.slice(1) || '');
-
     return (
       <Fragment>
         <NavHeader
@@ -177,11 +133,29 @@ export default class Login extends Component {
           centerFlex={2}
         />
         <Grid>
-          {
-            query.type === 'qr_code'
-              ? this.renderQrSignIn()
-              : this.renderNameSignIn()
-          }
+          <Row center="xs">
+            <Col xs={12} lg={6}>
+              <Row center="xs">
+                <Col xs={12}> Either scan your QR code </Col>
+              </Row>
+              <QrScanner
+                onCameraError={this.onCameraError}
+                onScannerError={this.onScannerError}
+                onScan={this.searchVisitorByQrCode}
+              />
+            </Col>
+            <Col xs={12} lg={6}>
+              <Row center="xs">
+                <Col xs={12}> Or, please enter the details you signed up with </Col>
+              </Row>
+              <Row center="xs">
+                <SignInForm
+                  onSuccess={this.onSignInSuccess}
+                  onFailure={this.onSignInFailure}
+                />
+              </Row>
+            </Col>
+          </Row>
         </Grid>
       </Fragment>
     );

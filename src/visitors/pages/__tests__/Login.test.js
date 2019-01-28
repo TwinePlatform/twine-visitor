@@ -50,7 +50,7 @@ describe('Visitor Login Component', () => {
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
       // Wait for sign in page to appear after initial fetch
-      await waitForElement(() => tools.getByText('Please enter the details you signed up with'));
+      await waitForElement(() => tools.getByText('Or, please enter the details you signed up with'));
       const nameInput = await waitForElement(() => tools.getByLabelText('Your name'));
       const btn = await waitForElement(() => tools.getByText('Sign in'));
 
@@ -74,7 +74,7 @@ describe('Visitor Login Component', () => {
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
       // Wait for sign in page to appear after initial fetch
-      await waitForElement(() => tools.getByText('Please enter the details you signed up with'));
+      await waitForElement(() => tools.getByText('Or, please enter the details you signed up with'));
       const nameInput = await waitForElement(() => tools.getByLabelText('Your name'));
       const btn = await waitForElement(() => tools.getByText('Sign in'));
 
@@ -102,7 +102,7 @@ describe('Visitor Login Component', () => {
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
       // Wait for sign in page to appear after initial fetch
-      await waitForElement(() => tools.getByText('Please enter the details you signed up with'));
+      await waitForElement(() => tools.getByText('Or, please enter the details you signed up with'));
       const nameInput = await waitForElement(() => tools.getByLabelText('Your name'));
       const btn = await waitForElement(() => tools.getByText('Sign in'));
 
@@ -137,7 +137,7 @@ describe('Visitor Login Component', () => {
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
       // Wait for sign in page to appear after initial fetch
-      await waitForElement(() => tools.getByText('Please enter the details you signed up with'));
+      await waitForElement(() => tools.getByText('Or, please enter the details you signed up with'));
       const nameInput = await waitForElement(() => tools.getByLabelText('Your name'));
       const btn = await waitForElement(() => tools.getByText('Sign in'));
 
@@ -172,7 +172,7 @@ describe('Visitor Login Component', () => {
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
       // Wait for sign in page to appear after initial fetch
-      await waitForElement(() => tools.getByText('Please enter the details you signed up with'));
+      await waitForElement(() => tools.getByText('Or, please enter the details you signed up with'));
       const nameInput = await waitForElement(() => tools.getByLabelText('Your name'));
       const btn = await waitForElement(() => tools.getByText('Sign in'));
 
@@ -209,7 +209,7 @@ describe('Visitor Login Component', () => {
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
       // Wait for sign in page to appear after initial fetch
-      await waitForElement(() => tools.getByText('Please enter the details you signed up with'));
+      await waitForElement(() => tools.getByText('Or, please enter the details you signed up with'));
       const nameInput = await waitForElement(() => tools.getByLabelText('Your name'));
       const btn = await waitForElement(() => tools.getByText('Sign in'));
 
@@ -245,7 +245,7 @@ describe('Visitor Login Component', () => {
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
       // Wait for sign in page to appear after initial fetch
-      await waitForElement(() => tools.getByText('Please enter the details you signed up with'));
+      await waitForElement(() => tools.getByText('Or, please enter the details you signed up with'));
       const nameInput = await waitForElement(() => tools.getByLabelText('Your name'));
       const btn = await waitForElement(() => tools.getByText('Sign in'));
 

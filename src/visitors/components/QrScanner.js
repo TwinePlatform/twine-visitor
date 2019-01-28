@@ -2,12 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Paragraph as P } from '../../shared/components/text/base';
 
-
-const Paragraph = styled(P)`
-  margin-bottom: 2em;
-`;
 
 const Video = styled.video`
   background-color: black;
@@ -88,7 +83,6 @@ export default class QrScanner extends React.Component {
   render() {
     return (
       <QrContainer id="qr-scanner-container">
-        <Paragraph>Scan QR code</Paragraph>
         <Video ref={this.setPlaybackRef} />
       </QrContainer>
     );

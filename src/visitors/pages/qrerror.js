@@ -15,6 +15,8 @@ const ErrorText = {
   no_user_qr: 'Your QR code does not correspond to a registered visitor at this organisation',
   no_user: 'Your details do not correspond to a registered visitor at this organisation',
   no_instascan: 'There was an application error',
+  scanner: 'There was an application error',
+  camera: 'There was a problem accessing the camera. If this continues, try a different device.',
   default: null,
 };
 
@@ -30,11 +32,14 @@ const ContinueOptions = {
     </>
   ),
   no_user: () => ContinueOptions.default(),
+  no_user_qr: () => ContinueOptions.default(),
   no_instascan: () => (
     <>
       <Button onClick={() => window.location.replace('/')}>Refresh the app</Button>
     </>
   ),
+  scanner: () => ContinueOptions.no_instascan(),
+  camera: () => ContinueOptions.no_instascan(),
 };
 
 const QrError = (props) => {
