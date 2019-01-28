@@ -12,7 +12,7 @@ import qs from 'qs';
 import styled from 'styled-components';
 import { Row, Col, Grid } from 'react-flexbox-grid';
 import { BeatLoader as Bl } from 'react-spinners';
-import QRPrivacy from '../components/qrprivacy';
+import PrivacyStatement from '../components/PrivacyStatement';
 import QrScanner from '../components/QrScanner';
 import SignInForm from '../components/SignInForm';
 import ActivitiesGrid from '../components/ActivitiesGrid';
@@ -45,7 +45,7 @@ export default class Login extends Component {
 
     this.state = {
       initialFetchDone: false,
-      hasScanned: false,
+      hasSignedIn: false,
       visitorId: null,
       visitorName: '',
       orgName: '',
@@ -81,7 +81,7 @@ export default class Login extends Component {
 
   onSignInSuccess = (res) => {
     this.setState({
-      hasScanned: true,
+      hasSignedIn: true,
       visitorName: res.name,
       visitorId: res.id,
       qrCodeContent: res.qrCodeContent,
@@ -99,10 +99,10 @@ export default class Login extends Component {
           throw new SignInForm.NoUserError('No user found');
         }
 
-        return {
+        return this.onSignInSuccess({
           ...res.data.result,
           qrCodeContent: content,
-        };
+        });
       })
       .catch(err => redirectOnError(this.props.history.push, err, { default: '/visitor/qrerror' }));
   }
@@ -204,7 +204,7 @@ export default class Login extends Component {
               />
             </Col>
             <Col xs={12} md={6}>
-              <QRPrivacy />
+              <PrivacyStatement />
             </Col>
           </Row>
         </Grid>
@@ -244,7 +244,7 @@ export default class Login extends Component {
   )
 
   render() {
-    const { hasScanned, activities, initialFetchDone } = this.state;
+    const { hasSignedIn, activities, initialFetchDone } = this.state;
 
     if (!initialFetchDone) {
       return this.renderLoader();
@@ -254,7 +254,7 @@ export default class Login extends Component {
       return this.renderNoActivities();
     }
 
-    return !hasScanned
+    return !hasSignedIn
       ? this.renderSignInPage()
       : this.renderActivitySelect();
   }

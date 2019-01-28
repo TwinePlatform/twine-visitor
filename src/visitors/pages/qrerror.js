@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import qs from 'qs';
-import QRPrivacy from '../components/qrprivacy';
+import PrivacyStatement from '../components/PrivacyStatement';
 import { PrimaryButton } from '../../shared/components/form/base';
 
 const Button = styled(PrimaryButton)`
@@ -48,7 +48,7 @@ const QrError = (props) => {
         <h4>{props.subHeaderContent}</h4>
         { ContinueOptions[query.e || 'default']() }
       </section>
-      <QRPrivacy />
+      <PrivacyStatement />
     </div>
   );
 };

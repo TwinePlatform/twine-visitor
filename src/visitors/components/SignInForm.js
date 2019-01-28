@@ -26,6 +26,10 @@ const Button = styled(PrimaryButton)`
   padding: 1.2em 0;
 `;
 
+const transformStateToPayload = compose(
+  renameKeys({ birthYear: 'age' }),
+  evolve({ birthYear: y => [y, y].map(BirthYear.toAge) }),
+);
 
 export default class SignInForm extends React.Component {
   constructor(props) {
@@ -47,12 +51,7 @@ export default class SignInForm extends React.Component {
 
     const { onSuccess, onFailure } = this.props;
 
-    const filterPayload = compose(
-      renameKeys({ birthYear: 'age' }),
-      evolve({ birthYear: y => [y, y].map(BirthYear.toAge) }),
-    )(this.state.form);
-
-    Visitors.get(null, { filter: filterPayload, fields: ['id', ...SignInForm.Fields] })
+    Visitors.get(null, { filter: transformStateToPayload(this.state.form), fields: ['id', ...SignInForm.Fields] })
       .then((res) => {
         if (!res.data.result || res.data.result.length === 0) {
           return onFailure(new SignInForm.NoUserError('No user found'));

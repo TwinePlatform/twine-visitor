@@ -7,7 +7,7 @@ const ATag = styled.a`
   font-weight: ${fonts.weight.medium};
   color: ${colors.dark};
 `;
-const qrPrivacy = () => (
+const PrivacyStatement = () => (
   <aside>
     <Heading3>What information are we storing?</Heading3>
     <Paragraph>
@@ -27,4 +27,4 @@ const qrPrivacy = () => (
   </aside>
 );
 
-export default qrPrivacy;
+export default PrivacyStatement;
