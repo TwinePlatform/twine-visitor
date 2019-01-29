@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import { Grid } from 'react-flexbox-grid';
 import { BirthYear } from '../../../shared/constants';
 import NavHeader from '../../../shared/components/NavHeader';
 import LabelledInput from '../../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../../shared/components/form/LabelledSelect';
-import { FlexContainerCol } from '../../../shared/components/layout/base';
 import { Form, FormSection, PrimaryButton } from '../../../shared/components/form/base';
 import { Paragraph } from '../../../shared/components/text/base';
 
@@ -22,7 +22,7 @@ const CenteredParagraph = styled(Paragraph)`
 `;
 
 const CreateAnonUserForm = props => (
-  <FlexContainerCol>
+  <Grid>
     <NavHeader
       leftTo="/cb/dashboard"
       leftContent="Back to dashboard"
@@ -63,7 +63,7 @@ const CreateAnonUserForm = props => (
         <SubmitButton type="submit">CREATE</SubmitButton>
       </FormSection>
     </Form>
-  </FlexContainerCol>);
+  </Grid>);
 
 
 CreateAnonUserForm.propTypes = {

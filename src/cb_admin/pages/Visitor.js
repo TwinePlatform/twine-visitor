@@ -220,7 +220,7 @@ export default class VisitorProfile extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {<PrintableQrCode cbLogoUrl={this.state.cbLogoUrl} qrCode={this.state.qrCodeUrl} />}
+        <PrintableQrCode cbLogoUrl={this.state.cbLogoUrl} qrCode={this.state.qrCodeUrl} />
         {this.renderMain(this.state)}
       </React.Fragment>
     );
