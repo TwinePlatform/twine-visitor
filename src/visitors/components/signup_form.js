@@ -73,7 +73,7 @@ const signupForm = (props) => {
                 label="Full Name"
                 name={`fullname$${props.uuid}`}
                 type="text"
-                error={props.errors.formSender && VISITOR_NAME_INVALID}
+                error={props.errors.name && VISITOR_NAME_INVALID}
                 required
               />
               <LabelledInput
@@ -81,21 +81,21 @@ const signupForm = (props) => {
                 label="Email Address"
                 name={`email$${props.uuid}`}
                 type="email"
-                error={props.errors.formEmail}
+                error={props.errors.email}
               />
               <LabelledInput
                 id="visitor-signup-phonenumber"
                 label="Phone Number"
                 name={`phone$${props.uuid}`}
                 type="text"
-                error={props.errors.formPhone}
+                error={props.errors.number}
               />
               <LabelledSelect
                 id="visitor-signup-gender"
                 label="Gender"
                 name="gender"
                 options={props.genders}
-                error={props.errors.formGender}
+                error={props.errors.gender}
                 required
               />
               <LabelledSelect
@@ -103,7 +103,7 @@ const signupForm = (props) => {
                 label="Year of Birth"
                 name="year"
                 options={props.years}
-                error={props.errors.formYear}
+                error={props.errors.birthYear}
                 required
               />
               {!props.hasGivenAge && ageCheckCheckbox}
