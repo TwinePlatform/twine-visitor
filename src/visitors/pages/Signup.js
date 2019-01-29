@@ -164,7 +164,7 @@ export default class Main extends Component {
     e.preventDefault();
 
     if (!this.state.phone && !this.state.email) {
-      return this.setState({ errors: { formEmail: 'You must supply a phone number or email address' } });
+      return this.setState({ errors: { email: 'You must supply a phone number or email address' } });
     }
 
     if (!this.state.hasGivenAge && !this.state.ageCheck) {
