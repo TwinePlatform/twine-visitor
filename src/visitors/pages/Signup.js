@@ -221,7 +221,7 @@ export default class Main extends Component {
 
           <Route path="/visitor/signup/thankyou">
             <React.Fragment>
-              {<PrintableQrCode cbLogoUrl={cbLogoUrl} qrCode={qrCode} />}
+              <PrintableQrCode cbLogoUrl={cbLogoUrl} qrCode={qrCode} />
               {this.renderMain(this.state)}
             </React.Fragment>
           </Route>
