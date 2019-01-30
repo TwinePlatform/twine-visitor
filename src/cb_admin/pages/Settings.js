@@ -6,7 +6,7 @@ import { assocPath, compose, pick, prop, filter, pipe, prepend, map, omit, flatt
 import csv from 'fast-csv';
 import jsZip from 'jszip';
 import fileSaver from 'file-saver';
-import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Paragraph as P } from '../../shared/components/text/base';
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
@@ -20,12 +20,6 @@ import { renameKeys, redirectOnError } from '../../util';
 import NavHeader from '../../shared/components/NavHeader';
 
 
-const FlexItem = styled.div`
-  flex: ${props => props.flex || '1'};
-  height: 100%;
-  margin-right: 1em;
-`;
-
 const Form = styled(Fm)`
   width: 100%;
 `;
@@ -34,27 +28,20 @@ const Paragraph = styled(P)`
   width: 100%;
 `;
 
-const Row = styled(FlexContainerRow)`
-  align-content: center;
-  align-items: flex-start;
-  flex: 2;
-  margin-bottom: 1.5em;
-`;
-
 const Button = styled(PrimaryButton)`
-  width: 90%;
+  width: 100%;
   height: 3em;
 `;
 
 const ExportButton = styled(Button)`
-  width: 50%;
+  width: 100%;
 `;
 
 const ErrorMessage = styled(P)`
   color: ${colors.error};
   display: inline-block;
   height: 3em;
-  width: 50%;
+  width: 100%;
   padding: 1rem;
 `;
 
@@ -259,24 +246,24 @@ export default class SettingsPage extends React.Component {
     ];
 
     return (
-      <FlexContainerCol>
+      <Grid>
         <NavHeader
           leftTo="/cb/dashboard"
           leftContent="Back to dashboard"
           centerContent={rest.name}
         />
-        <Row>
-          <FlexItem flex={7}>
+        <Row between="xs">
+          <Col xs={12} md={7}>
             <DetailsTable rows={rows} caption="Business details" />
-          </FlexItem>
-          <FlexItem flex={4}>
+          </Col>
+          <Col xs={12} md={4}>
             <Logo src={rest.logoUrl} alt="Business logo" />
-          </FlexItem>
+          </Col>
         </Row>
-        <FlexContainerRow flex={4}>
-          <Form onChange={this.onChange} onSubmit={this.onSubmit}>
-            <Paragraph>Edit your details</Paragraph>
-            <FlexItem flex={7}>
+        <Paragraph>Edit your details</Paragraph>
+        <Form onChange={this.onChange} onSubmit={this.onSubmit}>
+          <Row between="xs">
+            <Col xs={12} md={7}>
               <LabelledInput
                 id="cb-admin-business-name"
                 label="Business name"
@@ -304,18 +291,17 @@ export default class SettingsPage extends React.Component {
               />
               <ExportButton type="button" onClick={this.createZip}>Download data as CSV</ExportButton>
               <ErrorMessage>{this.state.errors.general}</ErrorMessage>
-            </FlexItem>
-            <FlexItem flex={4}>
+            </Col>
+            <Col xs={12} md={4}>
               <Dropzone
                 content={rest.dropzoneMsg}
-                disabled={Boolean(rest.logoUrl)}
                 onDrop={this.onImageDrop}
               />
               <Button type="submit">SAVE</Button>
-            </FlexItem>
-          </Form>
-        </FlexContainerRow>
-      </FlexContainerCol>
+            </Col>
+          </Row>
+        </Form>
+      </Grid>
     );
   }
 }

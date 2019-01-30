@@ -9,9 +9,10 @@ const Table = styled.table`
   background-color: ${colors.highlight_secondary}; /* Fallback */
   background: linear-gradient(0, ${rgba(colors.highlight_secondary, 0.75)} 0%, ${colors.highlight_secondary} 100%);
   color: ${colors.white};
-  width: 90%;
-  height: 6em;
-  padding: 2em;
+  height: 98%;
+  width: 100%;
+  padding: 1.5em 2em 1.5em 1em;
+  word-break: break-word;
 `;
 const TableCaption = styled.caption`
   display: none;
