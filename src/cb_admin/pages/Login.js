@@ -12,7 +12,7 @@ import { redirectOnError } from '../../util';
 
 const SubmitButton = styled(PrimaryButton)`
   height: 4em;
-  width: 90%;
+  width: 100%;
 `;
 
 const CenteredParagraph = styled(Paragraph)`

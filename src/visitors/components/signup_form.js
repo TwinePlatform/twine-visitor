@@ -11,7 +11,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Grid, Row } from 'react-flexbox-grid';
-import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
+import { Form as FM, FormSection, PrimaryButton } from '../../shared/components/form/base';
 import { Paragraph } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import StyledLabelledCheckbox from '../../shared/components/form/StyledLabelledCheckbox';
@@ -21,9 +21,14 @@ import NavHeader from '../../shared/components/NavHeader';
 import { colors, fonts } from '../../shared/style_guide';
 import { VISITOR_NAME_INVALID } from '../../cb_admin/constants/error_text';
 
+
+const Form = styled(FM)`
+  align-items: baseline;
+`;
+
 const SubmitButton = styled(PrimaryButton)`
   height: 4em;
-  width: 90%;
+  width: 100%;
 `;
 
 const PrivacyLink = styled.a`
@@ -32,7 +37,6 @@ const PrivacyLink = styled.a`
 `;
 
 const CenteredParagraph = styled(Paragraph)`
-  width: 90%;
   line-height: 1.5em;
 `;
 
@@ -65,7 +69,7 @@ const signupForm = (props) => {
         centerContent="Please tell us about yourself"
       />
       <Row>
-        <Form className="SignupForm" onChange={props.handleChange} onSubmit={props.createVisitor}>
+        <Form onChange={props.handleChange} onSubmit={props.createVisitor}>
           <FormSection flexOrder={1}>
             <div>
               <LabelledInput

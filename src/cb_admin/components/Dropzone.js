@@ -12,8 +12,7 @@ const StyledDropzone = styled(Dropzone) `
   flex-direction: column;
   justify-content: center;
   height: 8em;
-  width: 90%;
-  margin: 1.2em 0 2em 0;
+  margin: 1.2em 0 1.5em 0;
   border: 0.1em dashed ${colors.light};
   border-radius: 0;
   background-color: ${rgba(colors.highlight_primary, 0.06)};
@@ -37,7 +36,9 @@ const DropZone = props => (
     onDrop={props.onDrop}
   >
     <UploadIcon alt="upload icon" src={uploadSvg} />
-    { props.content }
+    <span style={{ padding: '0 0.2em' }}>
+      { props.content }
+    </span>
   </StyledDropzone>
 );
 

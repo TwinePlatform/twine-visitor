@@ -12,6 +12,10 @@ color: ${colors.error};
 display: ${props => (props.show ? 'inline' : 'none')};
 `;
 
+const LabelledSelectContainer = styled.div`
+  width: 100%;
+`;
+
 const LabelledSelect = (props) => {
   const { id, label, options, error, ...rest } = props;
 
@@ -27,10 +31,9 @@ const LabelledSelect = (props) => {
 
 
   return (
-    <div>
-      <Label htmlFor={id} display={'inline'}>{label}</Label>
-      <ErrorText key={1} show={error}>{error}</ErrorText>
-
+    <LabelledSelectContainer>
+      <Label htmlFor={id}>{label}</Label>
+      <ErrorText show={error}>{error}</ErrorText>
       <SelectWrapper>
         <Select id={id} {...rest}>
           {options.map(opt => (
@@ -41,7 +44,7 @@ const LabelledSelect = (props) => {
         </Select>
         <SelectArrow />
       </SelectWrapper>
-    </div>
+    </LabelledSelectContainer>
   );
 };
 
