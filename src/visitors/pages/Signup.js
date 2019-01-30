@@ -190,7 +190,7 @@ export default class Main extends Component {
           this.setState({ errors: ErrorUtils.getValidationErrors(err) });
         } else if (ErrorUtils.errorStatusEquals(err, 409)) {
           this.setState({
-            errors: { formEmail: 'A user has already been registered with this name and email' },
+            errors: { email: ErrorUtils.getErrorMessage(err) },
           });
         } else {
           redirectOnError(this.props.history.push, err);

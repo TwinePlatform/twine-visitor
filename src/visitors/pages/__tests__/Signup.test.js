@@ -217,6 +217,50 @@ describe('Visitor Registration Component', () => {
     });
   });
 
+  test('submit form w/ duplicate email', async () => {
+    expect.assertions(1);
+
+    mock
+      .onPost('/users/login/de-escalate')
+      .reply(200, { data: null });
+
+    mock
+      .onGet('/genders')
+      .reply(200, { result: [{ id: 1, name: 'male' }, { id: 2, name: 'female' }, { id: 3, name: 'prefer not to say' }] });
+
+
+    mock.onPost('/users/register/visitors')
+      .reply(409, { error: { statusCode: 409, message: 'User with this e-mail already registered' } });
+
+    const tools = renderWithRouter({ route: '/visitor/signup' })(main);
+
+    // wait page to be ready by waiting for gender list to be populated
+    await waitForElement(() => tools.getByText('female', { exact: false }));
+
+    const [
+      fullname,
+      email,
+      gender,
+      birthYear,
+      submit,
+    ] = await waitForElement(() => [
+      tools.getByLabelText('Full Name'),
+      tools.getByLabelText('Email Address'),
+      tools.getByLabelText('Gender'),
+      tools.getByLabelText('Year of Birth'),
+      tools.getByText('CONTINUE'),
+    ]);
+
+    fireEvent.change(fullname, { target: { value: 'Sheva Alomar' } });
+    fireEvent.change(email, { target: { value: '1@aperturescience.com' } });
+    fireEvent.change(gender, { target: { value: 'female' } });
+    fireEvent.change(birthYear, { target: { value: '1988' } });
+    fireEvent.click(submit);
+
+    const error = await waitForElement(() => tools.getByText('already registered', { exact: false }));
+    expect(error.textContent).toBe('User with this e-mail already registered');
+  });
+
   test('submit form w/o email or phone number', async () => {
     expect.assertions(1);
 
