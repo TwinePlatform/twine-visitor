@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { assocPath, compose, filter, pick, prop } from 'ramda';
 import { Grid as Gr, Row, Col } from 'react-flexbox-grid';
-import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
+import { FlexContainerRow } from '../../shared/components/layout/base';
 import { Paragraph as P, Heading } from '../../shared/components/text/base';
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
@@ -23,12 +23,6 @@ const Grid = styled(Gr) `
   }
 `;
 
-// const FlexItem = styled.div`
-//   flex: ${props => props.flex || '1'};
-//   height: 100%;
-//   margin-right: 1em;
-// `;
-
 const Form = styled(Fm) `
   width: 100%;
 `;
@@ -36,12 +30,6 @@ const Form = styled(Fm) `
 const Paragraph = styled(P) `
   width: 100%;
 `;
-
-// const Row = styled(FlexContainerRow) `
-//   align-content: center;
-//   align-items: flex-start;
-//   flex: 3;
-// `;
 
 const Button = styled(PrimaryButton) `
   width: 100%;
