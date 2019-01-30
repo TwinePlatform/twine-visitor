@@ -4,19 +4,14 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { BeatLoader as Bl } from 'react-spinners';
 import { SecondaryButton } from '../components/form/base';
-import { Heading, Link as HyperLink, Heading2 } from '../components/text/base';
+import { Heading, Heading2 } from '../components/text/base';
 import { FlexContainerCol } from '../components/layout/base';
 import DotButton from '../components/form/DottedButton';
+import NavHeader from '../components/NavHeader';
 import { CommunityBusiness, CbAdmin } from '../../api';
 import { redirectOnError } from '../../util';
 import { colors } from '../style_guide';
 
-
-const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
 
 const StyledSection = styled.section`
   display: flex;
@@ -26,10 +21,6 @@ const StyledSection = styled.section`
 const FlexLink = styled(Link)`
   flex: 1 0 20vh;
   text-align: center;
-`;
-
-const FlexItem = styled.div`
-  flex: ${props => props.flex || '1'};
 `;
 
 const ButtonLeft = styled(DotButton)`
@@ -82,16 +73,17 @@ export default class Home extends Component {
       />
       : (
         <FlexContainerCol justify="space-around">
-          <Nav>
-            <FlexItem>
-              <HyperLink to="/cb/login" onClick={() => CbAdmin.logout()}> Logout </HyperLink>
-            </FlexItem>
-            <FlexItem flex="2">
-              <Heading> Welcome to {this.state.cbName} </Heading>
-              <Heading2> Who are you? </Heading2>
-            </FlexItem>
-            <FlexItem />
-          </Nav>
+          <NavHeader
+            leftTo="/cb/login"
+            leftContent="Logout"
+            leftOnClick={() => CbAdmin.logout()}
+            centerContent={
+              <>
+                <Heading> Welcome to {this.state.cbName} </Heading>
+                <Heading2> Who are you? </Heading2>
+              </>
+            }
+          />
           <StyledSection>
             <FlexLink to="/visitor/home">
               <ButtonLeft> Visitor </ButtonLeft>

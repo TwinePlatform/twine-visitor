@@ -2,7 +2,7 @@
  * Twine API interface
  */
 import _axios, { create } from 'axios';
-import { pathOr, equals, evolve, map } from 'ramda';
+import { pathOr, equals, evolve, map, filter } from 'ramda';
 import qs from 'qs';
 import { BirthYear } from '../shared/constants';
 
@@ -65,7 +65,7 @@ export const Visitors = {
   ) =>
     axios.post(
       '/users/register/visitors',
-      {
+      filter(Boolean, {
         name,
         gender,
         birthYear,
@@ -74,7 +74,7 @@ export const Visitors = {
         emailConsent,
         smsConsent,
         organisationId,
-      },
+      }),
     ),
 
   update: ({ id, name, gender, birthYear, email, phoneNumber } = {}) =>

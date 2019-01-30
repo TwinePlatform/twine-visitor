@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { CbAdmin } from '../../api';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
-import { Heading, Paragraph, Link } from '../../shared/components/text/base';
+import { Paragraph, Link } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import { FlexContainerCol } from '../../shared/components/layout/base';
+import NavHeader from '../../shared/components/NavHeader';
 
 
 const SubmitButton = styled(PrimaryButton) `
@@ -46,7 +47,11 @@ export default class ConfirmPassword extends React.Component {
     const { errors } = this.state;
     return (
       <FlexContainerCol>
-        <Heading>Confirm password</Heading>
+        <NavHeader
+          leftTo="/"
+          leftContent="Back to main page"
+          centerContent="Confirm password"
+        />
         <CenteredParagraph>Welcome admin, please confirm your password</CenteredParagraph>
         <Form onChange={this.onChange} onSubmit={this.onSubmit}>
           <FormSection>

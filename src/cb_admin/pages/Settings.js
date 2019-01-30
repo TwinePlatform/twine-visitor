@@ -7,7 +7,7 @@ import csv from 'fast-csv';
 import jsZip from 'jszip';
 import fileSaver from 'file-saver';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
-import { Paragraph as P, Heading, Link } from '../../shared/components/text/base';
+import { Paragraph as P } from '../../shared/components/text/base';
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
@@ -17,14 +17,8 @@ import Dropzone from '../components/Dropzone';
 import Logo from '../components/Logo';
 import { CbAdmin, CommunityBusiness, Cloudinary, Visitors } from '../../api';
 import { renameKeys, redirectOnError } from '../../util';
+import NavHeader from '../../shared/components/NavHeader';
 
-
-const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex: 1;
-`;
 
 const FlexItem = styled.div`
   flex: ${props => props.flex || '1'};
@@ -43,10 +37,7 @@ const Row = styled(FlexContainerRow)`
   align-content: center;
   align-items: flex-start;
   flex: 2;
-`;
-
-const HyperLink = styled(Link)`
-  flex: ${props => props.flex || '1'};
+  margin-bottom: 1.5em;
 `;
 
 const Button = styled(PrimaryButton)`
@@ -268,11 +259,11 @@ export default class SettingsPage extends React.Component {
 
     return (
       <FlexContainerCol>
-        <Nav>
-          <HyperLink to="/cb/dashboard"> Back to dashboard </HyperLink>
-          <Heading flex={2}>{rest.name}</Heading>
-          <FlexItem />
-        </Nav>
+        <NavHeader
+          leftTo="/cb/dashboard"
+          leftContent="Back to dashboard"
+          centerContent={rest.name}
+        />
         <Row>
           <FlexItem flex={7}>
             <DetailsTable rows={rows} caption="Business details" />
