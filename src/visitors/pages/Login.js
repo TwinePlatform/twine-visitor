@@ -134,6 +134,11 @@ export default class Login extends Component {
         />
         <Grid>
           <Row center="xs">
+            <Paragraph style={{ marginBottom: '2em' }}>
+              Use one of the two options below to sign in!
+            </Paragraph>
+          </Row>
+          <Row center="xs">
             <Col xs={12} lg={6}>
               <Row center="xs">
                 <Col xs={12}> Either scan your QR code </Col>
