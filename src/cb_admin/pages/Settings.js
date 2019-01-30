@@ -6,9 +6,9 @@ import { assocPath, compose, pick, prop, filter, pipe, prepend, map, omit, flatt
 import csv from 'fast-csv';
 import jsZip from 'jszip';
 import fileSaver from 'file-saver';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Grid, Row as RW, Col } from 'react-flexbox-grid';
 import { Paragraph as P } from '../../shared/components/text/base';
-import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
+import { PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
 import { colors } from '../../shared/style_guide';
@@ -20,7 +20,11 @@ import { renameKeys, redirectOnError } from '../../util';
 import NavHeader from '../../shared/components/NavHeader';
 
 
-const Form = styled(Fm)`
+const Row = styled(RW)`
+  width: 100%;
+`;
+
+const Form = styled.form`
   width: 100%;
 `;
 
