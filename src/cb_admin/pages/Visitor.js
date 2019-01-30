@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import { assocPath, compose, filter, pick, prop } from 'ramda';
+import { Grid as Gr, Row, Col } from 'react-flexbox-grid';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { Paragraph as P, Heading } from '../../shared/components/text/base';
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
@@ -16,17 +17,17 @@ import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 import { renameKeys, redirectOnError } from '../../util';
 import { BirthYear } from '../../shared/constants';
 
-const Col = styled(FlexContainerCol) `
+const Grid = styled(Gr) `
   @media print {
     display: none;
   }
 `;
 
-const FlexItem = styled.div`
-  flex: ${props => props.flex || '1'};
-  height: 100%;
-  margin-right: 1em;
-`;
+// const FlexItem = styled.div`
+//   flex: ${props => props.flex || '1'};
+//   height: 100%;
+//   margin-right: 1em;
+// `;
 
 const Form = styled(Fm) `
   width: 100%;
@@ -36,11 +37,11 @@ const Paragraph = styled(P) `
   width: 100%;
 `;
 
-const Row = styled(FlexContainerRow) `
-  align-content: center;
-  align-items: flex-start;
-  flex: 3;
-`;
+// const Row = styled(FlexContainerRow) `
+//   align-content: center;
+//   align-items: flex-start;
+//   flex: 3;
+// `;
 
 const Button = styled(PrimaryButton) `
   width: 100%;
@@ -201,17 +202,17 @@ export default class VisitorProfile extends React.Component {
     ];
 
     return (
-      <Col>
+      <Grid>
         <NavHeader
           leftTo="/cb/dashboard"
           leftContent="Back to dashboard"
           centerContent="Visitor profile"
         />
-        <Row>
-          <FlexItem flex={7}>
+        <Row between="xs">
+          <Col xs={12} md={7}>
             <DetailsTable rows={rows} caption="Visitor details" />
-          </FlexItem>
-          <FlexItem flex={4}>
+          </Col>
+          <Col xs={12} md={4}>
             <QrBox
               qrCodeUrl={rest.qrCodeUrl}
               print={this.onClickPrint}
@@ -219,12 +220,12 @@ export default class VisitorProfile extends React.Component {
               status={rest.resendQrCodeState}
               error={errors.resendButton}
             />
-          </FlexItem>
+          </Col>
         </Row>
-        <FlexContainerRow flex={4}>
-          <Form onChange={this.onChange} onSubmit={this.onSubmit}>
-            <Paragraph>Edit user details</Paragraph>
-            <FlexItem flex={7}>
+        <Paragraph>Edit user details</Paragraph>
+        <Form onChange={this.onChange} onSubmit={this.onSubmit}>
+          <Row between="xs" style={{ width: '100%' }}>
+            <Col xs={12} md={7}>
               <LabelledInput
                 id="visitor-name"
                 label="Name"
@@ -242,8 +243,8 @@ export default class VisitorProfile extends React.Component {
                 error={errors.email}
               />
               <Button type="submit">SAVE</Button>
-            </FlexItem>
-            <FlexItem flex={4}>
+            </Col>
+            <Col xs={12} md={4}>
               <LabelledSelect
                 id="visitor-birthYear"
                 label="Year of birth"
@@ -260,10 +261,10 @@ export default class VisitorProfile extends React.Component {
                 value={rest.form.gender || rest.gender}
                 error={errors.gender}
               />
-            </FlexItem>
-          </Form>
-        </FlexContainerRow>
-      </Col>
+            </Col>
+          </Row>
+        </Form>
+      </Grid>
     );
   }
 
