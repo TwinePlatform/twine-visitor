@@ -2,47 +2,29 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Grid, Row as R, Col } from 'react-flexbox-grid';
 import { PrimaryButtonNoFill, SecondaryButton } from '../../shared/components/form/base';
 import { Heading2 } from '../../shared/components/text/base';
-import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import NavHeader from '../../shared/components/NavHeader';
-import confused from '../../shared/assets/icons/faces/confused.svg';
-import happy from '../../shared/assets/icons/faces/happy.svg';
-import sad from '../../shared/assets/icons/faces/sad.svg';
+import FeedbackButtons from '../components/FeedbackButtons';
 import { CommunityBusiness, CbAdmin } from '../../api';
 import { redirectOnError } from '../../util';
 
 
-const StyledSection = styled.section`
-  margin: 3rem 0;
-  display: flex;
-  justify-content: center;
-`;
-
-const FlexLink = styled(Link)`
-  flex: 1 0 20vh;
-  text-align: center;
+const Row = styled(R)`
+  padding: 2em 0;
 `;
 
 const ButtonLeft = styled(PrimaryButtonNoFill)`
-  width: 14rem;
+  width: 100%;
   height: 11rem;
+  max-width: 14rem;
 `;
 
 const ButtonRight = styled(SecondaryButton)`
-  width: 14rem;
+  width: 100%;
   height: 11rem;
-`;
-
-const FeedbackButton = styled(PrimaryButtonNoFill)`
-  flex: 1;
-  padding: 1rem;
-  border: none;
-`;
-
-const FeedbackStyledSection = styled.section`
-  width: 60%;
-  margin: 0 auto;
+  max-width: 14rem;
 `;
 
 const postFeedback = (feedbackScore, props) =>
@@ -58,40 +40,31 @@ export default class HomeVisitor extends Component {
   }
 
   render() {
-    const { props } = this;
     return (
-      <div>
-        <FlexContainerCol justify="space-around">
-          <NavHeader
-            leftTo="/"
-            leftContent="Back to main page"
-            centerContent="Welcome, visitor!"
-          />
-          <StyledSection>
-            <FlexLink to="/visitor/login">
-              <ButtonLeft large>Sign in</ButtonLeft>
-            </FlexLink>
-            <FlexLink to="/visitor/signup">
-              <ButtonRight large>Sign up</ButtonRight>
-            </FlexLink>
-          </StyledSection>
-          <FeedbackStyledSection>
-            <Heading2>What did you think of your visit today?</Heading2>
-            <FlexContainerRow>
-              <FeedbackButton data-testid="negative-feedback-btn" onClick={() => postFeedback(-1, props)}>
-                <img src={sad} alt="sad feedback button" />
-              </FeedbackButton>
-              <FeedbackButton data-testid="neutral-feedback-btn" onClick={() => postFeedback(0, props)}>
-                <img src={confused} alt="confused feedback button" />
-              </FeedbackButton>
-              <FeedbackButton data-testid="positive-feedback-btn" onClick={() => postFeedback(+1, props)}>
-                <img src={happy} alt="happy feedback button" />
-              </FeedbackButton>
-            </FlexContainerRow>
-          </FeedbackStyledSection>
-        </FlexContainerCol>
-      </div>)
-    ;
+      <Grid>
+        <NavHeader
+          leftTo="/"
+          leftContent="Back to main page"
+          centerContent="Welcome, visitor!"
+        />
+        <Row around="xs" center="xs">
+          <Col xs={4}>
+            <Link to="/visitor/login">
+              <ButtonLeft>Sign in</ButtonLeft>
+            </Link>
+          </Col>
+          <Col xs={4}>
+            <Link to="/visitor/signup">
+              <ButtonRight>Sign up as a new visitor</ButtonRight>
+            </Link>
+          </Col>
+        </Row>
+        <Row center="xs" middle="xs">
+          <Heading2>What did you think of your visit today?</Heading2>
+        </Row>
+        <FeedbackButtons onClick={score => postFeedback(score, this.props)} />
+      </Grid>
+    );
   }
 }
 
