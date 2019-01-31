@@ -39,11 +39,12 @@ export default class SignInForm extends React.Component {
       fields: SignInForm.Fields.slice(0, 1),
       form: {},
       errors: [],
+      uuid: btoa(new Date().toISOString()), // Used to prevent browser autocomplete
     };
   }
 
   handleFormChange = (e) => {
-    this.setState(assocPath(['form', e.target.name], e.target.value));
+    this.setState(assocPath(['form', e.target.name.split('$')[0]], e.target.value));
   }
 
   handleFormSubmit = (e) => {
@@ -83,6 +84,7 @@ export default class SignInForm extends React.Component {
                 value: this.state.form[field] || '',
                 error: this.state.errors[field],
                 onChange: this.handleFormChange,
+                uuid: this.state.uuid,
               }))
         }
         <Button type="submit">Sign in</Button>
@@ -111,7 +113,7 @@ SignInForm.FieldRenderer = {
     <LabelledInput
       key="visitor-login-name"
       id="visitor-login-name"
-      name="name"
+      name={'name$'.concat(props.uuid || '')} // eslint-disable-line react/prop-types
       label="Your name"
       value={props.value} // eslint-disable-line react/prop-types
       error={props.error} // eslint-disable-line react/prop-types
@@ -123,7 +125,7 @@ SignInForm.FieldRenderer = {
     <LabelledInput
       key="visitor-login-post-code"
       id="visitor-login-post-code"
-      name="postCode"
+      name={'postCode$'.concat(props.uuid || '')} // eslint-disable-line react/prop-types
       label="Your post code"
       value={props.value} // eslint-disable-line react/prop-types
       error={props.error} // eslint-disable-line react/prop-types
@@ -148,7 +150,7 @@ SignInForm.FieldRenderer = {
     <LabelledInput
       key="visitor-login-phone-number"
       id="visitor-login-phone-number"
-      name="phoneNumber"
+      name={'phoneNumber$'.concat(props.uuid || '')} // eslint-disable-line react/prop-types
       label="Phone number you registered with"
       value={props.value} // eslint-disable-line react/prop-types
       error={props.error} // eslint-disable-line react/prop-types
@@ -160,7 +162,7 @@ SignInForm.FieldRenderer = {
     <LabelledInput
       key="visitor-login-email"
       id="visitor-login-email"
-      name="email"
+      name={'email$'.concat(props.uuid || '')} // eslint-disable-line react/prop-types
       label="E-mail you registered with"
       value={props.value} // eslint-disable-line react/prop-types
       error={props.error} // eslint-disable-line react/prop-types
