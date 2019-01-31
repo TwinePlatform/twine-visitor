@@ -5,7 +5,7 @@ import {
   fireEvent,
 } from 'react-testing-library';
 import MockAdapter from 'axios-mock-adapter';
-import renderWithRouter from '../../../tests';
+import { renderWithRouter } from '../../../tests';
 import Settings from '../Settings';
 import { axios } from '../../../api';
 
