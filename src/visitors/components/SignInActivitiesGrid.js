@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Row, Col } from 'react-flexbox-grid';
-import ActivitiesGridItem from './ActivitiesGridItem';
+import SignInActivitiesGridItem from './SignInActivitiesGridItem';
 import { pairs } from '../../util';
 
 
@@ -10,14 +10,14 @@ const MarginSpacedCol = styled(Col)`
   margin: 1em 0;
 `;
 
-const ActivitiesGrid = props => (
+const SignInActivitiesGrid = props => (
   <>
     {
       pairs(props.activities)
         .map(([actLeft, actRight], i) => (
           <Row key={`${actLeft.id}${actRight && actRight.id}`} reverse={i % 2 === 0} middle="xs">
             <MarginSpacedCol xs={6}>
-              <ActivitiesGridItem
+              <SignInActivitiesGridItem
                 key={actLeft.id}
                 index={1}
                 name={actLeft.name}
@@ -27,7 +27,7 @@ const ActivitiesGrid = props => (
             {
               actRight && (
                 <MarginSpacedCol xs={6}>
-                  <ActivitiesGridItem
+                  <SignInActivitiesGridItem
                     key={actRight.id}
                     index={2}
                     name={actRight.name}
@@ -42,13 +42,13 @@ const ActivitiesGrid = props => (
   </>
 );
 
-ActivitiesGrid.propTypes = {
+SignInActivitiesGrid.propTypes = {
   activities: PropTypes.arrayOf(
     PropTypes.shape({ id: PropTypes.number, name: PropTypes.string }),
   ).isRequired,
   onClick: PropTypes.func.isRequired,
 };
 
-ActivitiesGrid.defaultProps = {};
+SignInActivitiesGrid.defaultProps = {};
 
-export default ActivitiesGrid;
+export default SignInActivitiesGrid;

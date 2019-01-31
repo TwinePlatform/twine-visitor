@@ -16,7 +16,7 @@ const BtnTwo = styled(SecondaryButton)`
   padding: 2em 0;
 `;
 
-const ActivitiesGridItem = props => (
+const SignInActivitiesGridItem = props => (
   <>
     {
       props.index % 2 === 0
@@ -34,14 +34,14 @@ const ActivitiesGridItem = props => (
   </>
 );
 
-ActivitiesGridItem.propTypes = {
+SignInActivitiesGridItem.propTypes = {
   index: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   onClick: PropTypes.func,
 };
 
-ActivitiesGridItem.defaultProps = {
+SignInActivitiesGridItem.defaultProps = {
   onClick: () => {},
 };
 
-export default ActivitiesGridItem;
+export default SignInActivitiesGridItem;

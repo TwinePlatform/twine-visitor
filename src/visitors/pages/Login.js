@@ -14,7 +14,7 @@ import { BeatLoader as Bl } from 'react-spinners';
 import PrivacyStatement from '../components/PrivacyStatement';
 import QrScanner from '../components/QrScanner';
 import SignInForm from '../components/SignInForm';
-import ActivitiesGrid from '../components/ActivitiesGrid';
+import SignInActivitiesGrid from '../components/SignInActivitiesGrid';
 import { Activities, Visitors, CbAdmin, CommunityBusiness } from '../../api';
 import { Paragraph } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
@@ -181,7 +181,7 @@ export default class Login extends Component {
         <Grid>
           <Row>
             <Col xs={12} md={6}>
-              <ActivitiesGrid
+              <SignInActivitiesGrid
                 activities={this.state.activities}
                 onClick={this.addVisitLog}
               />
