@@ -141,7 +141,9 @@ export default class Login extends Component {
           <Row center="xs">
             <Col xs={12} lg={6}>
               <Row center="xs">
-                <Col xs={12}> Either scan your QR code </Col>
+                <Col xs={12}>
+                  <Paragraph> Either scan your QR code </Paragraph>
+                </Col>
               </Row>
               <QrScanner
                 onCameraError={this.onCameraError}
@@ -151,7 +153,9 @@ export default class Login extends Component {
             </Col>
             <Col xs={12} lg={6}>
               <Row center="xs">
-                <Col xs={12}> Or, please enter the details you signed up with </Col>
+                <Col xs={12}>
+                  <Paragraph> Or, please enter the details you signed up with </Paragraph>
+                </Col>
               </Row>
               <Row center="xs">
                 <SignInForm
