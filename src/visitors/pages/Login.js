@@ -186,7 +186,7 @@ export default class Login extends Component {
                 onClick={this.addVisitLog}
               />
             </Col>
-            <Col xs={12} md={6}>
+            <Col xs={12} md={5} mdOffset={1}>
               <PrivacyStatement />
             </Col>
           </Row>
