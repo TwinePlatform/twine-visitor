@@ -11,16 +11,16 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { Row, Col, Grid } from 'react-flexbox-grid';
 import { BeatLoader as Bl } from 'react-spinners';
-import PrivacyStatement from '../components/PrivacyStatement';
-import QrScanner from '../components/QrScanner';
-import SignInForm from '../components/SignInForm';
-import SignInActivitiesGrid from '../components/SignInActivitiesGrid';
-import { Activities, Visitors, CbAdmin, CommunityBusiness } from '../../api';
-import { Paragraph } from '../../shared/components/text/base';
-import { PrimaryButton } from '../../shared/components/form/base';
-import NavHeader from '../../shared/components/NavHeader';
-import { redirectOnError } from '../../util';
-import { colors } from '../../shared/style_guide';
+import PrivacyStatement from '../../components/PrivacyStatement';
+import QrScanner from './QrScanner';
+import SignInForm from './SignInForm';
+import SignInActivitiesGrid from './SignInActivitiesGrid';
+import { Activities, Visitors, CbAdmin, CommunityBusiness } from '../../../api';
+import { Paragraph } from '../../../shared/components/text/base';
+import { PrimaryButton } from '../../../shared/components/form/base';
+import NavHeader from '../../../shared/components/NavHeader';
+import { redirectOnError } from '../../../util';
+import { colors } from '../../../shared/style_guide';
 
 
 const StyledSection = styled.section`

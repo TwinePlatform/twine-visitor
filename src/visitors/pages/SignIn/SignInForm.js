@@ -5,12 +5,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { assocPath, evolve, compose } from 'ramda';
-import { Form, PrimaryButton } from '../../shared/components/form/base';
-import LabelledInput from '../../shared/components/form/LabelledInput';
-import LabelledSelect from '../../shared/components/form/LabelledSelect';
-import { BirthYear } from '../../shared/constants';
-import { Visitors } from '../../api';
-import { reduceVisitorsToFields, renameKeys } from '../../util';
+import { Form, PrimaryButton } from '../../../shared/components/form/base';
+import LabelledInput from '../../../shared/components/form/LabelledInput';
+import LabelledSelect from '../../../shared/components/form/LabelledSelect';
+import { BirthYear } from '../../../shared/constants';
+import { Visitors } from '../../../api';
+import { reduceVisitorsToFields, renameKeys } from '../../../util';
 
 
 const CustomForm = styled(Form)`

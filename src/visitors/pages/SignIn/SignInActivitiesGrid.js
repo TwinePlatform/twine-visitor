@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Row, Col } from 'react-flexbox-grid';
 import SignInActivitiesGridItem from './SignInActivitiesGridItem';
-import { pairs } from '../../util';
+import { pairs } from '../../../util';
 
 
 const MarginSpacedCol = styled(Col)`
