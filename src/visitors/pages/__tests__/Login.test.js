@@ -7,7 +7,7 @@ import {
 import MockAdapter from 'axios-mock-adapter';
 import { axios } from '../../../api';
 import { renderWithRouter, MockResponses, MockInstaScan } from '../../../tests';
-import SignInForm from '../../components/SignInForm';
+import SignInForm from '../SignIn/SignInForm';
 import main from '../SignIn';
 
 describe('Visitor SignIn Component', () => {
