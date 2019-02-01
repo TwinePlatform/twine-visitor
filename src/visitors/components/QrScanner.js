@@ -15,6 +15,9 @@ const Video = styled.video`
   width: 100%;
 `;
 
+const QrContainer = styled.div`
+  text-align: center;
+`;
 
 const instascanAvailable = () => {
   try {
@@ -84,10 +87,10 @@ export default class QrScanner extends React.Component {
 
   render() {
     return (
-      <div id="qr-scanner-container" style={{ textAlign: 'center' }}>
+      <QrContainer id="qr-scanner-container">
         <Paragraph>Scan QR code</Paragraph>
         <Video ref={this.setPlaybackRef} />
-      </div>
+      </QrContainer>
     );
   }
 }
