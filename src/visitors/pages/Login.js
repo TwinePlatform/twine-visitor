@@ -32,7 +32,7 @@ const StyledSection = styled.section`
 const BeatLoader = styled(Bl)`
   width: 60px;
   margin: 0 auto;
-  padding-top: 5rem;
+  padding-top: 45vh;
 `;
 
 const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
@@ -213,8 +213,8 @@ export default class Login extends Component {
   }
 
   renderLoader = () => (
-    <Grid fluid className="full-height">
-      <Row center="xs" middle="xs" className="full-height">
+    <Grid fluid>
+      <Row center="xs" middle="xs">
         <Col xs={12}>
           <BeatLoader
             color={colors.highlight_primary}
