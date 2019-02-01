@@ -1,7 +1,7 @@
 /*
  *           ---- Scan QR code ---                       ---- Load activities ---- Register visit
  *          /                     \                    /
- * Login --                        -- Get visitor ID --
+ * Sign in --                      -- Get visitor ID --
  *          \                     /                    \
  *           --- Enter details ---                        ---- Failure screen
  */
@@ -38,7 +38,7 @@ const BeatLoader = styled(Bl)`
 const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
 const greetingWithOrgName = orgName => `Welcome${orgName ? ` to ${orgName}` : ''}!`;
 
-export default class Login extends Component {
+export default class SignIn extends Component {
   constructor() {
     super();
 
@@ -243,9 +243,9 @@ export default class Login extends Component {
   }
 }
 
-withRouter(Login); // to get history and use history.push
+withRouter(SignIn); // to get history and use history.push
 
-Login.propTypes = {
+SignIn.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
     location: PropTypes.shape({

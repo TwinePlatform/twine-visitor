@@ -8,9 +8,9 @@ import MockAdapter from 'axios-mock-adapter';
 import { axios } from '../../../api';
 import { renderWithRouter, MockResponses, MockInstaScan } from '../../../tests';
 import SignInForm from '../../components/SignInForm';
-import main from '../Login';
+import main from '../SignIn';
 
-describe('Visitor Login Component', () => {
+describe('Visitor SignIn Component', () => {
   let mock;
 
   beforeAll(() => {
@@ -34,7 +34,7 @@ describe('Visitor Login Component', () => {
     });
   });
 
-  describe('Login with name', () => {
+  describe('Sign in with name', () => {
     const activities = [
       { id: 1, name: 'Yoga' },
       { id: 2, name: 'Fencing' },
@@ -268,5 +268,5 @@ describe('Visitor Login Component', () => {
   });
 
   // Once we have a good mock of the QR scanning library
-  describe.skip('Login with QRCode', () => {});
+  describe.skip('Sign in with QRCode', () => {});
 });
