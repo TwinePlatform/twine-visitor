@@ -6,8 +6,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { assocPath, evolve, compose } from 'ramda';
 import { Form, PrimaryButton } from '../../../shared/components/form/base';
-import LabelledInput from '../../../shared/components/form/LabelledInput';
-import LabelledSelect from '../../../shared/components/form/LabelledSelect';
+import SignInFormFields from './SignInFormFields';
 import { BirthYear } from '../../../shared/constants';
 import { Visitors } from '../../../api';
 import { reduceVisitorsToFields, renameKeys } from '../../../util';
@@ -43,6 +42,21 @@ export default class SignInForm extends React.Component {
     };
   }
 
+  // Custom error type when no users are found
+  NoUserError = class NoUserError extends Error {};
+
+  // Custom error type when multiple users are found
+  MultipleUserError = class MultipleUserError extends Error {};
+
+  // Order of preference for fields to prompt user with
+  fields = [
+    'name',
+    'postCode',
+    'birthYear',
+    'phoneNumber',
+    'email',
+  ]
+
   handleFormChange = (e) => {
     this.setState(assocPath(['form', e.target.name.split('$')[0]], e.target.value));
   }
@@ -59,10 +73,10 @@ export default class SignInForm extends React.Component {
         }
 
         if (res.data.result.length !== 1) {
-          const fields = reduceVisitorsToFields(res.data.result);
-          const nextField = SignInForm.Fields.find(v => fields.includes(v));
+          const searchableFields = reduceVisitorsToFields(res.data.result);
+          const nextField = SignInForm.Fields.find(v => searchableFields.includes(v));
 
-          if (fields.length === 0 || !nextField) {
+          if (searchableFields.length === 0 || !nextField) {
             throw new SignInForm.MultipleUserError('Users cannot be distinguished');
           }
 
@@ -80,7 +94,7 @@ export default class SignInForm extends React.Component {
         {
           this.state.fields
             .map(field =>
-              SignInForm.FieldRenderer[field]({
+              SignInFormFields[field]({
                 value: this.state.form[field] || '',
                 error: this.state.errors[field],
                 onChange: this.handleFormChange,
@@ -96,77 +110,4 @@ export default class SignInForm extends React.Component {
 SignInForm.propTypes = {
   onSuccess: PropTypes.func.isRequired,
   onFailure: PropTypes.func.isRequired,
-};
-
-SignInForm.MultipleUserError = class MultipleUserError extends Error {};
-SignInForm.NoUserError = class NoUserError extends Error {};
-SignInForm.Fields = [
-  'name',
-  'postCode',
-  'birthYear',
-  'phoneNumber',
-  'email',
-];
-
-SignInForm.FieldRenderer = {
-  name: props => (
-    <LabelledInput
-      key="visitor-login-name"
-      id="visitor-login-name"
-      name={'name$'.concat(props.uuid || '')} // eslint-disable-line react/prop-types
-      label="Your name"
-      value={props.value} // eslint-disable-line react/prop-types
-      error={props.error} // eslint-disable-line react/prop-types
-      onChange={props.onChange} // eslint-disable-line react/prop-types
-    />
-  ),
-
-  postCode: props => (
-    <LabelledInput
-      key="visitor-login-post-code"
-      id="visitor-login-post-code"
-      name={'postCode$'.concat(props.uuid || '')} // eslint-disable-line react/prop-types
-      label="Your post code"
-      value={props.value} // eslint-disable-line react/prop-types
-      error={props.error} // eslint-disable-line react/prop-types
-      onChange={props.onChange} // eslint-disable-line react/prop-types
-    />
-  ),
-
-  birthYear: props => (
-    <LabelledSelect
-      key="visitor-login-birth-year"
-      id="visitor-login-birth-year"
-      name="birthYear"
-      label="Your year of birth"
-      options={BirthYear.defaultOptionsList()}
-      value={props.value} // eslint-disable-line react/prop-types
-      error={props.error} // eslint-disable-line react/prop-types
-      onChange={props.onChange} // eslint-disable-line react/prop-types
-    />
-  ),
-
-  phoneNumber: props => (
-    <LabelledInput
-      key="visitor-login-phone-number"
-      id="visitor-login-phone-number"
-      name={'phoneNumber$'.concat(props.uuid || '')} // eslint-disable-line react/prop-types
-      label="Phone number you registered with"
-      value={props.value} // eslint-disable-line react/prop-types
-      error={props.error} // eslint-disable-line react/prop-types
-      onChange={props.onChange} // eslint-disable-line react/prop-types
-    />
-  ),
-
-  email: props => (
-    <LabelledInput
-      key="visitor-login-email"
-      id="visitor-login-email"
-      name={'email$'.concat(props.uuid || '')} // eslint-disable-line react/prop-types
-      label="E-mail you registered with"
-      value={props.value} // eslint-disable-line react/prop-types
-      error={props.error} // eslint-disable-line react/prop-types
-      onChange={props.onChange} // eslint-disable-line react/prop-types
-    />
-  ),
 };
