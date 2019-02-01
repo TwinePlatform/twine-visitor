@@ -8,12 +8,14 @@ const BtnOne = styled(PrimaryButtonNoFill)`
   width: 100%;
   height: 100%;
   padding: 2em 0;
+  min-height: 6em;
 `;
 
 const BtnTwo = styled(SecondaryButton)`
   width: 100%;
   height: 100%;
   padding: 2em 0;
+  min-height: 6em;
 `;
 
 const SignInActivitiesGridItem = props => (
