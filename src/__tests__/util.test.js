@@ -145,8 +145,8 @@ describe('Client utility functions', () => {
         },
       ];
 
-      expect(new Set(...reduceVisitorsToFields(input)))
-        .toEqual(new Set(...['name', 'birthYear', 'postCode', 'phoneNumber']));
+      expect(reduceVisitorsToFields(input).sort())
+        .toEqual(['name', 'birthYear', 'postCode', 'phoneNumber'].sort());
     });
 
     test('fields with identical values are removed', () => {
@@ -186,8 +186,8 @@ describe('Client utility functions', () => {
         },
       ];
 
-      expect(new Set(...reduceVisitorsToFields(input)))
-        .toEqual(new Set(...['name', 'email', 'postCode', 'phoneNumber']));
+      expect(reduceVisitorsToFields(input).sort())
+        .toEqual(['name', 'email', 'postCode', 'phoneNumber'].sort());
     });
   });
 });
