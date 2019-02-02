@@ -14,6 +14,7 @@ export default {
       value={props.value} // eslint-disable-line react/prop-types
       error={props.error} // eslint-disable-line react/prop-types
       onChange={props.onChange} // eslint-disable-line react/prop-types
+      required
     />
   ),
 
@@ -26,6 +27,7 @@ export default {
       value={props.value} // eslint-disable-line react/prop-types
       error={props.error} // eslint-disable-line react/prop-types
       onChange={props.onChange} // eslint-disable-line react/prop-types
+      required
     />
   ),
 
@@ -39,6 +41,7 @@ export default {
       value={props.value} // eslint-disable-line react/prop-types
       error={props.error} // eslint-disable-line react/prop-types
       onChange={props.onChange} // eslint-disable-line react/prop-types
+      required
     />
   ),
 
@@ -51,6 +54,7 @@ export default {
       value={props.value} // eslint-disable-line react/prop-types
       error={props.error} // eslint-disable-line react/prop-types
       onChange={props.onChange} // eslint-disable-line react/prop-types
+      required
     />
   ),
 
@@ -63,6 +67,7 @@ export default {
       value={props.value} // eslint-disable-line react/prop-types
       error={props.error} // eslint-disable-line react/prop-types
       onChange={props.onChange} // eslint-disable-line react/prop-types
+      required
     />
   ),
 };

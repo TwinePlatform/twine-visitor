@@ -30,18 +30,10 @@ const transformStateToPayload = compose(
   evolve({ birthYear: y => [y, y].map(BirthYear.toAge) }),
 );
 
+const concatUnlessExists = x => xs => xs.includes(x) ? xs : xs.concat(x);
+
+
 export default class SignInForm extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      fields: SignInForm.Fields.slice(0, 1),
-      form: {},
-      errors: [],
-      uuid: btoa(new Date().toISOString()), // Used to prevent browser autocomplete
-    };
-  }
-
   // Custom error type when no users are found
   static NoUserError = class NoUserError extends Error {};
 
@@ -57,6 +49,17 @@ export default class SignInForm extends React.Component {
     'email',
   ]
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isFetching: false,
+      fields: SignInForm.fields.slice(0, 1),
+      form: {},
+      uuid: btoa(new Date().toISOString()), // Used to prevent browser autocomplete
+    };
+  }
+
   handleFormChange = (e) => {
     this.setState(assocPath(['form', e.target.name.split('$')[0]], e.target.value));
   }
@@ -64,28 +67,35 @@ export default class SignInForm extends React.Component {
   handleFormSubmit = (e) => {
     e.preventDefault();
 
+    this.setState({ isFetching: true });
+
     const { onSuccess, onFailure } = this.props;
 
-    Visitors.get(null, { filter: transformStateToPayload(this.state.form), fields: ['id', ...SignInForm.Fields] })
+    Visitors.get(null, { filter: transformStateToPayload(this.state.form), fields: ['id', ...SignInForm.fields] })
       .then((res) => {
+        this.setState({ isFetching: false });
+
         if (!res.data.result || res.data.result.length === 0) {
           return onFailure(new SignInForm.NoUserError('No user found'));
         }
 
         if (res.data.result.length !== 1) {
           const searchableFields = reduceVisitorsToFields(res.data.result);
-          const nextField = SignInForm.Fields.find(v => searchableFields.includes(v));
+          const nextField = SignInForm.fields.find(v => searchableFields.includes(v));
 
           if (searchableFields.length === 0 || !nextField) {
             throw new SignInForm.MultipleUserError('Users cannot be distinguished');
           }
 
-          return this.setState(evolve({ fields: f => f.concat(nextField) }));
+          return this.setState(evolve({ fields: concatUnlessExists(nextField) }));
         }
 
         return onSuccess(res.data.result[0]); // { id, name }
       })
-      .catch(onFailure);
+      .catch((err) => {
+        this.setState({ isFetching: false });
+        onFailure(err);
+      });
   }
 
   render() {
@@ -96,12 +106,11 @@ export default class SignInForm extends React.Component {
             .map(field =>
               SignInFormFields[field]({
                 value: this.state.form[field] || '',
-                error: this.state.errors[field],
                 onChange: this.handleFormChange,
                 uuid: this.state.uuid,
               }))
         }
-        <Button type="submit">Sign in</Button>
+        <Button type="submit" disabled={this.state.isFetching}>Sign in</Button>
       </CustomForm>
     );
   }
