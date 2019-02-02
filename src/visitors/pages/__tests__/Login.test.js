@@ -45,7 +45,7 @@ describe('Visitor SignIn Component', () => {
       MockResponses.CbAdmins.downGradePermissions(mock);
       MockResponses.Activities.get(mock, { params: { day: 'today' }, response: { result: activities } });
       MockResponses.CommunityBusinesses.get(mock, { response: { result: { name: 'Foo' } } });
-      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar' }, fields: ['id', ...SignInForm.Fields] }, response: { result: [{ id: 1, name: 'Bar' }] } });
+      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar' }, fields: ['id', ...SignInForm.fields] }, response: { result: [{ id: 1, name: 'Bar' }] } });
 
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
@@ -69,7 +69,7 @@ describe('Visitor SignIn Component', () => {
       MockResponses.CbAdmins.downGradePermissions(mock);
       MockResponses.Activities.get(mock, { params: { day: 'today' }, response: { result: activities } });
       MockResponses.CommunityBusinesses.get(mock, { response: { result: { name: 'Foo' } } });
-      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar' }, fields: ['id', ...SignInForm.Fields] }, response: { result: [] } });
+      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar' }, fields: ['id', ...SignInForm.fields] }, response: { result: [] } });
 
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
@@ -96,8 +96,8 @@ describe('Visitor SignIn Component', () => {
       MockResponses.CbAdmins.downGradePermissions(mock);
       MockResponses.Activities.get(mock, { params: { day: 'today' }, response: { result: activities } });
       MockResponses.CommunityBusinesses.get(mock, { response: { result: { name: 'Foo' } } });
-      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar' }, fields: ['id', ...SignInForm.Fields] }, response: { result: [{ id: 1, name: 'Bar', birthYear: yob }, { id: 2, name: 'Bar', birthYear: yob + 1 }] } });
-      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar', age: [age, age] }, fields: ['id', ...SignInForm.Fields] }, response: { result: [{ id: 1, name: 'Bar' }] } });
+      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar' }, fields: ['id', ...SignInForm.fields] }, response: { result: [{ id: 1, name: 'Bar', birthYear: yob }, { id: 2, name: 'Bar', birthYear: yob + 1 }] } });
+      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar', age: [age, age] }, fields: ['id', ...SignInForm.fields] }, response: { result: [{ id: 1, name: 'Bar' }] } });
 
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
@@ -132,7 +132,7 @@ describe('Visitor SignIn Component', () => {
       MockResponses.CbAdmins.downGradePermissions(mock);
       MockResponses.Activities.get(mock, { params: { day: 'today' }, response: { result: activities } });
       MockResponses.CommunityBusinesses.get(mock, { response: { result: { name: 'Foo' } } });
-      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar', age: [age, age] }, fields: ['id', ...SignInForm.Fields] }, response: { result: [] } });
+      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar', age: [age, age] }, fields: ['id', ...SignInForm.fields] }, response: { result: [] } });
 
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
@@ -166,8 +166,8 @@ describe('Visitor SignIn Component', () => {
       MockResponses.CbAdmins.downGradePermissions(mock);
       MockResponses.Activities.get(mock, { params: { day: 'today' }, response: { result: activities } });
       MockResponses.CommunityBusinesses.get(mock, { response: { result: { name: 'Foo' } } });
-      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar' }, fields: ['id', ...SignInForm.Fields] }, response: { result: [{ id: 1, name: 'Bar', birthYear: yob, email: 'bar1@cb.com', postCode: null }, { id: 2, name: 'Bar', birthYear: yob, email: 'bar2@cb.com', postCode: null }] } });
-      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar', email: 'bar1@cb.com' }, fields: ['id', ...SignInForm.Fields] }, response: { result: [{ id: 1, name: 'Bar', birthYear: yob, email: 'bar1@cb.com', postCode: null }] } });
+      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar' }, fields: ['id', ...SignInForm.fields] }, response: { result: [{ id: 1, name: 'Bar', birthYear: yob, email: 'bar1@cb.com', postCode: null }, { id: 2, name: 'Bar', birthYear: yob, email: 'bar2@cb.com', postCode: null }] } });
+      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar', email: 'bar1@cb.com' }, fields: ['id', ...SignInForm.fields] }, response: { result: [{ id: 1, name: 'Bar', birthYear: yob, email: 'bar1@cb.com', postCode: null }] } });
 
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
@@ -203,8 +203,8 @@ describe('Visitor SignIn Component', () => {
       MockResponses.CbAdmins.downGradePermissions(mock);
       MockResponses.Activities.get(mock, { params: { day: 'today' }, response: { result: activities } });
       MockResponses.CommunityBusinesses.get(mock, { response: { result: { name: 'Foo' } } });
-      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar' }, fields: ['id', ...SignInForm.Fields] }, response: { result: [{ id: 1, name: 'Bar', birthYear: yob, email: 'bar1@cb.com' }, { id: 2, name: 'Bar', birthYear: yob, email: 'bar2@cb.com' }] } });
-      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar', age: [age, age], email: 'bar@foo.com' }, fields: ['id', ...SignInForm.Fields] }, response: { result: [] } });
+      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar' }, fields: ['id', ...SignInForm.fields] }, response: { result: [{ id: 1, name: 'Bar', birthYear: yob, email: 'bar1@cb.com' }, { id: 2, name: 'Bar', birthYear: yob, email: 'bar2@cb.com' }] } });
+      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar', age: [age, age], email: 'bar@foo.com' }, fields: ['id', ...SignInForm.fields] }, response: { result: [] } });
 
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 
@@ -239,8 +239,8 @@ describe('Visitor SignIn Component', () => {
       MockResponses.CbAdmins.downGradePermissions(mock);
       MockResponses.Activities.get(mock, { params: { day: 'today' }, response: { result: activities } });
       MockResponses.CommunityBusinesses.get(mock, { response: { result: { name: 'Foo' } } });
-      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar' }, fields: ['id', ...SignInForm.Fields] }, response: { result: [{ id: 1, name: 'Bar', birthYear: yob, email: null, postCode: 'N1 2FH' }, { id: 2, name: 'Bar', birthYear: yob, email: null, postCode: 'NW2 4RF' }] } });
-      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar', postCode: 'N1 2FH' }, fields: ['id', ...SignInForm.Fields] }, response: { result: [{ id: 1, name: 'Bar', birthYear: yob, email: null, postCode: 'N1 2FH' }] } });
+      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar' }, fields: ['id', ...SignInForm.fields] }, response: { result: [{ id: 1, name: 'Bar', birthYear: yob, email: null, postCode: 'N1 2FH' }, { id: 2, name: 'Bar', birthYear: yob, email: null, postCode: 'NW2 4RF' }] } });
+      MockResponses.Visitors.get(mock, { params: { filter: { name: 'Bar', postCode: 'N1 2FH' }, fields: ['id', ...SignInForm.fields] }, response: { result: [{ id: 1, name: 'Bar', birthYear: yob, email: null, postCode: 'N1 2FH' }] } });
 
       const tools = renderWithRouter({ route: '/visitor/login?type=name' })(main);
 

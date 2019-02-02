@@ -43,13 +43,13 @@ export default class SignInForm extends React.Component {
   }
 
   // Custom error type when no users are found
-  NoUserError = class NoUserError extends Error {};
+  static NoUserError = class NoUserError extends Error {};
 
   // Custom error type when multiple users are found
-  MultipleUserError = class MultipleUserError extends Error {};
+  static MultipleUserError = class MultipleUserError extends Error {};
 
   // Order of preference for fields to prompt user with
-  fields = [
+  static fields = [
     'name',
     'postCode',
     'birthYear',
