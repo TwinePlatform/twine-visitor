@@ -16,17 +16,19 @@ import QrScanner from './QrScanner';
 import SignInForm from './SignInForm';
 import SignInActivitiesGrid from './SignInActivitiesGrid';
 import { Activities, Visitors, CbAdmin, CommunityBusiness } from '../../../api';
-import { Paragraph } from '../../../shared/components/text/base';
+import { Paragraph as P } from '../../../shared/components/text/base';
 import { PrimaryButton } from '../../../shared/components/form/base';
 import NavHeader from '../../../shared/components/NavHeader';
 import { redirectOnError } from '../../../util';
 import { colors } from '../../../shared/style_guide';
 
 
-const StyledSection = styled.section`
-  margin: ${props => props.margin}rem 0;
-  display: flex;
-  justify-content: center;
+const Paragraph = styled(P)`
+  margin-top: 25vh;
+`;
+
+const BackButton = styled(PrimaryButton)`
+  padding: 2em;
 `;
 
 const BeatLoader = styled(Bl)`
@@ -132,7 +134,7 @@ export default class SignIn extends Component {
           centerContent={greetingWithOrgName(this.state.orgName)}
           centerFlex={2}
         />
-        <Grid>
+        <Grid fluid>
           <Row center="xs">
             <Paragraph style={{ marginBottom: '2em' }}>
               Use one of the two options below to sign in!
@@ -178,7 +180,7 @@ export default class SignIn extends Component {
           centerContent={`Welcome back, ${capitaliseFirstName(name)}! Why are you here today?`}
           centerFlex={2}
         />
-        <Grid>
+        <Grid fluid>
           <Row>
             <Col xs={12} md={6}>
               <SignInActivitiesGrid
@@ -197,18 +199,21 @@ export default class SignIn extends Component {
 
   renderNoActivities() {
     return (
-      <Fragment>
+      <Grid fluid style={{ height: '100vh' }}>
         <NavHeader
           centerContent={`Welcome${this.state.orgName ? ` to ${this.state.orgName}` : ''}!`}
-          centerFlex={2}
         />
-        <StyledSection margin={3}>
-          <Paragraph>
-            There are no activities scheduled today.
-          </Paragraph>
-          <PrimaryButton onClick={() => this.props.history.push('/')}>Go back</PrimaryButton>
-        </StyledSection>
-      </Fragment>
+        <Grid>
+          <Row center="xs" middle="xs">
+            <Col xs={12}>
+              <Paragraph> There are no activities scheduled today. </Paragraph>
+            </Col>
+            <Col xs={12}>
+              <BackButton onClick={() => this.props.history.push('/')}>Go back</BackButton>
+            </Col>
+          </Row>
+        </Grid>
+      </Grid>
     );
   }
 
