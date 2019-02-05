@@ -8,8 +8,9 @@
  */
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import PurposeButton from '../components/purposeButton';
 import QRPrivacy from '../components/qrprivacy';
 import QrScanner from '../components/QrScanner';
@@ -17,7 +18,13 @@ import { Activities, Visitors, CbAdmin } from '../../api';
 import { FlexContainerRow } from '../../shared/components/layout/base';
 import NavHeader from '../../shared/components/NavHeader';
 import { redirectOnError } from '../../util';
+import { Paragraph } from '../../shared/components/text/base';
+import { PrimaryButton } from '../../shared/components/form/base';
 
+
+const Button = styled(PrimaryButton)`
+  padding: 1em;
+`;
 
 const StyledSection = styled.section`
   margin: ${props => props.margin}rem 0;
@@ -129,26 +136,74 @@ export default class QRCode extends Component {
       });
   }
 
+  renderQrScanner() {
+    return (
+      <Fragment>
+        <NavHeader
+          leftTo="/"
+          leftContent="Back to main page"
+          centerContent="Welcome, visitor!"
+        />
+        <StyledSection margin={0}>
+          <QrScanner
+            onCameraError={this.onCameraError}
+            onScannerError={this.onScannerError}
+            onScan={this.onScan}
+          />
+        </StyledSection>
+      </Fragment>
+    );
+  }
+
+  renderActivities() {
+    return this.state.activities
+      .map((activity, index) => (
+        <PurposeButton
+          key={activity.id}
+          color={index}
+          session={activity.name}
+          onClick={this.addVisitLog}
+        />
+      ))
+      .reduce(
+        (acc, el, index, array) =>
+          (index % 2 === 0
+            ? acc.concat([
+              <SnakeContainerRow key={el.key}>
+                {el} {array[index + 1]}
+              </SnakeContainerRow>,
+            ])
+            : acc),
+        [],
+      );
+  }
+
+  renderNoActivities = () => (
+    <Grid>
+      <Row center="xs">
+        <Col xs={12}>
+          <Paragraph>
+              There are no activities scheduled for today.
+          </Paragraph>
+        </Col>
+      </Row>
+      <Row center="xs">
+        <Col xs={12}>
+          <Link to="/visitor/home">
+            <Button>Go back</Button>
+          </Link>
+        </Col>
+      </Row>
+    </Grid>
+  )
+
   render() {
     const { hasScanned, visitorName } = this.state;
+
     if (!hasScanned) {
-      return (
-        <Fragment>
-          <NavHeader
-            leftTo="/"
-            leftContent="Back to main page"
-            centerContent="Welcome, visitor!"
-          />
-          <StyledSection margin={0}>
-            <QrScanner
-              onCameraError={this.onCameraError}
-              onScannerError={this.onScannerError}
-              onScan={this.onScan}
-            />
-          </StyledSection>
-        </Fragment>
-      );
+      return this.renderQrScanner();
     }
+
     return (
       <Fragment>
         <NavHeader
@@ -156,26 +211,11 @@ export default class QRCode extends Component {
         />
         <StyledSection margin={3}>
           <BigFlexContainerRow>
-            {this.state.activities
-              .map((activity, index) => (
-                <PurposeButton
-                  key={activity.id}
-                  color={index}
-                  session={activity.name}
-                  onClick={this.addVisitLog}
-                />
-              ))
-              .reduce(
-                (acc, el, index, array) =>
-                  (index % 2 === 0
-                    ? acc.concat([
-                      <SnakeContainerRow key={el.key}>
-                        {el} {array[index + 1]}
-                      </SnakeContainerRow>,
-                    ])
-                    : acc),
-                [],
-              )}
+            {
+              this.state.activities.length === 0
+                ? this.renderNoActivities()
+                : this.renderActivities()
+            }
           </BigFlexContainerRow>
           <SmallFlexContainerRow>
             <QRPrivacy />
