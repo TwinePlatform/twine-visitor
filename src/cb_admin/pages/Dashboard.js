@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
+import { Grid, Row } from 'react-flexbox-grid';
 import { SecondaryButton } from '../../shared/components/form/base';
 import DotButton from '../../shared/components/form/DottedButton';
 import NavHeader from '../../shared/components/NavHeader';
@@ -13,19 +13,17 @@ import { redirectOnError } from '../../util';
 const ButtonOne = styled(DotButton)`
   width: 14em;
   height: 12em;
+  margin: 1em 0;
 `;
 
 const ButtonTwo = styled(SecondaryButton) `
   width: 14em;
   height: 12em;
-`;
-
-const Row = styled(FlexContainerRow) `
-  align-content: space-evenly;
+  margin: 1em 0;
 `;
 
 const ButtonWrapperLink = styled(StyledLink) `
-  margin: 0 0.8em;
+  margin: 1em;
 `;
 
 const Caption = styled.p`
@@ -49,7 +47,7 @@ export default class Dashboard extends React.Component {
 
   render() {
     return (
-      <FlexContainerCol>
+      <Grid>
         <NavHeader
           leftTo="/"
           leftContent="Back home"
@@ -87,7 +85,7 @@ export default class Dashboard extends React.Component {
             </ButtonOne>
           </ButtonWrapperLink>
         </Row>
-      </FlexContainerCol>
+      </Grid>
     );
   }
 }
