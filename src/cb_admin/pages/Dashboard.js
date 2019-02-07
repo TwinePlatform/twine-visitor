@@ -57,11 +57,11 @@ export default class Dashboard extends React.Component {
           leftContent="Back home"
           centerContent="Welcome admin! Where do you want to go?"
         />
-        <Row>
+        <Row style={{ maxWidth: '768px', margin: '0 auto' }}>
           <Col xs={12} sm={6} md={4}>
             <ButtonWrapperLink to="/cb/activities">
               <ButtonOne>
-              Activities
+                Activities
                 <Caption>Edit what is happening at {this.state.orgName || 'your community business'}</Caption>
               </ButtonOne>
             </ButtonWrapperLink>
@@ -69,7 +69,7 @@ export default class Dashboard extends React.Component {
           <Col xs={12} sm={6} md={4}>
             <ButtonWrapperLink to="/cb/visits">
               <ButtonTwo>
-              Visits
+                Visits
                 <Caption>See who signed in</Caption>
               </ButtonTwo>
             </ButtonWrapperLink>
@@ -77,7 +77,7 @@ export default class Dashboard extends React.Component {
           <Col xs={12} sm={6} md={4}>
             <ButtonWrapperLink to="/cb/visitors">
               <ButtonOne>
-              Visitors
+                Visitors
                 <Caption>View and edit your visitors&#39; details</Caption>
               </ButtonOne>
             </ButtonWrapperLink>
@@ -85,7 +85,7 @@ export default class Dashboard extends React.Component {
           <Col xs={12} sm={6} md={4}>
             <ButtonWrapperLink to="/cb/settings">
               <ButtonTwo>
-              Account Settings
+                Account Settings
                 <Caption>View and edit your business&#39; details</Caption>
               </ButtonTwo>
             </ButtonWrapperLink>
@@ -93,7 +93,7 @@ export default class Dashboard extends React.Component {
           <Col xs={12} sm={6} md={4}>
             <ButtonWrapperLink to="/cb/feedback">
               <ButtonOne>
-              Feedback
+                Feedback
                 <Caption>See how your visitors feel about your business</Caption>
               </ButtonOne>
             </ButtonWrapperLink>
