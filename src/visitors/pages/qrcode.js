@@ -19,13 +19,17 @@ import { Activities, Visitors, CbAdmin } from '../../api';
 import { FlexContainerRow } from '../../shared/components/layout/base';
 import NavHeader from '../../shared/components/NavHeader';
 import { redirectOnError } from '../../util';
-import { Paragraph } from '../../shared/components/text/base';
+import { Paragraph as P } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { colors } from '../../shared/style_guide';
 
 
 const Button = styled(PrimaryButton)`
   padding: 1em;
+`;
+
+const Paragraph = styled(P)`
+  margin-top: 20vh;
 `;
 
 const StyledSection = styled.section`
@@ -172,7 +176,9 @@ export default class QRCode extends Component {
   }
 
   renderActivities() {
-    return this.state.activities
+    const { activities, visitorName } = this.state;
+
+    const activityBtns = activities
       .map((activity, index) => (
         <PurposeButton
           key={activity.id}
@@ -192,37 +198,6 @@ export default class QRCode extends Component {
             : acc),
         [],
       );
-  }
-
-  renderNoActivities = () => (
-    <Grid>
-      <Row center="xs">
-        <Col xs={12}>
-          <Paragraph>
-              There are no activities scheduled for today.
-          </Paragraph>
-        </Col>
-      </Row>
-      <Row center="xs">
-        <Col xs={12}>
-          <Link to="/visitor/home">
-            <Button>Go back</Button>
-          </Link>
-        </Col>
-      </Row>
-    </Grid>
-  )
-
-  render() {
-    const { hasScanned, visitorName } = this.state;
-
-    if (this.state.isFetching) {
-      return this.renderLoader();
-    }
-
-    if (!hasScanned && this.state.activities.length > 0) {
-      return this.renderQrScanner();
-    }
 
     return (
       <Fragment>
@@ -231,17 +206,55 @@ export default class QRCode extends Component {
         />
         <StyledSection margin={3}>
           <BigFlexContainerRow>
-            {
-              this.state.activities.length === 0
-                ? this.renderNoActivities()
-                : this.renderActivities()
-            }
+            { activityBtns }
           </BigFlexContainerRow>
           <SmallFlexContainerRow>
             <QRPrivacy />
           </SmallFlexContainerRow>
         </StyledSection>
       </Fragment>
+    );
+  }
+
+  renderNoActivities = () => (
+    <Fragment>
+      <NavHeader
+        centerContent={'No activities scheduled!'}
+      />
+      <StyledSection margin={3}>
+        <Grid>
+          <Row center="xs">
+            <Col xs={12}>
+              <Paragraph>There are no activities scheduled for today.</Paragraph>
+            </Col>
+          </Row>
+          <Row center="xs">
+            <Col xs={12}>
+              <Link to="/visitor/home">
+                <Button>Go back</Button>
+              </Link>
+            </Col>
+          </Row>
+        </Grid>
+      </StyledSection>
+    </Fragment>
+  )
+
+  render() {
+    const { hasScanned, isFetching, activities } = this.state;
+
+    if (isFetching) {
+      return this.renderLoader();
+    }
+
+    if (!hasScanned && activities.length > 0) {
+      return this.renderQrScanner();
+    }
+
+    return (
+      activities.length === 0
+        ? this.renderNoActivities()
+        : this.renderActivities()
     );
   }
 }
