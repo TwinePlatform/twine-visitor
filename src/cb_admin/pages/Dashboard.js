@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Grid, Row } from 'react-flexbox-grid';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import { SecondaryButton } from '../../shared/components/form/base';
 import DotButton from '../../shared/components/form/DottedButton';
 import NavHeader from '../../shared/components/NavHeader';
@@ -54,36 +54,46 @@ export default class Dashboard extends React.Component {
           centerContent="Welcome admin! Where do you want to go?"
         />
         <Row>
-          <ButtonWrapperLink to="/cb/activities">
-            <ButtonOne>
+          <Col xs={12} sm={6} md={4}>
+            <ButtonWrapperLink to="/cb/activities">
+              <ButtonOne>
               Activities
-              <Caption>Edit what is happening at {this.state.orgName || 'your community business'}</Caption>
-            </ButtonOne>
-          </ButtonWrapperLink>
-          <ButtonWrapperLink to="/cb/visits">
-            <ButtonTwo>
+                <Caption>Edit what is happening at {this.state.orgName || 'your community business'}</Caption>
+              </ButtonOne>
+            </ButtonWrapperLink>
+          </Col>
+          <Col xs={12} sm={6} md={4}>
+            <ButtonWrapperLink to="/cb/visits">
+              <ButtonTwo>
               Visits
-              <Caption>See who signed in</Caption>
-            </ButtonTwo>
-          </ButtonWrapperLink>
-          <ButtonWrapperLink to="/cb/visitors">
-            <ButtonOne>
+                <Caption>See who signed in</Caption>
+              </ButtonTwo>
+            </ButtonWrapperLink>
+          </Col>
+          <Col xs={12} sm={6} md={4}>
+            <ButtonWrapperLink to="/cb/visitors">
+              <ButtonOne>
               Visitors
-              <Caption>View and edit your visitors&#39; details</Caption>
-            </ButtonOne>
-          </ButtonWrapperLink>
-          <ButtonWrapperLink to="/cb/settings">
-            <ButtonTwo>
+                <Caption>View and edit your visitors&#39; details</Caption>
+              </ButtonOne>
+            </ButtonWrapperLink>
+          </Col>
+          <Col xs={12} sm={6} md={4}>
+            <ButtonWrapperLink to="/cb/settings">
+              <ButtonTwo>
               Account Settings
-              <Caption>View and edit your business&#39; details</Caption>
-            </ButtonTwo>
-          </ButtonWrapperLink>
-          <ButtonWrapperLink to="/cb/feedback">
-            <ButtonOne>
+                <Caption>View and edit your business&#39; details</Caption>
+              </ButtonTwo>
+            </ButtonWrapperLink>
+          </Col>
+          <Col xs={12} sm={6} md={4}>
+            <ButtonWrapperLink to="/cb/feedback">
+              <ButtonOne>
               Feedback
-              <Caption>See how your visitors feel about your business</Caption>
-            </ButtonOne>
-          </ButtonWrapperLink>
+                <Caption>See how your visitors feel about your business</Caption>
+              </ButtonOne>
+            </ButtonWrapperLink>
+          </Col>
         </Row>
       </Grid>
     );
