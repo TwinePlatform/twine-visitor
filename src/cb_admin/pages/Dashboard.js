@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Grid, Row, Col as Column } from 'react-flexbox-grid';
 import { SecondaryButton } from '../../shared/components/form/base';
 import DotButton from '../../shared/components/form/DottedButton';
 import NavHeader from '../../shared/components/NavHeader';
@@ -9,6 +9,10 @@ import { Link as StyledLink } from '../../shared/components/text/base';
 import { CommunityBusiness } from '../../api';
 import { redirectOnError } from '../../util';
 
+
+const Col = styled(Column)`
+  text-align: center;
+`;
 
 const ButtonOne = styled(DotButton)`
   width: 14em;
