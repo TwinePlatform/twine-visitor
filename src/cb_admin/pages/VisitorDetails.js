@@ -13,7 +13,7 @@ import NavHeader from '../../shared/components/NavHeader';
 import { colors, fonts } from '../../shared/style_guide';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
-import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
+import { Visitors, ErrorUtils } from '../../api';
 import { renameKeys, redirectOnError } from '../../util';
 import { AgeRange } from '../../shared/constants';
 
