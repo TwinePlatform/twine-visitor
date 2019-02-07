@@ -131,7 +131,7 @@ const CbAdminSignup = ({ errors, onChange, onSubmit }) => (
 
       <FormSection flexOrder={4}>
         <Paragraph>
-          Already a subscriber? <Link to="/cb/login">Login</Link>
+          Already a subscriber? <Link to="/admin/login">Login</Link>
         </Paragraph>
       </FormSection>
     </Form>
@@ -147,8 +147,8 @@ CbAdminSignup.propTypes = {
 const submitHandler = state => CbAdmin.create(payloadFromState(state));
 
 const forwarding = {
-  200: '/cb/login?ref=signup',
-  401: '/cb/login?ref=unauth',
+  200: '/admin/login?ref=signup',
+  401: '/admin/login?ref=unauth',
   404: '/error/404',
   409: self =>
     self.setState({ errors: { email: 'CB using this email has already been registered' } }),

@@ -70,8 +70,7 @@ export default class QRCode extends Component {
   }
 
   componentDidMount() {
-    CbAdmin.downgradePermissions()
-      .then(() => Activities.get({ day: 'today' }))
+    Activities.get({ day: 'today' })
       .then((res) => {
         this.setState({ activities: res.data.result });
       })

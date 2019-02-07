@@ -22,7 +22,7 @@ describe.skip('Signup Component', () => {
   test(':: correct cb details returns 200 and redirects', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/cb/register')
+    mock.onPost('/api/admin/register')
       .reply(200, { result: null });
 
     const { getByText, getByLabelText, history } = renderWithRouter()(Signup);
@@ -50,14 +50,14 @@ describe.skip('Signup Component', () => {
     fireEvent.change(confirmPassword);
     fireEvent.click(submit);
 
-    await wait(() => expect(history.location.pathname).toEqual('/cb/login'));
+    await wait(() => expect(history.location.pathname).toEqual('/admin/login'));
 
   });
 
   test(':: duplicate cb details returns 409 and displays error message', async () => {
     expect.assertions(1);
 
-    mock.onPost('/api/cb/register')
+    mock.onPost('/api/admin/register')
       .reply(409, { result: null, error: 'Business already registered' });
 
     const { getByText, getByLabelText } = renderWithRouter()(Signup);

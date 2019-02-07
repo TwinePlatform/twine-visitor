@@ -52,7 +52,7 @@ describe('Settings Component', () => {
 
     const { history } = renderWithRouter()(Settings);
 
-    await wait(() => expect(history.location.pathname).toEqual('/cb/login'));
+    await wait(() => expect(history.location.pathname).toEqual('/admin/login'));
   });
 
   test(':: update CB details successful updates fields', async () => {

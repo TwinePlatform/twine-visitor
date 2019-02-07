@@ -94,12 +94,11 @@ export default class VisitorProfile extends React.Component {
   }
 
   componentDidMount() {
-    CommunityBusiness.update() // used to check cookie permissions
-      .then(() => Promise.all([
-        Visitors.get({ id: this.props.match.params.id }),
-        Visitors.genders(),
-        CommunityBusiness.get({ fields: ['name', 'logoUrl'] }),
-      ]))
+    Promise.all([
+      Visitors.get({ id: this.props.match.params.id }),
+      Visitors.genders(),
+      CommunityBusiness.get({ fields: ['name', 'logoUrl'] }),
+    ])
       .then(([resVisitors, rGenders, resCb]) => {
         this.updateStateFromApi(resVisitors.data.result);
         this.setState({
@@ -108,7 +107,7 @@ export default class VisitorProfile extends React.Component {
           cbLogoUrl: resCb.data.result.logoUrl,
         });
       })
-      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/admin/confirm' }));
   }
 
   onClickPrint = () => {
@@ -192,7 +191,7 @@ export default class VisitorProfile extends React.Component {
     return (
       <Grid>
         <NavHeader
-          leftTo="/cb/dashboard"
+          leftTo="/admin"
           leftContent="Back to dashboard"
           centerContent="Visitor profile"
         />

@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { CbAdmin } from '../../api';
+import { CbAdmin, ResponseUtils } from '../../api';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
 import { Paragraph, Link } from '../../shared/components/text/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 import NavHeader from '../../shared/components/NavHeader';
+import { redirectOnError } from '../../util';
 
 
 const SubmitButton = styled(PrimaryButton) `
@@ -25,17 +26,24 @@ export default class ConfirmPassword extends React.Component {
 
     this.state = {
       errors: {},
+      email: null,
     };
   }
 
+  componentDidMount() {
+    CbAdmin.get()
+      .then(res => this.setState({ email: ResponseUtils.getResponse(res).email }))
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/admin/confirm' }));
+  }
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   onSubmit = (e) => {
     e.preventDefault();
 
-    CbAdmin.upgradePermissions({ password: this.state.password })
+    CbAdmin.login({ password: this.state.password, email: this.state.email })
       .then(() => {
-        this.props.history.push('/cb/dashboard');
+        this.props.loggedIn();
+        this.props.history.push('/admin');
       })
       .catch(() => {
         this.setState({ errors: { password: 'Wrong password' } });
@@ -43,6 +51,8 @@ export default class ConfirmPassword extends React.Component {
   };
 
   render() {
+    // console.log(this.state);
+
     const { errors } = this.state;
     return (
       <FlexContainerCol>
@@ -64,7 +74,7 @@ export default class ConfirmPassword extends React.Component {
             />
             <SubmitButton>CONTINUE</SubmitButton>
             <div style={{ textAlign: 'center', margin: '2em 0' }}>
-              <Link to="/cb/password/forgot">Forgot password?</Link>
+              <Link to="/admin/password/forgot">Forgot password?</Link>
             </div>
           </FormSection>
         </Form>
@@ -75,4 +85,5 @@ export default class ConfirmPassword extends React.Component {
 
 ConfirmPassword.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+  loggedIn: PropTypes.func.isRequired,
 };
