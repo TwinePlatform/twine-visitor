@@ -30,6 +30,7 @@ const Button = styled(PrimaryButton)`
 
 const Paragraph = styled(P)`
   margin-top: 20vh;
+  margin-bottom: 3em;
 `;
 
 const StyledSection = styled.section`
