@@ -36,6 +36,7 @@ const TableRow = styled.tr`
 `;
 const TableCell = styled.td`
   vertical-align: center;
+  cursor: ${props => props.clickable ? 'pointer' : 'inherit'};
 `;
 const TableHead = styled.thead``;
 const TableColHeading = styled.th`
@@ -65,7 +66,8 @@ const TranslucentTable = ({ caption, columns, rows, headAlign, exportComponent }
           rows.map(({ key, data, onClick }) => (
             <TableRow border key={key} onClick={onClick}>
               {
-                data.map((cell, i) => <TableCell key={i}>{`${cell}`}</TableCell>) // eslint-disable-line
+                data.map(cell =>
+                  <TableCell clickable={!!onClick} key={cell}>{`${cell}`}</TableCell>)
               }
             </TableRow>
           ))
