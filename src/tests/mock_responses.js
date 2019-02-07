@@ -60,11 +60,6 @@ export const CommunityBusinesses = {
     get(mock, '/community-businesses/me', opts),
 };
 
-export const CbAdmins = {
-  downGradePermissions: (mock, opts) =>
-    post(mock, '/users/login/de-escalate', opts),
-};
-
 export const Visitors = {
   get: (mock, opts) =>
     get(mock, '/community-businesses/me/visitors', opts),

@@ -35,10 +35,6 @@ describe('Visitor Registration Component', () => {
       qrCode: 'data:image/png;base64,329t4ji3nfp23nfergj42finoregn',
     };
 
-    mock
-      .onPost('/users/login/de-escalate')
-      .reply(200, { data: null });
-
     mock.onPost('/users/register/visitors').reply(200, { result: { ...visitor } })
       .onGet('/community-businesses/me', { params: { fields: ['name', 'logoUrl', 'id'] } })
       .reply(200, { result: { name: 'cbName', logoUrl: 'cbURL', id: 1 } })
@@ -100,10 +96,6 @@ describe('Visitor Registration Component', () => {
       smsConsent: false,
       qrCode: 'data:image/png;base64,329t4ji3nfp23nfergj42finoregn',
     };
-
-    mock
-      .onPost('/users/login/de-escalate')
-      .reply(200, { data: null });
 
     mock.onPost('/users/register/visitors').reply(200, { result: { ...visitor } })
       .onGet('/community-businesses/me', { params: { fields: ['name', 'logoUrl', 'id'] } })
@@ -167,10 +159,6 @@ describe('Visitor Registration Component', () => {
       qrCode: 'data:image/png;base64,329t4ji3nfp23nfergj42finoregn',
     };
 
-    mock
-      .onPost('/users/login/de-escalate')
-      .reply(200, { data: null });
-
     mock.onPost('/users/register/visitors').reply(200, { result: { ...visitor } })
       .onGet('/community-businesses/me', { params: { fields: ['name', 'logoUrl', 'id'] } })
       .reply(200, { result: { name: 'cbName', logoUrl: 'cbURL', id: 1 } })
@@ -221,10 +209,6 @@ describe('Visitor Registration Component', () => {
     expect.assertions(1);
 
     mock
-      .onPost('/users/login/de-escalate')
-      .reply(200, { data: null });
-
-    mock
       .onGet('/genders')
       .reply(200, { result: [{ id: 1, name: 'male' }, { id: 2, name: 'female' }, { id: 3, name: 'prefer not to say' }] });
 
@@ -263,10 +247,6 @@ describe('Visitor Registration Component', () => {
 
   test('submit form w/o email or phone number', async () => {
     expect.assertions(1);
-
-    mock
-      .onPost('/users/login/de-escalate')
-      .reply(200, { data: null });
 
     mock
       .onGet('/genders')
