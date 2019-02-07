@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
-import { filter, project, pick, evolve, assoc, pipe, prepend, identity, toPairs, head, last, map } from 'ramda';
+import { filter, project, pick, omit, assoc, pipe, prepend, identity, toPairs, head, last, map } from 'ramda';
 import { Bar, Pie } from 'react-chartjs-2';
 import csv from 'fast-csv';
 import { saveAs } from 'file-saver';
@@ -117,7 +117,7 @@ export default class VisitsDataPage extends React.Component {
 
   onChange = (e) => {
     const value = e.target.name === 'ageFilter'
-      ? AgeRange.fromStr(e.target.value)
+      ? e.target.value && AgeRange.fromStr(e.target.value)
       : e.target.value;
     this.setState({ [e.target.name]: value }, this.getData);
   };
@@ -188,29 +188,39 @@ export default class VisitsDataPage extends React.Component {
   getDataForCsv = () => {
     const { genderFilter, ageFilter, activityFilter } = this.state;
 
-    Visitors.get({
-      withVisits: true,
-      genderFilter,
-      ageFilter,
-      activityFilter,
+    Visitors.get({}, {
+      visits: true,
+      filter: filter(Boolean, {
+        gender: genderFilter,
+        age: ageFilter,
+        visitActivity: activityFilter,
+      }),
     })
       .then((res) => {
-        const csvData = res.data.result.map(x =>
-          pipe(
-            pick(['visit_id', 'visitor_name', 'gender', 'yob', 'activity', 'visit_date']),
-            assoc('visit_time', moment(x.visit_date).format('HH:MM')),
-            evolve({ visit_date: y => moment(y).format('DD-MM-YYYY') }),
-          )(x),
-        );
+        const csvData = res.data.result
+          .map(
+            pipe(
+              pick(['name', 'gender', 'birthYear', 'visits']),
+              ({ visits, ...visitor }) => visits.map(v => ({ ...v, ...visitor })),
+            ))
+          .reduce((acc, x) => acc.concat(x), []) // flatten
+          .map(x =>
+            pipe(
+              assoc('visitTime', moment(x.createdAt).format('HH:MM')),
+              assoc('visitDate', moment(x.createdAt).format('DD-MM-YYYY')),
+              omit(['createdAt', 'deletedAt', 'modifiedAt']),
+            )(x),
+          );
+
         const withHeaders = prepend(
           {
-            visit_id: 'Visit ID',
-            visitor_name: 'Full Name',
+            id: 'Visit ID',
+            name: 'Full Name',
             gender: 'Gender',
-            yob: 'Year of Birth',
+            birthYear: 'Year of Birth',
             visitActivity: 'Activity',
-            visit_date: 'Visit Date',
-            visit_time: 'Visit Time',
+            visitDate: 'Visit Date',
+            visitTime: 'Visit Time',
           },
           csvData,
         );
@@ -222,7 +232,7 @@ export default class VisitsDataPage extends React.Component {
           if (err) {
             this.setState({ errors: { general: 'Could not create CSV' } });
           } else {
-            const csvFile = new File([data], `user_data${fileNameFilters}.csv`, {
+            const csvFile = new File([data], `visits_data${fileNameFilters}.csv`, {
               type: 'text/plain;charset=utf-8',
             });
             saveAs(csvFile);
