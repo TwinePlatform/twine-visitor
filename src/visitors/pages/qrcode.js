@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import { BeatLoader as Bl } from 'react-spinners';
 import PurposeButton from '../components/purposeButton';
 import QRPrivacy from '../components/qrprivacy';
 import QrScanner from '../components/QrScanner';
@@ -20,6 +21,7 @@ import NavHeader from '../../shared/components/NavHeader';
 import { redirectOnError } from '../../util';
 import { Paragraph } from '../../shared/components/text/base';
 import { PrimaryButton } from '../../shared/components/form/base';
+import { colors } from '../../shared/style_guide';
 
 
 const Button = styled(PrimaryButton)`
@@ -58,6 +60,12 @@ const SnakeContainerRow = styled(FlexContainerRow)`
   }
 `;
 
+const BeatLoader = styled(Bl)`
+  width: 60px;
+  margin: 0 auto;
+  padding-top: 5rem;
+`;
+
 const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
 
 export default class QRCode extends Component {
@@ -65,6 +73,7 @@ export default class QRCode extends Component {
     super();
 
     this.state = {
+      isFetching: true,
       hasScanned: false,
       visitorId: null,
       visitorName: '',
@@ -73,14 +82,13 @@ export default class QRCode extends Component {
       form: { name: null },
       errors: {},
     };
-
   }
 
   componentDidMount() {
     CbAdmin.downgradePermissions()
       .then(() => Activities.get({ day: 'today' }))
       .then((res) => {
-        this.setState({ activities: res.data.result });
+        this.setState({ activities: res.data.result, isFetching: false });
       })
       .catch(error => redirectOnError(this.props.history.push, error));
   }
@@ -135,6 +143,14 @@ export default class QRCode extends Component {
         this.props.history.push('/error/500');
       });
   }
+
+  renderLoader = () => (
+    <BeatLoader
+      color={colors.highlight_primary}
+      sizeUnit={'px'}
+      size={15}
+    />
+  )
 
   renderQrScanner() {
     return (
@@ -200,7 +216,11 @@ export default class QRCode extends Component {
   render() {
     const { hasScanned, visitorName } = this.state;
 
-    if (!hasScanned) {
+    if (this.state.isFetching) {
+      return this.renderLoader();
+    }
+
+    if (!hasScanned && this.state.activities.length > 0) {
       return this.renderQrScanner();
     }
 
