@@ -16,15 +16,17 @@ import QrScanner from './QrScanner';
 import SignInForm from './SignInForm';
 import SignInActivitiesGrid from './SignInActivitiesGrid';
 import { Activities, Visitors, CbAdmin, CommunityBusiness } from '../../../api';
-import { Paragraph as P } from '../../../shared/components/text/base';
+import { Paragraph } from '../../../shared/components/text/base';
 import { PrimaryButton } from '../../../shared/components/form/base';
 import NavHeader from '../../../shared/components/NavHeader';
 import { redirectOnError } from '../../../util';
 import { colors } from '../../../shared/style_guide';
 
 
-const Paragraph = styled(P)`
-  margin-top: 25vh;
+const TopParagraph = styled(Paragraph)`
+  @media only screen and (min-height: 993px) {
+    margin-top: 10vh;
+  }
 `;
 
 const BackButton = styled(PrimaryButton)`
@@ -126,6 +128,8 @@ export default class SignIn extends Component {
   }
 
   renderSignInPage() {
+    const colProps = Object.assign({ xs: 12 }, window.innerHeight > 1024 ? { xl: 6 } : { lg: 6 });
+
     return (
       <Fragment>
         <NavHeader
@@ -136,12 +140,12 @@ export default class SignIn extends Component {
         />
         <Grid fluid>
           <Row center="xs">
-            <Paragraph style={{ marginBottom: '2em' }}>
+            <TopParagraph style={{ marginBottom: '2em' }}>
               Use one of the two options below to sign in!
-            </Paragraph>
+            </TopParagraph>
           </Row>
           <Row center="xs">
-            <Col xs={12} lg={6}>
+            <Col {...colProps}>
               <Row center="xs">
                 <Col xs={12}>
                   <Paragraph> Either scan your QR code </Paragraph>
@@ -153,7 +157,7 @@ export default class SignIn extends Component {
                 onScan={this.searchVisitorByQrCode}
               />
             </Col>
-            <Col xs={12} lg={6}>
+            <Col {...colProps}>
               <Row center="xs">
                 <Col xs={12}>
                   <Paragraph> Or, please enter the details you signed up with </Paragraph>
