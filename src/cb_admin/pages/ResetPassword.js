@@ -16,7 +16,7 @@ const payloadFromState = pick(['password', 'passwordConfirm']);
 
 const SubmitButton = styled(PrimaryButton) `
   height: 4em;
-  width: 90%;
+  width: 100%;
 `;
 
 const ErrorText = styled.p`

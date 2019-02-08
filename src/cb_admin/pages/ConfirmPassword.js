@@ -11,11 +11,10 @@ import NavHeader from '../../shared/components/NavHeader';
 
 const SubmitButton = styled(PrimaryButton) `
   height: 4em;
-  width: 90%;
+  width: 100%;
 `;
 
 const CenteredParagraph = styled(Paragraph) `
-  /* width: 90%; */
   text-align: center;
   margin: 2em 0;
 `;
@@ -64,7 +63,7 @@ export default class ConfirmPassword extends React.Component {
               required
             />
             <SubmitButton>CONTINUE</SubmitButton>
-            <div style={{ textAlign: 'center', margin: '2em 0', width: '90%' }}>
+            <div style={{ textAlign: 'center', margin: '2em 0' }}>
               <Link to="/cb/password/forgot">Forgot password?</Link>
             </div>
           </FormSection>

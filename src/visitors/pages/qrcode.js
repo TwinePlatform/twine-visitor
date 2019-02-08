@@ -6,19 +6,32 @@
  *          \                     /                    \
  *           ---- Enter name ----                        ---- Failure screen
  */
-/* global Instascan */
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Grid, Row, Col } from 'react-flexbox-grid';
+import { BeatLoader as Bl } from 'react-spinners';
 import PurposeButton from '../components/purposeButton';
 import QRPrivacy from '../components/qrprivacy';
+import QrScanner from '../components/QrScanner';
 import { Activities, Visitors, CbAdmin } from '../../api';
-import { Paragraph } from '../../shared/components/text/base';
-import { FlexContainerRow, FlexContainerCol } from '../../shared/components/layout/base';
+import { FlexContainerRow } from '../../shared/components/layout/base';
 import NavHeader from '../../shared/components/NavHeader';
 import { redirectOnError } from '../../util';
+import { Paragraph as P } from '../../shared/components/text/base';
+import { PrimaryButton } from '../../shared/components/form/base';
+import { colors } from '../../shared/style_guide';
 
+
+const Button = styled(PrimaryButton)`
+  padding: 1em;
+`;
+
+const Paragraph = styled(P)`
+  margin-top: 20vh;
+  margin-bottom: 3em;
+`;
 
 const StyledSection = styled.section`
   margin: ${props => props.margin}rem 0;
@@ -44,11 +57,6 @@ const SmallFlexContainerRow = styled(FlexContainerRow)`
   }
 `;
 
-const QrParagraph = styled(Paragraph)`
-  text-align: center;
-  margin-bottom: 3rem;
-`;
-
 const SnakeContainerRow = styled(FlexContainerRow)`
   width: 100%;
   justify-content: space-between;
@@ -57,32 +65,20 @@ const SnakeContainerRow = styled(FlexContainerRow)`
   }
 `;
 
-const SignInContainer = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-`;
-
-const Video = styled.video`
-  background-color: black;
-  width: ${props => props.width || '50%'};
+const BeatLoader = styled(Bl)`
+  width: 60px;
+  margin: 0 auto;
+  padding-top: 5rem;
 `;
 
 const capitaliseFirstName = name => name.split(' ')[0].replace(/\b\w/g, l => l.toUpperCase());
-
-const instascanAvailable = () => {
-  try {
-    return Boolean(window.Instascan);
-  } catch (error) {
-    return false;
-  }
-};
 
 export default class QRCode extends Component {
   constructor() {
     super();
 
     this.state = {
+      isFetching: true,
       hasScanned: false,
       visitorId: null,
       visitorName: '',
@@ -91,97 +87,46 @@ export default class QRCode extends Component {
       form: { name: null },
       errors: {},
     };
-
-    this.scanner = null;
-    this.previewDiv = null;
-
-    this.previewRef = (element) => {
-      this.previewDiv = element;
-    };
   }
 
   componentDidMount() {
-    if (!instascanAvailable()) {
-      this.props.history.push('/visitor/qrerror?e=no_instascan');
-      return;
-    }
-
     CbAdmin.downgradePermissions()
       .then(() => Activities.get({ day: 'today' }))
       .then((res) => {
-        this.setState({ activities: res.data.result });
+        this.setState({ activities: res.data.result, isFetching: false });
       })
       .catch(error => redirectOnError(this.props.history.push, error));
+  }
 
-    this.scanner = this.scanner || new Instascan.Scanner({ video: this.previewDiv, scanPeriod: 5 });
+  onCameraError() {
+    this.props.history.push('/visitor/qrerror?e=camera');
+  }
 
-    Instascan.Camera.getCameras()
-      .then((cameras) => {
-        if (cameras.length < 1) {
-          throw new Error('No accessible cameras');
+  onScannerError() {
+    this.props.history.push('/visitor/qrerror?e=scanner');
+  }
+
+  onScan = content =>
+    Visitors.search({ qrCode: content })
+      .then((res) => {
+        if (!res.data.result) {
+          return this.props.history.push('/visitor/qrerror?e=no_user');
         }
-        return this.scanner.start(cameras[0]);
+
+        return this.setState({
+          visitorName: res.data.result.name,
+          visitorId: res.data.result.id,
+          qrCodeContent: content,
+          hasScanned: true,
+        });
       })
       .catch((err) => {
         console.log(err);
         this.props.history.push('/visitor/qrerror');
-      });
-
-    if (!this.state.hasScanned) {
-      this.scanner.addListener('scan', (content) => {
-        this.scanner.stop();
-
-        Visitors.search({ qrCode: content })
-          .then((res) => {
-            if (!res.data.result) {
-              return this.props.history.push('/visitor/qrerror?e=no_user');
-            }
-
-            return this.setState({
-              visitorName: res.data.result.name,
-              visitorId: res.data.result.id,
-              qrCodeContent: content,
-              hasScanned: true,
-            });
-          })
-          .catch((err) => {
-            console.log(err);
-            this.props.history.push('/visitor/qrerror');
-          });
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.scanner) {
-      this.scanner.stop()
-        .then(() => {
-          this.scanner = null;
-        });
-    }
-  }
+      })
 
   handleFormChange = (e) => {
     this.setState({ form: { [e.target.name]: e.target.value } });
-  }
-
-  submitVisitorName = (e) => {
-    e.preventDefault();
-
-    Visitors.get(null, { filter: { name: this.state.form.name } })
-      .then((res) => {
-        if (!res.data.result) {
-          throw new Error('No user found');
-        }
-
-        this.setState({
-          visitorName: res.data.result[0].name,
-          visitorId: res.data.result[0].id,
-          hasScanned: true,
-        });
-      })
-      .catch(err =>
-        redirectOnError(this.props.history.push, err, { default: '/visitor/qrerror' }));
   }
 
   addVisitLog = (newActivity) => {
@@ -204,27 +149,57 @@ export default class QRCode extends Component {
       });
   }
 
-  render() {
-    const { hasScanned, visitorName } = this.state;
-    if (!hasScanned) {
-      return (
-        <Fragment>
-          <NavHeader
-            leftTo="/"
-            leftContent="Back to main page"
-            centerContent="Welcome, visitor!"
+  renderLoader = () => (
+    <BeatLoader
+      color={colors.highlight_primary}
+      sizeUnit={'px'}
+      size={15}
+    />
+  )
+
+  renderQrScanner() {
+    return (
+      <Fragment>
+        <NavHeader
+          leftTo="/"
+          leftContent="Back to main page"
+          centerContent="Welcome, visitor!"
+        />
+        <StyledSection margin={0}>
+          <QrScanner
+            onCameraError={this.onCameraError}
+            onScannerError={this.onScannerError}
+            onScan={this.onScan}
           />
-          <StyledSection margin={0}>
-            <FlexContainerCol>
-              <QrParagraph>Please scan your QR code to log in</QrParagraph>
-              <SignInContainer>
-                <Video ref={this.previewRef} width="100%" />
-              </SignInContainer>
-            </FlexContainerCol>
-          </StyledSection>
-        </Fragment>
+        </StyledSection>
+      </Fragment>
+    );
+  }
+
+  renderActivities() {
+    const { activities, visitorName } = this.state;
+
+    const activityBtns = activities
+      .map((activity, index) => (
+        <PurposeButton
+          key={activity.id}
+          color={index}
+          session={activity.name}
+          onClick={this.addVisitLog}
+        />
+      ))
+      .reduce(
+        (acc, el, index, array) =>
+          (index % 2 === 0
+            ? acc.concat([
+              <SnakeContainerRow key={el.key}>
+                {el} {array[index + 1]}
+              </SnakeContainerRow>,
+            ])
+            : acc),
+        [],
       );
-    }
+
     return (
       <Fragment>
         <NavHeader
@@ -232,32 +207,55 @@ export default class QRCode extends Component {
         />
         <StyledSection margin={3}>
           <BigFlexContainerRow>
-            {this.state.activities
-              .map((activity, index) => (
-                <PurposeButton
-                  key={activity.id}
-                  color={index}
-                  session={activity.name}
-                  onClick={this.addVisitLog}
-                />
-              ))
-              .reduce(
-                (acc, el, index, array) =>
-                  (index % 2 === 0
-                    ? acc.concat([
-                      <SnakeContainerRow key={el.key}>
-                        {el} {array[index + 1]}
-                      </SnakeContainerRow>,
-                    ])
-                    : acc),
-                [],
-              )}
+            { activityBtns }
           </BigFlexContainerRow>
           <SmallFlexContainerRow>
             <QRPrivacy />
           </SmallFlexContainerRow>
         </StyledSection>
       </Fragment>
+    );
+  }
+
+  renderNoActivities = () => (
+    <Fragment>
+      <NavHeader
+        centerContent={'No activities scheduled!'}
+      />
+      <StyledSection margin={3}>
+        <Grid>
+          <Row center="xs">
+            <Col xs={12}>
+              <Paragraph>There are no activities scheduled for today.</Paragraph>
+            </Col>
+          </Row>
+          <Row center="xs">
+            <Col xs={12}>
+              <Link to="/visitor/home">
+                <Button>Go back</Button>
+              </Link>
+            </Col>
+          </Row>
+        </Grid>
+      </StyledSection>
+    </Fragment>
+  )
+
+  render() {
+    const { hasScanned, isFetching, activities } = this.state;
+
+    if (isFetching) {
+      return this.renderLoader();
+    }
+
+    if (!hasScanned && activities.length > 0) {
+      return this.renderQrScanner();
+    }
+
+    return (
+      activities.length === 0
+        ? this.renderNoActivities()
+        : this.renderActivities()
     );
   }
 }

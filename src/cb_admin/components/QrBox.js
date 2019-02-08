@@ -6,16 +6,13 @@ import { fonts, colors } from '../../shared/style_guide';
 
 
 const Container = styled.div`
-  height: 11em;
-  width: 90%;
 `;
 
 const Img = styled.img`
-  height: 11em;
-  width: 50%;
   object-fit: contain;
   object-position: center;
   display: block;
+  margin: auto;
 `;
 
 const Button = styled(PrimaryButton) `

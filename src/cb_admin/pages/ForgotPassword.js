@@ -11,11 +11,11 @@ import { redirectOnError } from '../../util';
 
 const SubmitButton = styled(PrimaryButton) `
   height: 4em;
-  width: 90%;
+  width: 100%;
 `;
 
 const CenteredParagraph = styled(Paragraph)`
-  width: 90%;
+  width: 100%;
   text-align: center;
   margin: 2em 0;
 `;
@@ -67,7 +67,7 @@ export default class ForgotPassword extends React.Component {
               required
             />
             <SubmitButton>CONTINUE</SubmitButton>
-            <div style={{ textAlign: 'center', margin: '2em 0', width: '90%' }}>
+            <div style={{ textAlign: 'center', margin: '2em 0', width: '100%' }}>
               <Link to="/cb/login">Back to login</Link>
             </div>
           </FormSection>

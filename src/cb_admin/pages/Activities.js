@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { assocPath, dissoc, invertObj } from 'ramda';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import { FlexContainerCol } from '../../shared/components/layout/base';
 import { Paragraph, ErrorParagraph } from '../../shared/components/text/base';
 import { Form, PrimaryButton } from '../../shared/components/form/base';
@@ -18,6 +19,7 @@ const SubmitButton = styled(PrimaryButton) `
   margin-left: 2em;
   height: 3em;
 `;
+
 
 const ActivitiesError = styled(ErrorParagraph) `
   opacity: ${props => (props.vis ? '1' : '0')};
@@ -169,25 +171,35 @@ export default class ActivitiesPage extends React.Component {
           to your visitors, and just deselect all days if the one you are editing is a one-off
           event or not currently on the agenda.
         </Paragraph>
-        <Form onSubmit={this.addActivity} onChange={this.onChange}>
-          <LabelledInput
-            id="cb-admin-activities-name"
-            label="Add an activity"
-            name="name"
-            type="text"
-            error={errors.activity}
-            required
-          />
-          <LabelledSelect
-            id="cb-admin-activities-category"
-            label="Category"
-            name="category"
-            options={this.state.categories}
-            error={errors.activity}
-            required
-          />
-          <SubmitButton type="submit">ADD</SubmitButton>
-        </Form>
+        <Grid>
+          <Form onSubmit={this.addActivity} onChange={this.onChange}>
+            <Row middle="xs" around="xs">
+              <Col md={5}>
+                <LabelledInput
+                  id="cb-admin-activities-name"
+                  label="Add an activity"
+                  name="name"
+                  type="text"
+                  error={errors.activity}
+                  required
+                />
+              </Col>
+              <Col md={5}>
+                <LabelledSelect
+                  id="cb-admin-activities-category"
+                  label="Category"
+                  name="category"
+                  options={this.state.categories}
+                  error={errors.activity}
+                  required
+                />
+              </Col>
+              <Col md={2}>
+                <SubmitButton type="submit">ADD</SubmitButton>
+              </Col>
+            </Row>
+          </Form>
+        </Grid>
         {errorMessage}
         <Table>
           <TableHead>
