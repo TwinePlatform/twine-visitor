@@ -49,10 +49,6 @@ export default class PrivateCookieRoute extends React.Component {
         );
 
       case status.FAILURE:
-        return (
-          <Redirect to={{ pathname: '/login' }} />
-        );
-
       default: // cos js be whack
         return (
           <Redirect to={{ pathname: '/login' }} />
