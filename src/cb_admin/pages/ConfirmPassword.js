@@ -51,8 +51,6 @@ export default class ConfirmPassword extends React.Component {
   };
 
   render() {
-    // console.log(this.state);
-
     const { errors } = this.state;
     return (
       <FlexContainerCol>
