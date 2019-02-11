@@ -12,6 +12,8 @@ import VisitorRoutes from './visitors';
 import CbAdminRoutes from './cb_admin';
 import Login from './cb_admin/pages/Login';
 import PrivateCookieRoute from './auth/PrivateCookieRoute';
+import ResetPassword from './cb_admin/pages/ResetPassword';
+import ForgotPassword from './cb_admin/pages/ForgotPassword';
 
 
 const ProtectedRoutes = () => (
@@ -30,6 +32,8 @@ const App = () => (
     <Container>
       <Switch>
         <Route exact path="/login" component={Login} />
+        <Route exact path="/password/reset/:token" component={ResetPassword} />
+        <Route exact path="/password/forgot" component={ForgotPassword} />
         <PrivateCookieRoute path="/*" component={ProtectedRoutes} />
       </Switch>
     </Container>
