@@ -9,6 +9,7 @@ import VisitsData from './pages/VisitsData';
 import Settings from './pages/Settings';
 import Feedback from './pages/Feedback';
 import NotFound from '../shared/components/NotFound';
+import AnonUser from './pages/AnonUser/index';
 
 
 export default class CbAdminRoutes extends React.Component {
@@ -28,6 +29,7 @@ export default class CbAdminRoutes extends React.Component {
         <Route exact path="/admin/visitors/:id" component={Visitor} />
         <Route exact path="/admin/settings" component={Settings} />
         <Route exact path="/admin/feedback" component={Feedback} />
+        <Route exact path="/admin/anonymous-user" component={AnonUser} />
         <Route exact path="/admin" component={Dashboard} />
         <Route component={NotFound} />
       </Switch>)

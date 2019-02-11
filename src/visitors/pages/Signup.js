@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 import SignupForm from '../components/signup_form';
 import NotFound from '../../shared/components/NotFound';
 import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
@@ -11,6 +10,7 @@ import { PrimaryButton } from '../../shared/components/form/base';
 import { FlexContainerCol, FlexContainerRow } from '../../shared/components/layout/base';
 import { renameKeys, redirectOnError } from '../../util';
 import { BirthYear } from '../../shared/constants';
+import PrintableQrCode from '../../shared/components/PrintableQrCode';
 
 
 const ButtonsFlexContainerCol = styled(FlexContainerCol)`
@@ -41,18 +41,6 @@ const CenteredHeading = styled(Heading)`
   font-weight: heavy;
 `;
 
-const PrintContainer = styled.div`
-  display: none;
-
-  @media print {
-    display: block;
-    margin-top: 25pt;
-    background: white;
-    font-size: 12pt;
-    text-align: center;
-  }
-`;
-
 const QRimg = styled.img`
   height: 25em;
   width: 100%;
@@ -66,17 +54,6 @@ const NotPrint = styled(FlexContainerCol)`
   @media print {
     display: none;
   }
-`;
-
-const CbLogo = styled.img`
-  height: 50pt;
-  flex: 1;
-  flex-grow: 0;
-`;
-const QrCodePrint = styled.img``;
-const PrintHeaderRow = styled(FlexContainerRow)`
-  justify-content: center;
-  align-items: center;
 `;
 
 const QRContainer = styled.div`
@@ -196,22 +173,6 @@ export default class Main extends Component {
       });
   };
 
-  renderPrinterFriendly(state) {
-    return (
-      <PrintContainer>
-        <PrintHeaderRow>
-          {state.cbLogoUrl ? (
-            <CbLogo src={this.state.cbLogoUrl} alt="Business logo" />
-          ) : (
-            <CbLogo src={p2cLogo} alt="Power to change logo" />
-          )}
-        </PrintHeaderRow>
-        <QrCodePrint src={state.qrCode} alt="QR code" />
-        <Paragraph>Please bring this QR code with you next time</Paragraph>
-      </PrintContainer>
-    );
-  }
-
   renderMain(state) {
     return (
       <NotPrint>
@@ -238,7 +199,7 @@ export default class Main extends Component {
   }
 
   render() {
-    const { errors, cbOrgName, formAutocompleteUUID, genders } = this.state;
+    const { errors, cbOrgName, formAutocompleteUUID, genders, cbLogoUrl, qrCode } = this.state;
 
     return (
       <div className="row">
@@ -258,7 +219,7 @@ export default class Main extends Component {
 
           <Route path="/visitor/signup/thankyou">
             <React.Fragment>
-              {this.renderPrinterFriendly(this.state)}
+              <PrintableQrCode cbLogoUrl={cbLogoUrl} qrCode={qrCode} />
               {this.renderMain(this.state)}
             </React.Fragment>
           </Route>

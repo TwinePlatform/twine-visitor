@@ -97,6 +97,14 @@ export default class Dashboard extends React.Component {
               </ButtonOne>
             </ButtonWrapperLink>
           </Col>
+          <Col xs={12} sm={6} md={4}>
+            <ButtonWrapperLink to="/admin/anonymous-user">
+              <ButtonTwo>
+              Create Anon User
+                <Caption>Create a new anonymous user</Caption>
+              </ButtonTwo>
+            </ButtonWrapperLink>
+          </Col>
         </Row>
       </Grid>
     );
