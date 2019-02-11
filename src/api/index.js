@@ -155,7 +155,7 @@ export const CommunityBusiness = {
 };
 
 export const Roles = {
-  check: () => axios.get('/users/me/roles'),
+  get: () => axios.get('/users/me/roles'),
 };
 
 export const Cloudinary = {

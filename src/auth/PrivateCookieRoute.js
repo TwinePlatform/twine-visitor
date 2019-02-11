@@ -25,7 +25,7 @@ export default class PrivateCookieRoute extends React.Component {
   }
 
   componentDidMount() {
-    Roles.check()
+    Roles.get()
       .then(() => this.setState({ authCheck: status.SUCCESS }))
       .catch(() => this.setState({ authCheck: status.FAILURE }));
   }
