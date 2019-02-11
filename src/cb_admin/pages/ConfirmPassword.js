@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { pathOr } from 'ramda';
 import { CbAdmin, ResponseUtils } from '../../api';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
 import { Paragraph, Link } from '../../shared/components/text/base';
@@ -32,8 +33,8 @@ export default class ConfirmPassword extends React.Component {
 
   componentDidMount() {
     CbAdmin.get()
-      .then(res => this.setState({ email: ResponseUtils.getResponse(res).email }))
-      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/admin/confirm' }));
+      .then(res => this.setState({ email: pathOr('', ['email'])(ResponseUtils.getResponse(res)) }))
+      .catch(error => redirectOnError(this.props.history.push, error));
   }
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
