@@ -8,5 +8,4 @@
 * [Developer Setup Guide](./dev_setup_guide.md)
 * [Stack](./stack.md)
 * [Testing Guide](./testing_guide.md)
-* [Users Outline](./users_outline.md)
-* [Database Backups](./database_backups.md)
+* [User Testing Guide](./user_testing_guide.md)
