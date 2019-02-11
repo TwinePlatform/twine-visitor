@@ -51,7 +51,7 @@ export default class Home extends Component {
     return (
       <FlexContainerCol justify="space-around">
         <NavHeader
-          leftTo="/admin/login"
+          leftTo="/login"
           leftContent="Logout"
           leftOnClick={() => CbAdmin.logout()}
           centerContent={

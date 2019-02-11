@@ -110,7 +110,7 @@ describe('ResetPassword Component', () => {
     fireEvent.click(submit);
 
     await wait(() => {
-      expect(history.location.pathname).toEqual('/admin/login');
+      expect(history.location.pathname).toEqual('/login');
       expect(history.location.search).toEqual('?ref=pwd_reset');
     });
   });

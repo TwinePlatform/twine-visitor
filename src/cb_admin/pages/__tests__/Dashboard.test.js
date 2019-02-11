@@ -48,6 +48,6 @@ describe('Dashboard Component', () => {
       renderWithRouter()(Dashboard);
 
     await wait(() => history.length === 2);
-    expect(history.location.pathname).toEqual('/admin/login');
+    expect(history.location.pathname).toEqual('/login');
   });
 });
