@@ -5,12 +5,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { assocPath, evolve, compose } from 'ramda';
+import { Link as L } from 'react-router-dom';
 import { Form, PrimaryButton } from '../../../shared/components/form/base';
+import { Paragraph } from '../../../shared/components/text/base';
 import SignInFormFields from './SignInFormFields';
 import { BirthYear } from '../../../shared/constants';
 import { Visitors } from '../../../api';
 import { reduceVisitorsToFields, renameKeys } from '../../../util';
 
+
+const Link = styled(L)`
+  width: 100%;
+`;
 
 const CustomForm = styled(Form)`
   display: flex;
@@ -98,6 +104,16 @@ export default class SignInForm extends React.Component {
       });
   }
 
+  handleFormReset = () => {
+    if (!this.state.isFetching) {
+      this.setState({
+        fields: SignInForm.fields.slice(0, 1),
+        form: {},
+        uuid: btoa(new Date().toISOString()),
+      });
+    }
+  }
+
   render() {
     return (
       <CustomForm onSubmit={this.handleFormSubmit}>
@@ -111,6 +127,9 @@ export default class SignInForm extends React.Component {
               }))
         }
         <Button type="submit" disabled={this.state.isFetching}>Sign in</Button>
+        <Link to="#" onClick={this.handleFormReset}>
+          <Paragraph>Start again</Paragraph>
+        </Link>
       </CustomForm>
     );
   }
