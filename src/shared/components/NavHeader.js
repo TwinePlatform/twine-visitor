@@ -21,7 +21,7 @@ const NavHeaderItem = ({ to, content, onClick }) => (
 );
 
 NavHeaderItem.propTypes = {
-  content: PropTypes.string,
+  content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   to: PropTypes.string,
   onClick: PropTypes.func,
 };
@@ -60,9 +60,9 @@ const NavHeader = props => (
 
 
 NavHeader.propTypes = {
-  leftContent: PropTypes.string,
-  centerContent: PropTypes.string,
-  rightContent: PropTypes.string,
+  leftContent: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  centerContent: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  rightContent: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   leftTo: PropTypes.string,
   centreTo: PropTypes.string,
   rightTo: PropTypes.string,

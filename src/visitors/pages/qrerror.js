@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import qs from 'qs';
-import QRPrivacy from '../components/qrprivacy';
+import PrivacyStatement from '../components/PrivacyStatement';
 import { PrimaryButton } from '../../shared/components/form/base';
 
 const Button = styled(PrimaryButton)`
@@ -15,6 +15,8 @@ const ErrorText = {
   no_user_qr: 'Your QR code does not correspond to a registered visitor at this organisation',
   no_user: 'Your details do not correspond to a registered visitor at this organisation',
   no_instascan: 'There was an application error',
+  scanner: 'There was an application error',
+  camera: 'There was a problem accessing the camera. If this continues, try a different device.',
   default: null,
 };
 
@@ -30,11 +32,14 @@ const ContinueOptions = {
     </>
   ),
   no_user: () => ContinueOptions.default(),
+  no_user_qr: () => ContinueOptions.default(),
   no_instascan: () => (
     <>
       <Button onClick={() => window.location.replace('/')}>Refresh the app</Button>
     </>
   ),
+  scanner: () => ContinueOptions.no_instascan(),
+  camera: () => ContinueOptions.no_instascan(),
 };
 
 const QrError = (props) => {
@@ -48,7 +53,7 @@ const QrError = (props) => {
         <h4>{props.subHeaderContent}</h4>
         { ContinueOptions[query.e || 'default']() }
       </section>
-      <QRPrivacy />
+      <PrivacyStatement />
     </div>
   );
 };
