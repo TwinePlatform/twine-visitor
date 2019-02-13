@@ -45,7 +45,7 @@ export default class PrivateRoute extends React.Component {
 
       case status.SUCCESS:
         return (
-          <Route {...rest} render={props => (<Component {...props} />)} />
+          <Route {...rest} component={Component} />
         );
 
       case status.FAILURE:
