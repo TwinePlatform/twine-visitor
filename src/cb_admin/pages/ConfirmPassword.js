@@ -72,7 +72,7 @@ class ConfirmPassword extends React.Component {
             />
             <SubmitButton>CONTINUE</SubmitButton>
             <div style={{ textAlign: 'center', margin: '2em 0' }}>
-              <Link to="/admin/password/forgot">Forgot password?</Link>
+              <Link to="/password/forgot">Forgot password?</Link>
             </div>
           </FormSection>
         </Form>
