@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { CbAdmin, ResponseUtils } from '../../api';
@@ -20,7 +21,7 @@ const CenteredParagraph = styled(Paragraph) `
   margin: 2em 0;
 `;
 
-export default class ConfirmPassword extends React.Component {
+class ConfirmPassword extends React.Component {
   constructor(props) {
     super(props);
 
@@ -43,7 +44,6 @@ export default class ConfirmPassword extends React.Component {
     CbAdmin.login({ password: this.state.password, email: this.state.email })
       .then(() => {
         this.props.onLogin();
-        this.props.history.push('/admin');
       })
       .catch(() => {
         this.setState({ errors: { password: 'Wrong password' } });
@@ -85,3 +85,5 @@ ConfirmPassword.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
   onLogin: PropTypes.func.isRequired,
 };
+
+export default withRouter(ConfirmPassword);
