@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { pathOr } from 'ramda';
 import { CbAdmin, ResponseUtils } from '../../api';
 import { Form, FormSection, PrimaryButton } from '../../shared/components/form/base';
 import { Paragraph, Link } from '../../shared/components/text/base';
