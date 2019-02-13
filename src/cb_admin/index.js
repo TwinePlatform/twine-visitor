@@ -17,7 +17,7 @@ export default class CbAdminRoutes extends React.Component {
     auth: false,
   }
 
-  loggedIn = () => this.setState({ auth: true })
+  onLogin = () => this.setState({ auth: true })
 
   render() {
     return this.state.auth
@@ -31,7 +31,7 @@ export default class CbAdminRoutes extends React.Component {
         <Route exact path="/admin" component={Dashboard} />
         <Route component={NotFound} />
       </Switch>)
-      : <ConfirmPassword loggedIn={this.loggedIn} />;
+      : <ConfirmPassword onLogin={this.onLogin} />;
   }
 }
 

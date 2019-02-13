@@ -43,7 +43,7 @@ export default class ConfirmPassword extends React.Component {
 
     CbAdmin.login({ password: this.state.password, email: this.state.email })
       .then(() => {
-        this.props.loggedIn();
+        this.props.onLogin();
         this.props.history.push('/admin');
       })
       .catch(() => {
@@ -84,5 +84,5 @@ export default class ConfirmPassword extends React.Component {
 
 ConfirmPassword.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func }).isRequired,
-  loggedIn: PropTypes.func.isRequired,
+  onLogin: PropTypes.func.isRequired,
 };
