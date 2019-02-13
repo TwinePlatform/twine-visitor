@@ -11,7 +11,7 @@ import HomePage from './shared/pages/Home';
 import VisitorRoutes from './visitors';
 import CbAdminRoutes from './cb_admin';
 import Login from './cb_admin/pages/Login';
-import PrivateCookieRoute from './auth/PrivateCookieRoute';
+import PrivateRoute from './auth/PrivateRoute';
 import ResetPassword from './cb_admin/pages/ResetPassword';
 import ForgotPassword from './cb_admin/pages/ForgotPassword';
 
@@ -34,7 +34,7 @@ const App = () => (
         <Route exact path="/login" component={Login} />
         <Route exact path="/password/reset/:token" component={ResetPassword} />
         <Route exact path="/password/forgot" component={ForgotPassword} />
-        <PrivateCookieRoute path="/*" component={ProtectedRoutes} />
+        <PrivateRoute path="/*" component={ProtectedRoutes} />
       </Switch>
     </Container>
   </Dots>

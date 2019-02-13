@@ -18,7 +18,7 @@ const BeatLoader = styled(Bl)`
   padding-top: 5rem;
 `;
 
-export default class PrivateCookieRoute extends React.Component {
+export default class PrivateRoute extends React.Component {
 
   state = {
     authCheck: status.PENDING,
