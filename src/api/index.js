@@ -179,5 +179,5 @@ export const ErrorUtils = {
 };
 
 export const ResponseUtils = {
-  getResponse: pathOr(null, ['data', 'result']),
+  getResponse: (maybeArray = [], obj) => pathOr(null, ['data', 'result', ...maybeArray], obj),
 };

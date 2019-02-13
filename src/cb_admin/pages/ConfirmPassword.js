@@ -33,7 +33,7 @@ export default class ConfirmPassword extends React.Component {
 
   componentDidMount() {
     CbAdmin.get()
-      .then(res => this.setState({ email: pathOr('', ['email'])(ResponseUtils.getResponse(res)) }))
+      .then(res => this.setState({ email: ResponseUtils.getResponse(['email'], res) }))
       .catch(error => redirectOnError(this.props.history.push, error));
   }
   onChange = e => this.setState({ [e.target.name]: e.target.value });
