@@ -14,13 +14,13 @@
 * Invalid PNG filters: https://github.com/bpampuch/pdfmake/issues/879
 * Correctly base-64 encoding axios responses: https://github.com/axios/axios/issues/513
 
-## Cleaning up resources in React Components
+## Cleaning up resources in React Components
 Be careful to clean up after yourself! Temporary resources instantiated or used in a component should be deleted or cleaned up in the `componentWillUnmount` hook to prevent memory leaks and obscure errors.
 
 **Example: Instascan scanner**
 The instascan scanner activates a given camera and uses the media feed to detect QR codes. If a reference to an instance of `scanner` is left around while the camera is active, it will not be garbage collected, and continue to attempt to interact with elements that may have already been unmounted. In addition, the camera will remain active unnecessarily unless `scanner.stop` is called. This is what caused [issue #411](https://github.com/TwinePlatform/DataPower/issues/411).
 
-## Form autocomplete
+## Form autocomplete
 Attempting to disable autocomplete on input fields is basically ignored by all modern browsers.
 
 See:

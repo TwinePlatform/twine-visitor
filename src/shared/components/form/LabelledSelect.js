@@ -51,16 +51,18 @@ const LabelledSelect = (props) => {
 LabelledSelect.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.node.isRequired,
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      key: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-      ]).isRequired,
+      key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       value: PropTypes.string.isRequired,
       content: PropTypes.string,
     }),
   ).isRequired,
+};
+
+LabelledSelect.defaultProps = {
+  error: null,
 };
 
 export default LabelledSelect;
