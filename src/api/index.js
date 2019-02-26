@@ -77,7 +77,16 @@ export const Visitors = {
       }),
     ),
 
-  update: ({ id, name, gender, birthYear, email, phoneNumber } = {}) =>
+  update: ({
+    id,
+    name,
+    gender,
+    birthYear,
+    email,
+    phoneNumber,
+    isEmailConsentGranted,
+    isSMSConsentGranted,
+  } = {}) =>
     axios.put(
       `/community-businesses/me/visitors/${id}`,
       {
@@ -86,6 +95,8 @@ export const Visitors = {
         email,
         phoneNumber,
         birthYear,
+        isEmailConsentGranted,
+        isSMSConsentGranted,
       },
     ),
 
