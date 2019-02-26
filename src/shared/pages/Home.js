@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { BeatLoader as Bl } from 'react-spinners';
 import { SecondaryButton } from '../components/form/base';
 import { Heading, Heading2 } from '../components/text/base';
 import { FlexContainerCol } from '../components/layout/base';
@@ -10,7 +9,6 @@ import DotButton from '../components/form/DottedButton';
 import NavHeader from '../components/NavHeader';
 import { CommunityBusiness, CbAdmin } from '../../api';
 import { redirectOnError } from '../../util';
-import { colors } from '../style_guide';
 
 
 const StyledSection = styled.section`
@@ -33,68 +31,47 @@ const ButtonRight = styled(SecondaryButton)`
   height: 12em;
 `;
 
-const BeatLoader = styled(Bl)`
-  width: 60px;
-  margin: 0 auto;
-  padding-top: 5rem;
-`;
-
-const onLoadState = {
-  PENDING: 'PENDING',
-  SUCCESS: 'SUCCESS',
-};
-
 export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
       cbName: null,
-      onLoadState: onLoadState.PENDING,
     };
   }
 
   componentDidMount() {
-    CbAdmin.downgradePermissions()
-      .then(() => CommunityBusiness.get({ fields: ['name'] }))
+    CommunityBusiness.get({ fields: ['name'] })
       .then(res => this.setState({
         cbName: res.data.result.name,
-        onLoadState: onLoadState.SUCCESS,
       }))
-    // on first load this redirects to login if bad/no cookie is present
       .catch(err => redirectOnError(this.props.history.push, err));
   }
 
   render() {
-    return this.state.onLoadState !== onLoadState.SUCCESS
-      ? <BeatLoader
-        color={colors.highlight_primary}
-        sizeUnit={'px'}
-        size={15}
-      />
-      : (
-        <FlexContainerCol justify="space-around">
-          <NavHeader
-            leftTo="/cb/login"
-            leftContent="Logout"
-            leftOnClick={() => CbAdmin.logout()}
-            centerContent={
+    return (
+      <FlexContainerCol justify="space-around">
+        <NavHeader
+          leftTo="/login"
+          leftContent="Logout"
+          leftOnClick={() => CbAdmin.logout()}
+          centerContent={
               <>
                 <Heading> Welcome to {this.state.cbName} </Heading>
                 <Heading2> Who are you? </Heading2>
               </>
-            }
-          />
-          <StyledSection>
-            <FlexLink to="/visitor/home">
-              <ButtonLeft> Visitor </ButtonLeft>
-            </FlexLink>
-            <FlexLink to="/cb/confirm">
-              <ButtonRight> Admin </ButtonRight>
-            </FlexLink>
-          </StyledSection>
-          <StyledSection />
-        </FlexContainerCol>
-      );
+          }
+        />
+        <StyledSection>
+          <FlexLink to="/visitor/home">
+            <ButtonLeft> Visitor </ButtonLeft>
+          </FlexLink>
+          <FlexLink to="/admin">
+            <ButtonRight> Admin </ButtonRight>
+          </FlexLink>
+        </StyledSection>
+        <StyledSection />
+      </FlexContainerCol>
+    );
   }
 }
 

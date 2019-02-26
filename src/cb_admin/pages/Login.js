@@ -87,7 +87,7 @@ export default class Login extends React.Component {
           </FormSection>
         </Form>
         <CenteredParagraph>
-          <LightLink to="/cb/password/forgot">Forgot your password?</LightLink>
+          <LightLink to="/password/forgot">Forgot your password?</LightLink>
         </CenteredParagraph>
       </FlexContainerCol>
     );

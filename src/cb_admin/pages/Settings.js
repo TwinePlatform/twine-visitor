@@ -252,7 +252,7 @@ export default class SettingsPage extends React.Component {
     return (
       <Grid>
         <NavHeader
-          leftTo="/cb/dashboard"
+          leftTo="/admin"
           leftContent="Back to dashboard"
           centerContent={rest.name}
         />

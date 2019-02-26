@@ -35,7 +35,7 @@ describe('ForgotPassword Component', () => {
     fireEvent.change(email);
     fireEvent.click(submit);
 
-    await wait(() => expect(history.location.pathname).toEqual('/cb/login'));
+    await wait(() => expect(history.location.pathname).toEqual('/login'));
   });
 
   test(':: unsubscribed email sends 400 and displays error message', async () => {

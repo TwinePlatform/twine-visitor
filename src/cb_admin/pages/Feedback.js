@@ -107,7 +107,7 @@ export default class Feedback extends Component {
           ? this.setState({ feedbackCounts: data.result, error: null })
           : this.setState({ error: 'Sorry, no data was found', feedbackCounts: null });
       })
-      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/admin/confirm' }));
   };
 
   handleAllDates = () => {
@@ -122,7 +122,7 @@ export default class Feedback extends Component {
     return (
       <div>
         <NavHeader
-          leftTo="/cb/dashboard"
+          leftTo="/admin"
           leftContent="Back to dashboard"
           centerContent="Visitor Satisfaction"
         />

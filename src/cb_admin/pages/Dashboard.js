@@ -43,10 +43,9 @@ export default class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    CommunityBusiness.update() // used to check cookie permissions
-      .then(() => CommunityBusiness.get({ fields: ['name'] }))
+    CommunityBusiness.get({ fields: ['name'] })
       .then(res => this.setState({ orgName: res.data.result.name }))
-      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/admin/confirm' }));
   }
 
   render() {
@@ -59,7 +58,7 @@ export default class Dashboard extends React.Component {
         />
         <Row style={{ maxWidth: '768px', margin: '0 auto' }}>
           <Col xs={12} sm={6} md={4}>
-            <ButtonWrapperLink to="/cb/activities">
+            <ButtonWrapperLink to="/admin/activities">
               <ButtonOne>
                 Activities
                 <Caption>Edit what is happening at {this.state.orgName || 'your community business'}</Caption>
@@ -67,7 +66,7 @@ export default class Dashboard extends React.Component {
             </ButtonWrapperLink>
           </Col>
           <Col xs={12} sm={6} md={4}>
-            <ButtonWrapperLink to="/cb/visits">
+            <ButtonWrapperLink to="/admin/visits">
               <ButtonTwo>
                 Visits
                 <Caption>See who signed in</Caption>
@@ -75,7 +74,7 @@ export default class Dashboard extends React.Component {
             </ButtonWrapperLink>
           </Col>
           <Col xs={12} sm={6} md={4}>
-            <ButtonWrapperLink to="/cb/visitors">
+            <ButtonWrapperLink to="/admin/visitors">
               <ButtonOne>
                 Visitors
                 <Caption>View and edit your visitors&#39; details</Caption>
@@ -83,7 +82,7 @@ export default class Dashboard extends React.Component {
             </ButtonWrapperLink>
           </Col>
           <Col xs={12} sm={6} md={4}>
-            <ButtonWrapperLink to="/cb/settings">
+            <ButtonWrapperLink to="/admin/settings">
               <ButtonTwo>
                 Account Settings
                 <Caption>View and edit your business&#39; details</Caption>
@@ -91,7 +90,7 @@ export default class Dashboard extends React.Component {
             </ButtonWrapperLink>
           </Col>
           <Col xs={12} sm={6} md={4}>
-            <ButtonWrapperLink to="/cb/feedback">
+            <ButtonWrapperLink to="/admin/feedback">
               <ButtonOne>
                 Feedback
                 <Caption>See how your visitors feel about your business</Caption>

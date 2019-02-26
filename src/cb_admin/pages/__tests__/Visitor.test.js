@@ -58,8 +58,8 @@ describe('Visitor Component', () => {
       match: {
         isExact: true,
         params: { id: '4' },
-        path: '/cb/visitors/:id',
-        url: '/cb/visitors/4',
+        path: '/admin/visitors/:id',
+        url: '/admin/visitors/4',
       },
     })(Visitor);
 
@@ -93,12 +93,12 @@ describe('Visitor Component', () => {
       match: {
         isExact: true,
         params: { id: '4' },
-        path: '/cb/visitors/:id',
-        url: '/cb/visitors/4',
+        path: '/admin/visitors/:id',
+        url: '/admin/visitors/4',
       },
     })(Visitor);
 
-    await wait(() => expect(history.location.pathname).toEqual('/cb/login'));
+    await wait(() => expect(history.location.pathname).toEqual('/login'));
   });
 
   test(':: can update visitor details', async () => {
@@ -152,8 +152,8 @@ describe('Visitor Component', () => {
       match: {
         isExact: true,
         params: { id: '4' },
-        path: '/cb/visitors/:id',
-        url: '/cb/visitors/4',
+        path: '/admin/visitors/:id',
+        url: '/admin/visitors/4',
       },
     })(Visitor);
 
@@ -220,8 +220,8 @@ describe('Visitor Component', () => {
       match: {
         isExact: true,
         params: { id: '4' },
-        path: '/cb/visitors/:id',
-        url: '/cb/visitors/4',
+        path: '/admin/visitors/:id',
+        url: '/admin/visitors/4',
       },
     })(Visitor);
 
