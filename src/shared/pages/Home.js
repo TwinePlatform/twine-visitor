@@ -55,10 +55,10 @@ export default class Home extends Component {
           leftContent="Logout"
           leftOnClick={() => CbAdmin.logout()}
           centerContent={
-              <>
-                <Heading> Welcome to {this.state.cbName} </Heading>
-                <Heading2> Who are you? </Heading2>
-              </>
+            <>
+              <Heading> Welcome to {this.state.cbName} </Heading>
+              <Heading2> Who are you? </Heading2>
+            </>
           }
         />
         <StyledSection>

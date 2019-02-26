@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 import { BeatLoader as Bl } from 'react-spinners';
 import styled from 'styled-components';
@@ -57,3 +58,7 @@ export default class PrivateRoute extends React.Component {
 
   }
 }
+
+PrivateRoute.propTypes = {
+  component: PropTypes.element.isRequired,
+};
