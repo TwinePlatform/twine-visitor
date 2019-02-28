@@ -79,8 +79,7 @@ export default class ActivitiesPage extends React.Component {
   }
 
   componentDidMount() {
-    CommunityBusiness.update() // used to check cookie permissions
-      .then(() => Promise.all([Activities.get(), CommunityBusiness.getActivities()]))
+    Promise.all([Activities.get(), CommunityBusiness.getActivities()])
       .then(([{ data: { result: activities } }, { data: { result: categories } }]) => {
 
         const order = activities.map(activity => activity.id);
@@ -94,7 +93,7 @@ export default class ActivitiesPage extends React.Component {
           categories: [{ id: -1, name: '' }].concat(categories).map(({ id, name }) => ({ key: id, value: name })),
         });
       })
-      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/admin/confirm' }));
   }
 
   onChange = e =>
@@ -108,7 +107,7 @@ export default class ActivitiesPage extends React.Component {
         this.setState(assocPath(['activities', 'items', id], res.data.result));
         this.setState(assocPath(['errors', 'view'], false));
       })
-      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/admin/confirm' }));
   }
 
   addActivity = (e) => {
@@ -137,7 +136,7 @@ export default class ActivitiesPage extends React.Component {
       .catch(error =>
         ErrorUtils.errorStatusEquals(error, 409)
           ? this.setState({ errors: { general: 'Activity already exists', view: true } })
-          : redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }),
+          : redirectOnError(this.props.history.push, error, { 403: '/admin/confirm' }),
       );
   }
 
@@ -152,7 +151,7 @@ export default class ActivitiesPage extends React.Component {
           return { ...state, activities: { order, items } };
         });
       })
-      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/admin/confirm' }));
   }
 
   render() {
@@ -161,7 +160,7 @@ export default class ActivitiesPage extends React.Component {
     return (
       <FlexContainerCol expand>
         <NavHeader
-          leftTo="/cb/dashboard"
+          leftTo="/admin"
           leftContent="Back to dashboard"
           centerContent="Activities List"
         />

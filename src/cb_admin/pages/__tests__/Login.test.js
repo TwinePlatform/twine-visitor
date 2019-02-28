@@ -65,7 +65,7 @@ describe('Login Component', () => {
     mock.onPost('/users/login')
       .reply(200, { });
 
-    const { getByText, history, getByLabelText } = renderWithRouter({ route: '/cb/login' })(Login);
+    const { getByText, history, getByLabelText } = renderWithRouter({ route: '/login' })(Login);
 
     const email = getByLabelText('Email');
     const password = getByLabelText('Password');

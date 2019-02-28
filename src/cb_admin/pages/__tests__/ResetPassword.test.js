@@ -32,7 +32,7 @@ describe('ResetPassword Component', () => {
 
     const { getByText, getByLabelText } =
         renderWithRouter({
-          route: '/cb/password/reset/tickettonarnia?email=lion@inthecloset.com',
+          route: '/admin/password/reset/tickettonarnia?email=lion@inthecloset.com',
           match: { params: { token: 'tickettonarnia' } },
           location: { search: '?email=lion@inthecloset.com' },
         })(ResetPassword);
@@ -65,7 +65,7 @@ describe('ResetPassword Component', () => {
 
     const { getByText, getByLabelText } =
         renderWithRouter({
-          route: '/cb/password/reset/tickettonarnia?email=lion@inthecloset.com',
+          route: '/admin/password/reset/tickettonarnia?email=lion@inthecloset.com',
           match: { params: { token: 'tickettonarnia' } },
           location: { search: '?email=lion@inthecloset.com' },
         })(ResetPassword);
@@ -94,7 +94,7 @@ describe('ResetPassword Component', () => {
 
     const { getByText, getByLabelText, history } =
         renderWithRouter({
-          route: '/cb/password/reset/tickettonarnia?email=lion@inthecloset.com',
+          route: '/admin/password/reset/tickettonarnia?email=lion@inthecloset.com',
           match: { params: { token: 'tickettonarnia' } },
           location: { search: '?email=lion@inthecloset.com' },
         })(ResetPassword);
@@ -110,7 +110,7 @@ describe('ResetPassword Component', () => {
     fireEvent.click(submit);
 
     await wait(() => {
-      expect(history.location.pathname).toEqual('/cb/login');
+      expect(history.location.pathname).toEqual('/login');
       expect(history.location.search).toEqual('?ref=pwd_reset');
     });
   });

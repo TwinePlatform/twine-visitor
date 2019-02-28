@@ -43,7 +43,7 @@
 const get = (mock, url, { params, status = 200, response = { result: null } } = {}) =>
   mock.onGet(url, params ? { params } : undefined).reply(status, response);
 
-const post = (mock, url, { body, status = 200, response = { result: null } } = {}) =>
+const post = (mock, url, { body, status = 200, response = { result: null } } = {}) => //eslint-disable-line
   mock.onPost(url, body || undefined).reply(status, response);
 
 
@@ -58,11 +58,6 @@ export const Activities = {
 export const CommunityBusinesses = {
   get: (mock, opts) =>
     get(mock, '/community-businesses/me', opts),
-};
-
-export const CbAdmins = {
-  downGradePermissions: (mock, opts) =>
-    post(mock, '/users/login/de-escalate', opts),
 };
 
 export const Visitors = {

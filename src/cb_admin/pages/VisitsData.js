@@ -241,7 +241,7 @@ export default class VisitsDataPage extends React.Component {
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/cb/confirm');
+          this.props.history.push('/admin/confirm');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
         } else {
@@ -284,7 +284,7 @@ export default class VisitsDataPage extends React.Component {
           fullCount,
         });
       })
-      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/admin/confirm' }));
   };
 
   render() {
@@ -292,7 +292,7 @@ export default class VisitsDataPage extends React.Component {
     return (
       <FlexContainerCol expand>
         <NavHeader
-          leftTo="/cb/dashboard"
+          leftTo="/admin"
           leftContent="Back to dashboard"
           centerContent="Visits data"
         />

@@ -35,7 +35,7 @@ export default class ForgotPassword extends React.Component {
     e.preventDefault();
 
     CbAdmin.forgotPassword({ email: this.state.email })
-      .then(() => this.props.history.push('/cb/login'))
+      .then(() => this.props.history.push('/login'))
       .catch((err) => {
         if (ErrorUtils.errorStatusEquals(err, 400)) {
           this.setState({ errors: { email: ErrorUtils.getErrorMessage(err) } });
@@ -68,7 +68,7 @@ export default class ForgotPassword extends React.Component {
             />
             <SubmitButton>CONTINUE</SubmitButton>
             <div style={{ textAlign: 'center', margin: '2em 0', width: '100%' }}>
-              <Link to="/cb/login">Back to login</Link>
+              <Link to="/login">Back to login</Link>
             </div>
           </FormSection>
         </Form>

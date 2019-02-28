@@ -13,7 +13,7 @@ import NavHeader from '../../shared/components/NavHeader';
 import { colors, fonts } from '../../shared/style_guide';
 import TranslucentTable from '../components/TranslucentTable';
 import PaginatedTableWrapper from '../components/PaginatedTableWrapper';
-import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
+import { Visitors, ErrorUtils } from '../../api';
 import { renameKeys, redirectOnError } from '../../util';
 import { AgeRange } from '../../shared/constants';
 
@@ -91,12 +91,11 @@ export default class VisitorDetailsPage extends React.Component {
   }
 
   componentDidMount() {
-    CommunityBusiness.update() // used to check cookie permissions
-      .then(Visitors.genders)
+    Visitors.genders()
       .then(res => this.setState({
         genderList: [{ key: 0, value: '' }].concat(res.data.result.map(renameKeys({ id: 'key', name: 'value' }))),
       }))
-      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/cb/confirm' }));
+      .catch(error => redirectOnError(this.props.history.push, error, { 403: '/admin/confirm' }));
   }
 
   onChange = (e) => {
@@ -167,7 +166,7 @@ export default class VisitorDetailsPage extends React.Component {
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/cb/confirm');
+          this.props.history.push('/admin/confirm');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
         } else {
@@ -198,7 +197,7 @@ export default class VisitorDetailsPage extends React.Component {
       })
       .catch((error) => {
         if (ErrorUtils.errorStatusEquals(error, 401)) {
-          this.props.history.push('/cb/confirm');
+          this.props.history.push('/admin/confirm');
         } else if (ErrorUtils.errorStatusEquals(error, 500)) {
           this.props.history.push('/error/500');
         } else {
@@ -213,7 +212,7 @@ export default class VisitorDetailsPage extends React.Component {
     return (
       <FlexContainerCol expand>
         <NavHeader
-          leftTo="/cb/dashboard"
+          leftTo="/admin"
           leftContent="Back to dashboard"
           centerContent="Visitor details"
         />
@@ -265,7 +264,7 @@ export default class VisitorDetailsPage extends React.Component {
               rows={
                 this.state.users.map(v => ({
                   key: `${v.id}`,
-                  onClick: () => this.props.history.push(`/cb/visitors/${v.id}`),
+                  onClick: () => this.props.history.push(`/admin/visitors/${v.id}`),
                   data: Object.values(project(Object.keys(filter(Boolean, keyMap)), [v])[0]),
                 }))}
               loadRows={this.loadRows}

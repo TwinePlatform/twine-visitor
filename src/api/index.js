@@ -115,12 +115,6 @@ export const CbAdmin = {
   logout: () =>
     axios.get('/users/logout'),
 
-  upgradePermissions: ({ password } = {}) =>
-    axios.post('/users/login/escalate', { password }),
-
-  downgradePermissions: () =>
-    axios.post('/users/login/de-escalate'),
-
   forgotPassword: ({ email } = {}) =>
     axios.post('/users/password/forgot', { email, redirect: 'VISITOR_APP' }),
 
@@ -160,6 +154,10 @@ export const CommunityBusiness = {
     ),
 };
 
+export const Roles = {
+  get: () => axios.get('/users/me/roles'),
+};
+
 export const Cloudinary = {
   UPLOAD_URL: 'https://api.cloudinary.com/v1_1/dqzxe8mav/upload',
   UPLOAD_PRESET: 'cklrrn9k',
@@ -178,4 +176,8 @@ export const ErrorUtils = {
   getValidationErrors: pathOr({ general: ['Unknown error'] }, ['response', 'data', 'error', 'validation']),
   getErrorMessage: pathOr({ general: ['Unknown error'] }, ['response', 'data', 'error', 'message']),
   errorStatusEquals: (error, status) => equals(ErrorUtils.getErrorStatus(error), status),
+};
+
+export const ResponseUtils = {
+  getResponse: (maybeArray = [], obj) => pathOr(null, ['data', 'result', ...maybeArray], obj),
 };

@@ -15,7 +15,7 @@ import { BeatLoader as Bl } from 'react-spinners';
 import PurposeButton from '../components/purposeButton';
 import QRPrivacy from '../components/qrprivacy';
 import QrScanner from '../components/QrScanner';
-import { Activities, Visitors, CbAdmin } from '../../api';
+import { Activities, Visitors } from '../../api';
 import { FlexContainerRow } from '../../shared/components/layout/base';
 import NavHeader from '../../shared/components/NavHeader';
 import { redirectOnError } from '../../util';
@@ -90,8 +90,7 @@ export default class QRCode extends Component {
   }
 
   componentDidMount() {
-    CbAdmin.downgradePermissions()
-      .then(() => Activities.get({ day: 'today' }))
+    Activities.get({ day: 'today' })
       .then((res) => {
         this.setState({ activities: res.data.result, isFetching: false });
       })

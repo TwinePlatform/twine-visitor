@@ -73,7 +73,7 @@ describe('VisitorDetails Component', () => {
 
     const { history } = renderWithRouter()(VisitorDetails);
 
-    await wait(() => expect(history.location.pathname).toEqual('/cb/confirm'));
+    await wait(() => expect(history.location.pathname).toEqual('/admin/confirm'));
   });
 });
 

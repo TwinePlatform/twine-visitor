@@ -73,8 +73,8 @@ export const toCancellable = (p) => {
 export const redirectOnError = (historyPush, error, custom = {}) => {
   const defaults = {
     400: '/error/400',
-    401: '/cb/login',
-    403: '/cb/login',
+    401: '/login',
+    403: '/login',
     404: '/error/404',
     500: '/error/500',
     default: '/error/unknown',

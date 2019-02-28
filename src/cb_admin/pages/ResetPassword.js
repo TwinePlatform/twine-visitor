@@ -51,7 +51,7 @@ export default class ResetPassword extends React.Component {
       token: this.props.match.params.token,
       ...payloadFromState(this.state),
     })
-      .then(() => this.props.history.push('/cb/login?ref=pwd_reset'))
+      .then(() => this.props.history.push('/login?ref=pwd_reset'))
       .catch((err) => {
         if (ErrorUtils.errorStatusEquals(err, 400)) {
           this.setState({ errors: ErrorUtils.getValidationErrors(err) });
