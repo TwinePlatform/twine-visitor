@@ -27,6 +27,7 @@ const Grid = styled(Gr) `
 
 const Form = styled(Fm) `
   width: 100%;
+  margin-bottom: 2em;
 `;
 
 const Paragraph = styled(P) `
@@ -59,6 +60,9 @@ const QrCodePrint = styled.img``;
 const PrintHeaderRow = styled(FlexContainerRow) `
   justify-content: center;
   align-items: center;
+`;
+const TopMarginContainer = styled.div`
+  margin-top: 2em;
 `;
 
 const payloadFromState = compose(
@@ -266,20 +270,22 @@ export default class VisitorProfile extends React.Component {
                 error={errors.gender}
                 onChange={this.onChange}
               />
-              <Checkbox
-                id="visitor-email-consent"
-                name="isEmailConsentGranted"
-                label="E-mail consent"
-                checked={has('isEmailConsentGranted', rest.form) ? rest.form.isEmailConsentGranted : rest.isEmailConsentGranted}
-                onChange={this.onChange}
-              />
-              <Checkbox
-                id="visitor-sms-consent"
-                name="isSMSConsentGranted"
-                label="SMS consent"
-                checked={has('isSMSConsentGranted', rest.form) ? rest.form.isSMSConsentGranted : rest.isSMSConsentGranted}
-                onChange={this.onChange}
-              />
+              <TopMarginContainer>
+                <Checkbox
+                  id="visitor-email-consent"
+                  name="isEmailConsentGranted"
+                  label="E-mail consent"
+                  checked={has('isEmailConsentGranted', rest.form) ? rest.form.isEmailConsentGranted : rest.isEmailConsentGranted}
+                  onChange={this.onChange}
+                />
+                <Checkbox
+                  id="visitor-sms-consent"
+                  name="isSMSConsentGranted"
+                  label="SMS consent"
+                  checked={has('isSMSConsentGranted', rest.form) ? rest.form.isSMSConsentGranted : rest.isSMSConsentGranted}
+                  onChange={this.onChange}
+                />
+              </TopMarginContainer>
             </Col>
           </Row>
         </Form>
