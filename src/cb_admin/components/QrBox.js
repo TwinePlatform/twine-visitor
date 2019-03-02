@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Grid, Row } from 'react-flexbox-grid';
 import { PrimaryButton } from '../../shared/components/form/base';
 import { fonts, colors } from '../../shared/style_guide';
 
-
-const Container = styled.div`
-`;
 
 const Img = styled.img`
   object-fit: contain;
@@ -37,18 +35,21 @@ const QrBox = ({ qrCodeUrl, print, send, error, status }) => {
   const hasError = status === resendQrCodeState.ERROR;
 
   return (
-    <Container>
+    <Grid>
       <Img alt="QR code" src={qrCodeUrl} />
-      <Button onClick={print}>PRINT QR CODE</Button>
-      <Button onClick={send} disabled={hasSent}>
-        {
-          hasSent
-            ? 'QR CODE SENT'
-            : 'RESEND QR CODE'
-        }
-      </Button>
+      <Row between={'xs'}>
+        <Button onClick={print}>PRINT QR CODE</Button>
+        <Button onClick={send} disabled={hasSent}>
+          {
+            hasSent
+              ? 'QR CODE SENT'
+              : 'RESEND QR CODE'
+          }
+        </Button>
+
+      </Row>
       {hasError && <ErrorText>{error.message}</ErrorText>}
-    </Container>
+    </Grid>
   );
 };
 
