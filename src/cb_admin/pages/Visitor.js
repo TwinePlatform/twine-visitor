@@ -221,74 +221,80 @@ export default class VisitorProfile extends React.Component {
             />
           </Col>
         </Row>
-        <Paragraph>Edit user details</Paragraph>
-        <Form onChange={this.onChange} onSubmit={this.onSubmit}>
-          <Row between="xs" style={{ width: '100%' }}>
-            <Col xs={12} md={7}>
-              <LabelledInput
-                id="visitor-name"
-                label="Name"
-                name="name"
-                type="text"
-                placeholder={rest.name}
-                error={errors.name}
-              />
-              <LabelledInput
-                id="visitor-email"
-                label="Email"
-                name="email"
-                type="email"
-                placeholder={rest.email}
-                error={errors.email}
-              />
-              <LabelledInput
-                id="visitor-phone-number"
-                label="Phone number"
-                name="phoneNumber"
-                type="phoneNumber"
-                placeholder={rest.phoneNumber}
-                error={errors.phoneNumber}
-              />
-              <Button type="submit">SAVE</Button>
-            </Col>
-            <Col xs={12} md={4}>
-              <LabelledSelect
-                id="visitor-birthYear"
-                label="Year of birth"
-                name="birthYear"
-                options={BirthYear.defaultOptionsList()}
-                value={rest.form.birthYear || rest.birthYear}
-                error={errors.birthYear}
-                onChange={this.onChange}
-              />
-              <LabelledSelect
-                id="visitor-gender"
-                label="Gender"
-                name="gender"
-                options={rest.genderList}
-                value={rest.form.gender || rest.gender}
-                error={errors.gender}
-                onChange={this.onChange}
-              />
-              <TopMarginContainer>
-                <Checkbox
-                  id="visitor-email-consent"
-                  name="isEmailConsentGranted"
-                  label="E-mail consent"
-                  checked={has('isEmailConsentGranted', rest.form) ? rest.form.isEmailConsentGranted : rest.isEmailConsentGranted}
+        <Row>
+          <Col xs={12}>
+            <Paragraph>Edit user details</Paragraph>
+          </Col>
+        </Row>
+        <Row>
+          <Form onChange={this.onChange} onSubmit={this.onSubmit}>
+            <Row between="xs" style={{ width: '100%' }}>
+              <Col xs={12} md={7}>
+                <LabelledInput
+                  id="visitor-name"
+                  label="Name"
+                  name="name"
+                  type="text"
+                  placeholder={rest.name}
+                  error={errors.name}
+                />
+                <LabelledInput
+                  id="visitor-email"
+                  label="Email"
+                  name="email"
+                  type="email"
+                  placeholder={rest.email}
+                  error={errors.email}
+                />
+                <LabelledInput
+                  id="visitor-phone-number"
+                  label="Phone number"
+                  name="phoneNumber"
+                  type="phoneNumber"
+                  placeholder={rest.phoneNumber}
+                  error={errors.phoneNumber}
+                />
+                <Button type="submit">SAVE</Button>
+              </Col>
+              <Col xs={12} md={4}>
+                <LabelledSelect
+                  id="visitor-birthYear"
+                  label="Year of birth"
+                  name="birthYear"
+                  options={BirthYear.defaultOptionsList()}
+                  value={rest.form.birthYear || rest.birthYear}
+                  error={errors.birthYear}
                   onChange={this.onChange}
                 />
-                <Checkbox
-                  id="visitor-sms-consent"
-                  name="isSMSConsentGranted"
-                  label="SMS consent"
-                  checked={has('isSMSConsentGranted', rest.form) ? rest.form.isSMSConsentGranted : rest.isSMSConsentGranted}
+                <LabelledSelect
+                  id="visitor-gender"
+                  label="Gender"
+                  name="gender"
+                  options={rest.genderList}
+                  value={rest.form.gender || rest.gender}
+                  error={errors.gender}
                   onChange={this.onChange}
                 />
-              </TopMarginContainer>
-            </Col>
-          </Row>
-        </Form>
+                <TopMarginContainer>
+                  <Checkbox
+                    id="visitor-email-consent"
+                    name="isEmailConsentGranted"
+                    label="E-mail consent"
+                    checked={has('isEmailConsentGranted', rest.form) ? rest.form.isEmailConsentGranted : rest.isEmailConsentGranted}
+                    onChange={this.onChange}
+                  />
+                  <Checkbox
+                    id="visitor-sms-consent"
+                    name="isSMSConsentGranted"
+                    label="SMS consent"
+                    checked={has('isSMSConsentGranted', rest.form) ? rest.form.isSMSConsentGranted : rest.isSMSConsentGranted}
+                    onChange={this.onChange}
+                  />
+                </TopMarginContainer>
+              </Col>
+            </Row>
+          </Form>
+        </Row>
       </Grid>
     );
   }
