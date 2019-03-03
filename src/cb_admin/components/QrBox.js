@@ -15,7 +15,6 @@ const Img = styled.img`
 
 const Button = styled(PrimaryButton) `
   width: 45%;
-  margin: 0 2.5%;
   height: 4.5em;
   font-size: ${fonts.size.small};
 `;
