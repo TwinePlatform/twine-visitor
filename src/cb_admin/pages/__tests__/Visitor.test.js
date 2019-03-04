@@ -102,7 +102,7 @@ describe('Visitor Component', () => {
   });
 
   test(':: can update visitor details', async () => {
-    expect.assertions(3);
+    expect.assertions(4);
 
     mock.onPut('/community-businesses/me')
       .reply(200, { result: null });
@@ -160,16 +160,24 @@ describe('Visitor Component', () => {
     // ensures page has successfully loaded before continuing with tests
     await waitForElement(() => tools.getByText('yusra mardini'));
 
-    const [nameInput, emailInput, genderInput, submitBtn] = await waitForElement(() => [
+    const [
+      nameInput,
+      emailInput,
+      genderInput,
+      emailConsentBox,
+      submitBtn,
+    ] = await waitForElement(() => [
       tools.getByLabelText('Name'),
       tools.getByLabelText('Email'),
       tools.getByLabelText('Gender'),
+      tools.container.querySelector('#visitor-email-consent'),
       tools.getByText('SAVE'),
     ]);
 
     fireEvent.change(nameInput, { target: { value: 'foosra mardini' } });
     fireEvent.change(emailInput, { target: { value: 'manewmail@gmail.com' } });
     fireEvent.change(genderInput, { target: { value: 'male' } });
+    fireEvent.change(emailConsentBox, { target: { value: 'on' } });
     fireEvent.click(submitBtn);
 
     const [nameText, emailText, genderText] = await waitForElement(() => [
@@ -181,6 +189,7 @@ describe('Visitor Component', () => {
     expect(nameText).toBeTruthy();
     expect(emailText).toBeTruthy();
     expect(genderText).toBeTruthy();
+    expect(emailConsentBox.value).toBe('on');
   });
 
   test(':: fail to update visitor details', async () => {

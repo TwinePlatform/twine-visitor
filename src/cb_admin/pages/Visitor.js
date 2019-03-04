@@ -2,20 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
-import { assocPath, compose, filter, pick, prop } from 'ramda';
+import { assocPath, compose, filter, pick, prop, has } from 'ramda';
 import { Grid as Gr, Row, Col } from 'react-flexbox-grid';
 import { FlexContainerRow } from '../../shared/components/layout/base';
 import { Paragraph as P, Heading } from '../../shared/components/text/base';
 import { Form as Fm, PrimaryButton } from '../../shared/components/form/base';
 import LabelledInput from '../../shared/components/form/LabelledInput';
 import LabelledSelect from '../../shared/components/form/LabelledSelect';
+import Checkbox from '../../shared/components/form/Checkbox';
 import NavHeader from '../../shared/components/NavHeader';
 import DetailsTable from '../components/DetailsTable';
 import QrBox from '../components/QrBox';
 import { CommunityBusiness, Visitors, ErrorUtils } from '../../api';
-import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
 import { renameKeys, redirectOnError } from '../../util';
 import { BirthYear } from '../../shared/constants';
+import p2cLogo from '../../shared/assets/images/qrcodelogo.png';
+
 
 const Grid = styled(Gr) `
   @media print {
@@ -25,6 +27,7 @@ const Grid = styled(Gr) `
 
 const Form = styled(Fm) `
   width: 100%;
+  margin-bottom: 2em;
 `;
 
 const Paragraph = styled(P) `
@@ -58,10 +61,13 @@ const PrintHeaderRow = styled(FlexContainerRow) `
   justify-content: center;
   align-items: center;
 `;
+const TopMarginContainer = styled.div`
+  margin-top: 2em;
+`;
 
 const payloadFromState = compose(
-  filter(Boolean),
-  pick(['name', 'gender', 'email', 'birthYear', 'phoneNumber']),
+  filter(f => typeof f === 'boolean' ? true : Boolean(f)), // need to keep falsy boolean fields
+  pick(['name', 'gender', 'email', 'birthYear', 'phoneNumber', 'isSMSConsentGranted', 'isEmailConsentGranted']),
   prop('form'),
 );
 
@@ -70,6 +76,8 @@ const resendQrCodeState = {
   SUCCESS: 'SUCCESS',
   ERROR: 'ERROR',
 };
+
+
 export default class VisitorProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -77,12 +85,14 @@ export default class VisitorProfile extends React.Component {
     this.state = {
       id: props.match.params.id || null,
       name: null,
-      gender: null,
-      birthYear: null,
+      gender: '',
+      birthYear: '',
       email: null,
       phoneNumber: null,
       registeredAt: null,
       qrCodeUrl: '',
+      isEmailConsentGranted: false,
+      isSMSConsentGranted: false,
       isPrinting: false,
       resendQrCodeState: null,
       cbOrgName: '',
@@ -153,7 +163,9 @@ export default class VisitorProfile extends React.Component {
       gender: data.gender,
       birthYear: data.birthYear,
       email: data.email,
-      phoneNumber: data.phoneMumber,
+      phoneNumber: data.phoneNumber,
+      isEmailConsentGranted: data.isEmailConsentGranted,
+      isSMSConsentGranted: data.isSMSConsentGranted,
       registeredAt: moment(data.createdAt).format('Do MMMM YYYY'),
       qrCodeUrl: data.qrCode,
       form: {},
@@ -209,48 +221,80 @@ export default class VisitorProfile extends React.Component {
             />
           </Col>
         </Row>
-        <Paragraph>Edit user details</Paragraph>
-        <Form onChange={this.onChange} onSubmit={this.onSubmit}>
-          <Row between="xs" style={{ width: '100%' }}>
-            <Col xs={12} md={7}>
-              <LabelledInput
-                id="visitor-name"
-                label="Name"
-                name="name"
-                type="text"
-                placeholder={rest.name}
-                error={errors.name}
-              />
-              <LabelledInput
-                id="visitor-email"
-                label="Email"
-                name="email"
-                type="email"
-                placeholder={rest.email}
-                error={errors.email}
-              />
-              <Button type="submit">SAVE</Button>
-            </Col>
-            <Col xs={12} md={4}>
-              <LabelledSelect
-                id="visitor-birthYear"
-                label="Year of birth"
-                name="birthYear"
-                options={BirthYear.defaultOptionsList()}
-                value={rest.form.birthYear || rest.birthYear}
-                error={errors.birthYear}
-              />
-              <LabelledSelect
-                id="visitor-gender"
-                label="Gender"
-                name="gender"
-                options={rest.genderList}
-                value={rest.form.gender || rest.gender}
-                error={errors.gender}
-              />
-            </Col>
-          </Row>
-        </Form>
+        <Row>
+          <Col xs={12}>
+            <Paragraph>Edit user details</Paragraph>
+          </Col>
+        </Row>
+        <Row>
+          <Form onChange={this.onChange} onSubmit={this.onSubmit}>
+            <Row between="xs" style={{ width: '100%' }}>
+              <Col xs={12} md={7}>
+                <LabelledInput
+                  id="visitor-name"
+                  label="Name"
+                  name="name"
+                  type="text"
+                  placeholder={rest.name}
+                  error={errors.name}
+                />
+                <LabelledInput
+                  id="visitor-email"
+                  label="Email"
+                  name="email"
+                  type="email"
+                  placeholder={rest.email}
+                  error={errors.email}
+                />
+                <LabelledInput
+                  id="visitor-phone-number"
+                  label="Phone number"
+                  name="phoneNumber"
+                  type="phoneNumber"
+                  placeholder={rest.phoneNumber}
+                  error={errors.phoneNumber}
+                />
+                <Button type="submit">SAVE</Button>
+              </Col>
+              <Col xs={12} md={4}>
+                <LabelledSelect
+                  id="visitor-birthYear"
+                  label="Year of birth"
+                  name="birthYear"
+                  options={BirthYear.defaultOptionsList()}
+                  value={rest.form.birthYear || rest.birthYear}
+                  error={errors.birthYear}
+                  onChange={this.onChange}
+                />
+                <LabelledSelect
+                  id="visitor-gender"
+                  label="Gender"
+                  name="gender"
+                  options={rest.genderList}
+                  value={rest.form.gender || rest.gender}
+                  error={errors.gender}
+                  onChange={this.onChange}
+                />
+                <TopMarginContainer>
+                  <Checkbox
+                    id="visitor-email-consent"
+                    name="isEmailConsentGranted"
+                    label="E-mail consent"
+                    checked={has('isEmailConsentGranted', rest.form) ? rest.form.isEmailConsentGranted : rest.isEmailConsentGranted}
+                    onChange={this.onChange}
+                  />
+                  <Checkbox
+                    id="visitor-sms-consent"
+                    name="isSMSConsentGranted"
+                    label="SMS consent"
+                    checked={has('isSMSConsentGranted', rest.form) ? rest.form.isSMSConsentGranted : rest.isSMSConsentGranted}
+                    onChange={this.onChange}
+                  />
+                </TopMarginContainer>
+              </Col>
+            </Row>
+          </Form>
+        </Row>
       </Grid>
     );
   }
