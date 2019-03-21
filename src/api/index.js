@@ -111,6 +111,8 @@ export const Visitors = {
         visitActivityId: activityId,
       },
     ),
+  addRole: ({ userId, organisationId, role, token } = {}) =>
+    axios.post('/users/register/confirm', { userId, organisationId, role, token }),
 };
 
 export const CbAdmin = {
@@ -190,5 +192,5 @@ export const ErrorUtils = {
 };
 
 export const ResponseUtils = {
-  getResponse: (maybeArray = [], obj) => pathOr(null, ['data', 'result', ...maybeArray], obj),
+  getResponse: (obj, maybeArray = []) => pathOr(null, ['data', 'result', ...maybeArray], obj),
 };
