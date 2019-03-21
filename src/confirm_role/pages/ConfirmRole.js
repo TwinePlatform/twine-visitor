@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { BeatLoader } from 'react-spinners';
 import { parse } from 'querystring';
 import { Heading, Paragraph } from '../../shared/components/text/base';
 import { FlexContainerCol } from '../../shared/components/layout/base';
-import DotButton from '../../shared/components/form/DottedButton';
 import NavHeader from '../../shared/components/NavHeader';
 import { Visitors, ResponseUtils, ErrorUtils } from '../../api';
 import { colors } from '../../shared/style_guide';
