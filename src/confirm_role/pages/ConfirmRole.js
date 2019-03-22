@@ -47,24 +47,15 @@ export default class ConfirmRole extends Component {
     const { userId, organisationId, role } = parse(search.replace('?', ''));
     Visitors.addRole({ token, userId, organisationId, role: role && role.toUpperCase() })
       .then((r) => {
-        console.log({ r });
-
         const res = ResponseUtils.getResponse(r);
-        console.log({ res });
-
         return res.token
           ? this.setState({ status: status.REDIRECT, user: res })
           : this.setState({ status: status.SUCCESS });
       })
-      .catch((e) => {
-        console.log(e);
-
-        this.setState({
-          status: status.FAILURE,
-          errors: ErrorUtils.getErrorMessage(e),
-        })
-        ;
-      });
+      .catch(e => this.setState({
+        status: status.FAILURE,
+        errors: ErrorUtils.getErrorMessage(e),
+      }));
   }
 
   render() {
