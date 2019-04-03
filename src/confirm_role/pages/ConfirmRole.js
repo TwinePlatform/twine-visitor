@@ -3,9 +3,9 @@ import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { BeatLoader } from 'react-spinners';
+import { Col } from 'react-flexbox-grid';
 import { parse } from 'querystring';
 import { Heading, Paragraph } from '../../shared/components/text/base';
-import { FlexContainerCol } from '../../shared/components/layout/base';
 import NavHeader from '../../shared/components/NavHeader';
 import { Visitors, ResponseUtils, ErrorUtils } from '../../api';
 import { colors } from '../../shared/style_guide';
@@ -60,7 +60,7 @@ export default class ConfirmRole extends Component {
 
   render() {
     return (
-      <FlexContainerCol justify="flex-start">
+      <Col>
         <NavHeader
           centerContent={
             <Heading>Add {this.state.role} Role</Heading>
@@ -93,7 +93,7 @@ export default class ConfirmRole extends Component {
           )}
 
         </StyledSection>
-      </FlexContainerCol>
+      </Col>
     );
   }
 }
