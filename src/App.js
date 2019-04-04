@@ -14,6 +14,7 @@ import Login from './cb_admin/pages/Login';
 import PrivateRoute from './auth/PrivateRoute';
 import ResetPassword from './cb_admin/pages/ResetPassword';
 import ForgotPassword from './cb_admin/pages/ForgotPassword';
+import ConfirmRole from './confirm_role/pages/ConfirmRole';
 
 
 const ProtectedRoutes = () => (
@@ -34,6 +35,7 @@ const App = () => (
         <Route exact path="/login" component={Login} />
         <Route exact path="/password/reset/:token" component={ResetPassword} />
         <Route exact path="/password/forgot" component={ForgotPassword} />
+        <Route exact path="/confirm-role/:token" component={ConfirmRole} />
         <PrivateRoute path="/*" component={ProtectedRoutes} />
       </Switch>
     </Container>
