@@ -32,13 +32,8 @@ const status = {
 export default class ConfirmRole extends Component {
   constructor(props) {
     super(props);
-
-    const { props: { location: { search } } } = this;
-    const { role } = parse(search.replace('?', ''));
-
     this.state = {
       status: status.PENDING,
-      role,
     };
   }
 
@@ -59,11 +54,12 @@ export default class ConfirmRole extends Component {
   }
 
   render() {
+    const { role } = parse(this.props.location.search.replace('?', ''));
     return (
       <Col>
         <NavHeader
           centerContent={
-            <Heading>Add {this.state.role} Role</Heading>
+            <Heading>Add {role} Role</Heading>
           }
         />
         <StyledSection>
