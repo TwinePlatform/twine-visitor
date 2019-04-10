@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { BeatLoader } from 'react-spinners';
@@ -25,11 +25,10 @@ const ErrorText = styled(Paragraph)`
 const status = {
   PENDING: 'PENDING',
   SUCCESS: 'SUCCESS',
-  REDIRECT: 'REDIRECT',
   FAILURE: 'FAILURE',
 };
 
-export default class ConfirmRole extends Component {
+class ConfirmRole extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,11 +39,12 @@ export default class ConfirmRole extends Component {
   componentDidMount() {
     const { props: { location: { search }, match: { params: { token } } } } = this;
     const { userId, organisationId, role } = parse(search.replace('?', ''));
+
     Visitors.addRole({ token, userId, organisationId, role: role && role.toUpperCase() })
       .then((r) => {
         const res = ResponseUtils.getResponse(r);
         return res.token
-          ? this.setState({ status: status.REDIRECT, user: res })
+          ? this.props.history.push(`/password/reset/${res.token}?email=${res.email}`)
           : this.setState({ status: status.SUCCESS });
       })
       .catch(e => this.setState({
@@ -72,18 +72,15 @@ export default class ConfirmRole extends Component {
           )}
           {this.state.status === status.SUCCESS && (
             <Paragraph>
-            Visitor account has been created. See email for QR code.
+              Visitor account has been created. See email for QR code.
             </Paragraph>
-          )}
-          {this.state.status === status.REDIRECT && (
-            <Redirect to={{ pathname: `/password/reset/${this.state.user.token}?email=${this.state.user.email}` }} />
           )}
           {this.state.status === status.FAILURE && (
             <>
               <ErrorText>{this.state.errors}</ErrorText>
               <Paragraph>
-               Sorry there has been an error creating your account.
-               Please talk to your Community Business about setting up an account
+                Sorry there has been an error creating your account.
+                Please talk to your Community Business about setting up an account
               </Paragraph>
             </>
           )}
@@ -97,4 +94,7 @@ export default class ConfirmRole extends Component {
 ConfirmRole.propTypes = {
   location: PropTypes.shape({ search: PropTypes.string }).isRequired,
   match: PropTypes.shape({ params: PropTypes.string }).isRequired,
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
 };
+
+export default withRouter(ConfirmRole);
