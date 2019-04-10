@@ -59,7 +59,7 @@ export const Label = styled.label`
   width: 100%;
   margin-bottom: 0.2em;
   color: ${colors.dark};
-  font: ${fonts.base};
+  font: ${fonts.family.default};
   font-size: ${fonts.size.base};
 `;
 
